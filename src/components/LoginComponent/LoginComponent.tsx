@@ -1,6 +1,6 @@
+"use client";
 import React from "react";
 import "./loginComponent.modules.scss";
-import Image from "next/image";
 import LoginForm from "./LoginForm";
 
 function LoginComponent() {

@@ -1,17 +1,11 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { object, string, minLength, email } from "valibot";
-import { useForm } from "react-hook-form";
+import { object, string, minLength, email, Output, optional } from "valibot";
 import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";
 import "./loginForm.modules.scss";
-
-type formValueType = {
-  username: string;
-  password: string;
-};
+import useCustomForm from "@/hooks/useCustomForm";
 
 function LoginForm() {
   const schema = object({
@@ -25,15 +19,11 @@ function LoginForm() {
     ]),
   });
 
-  const form = useForm<formValueType>({
-    resolver: valibotResolver(schema),
-  });
-
-  const { register, handleSubmit, formState } = form;
+  const { register, handleSubmit, formState } = useCustomForm(schema);
 
   const { errors } = formState;
 
-  const onSubmit = (data: formValueType) => {
+  const onSubmit = (data: Output<typeof schema>) => {
     console.log("OnSubmit::", data);
   };
 
