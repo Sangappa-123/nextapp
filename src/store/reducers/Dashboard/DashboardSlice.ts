@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const dashboardSlice = createSlice({
+const DashboardSlice = createSlice({
   initialState: [],
   name: "dashboard",
   reducers: {
@@ -10,5 +10,6 @@ const dashboardSlice = createSlice({
     }
   }
 })
-export default dashboardSlice.reducer;
-export const { add } = dashboardSlice.actions;
+export default DashboardSlice;
+
+export const { add } = DashboardSlice.actions;
