@@ -1,0 +1,33 @@
+.form-control {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .input-field {
+    width: 100%;
+    height: 40px;
+    max-height: 40px;
+    padding: 3px 10px;
+    font-size: 12px;
+
+    border-radius: 7px;
+    background-color: white;
+    border: 1px solid #4169e1;
+
+    &:active,
+    &:focus {
+      background-color: #fff !important;
+      outline: none;
+    }
+  }
+
+  .error-msg {
+    text-align: left;
+    font-size: 13px;
+    color: red;
+  }
+  .error-field {
+    border-color: red;
+  }
+}
