@@ -1,5 +1,7 @@
+@use "@/scss/colors.scss" as *;
+
 .footer__main {
-  color: #827e7e;
+  color: $grey2;
   font-weight: 550;
   font-size: 15px;
 }

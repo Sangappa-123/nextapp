@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .form-control {
   position: relative;
   display: flex;
@@ -12,12 +14,11 @@
     font-size: 12px;
 
     border-radius: 7px;
-    background-color: white;
-    border: 1px solid #4169e1;
+    background-color: $white;
+    border: 1px solid $royalBlue;
 
     &:active,
     &:focus {
-      background-color: #fff !important;
       outline: none;
     }
   }
@@ -25,9 +26,9 @@
   .error-msg {
     text-align: left;
     font-size: 13px;
-    color: red;
+    color: $errorRed;
   }
   .error-field {
-    border-color: red;
+    border-color: $errorRed;
   }
 }

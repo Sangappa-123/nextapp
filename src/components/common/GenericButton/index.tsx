@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import "./genericButton.modules.scss";
+import buttonStyle from "./genericButton.module.scss";
 
 export enum btnThemes {
   lightBlue = "light-blue",
@@ -27,9 +27,9 @@ function GenericButton({
   return (
     <button
       className={clsx({
-        genericBtn: true,
+        [buttonStyle.genericBtn]: true,
         [btnClassname]: btnClassname,
-        [btnThemes[theme]]: true,
+        [buttonStyle[btnThemes[theme]]]: true,
       })}
       disabled={disabled}
       type="button"

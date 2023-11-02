@@ -1,9 +1,9 @@
 import React from "react";
-import "./footer.modules.scss";
+import footerStyle from "./footer.module.scss";
 
 function Footer() {
   return (
-    <div className="footer__main">
+    <div className={footerStyle.footer__main}>
       Powered by Artigem Streamline , ver. 1.0.682 © Artigem
     </div>
   );

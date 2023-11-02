@@ -22,8 +22,8 @@
     padding: 12px;
     border: 1px solid $royalBlue;
     border-radius: 20px;
-    box-shadow: 2px 0px 16px 0px lightgrey;
-    background-color: #fff;
+    box-shadow: 2px 0px 16px 0px $lightGrey;
+    background-color: $white;
     overflow: hidden;
 
     display: flex;
@@ -41,12 +41,12 @@
       height: 100%;
     }
     .loginComponent__content--right {
-      border-left: 1px solid#D9DDDC;
+      border-left: 1px solid $iron;
       gap: 16px;
       padding: 32px 20px 32px 32px;
 
       .loginComponent__subHeading {
-        color: #4169e1;
+        color: $royalBlue;
         font-size: 20px;
         font-weight: 100;
         line-height: 20px;

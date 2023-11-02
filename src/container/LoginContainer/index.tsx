@@ -2,18 +2,31 @@ import React from "react";
 
 import LoginComponent from "@/components/LoginComponent";
 import Footer from "@/components/common/Footer";
-import "./loginContainer.modules.scss";
+import loginContainerStyle from "./loginContainer.module.scss";
+import clsx from "clsx";
 
 function LoginContainer() {
   return (
-    <div className="loginContainer">
-      <div className="loginContainer__bgImg" />
-      <div className="loginContainer__main container">
-        <div className="loginContainer__content col-md-6 col-sm-12 col-xs-12">
+    <div className={loginContainerStyle.loginContainer}>
+      <div className={loginContainerStyle.loginContainer__bgImg} />
+      <div
+        className={clsx({
+          [loginContainerStyle.loginContainer__main]: true,
+          container: true,
+        })}
+      >
+        <div
+          className={clsx({
+            [loginContainerStyle.loginContainer__content]: true,
+            "col-md-6": true,
+            "col-sm-12": true,
+            "col-xs-12": true,
+          })}
+        >
           <LoginComponent />
         </div>
       </div>
-      <div className="loginContainer__footer">
+      <div className={loginContainerStyle.loginContainer__footer}>
         <Footer />
       </div>
     </div>

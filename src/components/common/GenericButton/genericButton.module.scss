@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .genericBtn {
   width: 100%;
   height: 40px;
@@ -19,11 +21,11 @@
 }
 
 .light-blue {
-  color: #ffffff;
-  background-color: #32c5d2;
+  color: $white;
+  background-color: $lightBlue2;
 }
 
 .dark-blue {
-  background: #27235e;
-  color: white;
+  background: $portGore;
+  color: $white;
 }

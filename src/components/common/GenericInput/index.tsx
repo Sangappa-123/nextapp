@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { clsx } from "clsx";
 
-import "./genericInput.modules.scss";
+import inputStyle from "./genericInput.module.scss";
 
 type propsType = {
   placeholder?: string;
@@ -26,7 +26,7 @@ function GenericInput(props: propsType, ref: any) {
   return (
     <div
       className={clsx({
-        "form-control": true,
+        [inputStyle["form-control"]]: true,
         [formControlClassname]: formControlClassname,
       })}
     >
@@ -35,15 +35,15 @@ function GenericInput(props: propsType, ref: any) {
         ref={ref}
         placeholder={placeholder}
         className={clsx({
-          "input-field": true,
+          [inputStyle["input-field"]]: true,
           [inputFieldClassname]: inputFieldClassname,
-          "error-field": showError,
+          [inputStyle["error-field"]]: showError,
         })}
         {...rest}
       />
       <div
         className={clsx({
-          "error-msg": true,
+          [inputStyle["error-msg"]]: true,
           "d-none": !showError,
           [errorMsgClassname]: errorMsgClassname,
         })}
