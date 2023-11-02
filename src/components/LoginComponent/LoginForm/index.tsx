@@ -43,17 +43,14 @@ function LoginForm() {
           showError={errors["password"]}
           errorMsg={errors?.password?.message}
           placeholder="Password"
+          type="password"
           id="password"
           {...register("password")}
         />
         <GenericButton label="Login" type="submit" />
         <Link href="/">Forgot Password</Link>
 
-        <GenericButton
-          label="Sign in with SSO"
-          theme="darkBlue"
-          onClickHandler={(e) => console.log(e)}
-        />
+        <GenericButton label="Sign in with SSO" theme="darkBlue" />
       </form>
     </>
   );
