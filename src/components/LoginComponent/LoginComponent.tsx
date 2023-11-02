@@ -2,6 +2,7 @@
 import React from "react";
 import "./loginComponent.modules.scss";
 import LoginForm from "./LoginForm";
+import Image from "next/image";
 
 function LoginComponent() {
   return (
@@ -9,9 +10,10 @@ function LoginComponent() {
       <h1 className="loginComponent__heading">Insurance company Portal</h1>
       <div className="loginComponent__container">
         <div className="loginComponent__content">
-          <img
+          <Image
             className="loginComponent__image"
             alt="company_logo"
+            fill
             src="http://173.255.198.245:8080/ArtigemRS-FI/artigem/mediafiles/EVLINS/05f9cee6-086a-43de-99ad-9dcf133481b6.png"
           />
         </div>
