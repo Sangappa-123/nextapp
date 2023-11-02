@@ -5,6 +5,7 @@ import buttonStyle from "./genericButton.module.scss";
 export enum btnThemes {
   lightBlue = "light-blue",
   darkBlue = "dark-blue",
+  normal = "normal-button",
 }
 
 type genericButtonType = {

@@ -5,6 +5,17 @@
   margin: 0;
 }
 
+* > h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
 * > body {
   max-height: 100vh;
   height: 100vh;
@@ -13,4 +24,17 @@
 
 .d-none {
   display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-justify {
+  text-align: justify;
 }

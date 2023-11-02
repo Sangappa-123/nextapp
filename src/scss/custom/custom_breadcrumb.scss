@@ -1,0 +1,43 @@
+@use "./../colors.scss" as *;
+
+.breadcrumb {
+  --bs-breadcrumb-padding-x: 0;
+  --bs-breadcrumb-padding-y: 0;
+  --bs-breadcrumb-margin-bottom: 1rem;
+  --bs-breadcrumb-bg: ;
+  --bs-breadcrumb-border-radius: ;
+  --bs-breadcrumb-item-padding-x: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  // padding: var(--bs-breadcrumb-padding-y) var(--bs-breadcrumb-padding-x);
+  // margin-bottom: var(--bs-breadcrumb-margin-bottom);
+  font-size: var(--bs-breadcrumb-font-size);
+  list-style: none;
+  background-color: var(--bs-breadcrumb-bg);
+  border-radius: var(--bs-breadcrumb-border-radius);
+  .breadcrumb-item {
+    .link {
+      color: $breadcrumbItemColor;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      height: auto;
+      line-height: 18.5714px;
+    }
+    .link-active {
+      color: $breadcrumbItemActiveColor;
+      pointer-events: none;
+    }
+  }
+}
+
+.breadcrumb-item + .breadcrumb-item {
+  padding-left: var(--bs-breadcrumb-item-padding-x);
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  float: left;
+  padding-right: var(--bs-breadcrumb-item-padding-x);
+  color: $breadcrumbDividerColor;
+  content: var(--bs-breadcrumb-divider, "|");
+}

@@ -29,3 +29,15 @@
   background: $portGore;
   color: $white;
 }
+
+.normal-button {
+  background-color: $grey3;
+  padding: 2px 12px;
+  line-height: 18px;
+  margin-left: auto;
+  width: fit-content;
+  height: fit-content;
+  font-weight: 600;
+  font-size: 13px;
+  color: $mineShaft;
+}

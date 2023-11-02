@@ -10,6 +10,8 @@ type propsType = {
   formControlClassname?: string;
   errorMsgClassname?: string;
   inputFieldClassname?: string;
+  label?: string;
+  labelClassname?: string;
   [rest: string]: any;
 };
 
@@ -21,6 +23,8 @@ function GenericInput(props: propsType, ref: any) {
     errorMsgClassname = "",
     inputFieldClassname = "",
     errorMsg = "",
+    label = "",
+    labelClassname = "",
     ...rest
   } = props;
   return (
@@ -30,25 +34,35 @@ function GenericInput(props: propsType, ref: any) {
         [formControlClassname]: formControlClassname,
       })}
     >
-      <input
-        type="text"
-        ref={ref}
-        placeholder={placeholder}
+      <label
+        htmlFor={rest.id}
         className={clsx({
-          [inputStyle["input-field"]]: true,
-          [inputFieldClassname]: inputFieldClassname,
-          [inputStyle["error-field"]]: showError,
-        })}
-        {...rest}
-      />
-      <div
-        className={clsx({
-          [inputStyle["error-msg"]]: true,
-          "d-none": !showError,
-          [errorMsgClassname]: errorMsgClassname,
+          [labelClassname]: labelClassname,
         })}
       >
-        {errorMsg}
+        {label}
+      </label>
+      <div>
+        <input
+          type="text"
+          ref={ref}
+          placeholder={placeholder}
+          className={clsx({
+            [inputStyle["input-field"]]: true,
+            [inputFieldClassname]: inputFieldClassname,
+            [inputStyle["error-field"]]: showError,
+          })}
+          {...rest}
+        />
+        <div
+          className={clsx({
+            [inputStyle["error-msg"]]: true,
+            "d-none": !showError,
+            [errorMsgClassname]: errorMsgClassname,
+          })}
+        >
+          {errorMsg}
+        </div>
       </div>
     </div>
   );
