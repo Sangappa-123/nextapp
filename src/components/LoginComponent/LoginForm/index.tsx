@@ -48,7 +48,7 @@ function LoginForm() {
           {...register("password")}
         />
         <GenericButton label="Login" type="submit" />
-        <Link href="/">Forgot Password</Link>
+        <Link href="/forgot-password">Forgot Password</Link>
 
         <GenericButton label="Sign in with SSO" theme="darkBlue" />
       </form>

@@ -23,6 +23,13 @@
     }
   }
 
+  .normal-input {
+    border-radius: unset;
+    border: 1px solid $grey4;
+    background-color: $white;
+    font-size: 12px;
+    height: 25px;
+  }
   .error-msg {
     text-align: left;
     font-size: 13px;

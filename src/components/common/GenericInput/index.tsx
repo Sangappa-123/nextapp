@@ -3,6 +3,11 @@ import { clsx } from "clsx";
 
 import inputStyle from "./genericInput.module.scss";
 
+export enum inputTheme {
+  normal = "normal-input",
+  default = "",
+}
+
 type propsType = {
   placeholder?: string;
   showError?: boolean;
@@ -12,6 +17,7 @@ type propsType = {
   inputFieldClassname?: string;
   label?: string;
   labelClassname?: string;
+  theme?: keyof typeof inputTheme;
   [rest: string]: any;
 };
 
@@ -25,6 +31,7 @@ function GenericInput(props: propsType, ref: any) {
     errorMsg = "",
     label = "",
     labelClassname = "",
+    theme = "default",
     ...rest
   } = props;
   return (
@@ -51,6 +58,7 @@ function GenericInput(props: propsType, ref: any) {
             [inputStyle["input-field"]]: true,
             [inputFieldClassname]: inputFieldClassname,
             [inputStyle["error-field"]]: showError,
+            [inputStyle[inputTheme[theme]]]: true,
           })}
           {...rest}
         />
