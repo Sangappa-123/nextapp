@@ -1,14 +1,18 @@
 import React from "react";
-
 import LoginComponent from "@/components/LoginComponent";
 import Footer from "@/components/common/Footer";
 import loginContainerStyle from "./loginContainer.module.scss";
 import clsx from "clsx";
+import { GetComponyBackgroundImage } from "@/services/LoginService";
 
-function LoginContainer() {
+async function LoginContainer() {
+  const {data} :any = await GetComponyBackgroundImage();
+  const imageUrl = data?.attachments[0]?.url;
   return (
     <div className={loginContainerStyle.loginContainer}>
-      <div className={loginContainerStyle.loginContainer__bgImg} />
+      <div className={loginContainerStyle.loginContainer__bgImg} 
+        style={{backgroundImage: `url(${imageUrl})`}}
+      />
       <div
         className={clsx({
           [loginContainerStyle.loginContainer__main]: true,

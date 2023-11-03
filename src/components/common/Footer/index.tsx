@@ -1,12 +1,16 @@
 import React from "react";
 import footerStyle from "./footer.module.scss";
+import { GetVersionNumberData } from "@/services/LoginService";
 
-function Footer() {
+async function Footer() {
+  const {buildVersion=""}:any = await GetVersionNumberData();
+
   return (
     <div className={footerStyle.footer__main}>
-      Powered by Artigem Streamline , ver. 1.0.682 © Artigem
+      <div>Powered by Artigem Streamline , ver. {buildVersion} © Artigem</div>
     </div>
   );
 }
 
 export default Footer;
+
