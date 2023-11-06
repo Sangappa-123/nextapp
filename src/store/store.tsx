@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { configureStore } from "@reduxjs/toolkit";
 import React from "react";
@@ -8,10 +8,13 @@ const store = configureStore({ reducer: rootReducer });
 
 export default store;
 
-export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
+export function StoreProvider({ children }: { children: React.ReactNode }){
   return (
     <Provider store={store}>
       {children}
     </Provider>
   )
 }
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

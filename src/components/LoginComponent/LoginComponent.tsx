@@ -1,11 +1,12 @@
-"use client";
 import React from "react";
 import Image from "next/image";
 import LoginForm from "./LoginForm";
 import loginComponentStyle from "./loginComponent.module.scss";
 import clsx from "clsx";
+import { GetComponyLogo } from "@/services/LoginService";
 
-function LoginComponent() {
+async function LoginComponent() {
+  const {data}:any = await GetComponyLogo();
   return (
     <div className={loginComponentStyle.loginComponent}>
       <h1 className={loginComponentStyle.loginComponent__heading}>
@@ -17,7 +18,7 @@ function LoginComponent() {
             className={loginComponentStyle.loginComponent__image}
             alt="company_logo"
             fill
-            src="http://173.255.198.245:8080/ArtigemRS-FI/artigem/mediafiles/EVLINS/05f9cee6-086a-43de-99ad-9dcf133481b6.png"
+            src={data?.logo}
           />
         </div>
         <div
