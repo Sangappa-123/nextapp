@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { GetComponyLogo } from "@/services/LoginService";
 
 async function LoginComponent() {
-  const {data}:any = await GetComponyLogo();
+  const { data }: any = await GetComponyLogo();
   return (
     <div className={loginComponentStyle.loginComponent}>
       <h1 className={loginComponentStyle.loginComponent__heading}>
@@ -19,6 +19,8 @@ async function LoginComponent() {
             alt="company_logo"
             fill
             src={data?.logo}
+            style={{ objectFit: "cover" }}
+            sizes="100%"
           />
         </div>
         <div

@@ -1,0 +1,27 @@
+@keyframes spin {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  .loader {
+    color: #ddd;
+    animation: spin 1000ms;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+}
