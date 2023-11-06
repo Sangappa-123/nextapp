@@ -16,7 +16,7 @@ async function ForgotPasswordContainer() {
             alt="company_logo"
             fill
             src={data?.logo}
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "contain" }}
             sizes="100%"
           />
           {/* <Image
