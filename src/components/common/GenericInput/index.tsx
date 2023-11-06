@@ -32,6 +32,7 @@ function GenericInput(props: propsType, ref: any) {
     label = "",
     labelClassname = "",
     theme = "default",
+    isFixedError = false,
     ...rest
   } = props;
   return (
@@ -54,10 +55,11 @@ function GenericInput(props: propsType, ref: any) {
           type="text"
           ref={ref}
           placeholder={placeholder}
+          autoComplete="false"
           className={clsx({
             [inputStyle["input-field"]]: true,
             [inputFieldClassname]: inputFieldClassname,
-            [inputStyle["error-field"]]: showError,
+            // [inputStyle["error-field"]]: showError,
             [inputStyle[inputTheme[theme]]]: true,
           })}
           {...rest}
@@ -67,6 +69,7 @@ function GenericInput(props: propsType, ref: any) {
             [inputStyle["error-msg"]]: true,
             "d-none": !showError,
             [errorMsgClassname]: errorMsgClassname,
+            "position-absolute": isFixedError,
           })}
         >
           {errorMsg}

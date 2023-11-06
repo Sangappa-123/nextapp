@@ -12,7 +12,7 @@ function ForgotPasswordForm() {
   const router = useRouter();
   const schema = object({
     email: string("Your email must be a string.", [
-      minLength(1, "User name field is required."),
+      minLength(1, "Email is required."),
       email("Please enter valid email."),
     ]),
   });
@@ -39,6 +39,7 @@ function ForgotPasswordForm() {
         theme="normal"
         showError={errors["email"]}
         errorMsg={errors?.email?.message}
+        isFixedError={true}
         {...register("email")}
       />
       <div className={fPWDFormStyle.actionDiv}>

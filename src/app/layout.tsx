@@ -3,7 +3,7 @@ import { Open_Sans } from "next/font/google";
 import "@/scss/globals.scss";
 import { StoreProvider } from "@/store/store";
 
-const inter = Open_Sans({subsets: ["latin"]});
+const inter = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Artigem Streamline",

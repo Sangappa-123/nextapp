@@ -15,11 +15,20 @@
 
     border-radius: 7px;
     background-color: $white;
-    border: 1px solid $royalBlue;
+    border: 1px solid $grey4;
 
     &:active,
     &:focus {
       outline: none;
+      border-color: $royalBlue;
+    }
+  }
+
+  .error-field {
+    border-color: $errorRed;
+    &:active,
+    &:focus {
+      border-color: $errorRed;
     }
   }
 
@@ -34,8 +43,5 @@
     text-align: left;
     font-size: 13px;
     color: $errorRed;
-  }
-  .error-field {
-    border-color: $errorRed;
   }
 }

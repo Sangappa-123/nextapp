@@ -1,4 +1,6 @@
+@use "@/scss/colors.scss" as *;
 @import "bootstrap/dist/css/bootstrap-grid.min.css";
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -37,4 +39,19 @@ ol {
 }
 .text-justify {
   text-align: justify;
+}
+.position-absolute {
+  position: absolute;
+}
+
+a {
+  color: $astral;
+  text-decoration: none;
+  text-shadow: none;
+  line-height: 18px;
+  font-size: 13px;
+  &:hover {
+    color: $blueJay;
+    text-decoration: underline;
+  }
 }

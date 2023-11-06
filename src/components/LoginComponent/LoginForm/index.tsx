@@ -40,7 +40,7 @@ function LoginForm() {
           {...register("username")}
         />
         <GenericInput
-          showError={errors["password"]}
+          showError={!errors["username"] && errors["password"]}
           errorMsg={errors?.password?.message}
           placeholder="Password"
           type="password"
@@ -48,8 +48,9 @@ function LoginForm() {
           {...register("password")}
         />
         <GenericButton label="Login" type="submit" />
-        <Link href="/forgot-password">Forgot Password</Link>
-
+        <Link className={loginFormStyle.link} href="/forgot-password">
+          Forgot Your Password?
+        </Link>
         <GenericButton label="Sign in with SSO" theme="darkBlue" />
       </form>
     </>

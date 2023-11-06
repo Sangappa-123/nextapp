@@ -1,13 +1,14 @@
-import securityLayoutStyle from "./layout.module.scss";
+import CommonSecurityLayout from "@/components/common/Layouts/CommonSecurityLayout";
 
-export default function DashboardLayout({
+export default function SecurityLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className={securityLayoutStyle.container}>
-      <div>{children}</div>
-    </div>
-  );
+  return <CommonSecurityLayout>{children}</CommonSecurityLayout>;
+  // return (
+  //   <div className={securityLayoutStyle.container}>
+  //     <div>{children}</div>
+  //   </div>
+  // );
 }

@@ -1,0 +1,20 @@
+@use "@/scss/colors.scss" as *;
+
+.root {
+  width: 100%;
+  height: fit-content;
+  max-height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  .container {
+    width: 100%;
+    height: fit-content;
+    min-height: calc(100vh - 8px);
+    max-width: 90%;
+    margin: 0 auto;
+
+    border-left: 1px solid $grey1;
+    border-right: 1px solid $grey1;
+    box-shadow: 0px 1px 16px 1px $oxfordBlue;
+  }
+}
