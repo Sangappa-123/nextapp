@@ -36,7 +36,7 @@ function ForgotPasswordForm() {
         formControlClassname={fPWDFormStyle.formControl}
         inputFieldClassname={fPWDFormStyle.inputField}
         labelClassname={fPWDFormStyle.label}
-        theme="normal"
+        // theme="normal"
         showError={errors["email"]}
         errorMsg={errors?.email?.message}
         isFixedError={true}
@@ -48,7 +48,7 @@ function ForgotPasswordForm() {
         </Link>
         <GenericButton
           label="Reset"
-          theme="normal"
+          // theme="normal"
           type="submit"
           btnClassname={fPWDFormStyle.resetBtn}
         />
