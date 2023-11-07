@@ -9,7 +9,7 @@ function ForgotPasswordComponent() {
       <GenericComponentHeading title="Forgot Password?" />
       <div className={fPWDCStyle.fogotPasswordContent}>
         <div className={fPWDCStyle.subHeading}>
-          Provide your email address and we'll send you link to reset your
+          Provide your email address and we&apos;ll send you link to reset your
           password.
         </div>
       </div>
