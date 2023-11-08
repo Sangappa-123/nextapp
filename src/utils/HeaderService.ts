@@ -28,10 +28,10 @@
 
 export const getHeaderWithoutToken = () => {
   return {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "X-originator": process.env.NEXT_PUBLIC_XORIGINATOR,
-  }
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "X-originator": process.env.NEXT_PUBLIC_XORIGINATOR,
+  };
 };
 
 // export const getHeaderWithoutTokenAndOriginator = () => {

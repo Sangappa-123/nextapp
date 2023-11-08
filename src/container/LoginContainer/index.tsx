@@ -15,18 +15,16 @@ async function LoginContainer() {
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
       <div
-        className={clsx({
-          [loginContainerStyle.loginContainer__main]: true,
-          container: true,
-        })}
+        className={clsx(loginContainerStyle.loginContainer__main, "container"
+        )}
       >
         <div
-          className={clsx({
-            [loginContainerStyle.loginContainer__content]: true,
-            "col-md-6": true,
-            "col-sm-12": true,
-            "col-xs-12": true,
-          })}
+          className={clsx(
+            loginContainerStyle.loginContainer__content,
+            "col-md-6",
+            "col-sm-12",
+            "col-12",
+          )}
         >
           <LoginComponent />
         </div>

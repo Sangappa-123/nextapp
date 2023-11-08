@@ -2,6 +2,7 @@ enum apiEndPoints {
   buildInfo = "application/buildinfo",
   companyLogo = "web/company-logo",
   companyLogoBackgroundImage = "web/company-backgroundImage",
+  login = "web/login",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

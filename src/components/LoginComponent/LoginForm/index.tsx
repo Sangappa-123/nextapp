@@ -6,6 +6,8 @@ import useCustomForm from "@/hooks/useCustomForm";
 import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";
 import loginFormStyle from "./loginForm.module.scss";
+import { login } from "@/services/LoginService";
+import { getCipherEncryptedText } from "@/utils/helper";
 
 function LoginForm() {
   const schema = object({
@@ -24,6 +26,18 @@ function LoginForm() {
 
   const onSubmit = (data: Output<typeof schema>) => {
     console.log("OnSubmit::", data);
+    let payload;
+    const username = getCipherEncryptedText(data.username);
+    const password = getCipherEncryptedText(data.password);
+    if(username && password) {
+      payload = {
+        captchCode : "",
+        isHideCaptcha : process.env.NEXT_PUBLIC_HIDE_CAPTCHA?.toString(),
+        username : window.btoa(username),
+        password : window.btoa(password),
+     }
+    }
+   login(payload);
   };
 
   return (
