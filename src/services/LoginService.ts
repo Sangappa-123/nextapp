@@ -1,5 +1,6 @@
 import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
+import { addLocalStorageData } from "@/utils/LocalStorageHelper";
 
 export const GetVersionNumberData = async () => {
   const headersData: any = getHeaderWithoutToken();
@@ -61,10 +62,8 @@ export const GetComponyBackgroundImage = async () => {
   });
 };
 
-export const login = (payload: object | undefined) => {
+export const login = async (payload: object | undefined) => {
   const headersData: {} = getHeaderWithoutToken();
-  console.log("payload", payload);
-
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("login"), {
       method: "POST",
@@ -74,8 +73,10 @@ export const login = (payload: object | undefined) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        const { data } = result;
-        return resolve({ data });
+        if (result.status === 200001) {
+          addLocalStorageData(result);
+        }
+        return resolve({ result });
       })
       .catch((error) => {
         console.log("error::", error);

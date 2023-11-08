@@ -2,9 +2,13 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import React from "react";
-import rootReducer from "@/store/reducers";
+import rootReducer from "@/reducers";
 import { Provider } from "react-redux";
-const store = configureStore({ reducer: rootReducer });
+
+const store = configureStore({ reducer: rootReducer, 
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+  serializableCheck: false,
+}) });
 
 export default store;
 
