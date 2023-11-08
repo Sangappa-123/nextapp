@@ -1,7 +1,7 @@
 import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 
-export async function GetVersionNumberData() {
+export const GetVersionNumberData = async () => {
   const headersData: any = getHeaderWithoutToken();
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("buildInfo"), {
@@ -19,9 +19,9 @@ export async function GetVersionNumberData() {
         rejects(error);
       });
   });
-}
+};
 
-export async function GetComponyLogo() {
+export const GetComponyLogo = async () => {
   const headersData: any = getHeaderWithoutToken();
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("companyLogo"), {
@@ -39,9 +39,9 @@ export async function GetComponyLogo() {
         rejects({ error });
       });
   });
-}
+};
 
-export async function GetComponyBackgroundImage() {
+export const GetComponyBackgroundImage = async () => {
   const headersData: any = getHeaderWithoutToken();
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("companyLogoBackgroundImage"), {
@@ -59,4 +59,27 @@ export async function GetComponyBackgroundImage() {
         rejects({ error });
       });
   });
-}
+};
+
+export const login = (payload: object | undefined) => {
+  const headersData: {} = getHeaderWithoutToken();
+  console.log("payload", payload);
+
+  return new Promise((resolve, rejects) => {
+    fetch(getApiEndPoint("login"), {
+      method: "POST",
+      cache: "no-cache",
+      headers: headersData,
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        const { data } = result;
+        return resolve({ data });
+      })
+      .catch((error) => {
+        console.log("error::", error);
+        rejects({ error });
+      });
+  });
+};
