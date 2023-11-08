@@ -28,9 +28,9 @@ function GenericButton({
   return (
     <button
       className={clsx({
+        [buttonStyle[btnThemes[theme]]]: true,
         [buttonStyle.genericBtn]: true,
         [btnClassname]: btnClassname,
-        [buttonStyle[btnThemes[theme]]]: true,
       })}
       disabled={disabled}
       type="button"

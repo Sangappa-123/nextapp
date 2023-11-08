@@ -10,11 +10,19 @@
   display: flex;
   flex-direction: column;
   gap: $size_md;
-  .formGroup {
+  .formGroups {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin: 0 $size_lg;
     padding-right: 25%;
+    .formGroup {
+      gap: 10px;
+    }
   }
+}
+.actionBtn {
+  width: fit-content;
+  margin-left: auto;
+  padding: 0 24px;
 }

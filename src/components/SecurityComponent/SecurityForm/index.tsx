@@ -34,7 +34,6 @@ function SecurityForm() {
     handleSubmit,
     formState: { errors, isDirty },
   } = useCustomForm(schema);
-  console.log("=========", errors);
 
   const onSubmit = (data: Output<typeof schema>) => {
     console.log("password::", data);

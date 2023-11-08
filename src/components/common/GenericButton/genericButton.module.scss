@@ -22,12 +22,18 @@
 
 .light-blue {
   color: $white;
-  background-color: $lightBlue2;
+  background-color: $lightBlueBtn;
+  &:not(:disabled):hover {
+    background-color: $lightBlueHoverBtn;
+  }
 }
 
 .dark-blue {
-  background: $portGore;
+  background: $darkBlueBtn;
   color: $white;
+  &:not(:disabled):hover {
+    background-color: $darkBlueHoverBtn;
+  }
 }
 
 .normal-button {

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { object, string, minLength, email, Output, optional } from "valibot";
+import { object, string, minLength, email, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";

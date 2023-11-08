@@ -1,0 +1,21 @@
+@use "@/scss/colors.scss" as *;
+
+.form-control {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  .error-field {
+    border-color: $errorRed;
+    &:active,
+    &:focus {
+      border-color: $errorRed;
+    }
+  }
+
+  .error-msg {
+    text-align: left;
+    font-size: 13px;
+    color: $errorRed;
+  }
+}
