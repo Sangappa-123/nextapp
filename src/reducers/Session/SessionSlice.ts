@@ -6,14 +6,12 @@ const SessionSlice = createSlice({
   reducers: {
     updateLoadingState(state, action) {
       const { payload } = action;
-      // state.isLoading = payload;
-      state = { ...state, payload };
+      state = { ...state, ...payload };
       return state;
     },
     addSessionData(state, action) {
-      // update the state can be done using the "action.payload"
       const { payload } = action;
-      state = payload;
+      state = { ...state, ...payload };
       return state;
     },
   },

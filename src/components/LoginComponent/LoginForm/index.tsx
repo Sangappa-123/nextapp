@@ -9,10 +9,12 @@ import loginFormStyle from "./loginForm.module.scss";
 import { login } from "@/services/LoginService";
 import { getCipherEncryptedText } from "@/utils/helper";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { useRouter } from "next/navigation";
 import { addSessionData, updateLoadingState } from "@/reducers/Session/SessionSlice";
 
 function LoginForm() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const schema = object({
     username: string("Your email must be a string.", [
       minLength(1, "User name field is required."),
@@ -42,7 +44,9 @@ function LoginForm() {
     }
    const loginRes: any = await login(payload);
     dispatch(addSessionData(localStorage));
-    // dispatch(updateLoadingState(false));
+    if(loginRes.result.status === 200001) {
+      router.replace("/adjuster-dashboard");
+    }
   }
 
   return (
