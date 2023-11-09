@@ -1,13 +1,13 @@
-import Loading from "@/app/loading";
+// import Loading from "@/app/loading";
 import AdjusterDashboard from "@/container/AdjusterDashboardContainer";
-import { Suspense } from "react";
+// import { Suspense } from "react";
 
 export default function adjusterDashboard() {
   return (
     <>
-    {/* <Suspense fallback={<Loading />}> */}
+      {/* <Suspense fallback={<Loading />}> */}
       <AdjusterDashboard />
-    {/* </Suspense> */}
+      {/* </Suspense> */}
     </>
-  )
+  );
 }
