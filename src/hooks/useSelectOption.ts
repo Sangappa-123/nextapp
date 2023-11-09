@@ -1,18 +1,21 @@
-import { TypedOption } from "@/components/common/GenericSelect";
 import { useState } from "react";
 
-type TypedProps = TypedOption[];
+type TypedOption<T> = T;
 
-function useSelectOption(originalOption: TypedProps) {
-  //   const { originalOption = [] } = props;
+export type OptionTypedList<T> = TypedOption<T>[];
+
+function useSelectOption<T extends object>(originalOption: OptionTypedList<T>) {
   const [options, setOptions] = useState(originalOption);
 
-  const filterOption = (selected: TypedOption, filterBy: keyof TypedOption) => {
+  const filterOption = (
+    selected: TypedOption<T>,
+    filterBy: keyof TypedOption<T>
+  ) => {
     if (selected === null) {
       setOptions(originalOption);
     }
     const filteredOption = originalOption.filter(
-      (option) => option.label !== selected.label
+      (option) => option[filterBy] !== selected[filterBy]
     );
     setOptions(filteredOption);
   };

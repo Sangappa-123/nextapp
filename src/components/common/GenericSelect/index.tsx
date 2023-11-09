@@ -3,13 +3,8 @@ import ReactSelect from "react-select";
 import clsx from "clsx";
 import selectStyle from "./genericSelect.module.scss";
 
-export type TypedOption = {
-  value: string;
-  label: string;
-};
-
-interface TypedProps {
-  options: TypedOption[];
+interface TypedProps<T> {
+  options: T[];
   labelText: string;
   placeholder?: string;
   showError?: boolean;
@@ -21,7 +16,7 @@ interface TypedProps {
   [rest: string]: any;
 }
 
-function GenericSelect(props: TypedProps, ref: any) {
+function GenericSelect<T extends {}>(props: TypedProps<T>, ref: any) {
   const {
     labelText,
     options,
