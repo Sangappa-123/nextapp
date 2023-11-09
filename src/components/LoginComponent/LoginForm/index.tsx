@@ -8,8 +8,13 @@ import GenericButton from "@/components/common/GenericButton";
 import loginFormStyle from "./loginForm.module.scss";
 import { login } from "@/services/LoginService";
 import { getCipherEncryptedText } from "@/utils/helper";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { useRouter } from "next/navigation";
+import { addSessionData, updateLoadingState } from "@/reducers/Session/SessionSlice";
 
 function LoginForm() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const schema = object({
     username: string("Your email must be a string.", [
       minLength(1, "User name field is required."),
@@ -24,7 +29,7 @@ function LoginForm() {
 
   const { errors } = formState;
 
-  const onSubmit = (data: Output<typeof schema>) => {
+  const onSubmit = async (data: Output<typeof schema>) => {
     console.log("OnSubmit::", data);
     let payload;
     const username = getCipherEncryptedText(data.username);
@@ -37,8 +42,12 @@ function LoginForm() {
         password : window.btoa(password),
      }
     }
-   login(payload);
-  };
+   const loginRes: any = await login(payload);
+    dispatch(addSessionData(localStorage));
+    if(loginRes.result.status === 200001) {
+      router.replace("/adjuster-dashboard");
+    }
+  }
 
   return (
     <>
