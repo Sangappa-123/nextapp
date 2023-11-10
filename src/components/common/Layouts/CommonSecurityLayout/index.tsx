@@ -1,3 +1,5 @@
+import React from "react";
+import NavBarMenu from "../../NavBarMenu";
 import securityLayoutStyle from "./commonSecurityLayout.module.scss";
 
 export default function CommonSecurityLayout({
@@ -8,6 +10,9 @@ export default function CommonSecurityLayout({
   return (
     <div className={securityLayoutStyle.root}>
       <div className={securityLayoutStyle.container}>
+        <div>
+          <NavBarMenu />
+        </div>
         <div>{children}</div>
       </div>
     </div>
