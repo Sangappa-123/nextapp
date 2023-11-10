@@ -25,7 +25,7 @@ export default function TestDashboardComponent(props: any): any {
                 | null
                 | undefined;
             }) => (
-              <button className={MenuBarStyle.p} key={todo.id}>
+              <button className={MenuBarStyle.menuTab} key={todo.id}>
                 {todo}
               </button>
             )
@@ -47,7 +47,7 @@ export default function TestDashboardComponent(props: any): any {
                 | null
                 | undefined
             ) => (
-              <button className={MenuBarStyle.p1} key={todo.id}>
+              <button className={MenuBarStyle.menuTab} key={todo.id}>
                 {todo}
               </button>
             )
