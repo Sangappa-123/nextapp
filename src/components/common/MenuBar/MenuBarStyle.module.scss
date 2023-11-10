@@ -88,9 +88,8 @@
   padding: 12px 16px;
   z-index: 1;
   top: 40px;
-  left: 180px;
+  left: 194px;
   color: #337ab7;
-  width: 230px;
   box-shadow: none;
   border-bottom: 4px solid #007db8;
   border-right: 1px solid #cce7f3;
@@ -108,7 +107,9 @@
 }
 .menuTab {
   position: relative;
-  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
   color: #337ab7;
   background: none;
   border: none;
@@ -116,6 +117,7 @@
   padding: 10px;
   text-align: left;
   right: 20px;
+  display: block;
 }
 .menuTab:hover {
   position: relative;
@@ -128,21 +130,17 @@
 .dropdown1 {
   position: relative;
   display: inline-block;
-  border: 5px 5px 5px 5px solid #33aae5;
 }
 
 .dropdownContent1 {
-  text-align: left;
   display: none;
   position: relative;
   background-color: #fff;
   padding: 12px 16px;
   z-index: 1;
   top: 40px;
-  left: 279px;
+  left: 294px;
   color: #337ab7;
-  width: 230px;
-  height: 100px;
   box-shadow: none;
   border-bottom: 4px solid #007db8;
   border-right: 1px solid #cce7f3;
