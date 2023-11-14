@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
-// import { SlCalender } from 'react-icons/sl';
 import { HiOutlineMenu } from "react-icons/hi";
 import NavStyle from "./NavBarMenu.module.scss";
 
