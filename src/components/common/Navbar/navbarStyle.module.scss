@@ -58,8 +58,10 @@
     }
   }
   .active {
-    background-color: #fff;
     .navItem {
+      height: 36px;
+      margin: 2px 0;
+      background-color: #fff;
       color: #33aae5;
     }
   }
