@@ -1,6 +1,7 @@
-import CommonSecurityLayout from "@/components/common/Layouts/CommonSecurityLayout";
+// import CommonLayout from "@/components/common/Layouts/CommonLayout";
+import CommonLayout from "@/components/common/Layouts/CommonLayout";
 import React from "react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return <CommonSecurityLayout>{children}</CommonSecurityLayout>;
+  return <CommonLayout>{children}</CommonLayout>;
 }

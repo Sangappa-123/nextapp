@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import CommonSecurityLayout from "@/components/common/Layouts/CommonSecurityLayout";
+import CommonLayout from "@/components/common/Layouts/CommonLayout";
 
 export default function SecurityLayout({ children }: { children: ReactNode }) {
-  return <CommonSecurityLayout>{children}</CommonSecurityLayout>;
+  return <CommonLayout>{children}</CommonLayout>;
 }
