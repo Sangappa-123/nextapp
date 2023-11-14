@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
-import NavStyle from "./NavBarMenu.module.scss";
+import NavStyle from "./headerStyle.module.scss";
 
 const NavBarMenu = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);

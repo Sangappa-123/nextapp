@@ -1,9 +1,8 @@
 import React from "react";
-// import NavBarMenu from "@/components/common/NavBarMenu";
 import NavBar from "@/components/common/Navbar";
 import { TypedMenuObject } from "@/components/common/Navbar/NavbarComponent";
 import securityLayoutStyle from "./commonLayout.module.scss";
-import NavBarMenu from "../../NavBarMenu";
+import Header from "@/components/common/Header/index";
 
 const menu: TypedMenuObject[] = [
   { label: "My Claims" },
@@ -34,7 +33,7 @@ function CommonLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={securityLayoutStyle.root}>
       <div className={securityLayoutStyle.container}>
-        <NavBarMenu />
+        <Header />
         <NavBar menu={menu} />
 
         <div>{children}</div>
