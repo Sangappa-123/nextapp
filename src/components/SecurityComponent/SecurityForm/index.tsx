@@ -49,7 +49,7 @@ function SecurityForm() {
     console.log("changePasswordRes", changePasswordRes);
 
     if (changePasswordRes.result.status === 200) {
-      router.replace("security-question");
+      router.replace("/security-question");
     }
     // console.log("changePasswordRes", changePasswordRes);
   };

@@ -7,6 +7,7 @@ import GenericInput from "@/components/common/GenericInput";
 import useCustomForm from "@/hooks/useCustomForm";
 import { Output, email, minLength, object, string } from "valibot";
 import { useRouter } from "next/navigation";
+import { forgotPassword } from "@/services/ForgetpasswordService";
 
 function ForgotPasswordForm() {
   const router = useRouter();
@@ -23,9 +24,17 @@ function ForgotPasswordForm() {
     formState: { errors },
   } = useCustomForm(schema);
 
-  const onSubmit = (data: Output<typeof schema>) => {
+  const onSubmit = async (data: Output<typeof schema>) => {
     console.log("Data::;", data);
-    router.push("/security");
+    // router.push("/security");
+    const payload = {
+      email: data.email,
+      isHideCaptcha: process.env.NEXT_PUBLIC_HIDE_CAPTCHA,
+    };
+    const response: any = await forgotPassword(payload);
+    if (response.result.status === 200) {
+      router.replace("/login");
+    }
   };
 
   return (
