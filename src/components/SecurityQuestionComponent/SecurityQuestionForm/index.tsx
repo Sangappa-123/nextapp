@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import clsx from "clsx";
 import SecurityQuestionPoints from "./SecurityQuestionPoints";
@@ -8,15 +9,16 @@ import useCustomForm from "@/hooks/useCustomForm";
 import securityQuestionFormStyle from "./securityQuestionForm.module.scss";
 import { object, string, minLength, Output, number } from "valibot";
 import SecurityFieldComponent from "./SecurityFieldComponent";
+import { saveSecurityQuestion } from "@/services/MyProfileService";
+import { useRouter } from "next/navigation";
 
 interface TypedProp<T> {
   selectOptions: OptionTypedList<T>;
 }
 
-function SecurityQuestionForm<T extends object>({
-  selectOptions,
-}: TypedProp<T>) {
+function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>) {
   const { options } = useSelectOption(selectOptions);
+  const router = useRouter();
 
   const schema = object({
     question1: object({
@@ -36,29 +38,40 @@ function SecurityQuestionForm<T extends object>({
     answer3: string("Fill the answer.", [minLength(1, "Fill the answer.")]),
   });
 
-  const { register, handleSubmit, formState, setValue, control } =
-    useCustomForm(schema);
+  const { register, handleSubmit, formState, setValue, control } = useCustomForm(schema);
 
   const { errors, isValid } = formState;
 
-  const submitHandler = (data: Output<typeof schema>) => {
+  const submitHandler = async (data: Output<typeof schema>) => {
     console.log("Submit data", data);
+
+    const questionAnswerList = {
+      userId: localStorage.getItem("userId"),
+      questionAnswerList: [
+        {
+          questionId: data.question1.value,
+          answer: data.answer1,
+        },
+        {
+          questionId: data.question2.value,
+          answer: data.answer2,
+        },
+        {
+          questionId: data.question3.value,
+          answer: data.answer3,
+        },
+      ],
+    };
+
+    const saveSecurityQuestionRes: any = await saveSecurityQuestion(questionAnswerList);
+    if (saveSecurityQuestionRes.result.status === 200) {
+      router.replace("/adjuster-dashboard");
+    }
   };
 
   return (
-    <form
-      className={clsx({
-        "col-12": true,
-        "d-flex": true,
-        "flex-column": true,
-      })}
-      onSubmit={handleSubmit(submitHandler)}
-    >
-      <div
-        className={clsx({
-          [securityQuestionFormStyle.formContainer]: true,
-        })}
-      >
+    <form className="col-12 d-flex flex-column" onSubmit={handleSubmit(submitHandler)}>
+      <div className={securityQuestionFormStyle.formContainer}>
         <div>Security Questions</div>
         <SecurityQuestionPoints />
         <div className={securityQuestionFormStyle.formGroups}>
@@ -117,9 +130,7 @@ function SecurityQuestionForm<T extends object>({
       </div>
       <GenericButton
         label="I'm ready"
-        btnClassname={clsx("my-3", {
-          [securityQuestionFormStyle.actionBtn]: true,
-        })}
+        btnClassname={clsx("my-3", securityQuestionFormStyle.actionBtn)}
         disabled={!isValid}
         type="submit"
       />
