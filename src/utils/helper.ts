@@ -1,6 +1,5 @@
 import AesUtil from "./AESUtil";
-import { lib } from "crypto-js";
-import { enc } from "crypto-js";
+import { lib, enc } from "crypto-js";
 
 export const getCipherEncryptedText = (text: string | lib.WordArray) => {
   const aesUtil = new AesUtil(128, 1000);
@@ -18,4 +17,16 @@ export const getCipherEncryptedText = (text: string | lib.WordArray) => {
       passPhrase
     );
   }
+};
+
+const deleteAllCookies = () => {
+  const cookies = document.cookie.split(";");
+  cookies.map((cookie) => {
+    document.cookie = cookie + "=; expires=" + new Date(0).toUTCString();
+  });
+};
+
+export const logoutHandler = () => {
+  localStorage.clear();
+  deleteAllCookies();
 };

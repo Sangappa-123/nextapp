@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {};
+
 const SessionSlice = createSlice({
-  initialState: { isLoading: true },
+  initialState,
   name: "session",
   reducers: {
     updateLoadingState(state, action) {
@@ -14,8 +16,12 @@ const SessionSlice = createSlice({
       state = { ...state, ...payload };
       return state;
     },
+    resetSessionState() {
+      return initialState;
+    },
   },
 });
 export default SessionSlice;
 
-export const { updateLoadingState, addSessionData } = SessionSlice.actions;
+export const { updateLoadingState, addSessionData, resetSessionState } =
+  SessionSlice.actions;

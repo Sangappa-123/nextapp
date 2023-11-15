@@ -3,8 +3,14 @@ import React, { useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
 import NavStyle from "./headerStyle.module.scss";
+import { logoutHandler } from "@/utils/helper";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { resetSessionState } from "@/reducers/Session/SessionSlice";
 
 const NavBarMenu = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -14,6 +20,11 @@ const NavBarMenu = () => {
   const loggedInUser = {
     firstName: "John",
     lastName: "Doe",
+  };
+  const signoutHandle = () => {
+    dispatch(resetSessionState());
+    logoutHandler();
+    router.replace("/login");
   };
 
   return (
@@ -34,14 +45,9 @@ const NavBarMenu = () => {
             {loggedInUser.firstName} {loggedInUser.lastName}
           </div>
         </div>
-        {/* <div className={NavStyle.calendarIcon}>
-          <div className={NavStyle.calendarcontainer}>
-    <SlCalender />
-  </div>
-  </div> */}
-        {/* <div className={NavStyle.helpText}>Help</div> */}
-        <div className={NavStyle.helpText}>Sign Out</div>
-        {/* </div> */}
+        <div className={NavStyle.signoutText} onClick={signoutHandle}>
+          Sign Out
+        </div>
       </nav>
       <div className={NavStyle.toggleButton} onClick={toggleMenu}>
         <HiOutlineMenu />
