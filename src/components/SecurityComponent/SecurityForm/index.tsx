@@ -5,27 +5,25 @@ import securityFormStyle from "./securityForm.module.scss";
 import GenericInput from "@/components/common/GenericInput";
 import PasswordValidationCondition from "./PasswordValidationCondition";
 import GenericButton from "@/components/common/GenericButton";
-import { Output, ValiError, minLength, object, string } from "valibot";
+import { Output, minLength, object, string } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
+import { getCipherEncryptedText } from "@/utils/helper";
+import { changePassword } from "@/services/MyProfileService";
+import { useRouter } from "next/navigation";
 
 function SecurityForm() {
+  const router = useRouter();
   const schema = object({
-    currentPass: string("Please enter your current password", [
+    currentPassword: string("Please enter your current password", [
       minLength(1, "Please enter your current password"),
     ]),
-    newPass: string("Confirmpass", [
+    newPassword: string("Confirmpass", [
       minLength(1, "Please enter your password."),
-      minLength(
-        8,
-        "The entered password does not meet the above requirements."
-      ),
+      minLength(8, "The entered password does not meet the above requirements."),
     ]),
     confirmPass: string("Confirmpass", [
       minLength(1, "Please enter your password."),
-      minLength(
-        8,
-        "The entered password does not meet the above requirements."
-      ),
+      minLength(8, "The entered password does not meet the above requirements."),
     ]),
   });
 
@@ -35,8 +33,25 @@ function SecurityForm() {
     formState: { errors, isDirty },
   } = useCustomForm(schema);
 
-  const onSubmit = (data: Output<typeof schema>) => {
+  const onSubmit = async (data: Output<typeof schema>) => {
     console.log("password::", data);
+    let payload;
+    const encryptedCurrPass = getCipherEncryptedText(data.currentPassword);
+    const encryptedNewPass = getCipherEncryptedText(data.newPassword);
+    if (encryptedCurrPass && encryptedNewPass) {
+      payload = {
+        oldPassword: btoa(encryptedCurrPass),
+        newPassword: btoa(encryptedNewPass),
+      };
+    }
+    const changePasswordRes: any = await changePassword(payload);
+    // if(changePasswordRes)
+    console.log("changePasswordRes", changePasswordRes);
+
+    if (changePasswordRes.result.status === 200) {
+      router.replace("security-question");
+    }
+    // console.log("changePasswordRes", changePasswordRes);
   };
 
   return (
@@ -61,9 +76,9 @@ function SecurityForm() {
             })}
             inputFieldClassname={securityFormStyle.inputFieldClassname}
             label="current password"
-            id="currentPass"
+            id="currentPassword"
             placeholder="Current Password"
-            {...register("currentPass")}
+            {...register("currentPassword")}
           />
           <PasswordValidationCondition />
           <GenericInput
@@ -72,11 +87,11 @@ function SecurityForm() {
             })}
             inputFieldClassname={securityFormStyle.inputFieldClassname}
             label="new password"
-            id="newPass"
+            id="newPassword"
             placeholder="New Password"
-            errorMsg={errors?.newPass?.message}
-            showError={errors["newPass"]}
-            {...register("newPass")}
+            errorMsg={errors?.newPassword?.message}
+            showError={errors["newPassword"]}
+            {...register("newPassword")}
           />
           <GenericInput
             formControlClassname={clsx({

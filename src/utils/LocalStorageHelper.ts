@@ -1,43 +1,50 @@
 export const addLocalStorageData = (response: any) => {
   const { data } = response;
-  window.localStorage.setItem("IsLogined", "true");
-  window.localStorage.setItem("AccessToken", data.token);
-  window.localStorage.setItem("UserName", data.email);
-  window.localStorage.setItem("UserLastName", data.lastName);
-  window.localStorage.setItem("Name", data.lastName + ", " + data.firstName);
-  window.localStorage.setItem("Office", response?.data?.office);
-  window.localStorage.setItem("UserId", data.userId);
+  localStorage.setItem("isLogined", "true");
+  localStorage.setItem("accessToken", data.token);
+  localStorage.setItem("userName", data.email);
+  localStorage.setItem("userLastName", data.lastName);
+  localStorage.setItem("name", data.lastName + ", " + data.firstName);
+  localStorage.setItem("office", data?.office);
+  localStorage.setItem("userId", data.userId);
+
+  // for first time login, and forgot password flow
+  localStorage.setItem("resetPassword", data?.resetPassword);
+  localStorage.setItem("forgotPassword", data?.forgotPassword);
+  localStorage.setItem("securityQuestionsExists", data?.securityQuestionsExists);
+
+  document.cookie = `resetPassword=${data?.resetPassword}`;
+  document.cookie = `forgotPassword=${data?.forgotPassword}`;
+  document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists}`;
+  document.cookie = `accessToken=${data?.token}`;
+
+  // const expiryDuration =  60 * 2;
+  // document.cookie = `accessToken=${data?.token}; max-age=${expiryDuration}; path=/;`;
 
   if (data.branchDetails != null) {
-    window.localStorage.setItem("BranchCode", data.branchDetails.branchCode);
-    window.localStorage.setItem("BranchId", data.branchDetails.branchId);
+    window.localStorage.setItem("branchCode", data.branchDetails.branchCode);
+    window.localStorage.setItem("branchId", data.branchDetails.branchId);
   }
   if (
     data.companyDetails &&
     data.companyDetails !== null &&
     data.companyDetails !== undefined
   ) {
-    window.localStorage.setItem(
-      "InsuranceCompanyName",
-      data.companyDetails.name
-    );
+    window.localStorage.setItem("insuranceCompanyName", data.companyDetails.name);
   }
 
   //sessionStorage.setItem("Password", password);
-  window.localStorage.setItem("UserType", data.loggedinUserType);
+  window.localStorage.setItem("userType", data.loggedinUserType);
   window.localStorage.setItem(
-    "CompanyId",
+    "companyId",
     data.companyDetails ? data.companyDetails.id : ""
   );
-  window.localStorage.setItem(
-    "CRN",
-    data.companyDetails ? data.companyDetails.crn : ""
-  );
+  window.localStorage.setItem("CRN", data.companyDetails ? data.companyDetails.crn : "");
   if (data.vendorDetails !== null && data.vendorDetails !== undefined) {
-    window.localStorage.setItem("VendorId", data.vendorDetails.vendorId);
+    window.localStorage.setItem("vendorId", data.vendorDetails.vendorId);
   }
   if (data.role.length > 0) {
-    window.localStorage.setItem("RoleList", data.role[0]?.roleName);
+    window.localStorage.setItem("roleList", data.role[0]?.roleName);
   }
   // else window.localStorage.setItem("VendorId", null);
 };

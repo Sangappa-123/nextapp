@@ -14,22 +14,21 @@ async function LoginContainer() {
         className={loginContainerStyle.loginContainer__bgImg}
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
-      <div
-        className={clsx(loginContainerStyle.loginContainer__main, "container"
-        )}
-      >
+      <div className={clsx(loginContainerStyle.loginContainer__main, "container")}>
         <div
           className={clsx(
             loginContainerStyle.loginContainer__content,
             "col-md-6",
             "col-sm-12",
-            "col-12",
+            "col-12"
           )}
         >
+          {/* @ts-expect-error Server Component */}
           <LoginComponent />
         </div>
       </div>
       <div className={loginContainerStyle.loginContainer__footer}>
+        {/* @ts-expect-error Server Component */}
         <Footer />
       </div>
     </div>

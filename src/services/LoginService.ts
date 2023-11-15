@@ -84,3 +84,26 @@ export const login = async (payload: object | undefined) => {
       });
   });
 };
+
+// export const getVendorDetails = async (payload) => {
+//   const headersData: {} = getHeader();
+//   return new Promise((resolve, rejects) => {
+//     fetch(getApiEndPoint("login"), {
+//       method: "POST",
+//       cache: "no-cache",
+//       headers: headersData,
+//       body: JSON.stringify(payload),
+//     })
+//       .then((response) => response.json())
+//       .then((result) => {
+//         // if (result.status === 200001) {
+//         //   addLocalStorageData(result);
+//         // }
+//         return resolve({ result });
+//       })
+//       .catch((error) => {
+//         console.log("error::", error);
+//         rejects({ error });
+//       });
+//   });
+// }

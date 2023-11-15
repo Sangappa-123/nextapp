@@ -10,7 +10,7 @@ import { login } from "@/services/LoginService";
 import { getCipherEncryptedText } from "@/utils/helper";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { useRouter } from "next/navigation";
-import { addSessionData, updateLoadingState } from "@/reducers/Session/SessionSlice";
+import { addSessionData } from "@/reducers/Session/SessionSlice";
 
 function LoginForm() {
   const dispatch = useAppDispatch();
@@ -34,27 +34,52 @@ function LoginForm() {
     let payload;
     const username = getCipherEncryptedText(data.username);
     const password = getCipherEncryptedText(data.password);
-    if(username && password) {
+    if (username && password) {
       payload = {
-        captchCode : "",
-        isHideCaptcha : process.env.NEXT_PUBLIC_HIDE_CAPTCHA?.toString(),
-        username : window.btoa(username),
-        password : window.btoa(password),
-     }
+        captchCode: "",
+        isHideCaptcha: process.env.NEXT_PUBLIC_HIDE_CAPTCHA?.toString(),
+        username: btoa(username),
+        password: btoa(password),
+      };
     }
-   const loginRes: any = await login(payload);
+    const loginRes: any = await login(payload);
     dispatch(addSessionData(localStorage));
-    if(loginRes.result.status === 200001) {
-      router.replace("/adjuster-dashboard");
+    if (loginRes.result.status === 200001) {
+      if (localStorage.getItem("resetPassword") === "true") {
+        router.replace("/security");
+      } else if (
+        localStorage.getItem("forgotPassword") === "true" &&
+        localStorage.getItem("securityQuestionsExists") == "false"
+      ) {
+        router.replace("/security");
+      } else if (
+        localStorage.getItem("forgotPassword") === "true" &&
+        localStorage.getItem("securityQuestionsExists") === "true"
+      ) {
+        router.replace("/reset-password");
+      } else if (
+        localStorage.getItem("forgotPassword") === "false" &&
+        localStorage.getItem("securityQuestionsExists") === "false" &&
+        localStorage.getItem("resetPassword") === "false"
+      ) {
+        router.replace("/security-question");
+      } else {
+        router.replace("/adjuster-dashboard");
+      }
     }
-  }
+  };
+
+  // const payload = {"registrationNumber": sessionStorage.getItem("jewelryVendor")}
+  // const payload = {"registrationNumber": "ARTGM"}
+
+  // const vendorDetailsRes = await getVendorDetails(payload);
+  //   var data ={
+  //     "registrationNumber": sessionStorage.getItem("jewelryVendor")
+  // };
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={loginFormStyle.loginForm__form}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className={loginFormStyle.loginForm__form}>
         <GenericInput
           showError={errors["username"]}
           errorMsg={errors?.username?.message}

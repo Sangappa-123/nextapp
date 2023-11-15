@@ -1,12 +1,25 @@
+// import { cookies } from "next/headers";
 // export const getHeader = () => {
 //   return {
 //       "Content-Type": "application/json",
 //       "Accept": "application/json",
-//       "X-Auth-Token": sessionStorage.getItem("AccessToken"),
+//       "X-Auth-Token": sessionStorage.getItem("accessToken"),
 //       "X-originator": sessionStorage.getItem("Xoriginator"),
 //       "Time-Zone": Intl.DateTimeFormat().resolvedOptions().timeZone
 //   }
 // };
+export const getHeader = () => {
+  // const cookieStore = cookies();
+  console.log("cookies", document.cookie);
+
+  return {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "X-Auth-Token": window.localStorage.getItem("accessToken"),
+    "X-originator": process.env.NEXT_PUBLIC_XORIGINATOR,
+    "Time-Zone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+};
 
 // export const getFileHeader = () => {
 //   return {
