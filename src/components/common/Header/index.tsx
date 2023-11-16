@@ -55,7 +55,9 @@ const NavBarMenu = () => {
       <div className={`${NavStyle.menuItems} ${isMenuOpen ? NavStyle.show : ""}`}>
         <div className={NavStyle.calendarIcon}>Calendar Icon</div>
         <div className={NavStyle.helpText}>Help</div>
-        <div className={NavStyle.helpText}>Sign Out</div>
+        <div className={NavStyle.signoutText} onClick={signoutHandle}>
+          Sign Out
+        </div>
       </div>
     </div>
   );
