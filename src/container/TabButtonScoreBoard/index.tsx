@@ -4,7 +4,11 @@ import TabsStyle from "./TabButtonScoreBoard.module.scss";
 
 const tabData = [
   { name: "This Month", content: <ScoreBoardsTableCards />, className: TabsStyle.tab1 },
-  { name: "This Quater(Oct-Dec)", content: "ddddd", className: TabsStyle.tab2 },
+  {
+    name: "This Quater(Oct-Dec)",
+    content: <ScoreBoardsTableCards />,
+    className: TabsStyle.tab2,
+  },
   { name: "This Year", content: "ddddd", className: TabsStyle.tab2 },
 ];
 

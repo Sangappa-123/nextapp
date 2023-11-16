@@ -11,7 +11,7 @@ type Tab = {
 
 type TabsProps = {
   tabData: Tab[];
-  showBorders?: boolean; // New prop to control border visibility
+  showBorders?: boolean;
 };
 
 const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {

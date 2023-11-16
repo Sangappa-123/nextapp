@@ -13,7 +13,8 @@ const Cards: React.FC<CardProps> = ({ width, height, children, className, ...res
     border: "1px solid #ccc",
     borderRadius: "8px",
     padding: "8px",
-    margin: "10px",
+    marginTop: "10px",
+    boxShadow: "0px 3px 6px 0px #ddd",
   };
 
   return (
