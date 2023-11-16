@@ -3,8 +3,8 @@ import AlertComponent1 from "@/components/AlertComponent1";
 import TabsStyle from "./TabsButton.module.scss";
 
 const tabData = [
-  { name: "Tab 1", content: <AlertComponent1 />, className: TabsStyle.tab1 },
-  { name: "Tab 2", content: "ddddd", className: TabsStyle.tab2 },
+  { name: "Notifications", content: <AlertComponent1 />, className: TabsStyle.tab1 },
+  { name: "Messages", content: "ddddd", className: TabsStyle.tab2 },
   { name: "Tab 2", content: "ddddd", className: TabsStyle.tab2 },
   { name: "Tab 2", content: "ddddd", className: TabsStyle.tab2 },
 ];
@@ -12,7 +12,7 @@ const tabData = [
 const TabsButton = () => {
   return (
     <div>
-      <TabsButtonComponent tabData={tabData} showBorders={false} />
+      <TabsButtonComponent tabData={tabData} showBorders={true} />
     </div>
   );
 };

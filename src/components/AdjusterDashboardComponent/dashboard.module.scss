@@ -14,21 +14,29 @@
 }
 
 .cardsStylAdjustAlert {
-  max-width: 600px;
-  min-height: 440px;
+  // max-width: 600px;
+  min-height: 400px;
+  // margin-left: 10px;
 }
 
 .cardsStylAdjustScore {
-  max-width: 600px;
-  min-height: 200px;
+  // max-width: 600px;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-right: 9px;
+  // margin-bottom: 15px;
 }
 
-// .cardsStylClaims{
-//     max-width: 200px;
-//     min-height: 200px;
-// }
+.cardsStylClaims {
+  margin-left: -11px;
+}
 
 // .cardsStylVendor{
 //     max-width: 600px;
 //     min-height: 200px;
 // }
+.cardddd {
+  margin-top: 12px;
+  margin-left: 10px;
+}
