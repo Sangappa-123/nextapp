@@ -8,6 +8,8 @@ enum apiEndPoints {
   changePassword = "web/update/password",
   saveSecurityQuestion = "web/save/security/answer",
   forgotPassword = "customer/forgetpassword",
+  randomQuestion = "web/get/selected/question/",
+  verifySecurityQuestion = "web/verify/security/answer/",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

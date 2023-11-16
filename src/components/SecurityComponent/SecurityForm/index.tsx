@@ -45,13 +45,19 @@ function SecurityForm() {
       };
     }
     const changePasswordRes: any = await changePassword(payload);
-    // if(changePasswordRes)
     console.log("changePasswordRes", changePasswordRes);
 
     if (changePasswordRes.result.status === 200) {
-      router.replace("/security-question");
+      if (
+        localStorage.getItem("forgotPassword") === "false" &&
+        localStorage.getItem("securityQuestionsExists") === "false" &&
+        localStorage.getItem("resetPassword") === "false"
+      ) {
+        router.replace("/security-question");
+      } else {
+        router.replace("/adjuster-dashboard");
+      }
     }
-    // console.log("changePasswordRes", changePasswordRes);
   };
 
   return (
