@@ -23,12 +23,10 @@ async function LoginContainer() {
             "col-12"
           )}
         >
-          {/* @ts-expect-error Server Component */}
           <LoginComponent />
         </div>
       </div>
       <div className={loginContainerStyle.loginContainer__footer}>
-        {/* @ts-expect-error Server Component */}
         <Footer />
       </div>
     </div>
