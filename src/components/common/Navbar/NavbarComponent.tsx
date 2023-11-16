@@ -11,6 +11,7 @@ type TypeMenuoption = {
 
 export type TypedMenuObject = {
   label: string;
+  active?: boolean;
   dropdown?: TypeMenuoption[];
 };
 
@@ -27,7 +28,7 @@ export default function NavbarComponent(props: TypedProps) {
           key={`menu_${i}`}
           id={`menu_${i}`}
           className={clsx(MenuBarStyle.navItems, {
-            [MenuBarStyle.selected]: i === 0,
+            [MenuBarStyle.selected]: item.active,
           })}
           data-name={`menu_${i}`}
           onMouseOver={(e: any) => {

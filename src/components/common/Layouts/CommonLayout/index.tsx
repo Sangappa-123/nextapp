@@ -5,7 +5,7 @@ import securityLayoutStyle from "./commonLayout.module.scss";
 import Header from "@/components/common/Header/index";
 
 const menu: TypedMenuObject[] = [
-  { label: "My Claims" },
+  { label: "My Claims", active: true },
   { label: "All Claims" },
   {
     label: "Reports",
