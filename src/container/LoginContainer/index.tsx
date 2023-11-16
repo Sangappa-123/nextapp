@@ -24,7 +24,7 @@ async function LoginContainer({ lang }: { lang: Locale }) {
             "col-12"
           )}
         >
-          <LoginComponent lang={lang} />
+          <LoginComponent lang={lang} heading={data?.attachments[0]?.description} />
         </div>
       </div>
       <div className={loginContainerStyle.loginContainer__footer}>

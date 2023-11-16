@@ -9,15 +9,13 @@ import { loginTranslateType } from "@/translations/loginTranslate/en";
 import { Locale } from "@/i18n.config";
 import { getTranslate } from "@/translations";
 
-async function LoginComponent({ lang }: { lang: Locale }) {
+async function LoginComponent({ lang, heading = "" }: { lang: Locale; heading: string }) {
   // const translate: loginTranslateType = await getServerTranslation("loginTranslate");
   const translate: loginTranslateType = await getTranslate(lang, "loginTranslate");
   const { data }: any = await GetComponyLogo();
   return (
     <div className={loginComponentStyle.loginComponent}>
-      <h1 className={loginComponentStyle.loginComponent__heading}>
-        Insurance company Portal
-      </h1>
+      <h1 className={loginComponentStyle.loginComponent__heading}>{heading}</h1>
       <div className={loginComponentStyle.loginComponent__container}>
         <div className={loginComponentStyle.loginComponent__content}>
           <Image
