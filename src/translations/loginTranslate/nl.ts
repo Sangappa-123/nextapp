@@ -1,6 +1,6 @@
 const translate = {
-  welcomeMsg: "Welcome back!",
-  forgotPasswordLink: "Forgot Your Password?",
+  welcomeMsg: "Welcome back! nl",
+  forgotPasswordLink: "Forgot Your Password? nl",
 };
 
 export { translate };

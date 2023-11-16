@@ -11,8 +11,9 @@ import { getCipherEncryptedText } from "@/utils/helper";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { useRouter } from "next/navigation";
 import { addSessionData } from "@/reducers/Session/SessionSlice";
+import { loginTranslateType } from "@/translations/loginTranslate/en";
 
-function LoginForm() {
+function LoginForm({ translate }: { translate: loginTranslateType }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const schema = object({
@@ -97,7 +98,7 @@ function LoginForm() {
         />
         <GenericButton label="Login" type="submit" />
         <Link className={loginFormStyle.link} href="/forgot-password">
-          Forgot Your Password?
+          {translate.forgotPasswordLink}
         </Link>
         <GenericButton label="Sign in with SSO" theme="darkBlue" />
       </form>

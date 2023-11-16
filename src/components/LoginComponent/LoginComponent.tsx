@@ -4,8 +4,14 @@ import LoginForm from "./LoginForm";
 import loginComponentStyle from "./loginComponent.module.scss";
 import clsx from "clsx";
 import { GetComponyLogo } from "@/services/LoginService";
+// import getServerTranslation from "@/translations/getServerTranslation";
+import { loginTranslateType } from "@/translations/loginTranslate/en";
+import { Locale } from "@/i18n.config";
+import { getTranslate } from "@/translations";
 
-async function LoginComponent() {
+async function LoginComponent({ lang }: { lang: Locale }) {
+  // const translate: loginTranslateType = await getServerTranslation("loginTranslate");
+  const translate: loginTranslateType = await getTranslate(lang, "loginTranslate");
   const { data }: any = await GetComponyLogo();
   return (
     <div className={loginComponentStyle.loginComponent}>
@@ -30,9 +36,9 @@ async function LoginComponent() {
           })}
         >
           <h3 className={loginComponentStyle.loginComponent__subHeading}>
-            Welcome back!
+            {translate.welcomeMsg}
           </h3>
-          <LoginForm />
+          <LoginForm translate={translate} />
         </div>
       </div>
     </div>

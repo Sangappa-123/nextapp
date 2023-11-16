@@ -4,8 +4,9 @@ import Footer from "@/components/common/Footer";
 import loginContainerStyle from "./loginContainer.module.scss";
 import clsx from "clsx";
 import { GetComponyBackgroundImage } from "@/services/LoginService";
+import { Locale } from "@/i18n.config";
 
-async function LoginContainer() {
+async function LoginContainer({ lang }: { lang: Locale }) {
   const { data }: any = await GetComponyBackgroundImage();
   const imageUrl = data?.attachments[0]?.url;
   return (
@@ -23,7 +24,7 @@ async function LoginContainer() {
             "col-12"
           )}
         >
-          <LoginComponent />
+          <LoginComponent lang={lang} />
         </div>
       </div>
       <div className={loginContainerStyle.loginContainer__footer}>

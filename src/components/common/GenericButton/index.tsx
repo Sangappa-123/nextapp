@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import buttonStyle from "./genericButton.module.scss";
 
-export enum btnThemes {
+enum btnThemes {
   lightBlue = "light-blue",
   darkBlue = "dark-blue",
   normal = "normal-button",

@@ -1,10 +1,16 @@
 import { Locale, i18n } from "@/i18n.config";
+import { translatePageType } from "./translationStore";
 
 const translate = {
-  en: () => import("@/translations/loginTranslate/en").then((module) => module.default),
-  nl: () =>
-    import("@/translations/loginTranslate/nl.json").then((module) => module.default),
+  en: (path: string) =>
+    import(`@/translations/${path}/en`).then((module) => {
+      return module.translate;
+    }),
+  nl: (path: string) =>
+    import(`@/translations/${path}/nl`).then((module) => {
+      return module.translate;
+    }),
 };
 
-export const getDictionary = async (locale: Locale) =>
-  translate[locale]?.() ?? translate[i18n.defaultLocale]();
+export const getTranslate = async (locale: Locale, path: translatePageType) =>
+  translate[locale]?.(path) ?? translate[i18n.defaultLocale](path);

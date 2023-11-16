@@ -7,21 +7,32 @@ function getLocale(request: NextRequest): string | undefined {
   const negotiatorHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
-  // @ts-ignore locales are readonly
+  // @ts-expect-error locales are readonly
   const locales: string[] = i18n.locales;
-  let languages = new Negotiator({ headers: negotiatorHeaders }).languages(locales);
+  const languages = new Negotiator({ headers: negotiatorHeaders }).languages(locales);
   const locale = matchLocale(languages, locales, i18n.defaultLocale);
   return locale;
 }
-
 export default function middleware(req: NextRequest) {
-  // const url = req.nextUrl.clone();
   const pathname = req.nextUrl.pathname;
-
-  if (pathname == "/") {
+  const tempLocale = pathname.trim().split("/")[1];
+  let urlHasLocale = false;
+  if (tempLocale.length === 2) {
+    urlHasLocale = true;
+  }
+  if ((urlHasLocale && pathname === `/${tempLocale}`) || pathname == "/") {
     const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    if (urlHasLocale) {
+      url.pathname = `/${tempLocale}/login`;
+    } else {
+      url.pathname = "/login";
+    }
+    const redirect = NextResponse.redirect(url);
+    if (tempLocale) {
+      redirect.cookies.set("lang", tempLocale);
+    }
+    return redirect;
+    // return NextResponse.redirect(url)
   }
 
   /*------------For localization---------------*/
@@ -30,10 +41,29 @@ export default function middleware(req: NextRequest) {
   );
   if (pathnameIsMissingLocale) {
     const locale = getLocale(req);
-    return NextResponse.rewrite(
+    if (urlHasLocale) {
+      const newPathname = pathname.replace(`/${tempLocale}`, "");
+      const rewrite = NextResponse.rewrite(
+        new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${newPathname}`, req.url)
+      );
+      rewrite.cookies.set("lang", locale || "");
+      return rewrite;
+      // return NextResponse.rewrite(
+      //   new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${newPathname}`, req.url)
+      // );
+    }
+    const rewrite = NextResponse.rewrite(
       new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, req.url)
     );
+    rewrite.cookies.set("lang", locale || "");
+    return rewrite;
+    // return NextResponse.rewrite(
+    //   new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, req.url)
+    // );
   }
+  const res = NextResponse.next();
+  res.cookies.set("lang", tempLocale || "");
+  return res;
 }
 
 export const config = {
