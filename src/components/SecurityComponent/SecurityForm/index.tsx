@@ -10,8 +10,11 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { getCipherEncryptedText } from "@/utils/helper";
 import { changePassword } from "@/services/MyProfileService";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 function SecurityForm() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const schema = object({
     currentPassword: string("Please enter your current password", [
@@ -48,6 +51,12 @@ function SecurityForm() {
     console.log("changePasswordRes", changePasswordRes);
 
     if (changePasswordRes.result.status === 200) {
+      dispatch(
+        addNotification({
+          message: "The password was updated successfully",
+          id: "password-update",
+        })
+      );
       if (
         localStorage.getItem("forgotPassword") === "false" &&
         localStorage.getItem("securityQuestionsExists") === "false"
