@@ -8,8 +8,11 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { Output, email, minLength, object, string } from "valibot";
 import { useRouter } from "next/navigation";
 import { forgotPassword } from "@/services/ForgetpasswordService";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 function ForgotPasswordForm() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const schema = object({
     email: string("Your email must be a string.", [
@@ -33,6 +36,11 @@ function ForgotPasswordForm() {
     };
     const response: any = await forgotPassword(payload);
     if (response.result.status === 200) {
+      const notifyPayload = {
+        message: `An email has been sent to ${data.email} with details to reset password.`,
+        id: "reset-email",
+      };
+      dispatch(addNotification(notifyPayload));
       router.replace("/login");
     }
   };

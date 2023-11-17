@@ -10,19 +10,22 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { getCipherEncryptedText } from "@/utils/helper";
 import { changePassword } from "@/services/MyProfileService";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 function SecurityForm() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const schema = object({
     currentPassword: string("Please enter your current password", [
       minLength(1, "Please enter your current password"),
     ]),
     newPassword: string("Confirmpass", [
-      minLength(1, "Please enter your password."),
+      minLength(1, "Please enter your new password."),
       minLength(8, "The entered password does not meet the above requirements."),
     ]),
     confirmPass: string("Confirmpass", [
-      minLength(1, "Please enter your password."),
+      minLength(1, "Please confirm your new password."),
       minLength(8, "The entered password does not meet the above requirements."),
     ]),
   });
@@ -48,10 +51,15 @@ function SecurityForm() {
     console.log("changePasswordRes", changePasswordRes);
 
     if (changePasswordRes.result.status === 200) {
+      dispatch(
+        addNotification({
+          message: "The password was updated successfully",
+          id: "password-update",
+        })
+      );
       if (
         localStorage.getItem("forgotPassword") === "false" &&
-        localStorage.getItem("securityQuestionsExists") === "false" &&
-        localStorage.getItem("resetPassword") === "false"
+        localStorage.getItem("securityQuestionsExists") === "false"
       ) {
         router.replace("/security-question");
       } else {
@@ -83,7 +91,10 @@ function SecurityForm() {
             inputFieldClassname={securityFormStyle.inputFieldClassname}
             label="current password"
             id="currentPassword"
+            type="password"
             placeholder="Current Password"
+            errorMsg={errors?.currentPassword?.message}
+            showError={errors["currentPassword"]}
             {...register("currentPassword")}
           />
           <PasswordValidationCondition />
@@ -94,9 +105,10 @@ function SecurityForm() {
             inputFieldClassname={securityFormStyle.inputFieldClassname}
             label="new password"
             id="newPassword"
+            type="password"
             placeholder="New Password"
             errorMsg={errors?.newPassword?.message}
-            showError={errors["newPassword"]}
+            showError={!errors["currentPassword"] && errors["newPassword"]}
             {...register("newPassword")}
           />
           <GenericInput
@@ -106,17 +118,22 @@ function SecurityForm() {
             inputFieldClassname={securityFormStyle.inputFieldClassname}
             label="Confirm Password"
             id="confirmPass"
+            type="password"
             placeholder="Confirm Password"
             errorMsg={errors?.confirmPass?.message}
-            showError={errors["confirmPass"]}
+            showError={
+              !errors["currentPassword"] &&
+              !errors["newPassword"] &&
+              errors["confirmPass"]
+            }
             {...register("confirmPass")}
           />
         </div>
       </div>
       <GenericButton
-        btnClassname="mt-2"
+        btnClassname="mt-2 ms-auto w-fit"
         label="Change Password"
-        theme="normal"
+        // theme="normal"
         disabled={!isDirty}
         type="submit"
       />

@@ -5,7 +5,7 @@ import Loading from "../../loading";
 function ResetPassword() {
   return (
     <Suspense fallback={<Loading />}>
-      <ResetPasswordContainer />;
+      <ResetPasswordContainer />
     </Suspense>
   );
 }
