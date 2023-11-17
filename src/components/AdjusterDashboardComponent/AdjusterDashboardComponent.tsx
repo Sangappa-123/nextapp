@@ -6,6 +6,9 @@ import AlertCards from "../common/AlertCards";
 import MyScoreBoardCards from "../common/MyScoreBoardCards";
 import PendingVendorCards from "../common/PendingVendorCards";
 import ClaimsCards from "../common/ClaimsCards";
+// import OpenClaimsTableContainer from "@/container/OpenClaimsTableContainer";
+// import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
+import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
 
 export default function DashboardComponent() {
   return (
@@ -60,6 +63,11 @@ export default function DashboardComponent() {
               </Cards>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-lg-12 col-md-12 col-12">
+          <OpenClaimsTableComponent />
         </div>
       </div>
     </div>
