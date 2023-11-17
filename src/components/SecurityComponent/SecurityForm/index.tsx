@@ -50,8 +50,7 @@ function SecurityForm() {
     if (changePasswordRes.result.status === 200) {
       if (
         localStorage.getItem("forgotPassword") === "false" &&
-        localStorage.getItem("securityQuestionsExists") === "false" &&
-        localStorage.getItem("resetPassword") === "false"
+        localStorage.getItem("securityQuestionsExists") === "false"
       ) {
         router.replace("/security-question");
       } else {
