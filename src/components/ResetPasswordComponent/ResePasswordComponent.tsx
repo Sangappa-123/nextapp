@@ -21,6 +21,8 @@ function ResetPasswordComponent() {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -60,9 +62,21 @@ function ResetPasswordComponent() {
 
   const isButtonDisabled = answer.length === 0;
 
+  const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAnswer(e.target.value);
+    if (e.target.value.trim() === "") {
+      setError("answer", {
+        type: "manual",
+        message: "Answer is required",
+      });
+    } else {
+      clearErrors("answer");
+    }
+  };
+
   return (
     <form
-      className="col-md-6 col-12 d-flex flex-column"
+      className="col-lg-4 col-md-6 col-12 d-flex flex-column"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={ResetPasswordComponentStyle.formContainer}>
@@ -72,15 +86,14 @@ function ResetPasswordComponent() {
             Answer
           </label>
           <GenericInput
+            inputFieldClassname={ResetPasswordComponentStyle.inputFieldClassname}
             placeholder="Enter Answer"
             showError={errors.answer}
             errorMsg={errors.answer?.message}
             isFixedError={true}
-            {...register("answer", { required: "Answer is required" })}
+            {...register("answer")}
             value={answer}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setAnswer(e.target.value)
-            }
+            onChange={handleAnswerChange}
           />
         </div>
       </div>
