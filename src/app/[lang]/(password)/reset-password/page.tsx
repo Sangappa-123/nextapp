@@ -1,8 +1,13 @@
 import ResetPasswordContainer from "@/container/PasswordContainer/ResetPasswordContainer";
-import React from "react";
+import React, { Suspense } from "react";
+import Loading from "../../loading";
 
 function ResetPassword() {
-  return <ResetPasswordContainer />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <ResetPasswordContainer />;
+    </Suspense>
+  );
 }
 
 export default ResetPassword;
