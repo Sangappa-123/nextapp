@@ -12,6 +12,8 @@ function NotifyMessage() {
       toast[notify?.status ?? "success"](notify?.message, {
         toastId: notify?.id,
         position: notify.position ?? toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+        className: notify.status ?? "success",
       });
     }
   }, [notifySelector]);
