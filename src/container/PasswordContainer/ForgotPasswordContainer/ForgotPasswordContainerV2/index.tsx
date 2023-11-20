@@ -16,13 +16,15 @@ async function ForgotPasswordContainerV2() {
       </div>
       <div className={fPWDStyle.content}>
         <div className={fPWDStyle.logo}>
-          <Image
-            alt="company_logo"
-            fill
-            src={data?.logo}
-            style={{ objectFit: "contain" }}
-            sizes="100%"
-          />
+          {data?.logo && (
+            <Image
+              alt="company_logo"
+              fill
+              src={data?.logo}
+              style={{ objectFit: "contain" }}
+              sizes="100%"
+            />
+          )}
         </div>
         <div className={fPWDStyle.forgotPwdContainer}>
           <ForgotPasswordComponent />

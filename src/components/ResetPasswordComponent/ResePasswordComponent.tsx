@@ -12,11 +12,14 @@ import {
   verifyAnswer,
 } from "@/services/ForgetpasswordService";
 import RandomQuestionComponent from "./RandomQuestionComponent";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 interface FormData {
   answer: string;
 }
 function ResetPasswordComponent() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     register,
@@ -57,6 +60,14 @@ function ResetPasswordComponent() {
     const resp: any = await verifyAnswer(payload);
     if (resp.result.status === 200) {
       router.replace("/security");
+    } else if (resp.result.errorMessage) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.errorMessage,
+          id: "verify-answer",
+          status: "error",
+        })
+      );
     }
   };
 
