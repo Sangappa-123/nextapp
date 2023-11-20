@@ -47,13 +47,11 @@ function SecurityForm() {
         newPassword: btoa(encryptedNewPass),
       };
     }
-    const changePasswordRes: any = await changePassword(payload);
-    console.log("changePasswordRes", changePasswordRes);
-
-    if (changePasswordRes.result.status === 200) {
+    const resp: any = await changePassword(payload);
+    if (resp.result.status === 200) {
       dispatch(
         addNotification({
-          message: "The password was updated successfully",
+          message: resp?.result?.message,
           id: "password-update",
         })
       );
@@ -65,6 +63,14 @@ function SecurityForm() {
       } else {
         router.replace("/adjuster-dashboard");
       }
+    } else if (resp?.result?.errorMessage) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.errorMessage,
+          id: "password-update",
+          status: "error",
+        })
+      );
     }
   };
 

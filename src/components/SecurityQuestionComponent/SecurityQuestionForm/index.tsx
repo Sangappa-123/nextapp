@@ -11,6 +11,8 @@ import { object, string, minLength, Output, number } from "valibot";
 import SecurityFieldComponent from "./SecurityFieldComponent";
 import { saveSecurityQuestion } from "@/services/MyProfileService";
 import { useRouter } from "next/navigation";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 interface TypedProp<T> {
   selectOptions: OptionTypedList<T>;
@@ -19,6 +21,7 @@ interface TypedProp<T> {
 function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>) {
   const { options } = useSelectOption(selectOptions);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const schema = object({
     question1: object({
@@ -63,9 +66,17 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
       ],
     };
 
-    const saveSecurityQuestionRes: any = await saveSecurityQuestion(questionAnswerList);
-    if (saveSecurityQuestionRes.result.status === 200) {
+    const resp: any = await saveSecurityQuestion(questionAnswerList);
+    if (resp.result.status === 200) {
       router.replace("/adjuster-dashboard");
+    } else if (resp?.result?.errorMessage) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.errorMessage,
+          id: "security-question",
+          status: "error",
+        })
+      );
     }
   };
 
