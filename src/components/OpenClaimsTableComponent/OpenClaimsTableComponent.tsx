@@ -14,7 +14,7 @@ function OpenClaimsTableComponent(): React.ReactNode {
         <OpenClaimsText />
       </div>
       <div className={OpenClaimsComponentStyleTable.claimContainer}>
-        <div className="row mt-2 p-1">
+        <div className={`row ${OpenClaimsComponentStyleTable.claimContentContainer}`}>
           <div className="col-lg-3 col-md-4 col-sm-12 d-flex align-items-center">
             <NewClaimButton />
           </div>
