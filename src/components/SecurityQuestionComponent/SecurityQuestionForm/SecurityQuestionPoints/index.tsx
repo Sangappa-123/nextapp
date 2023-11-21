@@ -1,18 +1,18 @@
 import React from "react";
 import securityQuestionPointsStyle from "./securityQuestionPoints.module.scss";
+import { securityQuestionTranslateType } from "@/translations/securityQuestionTranslate/en";
 
-function SecurityQuestionPoints() {
+function SecurityQuestionPoints({
+  translate,
+}: {
+  translate: securityQuestionTranslateType | undefined;
+}) {
   return (
-    <div
-      className={securityQuestionPointsStyle.securityQuestionPointsContainer}
-    >
+    <div className={securityQuestionPointsStyle.securityQuestionPointsContainer}>
       <ul className={securityQuestionPointsStyle.validationList}>
-        <li>* Select 3 security questions from the list and answer them.</li>
-        <li>
-          * These questions and answers will be needed when resetting you
-          password.
-        </li>
-        <li>* Fields are marked with * symbol are mandatory.</li>
+        {translate?.validatePoints?.points?.map((point, i) => (
+          <li key={`point-${i}`}>{point}</li>
+        ))}
       </ul>
     </div>
   );

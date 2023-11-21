@@ -5,9 +5,16 @@ import fPWDStyle from "./forgotPasswordContainerV2.module.scss";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent";
 import { GetComponyLogo } from "@/services/LoginService";
 import clsx from "clsx";
+import { Locale } from "@/i18n.config";
+import { getTranslate } from "@/translations";
+import { forgotPwdTranslateType } from "@/translations/forgotPasswordTranslate/en";
 
-async function ForgotPasswordContainerV2() {
+async function ForgotPasswordContainerV2({ lang }: { lang: Locale }) {
   const { data }: any = await GetComponyLogo();
+  const translate: forgotPwdTranslateType = await getTranslate(
+    lang,
+    "forgotPasswordTranslate"
+  );
 
   return (
     <div className={fPWDStyle.root}>
@@ -16,16 +23,18 @@ async function ForgotPasswordContainerV2() {
       </div>
       <div className={fPWDStyle.content}>
         <div className={fPWDStyle.logo}>
-          <Image
-            alt="company_logo"
-            fill
-            src={data?.logo}
-            style={{ objectFit: "contain" }}
-            sizes="100%"
-          />
+          {data?.logo && (
+            <Image
+              alt="company_logo"
+              fill
+              src={data?.logo}
+              style={{ objectFit: "contain" }}
+              sizes="100%"
+            />
+          )}
         </div>
         <div className={fPWDStyle.forgotPwdContainer}>
-          <ForgotPasswordComponent />
+          <ForgotPasswordComponent translate={translate} />
         </div>
       </div>
     </div>

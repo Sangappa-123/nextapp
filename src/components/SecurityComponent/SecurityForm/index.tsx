@@ -10,27 +10,38 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { getCipherEncryptedText } from "@/utils/helper";
 import { changePassword } from "@/services/MyProfileService";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import useTranslation from "@/hooks/useTranslation";
+import CustomLoader from "@/components/common/CustomLoader";
+import { securityTranslateType } from "@/translations/securityTranslate/en";
 
 function SecurityForm() {
+  const dispatch = useAppDispatch();
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: securityTranslateType | undefined } =
+    useTranslation("securityTranslate");
   const router = useRouter();
   const schema = object({
-    currentPassword: string("Please enter your current password", [
-      minLength(1, "Please enter your current password"),
+    currentPassword: string(translate?.errorMsg?.currentPassword?.requireError, [
+      minLength(1, translate?.errorMsg?.currentPassword?.requireError),
     ]),
-    newPassword: string("Confirmpass", [
-      minLength(1, "Please enter your password."),
-      minLength(8, "The entered password does not meet the above requirements."),
+    newPassword: string(translate?.errorMsg?.newPassword?.requireError, [
+      minLength(1, translate?.errorMsg?.newPassword?.requireError),
+      minLength(8, translate?.errorMsg?.newPassword?.requireError),
     ]),
-    confirmPass: string("Confirmpass", [
-      minLength(1, "Please enter your password."),
-      minLength(8, "The entered password does not meet the above requirements."),
+    confirmPass: string(translate?.errorMsg?.confirmPass?.requireError, [
+      minLength(1, translate?.errorMsg?.confirmPass?.requireError),
+      minLength(8, translate?.errorMsg?.confirmPass?.compareError),
     ]),
   });
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useCustomForm(schema);
 
   const onSubmit = async (data: Output<typeof schema>) => {
@@ -44,21 +55,47 @@ function SecurityForm() {
         newPassword: btoa(encryptedNewPass),
       };
     }
-    const changePasswordRes: any = await changePassword(payload);
-    console.log("changePasswordRes", changePasswordRes);
-
-    if (changePasswordRes.result.status === 200) {
+    const resp: any = await changePassword(payload);
+    if (resp.result.status === 200) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.message,
+          id: "password-update",
+        })
+      );
       if (
         localStorage.getItem("forgotPassword") === "false" &&
-        localStorage.getItem("securityQuestionsExists") === "false" &&
-        localStorage.getItem("resetPassword") === "false"
+        localStorage.getItem("securityQuestionsExists") === "false"
       ) {
         router.replace("/security-question");
       } else {
         router.replace("/adjuster-dashboard");
       }
+    } else if (resp?.result?.errorMessage) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.errorMessage,
+          id: "password-update",
+          status: "error",
+        })
+      );
     }
   };
+
+  if (loading) {
+    return (
+      <div
+        className={clsx({
+          "col-12": true,
+          "d-flex": true,
+          "flex-column": true,
+          "position-relative": true,
+        })}
+      >
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
 
   return (
     <form
@@ -74,29 +111,33 @@ function SecurityForm() {
           [securityFormStyle.securityFormContainer]: true,
         })}
       >
-        <div>Password</div>
+        <div>{translate?.subHeading}</div>
         <div className={securityFormStyle.formGroup}>
           <GenericInput
             formControlClassname={clsx({
               [securityFormStyle.formControl]: true,
             })}
             inputFieldClassname={securityFormStyle.inputFieldClassname}
-            label="current password"
+            label={translate?.inputFields?.currentPwd?.label}
             id="currentPassword"
-            placeholder="Current Password"
+            type="password"
+            placeholder={translate?.inputFields?.currentPwd?.placeholder}
+            errorMsg={errors?.currentPassword?.message}
+            showError={errors["currentPassword"]}
             {...register("currentPassword")}
           />
-          <PasswordValidationCondition />
+          <PasswordValidationCondition translate={translate} />
           <GenericInput
             formControlClassname={clsx({
               [securityFormStyle.formControl]: true,
             })}
             inputFieldClassname={securityFormStyle.inputFieldClassname}
-            label="new password"
+            label={translate?.inputFields?.newPwd?.label}
             id="newPassword"
-            placeholder="New Password"
+            type="password"
+            placeholder={translate?.inputFields?.newPwd?.placeholder}
             errorMsg={errors?.newPassword?.message}
-            showError={errors["newPassword"]}
+            showError={!errors["currentPassword"] && errors["newPassword"]}
             {...register("newPassword")}
           />
           <GenericInput
@@ -104,20 +145,24 @@ function SecurityForm() {
               [securityFormStyle.formControl]: true,
             })}
             inputFieldClassname={securityFormStyle.inputFieldClassname}
-            label="Confirm Password"
+            label={translate?.inputFields?.confirmPwd?.label}
             id="confirmPass"
-            placeholder="Confirm Password"
+            type="password"
+            placeholder={translate?.inputFields?.confirmPwd?.placeholder}
             errorMsg={errors?.confirmPass?.message}
-            showError={errors["confirmPass"]}
+            showError={
+              !errors["currentPassword"] &&
+              !errors["newPassword"] &&
+              errors["confirmPass"]
+            }
             {...register("confirmPass")}
           />
         </div>
       </div>
       <GenericButton
-        btnClassname="mt-2"
-        label="Change Password"
-        theme="normal"
-        disabled={!isDirty}
+        btnClassname="mt-2 ms-auto w-fit"
+        label={translate?.inputFields?.submitBtn?.label ?? ""}
+        // theme="normal"
         type="submit"
       />
     </form>

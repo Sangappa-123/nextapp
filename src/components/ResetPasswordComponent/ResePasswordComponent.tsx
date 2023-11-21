@@ -12,11 +12,19 @@ import {
   verifyAnswer,
 } from "@/services/ForgetpasswordService";
 import RandomQuestionComponent from "./RandomQuestionComponent";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { resetPasswordTranslateType } from "@/translations/resetPasswordTranslate/en";
 
 interface FormData {
   answer: string;
 }
-function ResetPasswordComponent() {
+function ResetPasswordComponent({
+  translate,
+}: {
+  translate: resetPasswordTranslateType;
+}) {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     register,
@@ -57,6 +65,14 @@ function ResetPasswordComponent() {
     const resp: any = await verifyAnswer(payload);
     if (resp.result.status === 200) {
       router.replace("/security");
+    } else if (resp.result.errorMessage) {
+      dispatch(
+        addNotification({
+          message: resp?.result?.errorMessage,
+          id: "verify-answer",
+          status: "error",
+        })
+      );
     }
   };
 
@@ -80,14 +96,17 @@ function ResetPasswordComponent() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={ResetPasswordComponentStyle.formContainer}>
-        <RandomQuestionComponent question={question} />
+        <RandomQuestionComponent
+          question={question}
+          label={translate?.inputFields?.qestionLabel}
+        />
         <div className={ResetPasswordComponentStyle.answerContainer}>
           <label htmlFor="answer" className={ResetPasswordComponentStyle.label}>
-            Answer
+            {translate?.inputFields?.answerLabel}
           </label>
           <GenericInput
             inputFieldClassname={ResetPasswordComponentStyle.inputFieldClassname}
-            placeholder="Enter Answer"
+            placeholder={translate?.inputFields?.answerPlaceholder}
             showError={errors.answer}
             errorMsg={errors.answer?.message}
             isFixedError={true}
@@ -98,7 +117,7 @@ function ResetPasswordComponent() {
         </div>
       </div>
       <GenericButton
-        label="Verify Answer"
+        label={translate?.inputFields?.submitBtn}
         btnClassname={clsx("my-3", ResetPasswordComponentStyle.actionBtn)}
         type="submit"
         disabled={isButtonDisabled}

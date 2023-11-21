@@ -1,8 +1,8 @@
 import ForgotPasswordContainer from "@/container/PasswordContainer/ForgotPasswordContainer";
-import React from "react";
+import { Locale } from "@/i18n.config";
 
-function ForgotPassword() {
-  return <ForgotPasswordContainer />;
+function ForgotPassword({ params }: { params: { lang: Locale } }) {
+  return <ForgotPasswordContainer lang={params.lang} />;
 }
 
 export default ForgotPassword;

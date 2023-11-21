@@ -18,11 +18,11 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
   const router = useRouter();
   const schema = object({
     username: string("Your email must be a string.", [
-      minLength(1, "User name field is required."),
-      email("Please enter valid email."),
+      minLength(1, translate?.inputErrors?.userNameRequired),
+      email(translate?.inputErrors?.invalidEmail),
     ]),
     password: string("Your password must be a string.", [
-      minLength(1, "Password field is required."),
+      minLength(1, translate?.inputErrors?.passwordRequired),
     ]),
   });
 
@@ -78,29 +78,31 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
   //     "registrationNumber": sessionStorage.getItem("jewelryVendor")
   // };
 
+  // if (loading) return null;
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={loginFormStyle.loginForm__form}>
         <GenericInput
           showError={errors["username"]}
           errorMsg={errors?.username?.message}
-          placeholder="Username or Agencycode"
+          placeholder={translate?.inputFields?.usernamePlaceholder}
           id="username"
           {...register("username")}
         />
         <GenericInput
           showError={!errors["username"] && errors["password"]}
           errorMsg={errors?.password?.message}
-          placeholder="Password"
+          placeholder={translate?.inputFields?.passwordPlaceholder}
           type="password"
           id="password"
           {...register("password")}
         />
-        <GenericButton label="Login" type="submit" />
+        <GenericButton label={translate?.inputFields?.submitBtn} type="submit" />
         <Link className={loginFormStyle.link} href="/forgot-password">
-          {translate.forgotPasswordLink}
+          {translate?.forgotPasswordLink}
         </Link>
-        <GenericButton label="Sign in with SSO" theme="darkBlue" />
+        <GenericButton label={translate?.inputFields?.ssoBtn} theme="darkBlue" />
       </form>
     </>
   );

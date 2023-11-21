@@ -11,7 +11,6 @@ const SecurityFieldComponent = ({
   errors,
   register,
   inputData,
-  setValue,
 }: any) => {
   const {
     selectLabel,
@@ -21,15 +20,9 @@ const SecurityFieldComponent = ({
     inputId,
     inputName,
     selectName,
-    valueField,
   } = inputData;
   return (
-    <div
-      className={clsx(
-        "d-flex flex-column",
-        securityQuestionFormStyle.formGroup
-      )}
-    >
+    <div className={clsx("d-flex flex-column", securityQuestionFormStyle.formGroup)}>
       <Controller
         control={control}
         name={selectName}
@@ -42,10 +35,6 @@ const SecurityFieldComponent = ({
             showError={errors[selectName]}
             errorMsg={errors[selectName]?.message}
             name={selectName}
-            // onChange={(data: any) => {
-            //   setValue(selectName, data?.[valueField]);
-            //   value = data;
-            // }}
             {...rest}
           />
         )}

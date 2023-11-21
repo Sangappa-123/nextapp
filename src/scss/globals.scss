@@ -43,6 +43,9 @@ ol {
 .position-absolute {
   position: absolute;
 }
+.position-relative {
+  position: relative;
+}
 
 a {
   color: $astral;
@@ -57,4 +60,10 @@ a {
 }
 .row {
   margin: 0;
+}
+.w-fit {
+  width: fit-content;
+}
+.Toastify__toast-container {
+  width: fit-content;
 }
