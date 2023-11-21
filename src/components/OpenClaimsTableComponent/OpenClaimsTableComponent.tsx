@@ -6,8 +6,15 @@ import NewClaimButton from "./NewClaimButton";
 import OpenClaimSelectDropdown from "./OpenClaimSelectDropdown";
 import OpenClaimsSearchBox from "./OpenClaimsSearchBox/OpenClaimsSearchBox";
 import OpenClaimsComponentStyleTable from "./OpenClaimsTableComponent.module.scss";
+import OpenClaimTable from "./OpenClaimTable/index";
+import { fetchClaimList } from "@/services/ClaimService";
 
 function OpenClaimsTableComponent(): React.ReactNode {
+  const result = fetchClaimList();
+  const { data = [], error }: any = result;
+  if (!error && data) {
+    console.log("Success");
+  }
   return (
     <>
       <div className="mt-4">
@@ -25,6 +32,10 @@ function OpenClaimsTableComponent(): React.ReactNode {
             <OpenClaimsSearchBox />
           </div>
         </div>
+      </div>
+
+      <div className="row">
+        <OpenClaimTable />
       </div>
     </>
   );
