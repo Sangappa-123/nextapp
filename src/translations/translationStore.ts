@@ -3,6 +3,7 @@ enum translatePage {
   forgotPasswordTranslate = "forgotPasswordTranslate",
   securityTranslate = "securityTranslate",
   securityQuestionTranslate = "securityQuestionTranslate",
+  resetPasswordTranslate = "resetPasswordTranslate",
 }
 
 export type translatePageType = keyof typeof translatePage;

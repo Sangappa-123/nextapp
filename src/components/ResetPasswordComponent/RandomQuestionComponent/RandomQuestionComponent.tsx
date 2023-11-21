@@ -5,7 +5,7 @@ function RandomQuestionComponent(props: any) {
   return (
     // <Suspense
     <div className={RandomQuestionStyle.questionContainer}>
-      <label htmlFor="question">Question</label>
+      <label htmlFor="question">{props.label}</label>
       <h4>{props.question}</h4>
     </div>
   );
