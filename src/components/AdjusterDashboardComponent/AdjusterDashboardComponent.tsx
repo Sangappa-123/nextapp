@@ -14,50 +14,22 @@ export default function DashboardComponent() {
   return (
     <div className={CardsStyle.cardddd}>
       <div className="row">
-        <div
-          className={clsx({
-            "col-lg-6": true,
-            "col-md-12": true,
-            "col-sm-12": true,
-            "col-xs-12": true,
-          })}
-        >
+        <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <Cards className={CardsStyle.cardsStylAdjustAlert}>
             <AlertCards />
           </Cards>
         </div>
-        <div
-          className={clsx({
-            "col-lg-6": true,
-            "col-md-12": true,
-            "col-sm-12": true,
-            "col-xs-12": true,
-          })}
-        >
+        <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <Cards className={CardsStyle.cardsStylAdjustScore}>
             <MyScoreBoardCards />
           </Cards>
           <div className={clsx("row", CardsStyle.cardsStylClaimsRow)}>
-            <div
-              className={clsx({
-                "col-lg-6": true,
-                "col-md-6": true,
-                "col-sm-12": true,
-                "col-xs-12": true,
-              })}
-            >
+            <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
               <Cards className={CardsStyle.cardsStylClaims}>
                 <ClaimsCards />
               </Cards>
             </div>
-            <div
-              className={clsx({
-                "col-lg-6": true,
-                "col-md-6": true,
-                "col-sm-12": true,
-                "col-xs-12": true,
-              })}
-            >
+            <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
               <Cards className={CardsStyle.cardsStylVendor}>
                 <PendingVendorCards />
               </Cards>

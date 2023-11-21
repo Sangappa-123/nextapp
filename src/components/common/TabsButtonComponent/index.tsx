@@ -23,13 +23,7 @@ const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {
 
   return (
     <div className={TabsButtonStyle.tabWidth}>
-      <div
-        className={clsx({
-          "col-md-12": true,
-          "col-sm-12": true,
-          "col-xs-12": true,
-        })}
-      >
+      <div className="col-md-12 col-sm-12 col-xs-12">
         <div
           className={clsx(
             TabsButtonStyle.tabList,
