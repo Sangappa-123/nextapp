@@ -2,18 +2,16 @@ import React from "react";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import fPWDCStyle from "./forgotPasswordComponent.module.scss";
+import { forgotPwdTranslateType } from "@/translations/forgotPasswordTranslate/en";
 
-function ForgotPasswordComponent() {
+function ForgotPasswordComponent({ translate }: { translate: forgotPwdTranslateType }) {
   return (
     <div className={fPWDCStyle.main}>
-      <GenericComponentHeading title="Forgot Password?" />
+      <GenericComponentHeading title={translate?.heading} />
       <div className={fPWDCStyle.fogotPasswordContent}>
-        <div className={fPWDCStyle.subHeading}>
-          Provide your email address and we&apos;ll send you link to reset your
-          password.
-        </div>
+        <div className={fPWDCStyle.subHeading}>{translate?.subHeading}</div>
       </div>
-      <ForgotPasswordForm />
+      <ForgotPasswordForm translate={translate} />
     </div>
   );
 }

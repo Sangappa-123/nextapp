@@ -10,14 +10,15 @@ import { useRouter } from "next/navigation";
 import { forgotPassword } from "@/services/ForgetpasswordService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { forgotPwdTranslateType } from "@/translations/forgotPasswordTranslate/en";
 
-function ForgotPasswordForm() {
+function ForgotPasswordForm({ translate }: { translate: forgotPwdTranslateType }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const schema = object({
-    email: string("Your email must be a string.", [
-      minLength(1, "Email is required."),
-      email("Please enter valid email."),
+    email: string(translate?.errorMsg?.email?.required, [
+      minLength(1, translate?.errorMsg?.email?.required),
+      email(translate?.errorMsg?.email?.invalid),
     ]),
   });
 
@@ -48,8 +49,8 @@ function ForgotPasswordForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={fPWDFormStyle.root}>
       <GenericInput
-        label="Email Address"
-        placeholder="Email"
+        label={translate?.inputField?.label}
+        placeholder={translate?.inputField?.placeholder}
         formControlClassname={fPWDFormStyle.formControl}
         inputFieldClassname={fPWDFormStyle.inputField}
         labelClassname={fPWDFormStyle.label}
@@ -61,10 +62,10 @@ function ForgotPasswordForm() {
       />
       <div className={fPWDFormStyle.actionDiv}>
         <Link href="/login" className={fPWDFormStyle.backBtn}>
-          Back to Login Page
+          {translate?.inputField?.backBtn}
         </Link>
         <GenericButton
-          label="Reset"
+          label={translate?.inputField?.submitBtn}
           // theme="normal"
           type="submit"
           btnClassname={fPWDFormStyle.resetBtn}
