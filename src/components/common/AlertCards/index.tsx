@@ -1,12 +1,12 @@
 import React from "react";
 import GenericComponentHeading from "../GenericComponentHeading";
-import TabsButton from "@/container/TabsButton";
+import AlertTabsButton from "./AlertTabsButton";
 
 const AlertCards: React.FC = () => {
   return (
     <div>
       <GenericComponentHeading title="Alert" />
-      <TabsButton />
+      <AlertTabsButton />
     </div>
   );
 };

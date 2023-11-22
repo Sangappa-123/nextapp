@@ -1,6 +1,6 @@
 import React from "react";
 import GenericComponentHeading from "../GenericComponentHeading";
-import TabsButtonScoreBoard from "@/container/TabButtonScoreBoard";
+import TabsButtonScoreBoard from "@/components/ScoreBoardsComponent/TabButtonScoreBoard";
 
 const MyScoreBoardCards: React.FC = () => {
   return (

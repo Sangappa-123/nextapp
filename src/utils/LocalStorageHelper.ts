@@ -13,10 +13,12 @@ export const addLocalStorageData = (response: any) => {
   localStorage.setItem("forgotPassword", data?.forgotPassword);
   localStorage.setItem("securityQuestionsExists", data?.securityQuestionsExists);
 
-  document.cookie = `resetPassword=${data?.resetPassword}`;
-  document.cookie = `forgotPassword=${data?.forgotPassword}`;
-  document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists}`;
-  document.cookie = `accessToken=${data?.token}`;
+  const maxAge = 60 * 60 * 24 * 7; // 7 days
+
+  document.cookie = `resetPassword=${data?.resetPassword};max-age=${maxAge}`;
+  document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
+  document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
+  document.cookie = `accessToken=${data?.token};max-age=${maxAge}`;
 
   // const expiryDuration =  60 * 2;
   // document.cookie = `accessToken=${data?.token}; max-age=${expiryDuration}; path=/;`;
