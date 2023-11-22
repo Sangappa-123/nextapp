@@ -1,12 +1,20 @@
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
-import AlertComponent1 from "@/components/AlertComponent1";
+import NotificationAlertComponent from "@/components/NotificationAlertComponent";
+import MessageAlertComponent from "@/components/MessageAlertComponent";
+import { sampleNotifications } from "@/services/sampleNotifications";
 import TabsStyle from "./TabsButton.module.scss";
 
 const tabData = [
-  { name: "Notifications", content: <AlertComponent1 />, className: TabsStyle.tab1 },
-  { name: "Messages", content: "ddddd", className: TabsStyle.tab2 },
-  { name: "Tab 2", content: "ddddd", className: TabsStyle.tab2 },
-  { name: "Tab 2", content: "ddddd", className: TabsStyle.tab2 },
+  {
+    name: "Notifications",
+    content: (
+      <NotificationAlertComponent
+        alertNotifications={sampleNotifications[0].data.notifications}
+      />
+    ),
+    className: TabsStyle.tab1,
+  },
+  { name: "Messages", content: <MessageAlertComponent />, className: TabsStyle.tab2 },
 ];
 
 const TabsButton = () => {

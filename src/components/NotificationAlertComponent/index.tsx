@@ -1,8 +1,8 @@
 import React from "react";
-import CommonTable from "@/components/common/CommonTable";
-import TableCardsStyle from "./TableCards.module.scss";
-interface TableCardsProps {
-  notifications: {
+import TableCards from "@/container/TableCards";
+
+interface NotificationAlertPropsComponent {
+  alertNotifications: {
     createDate: string;
     id: number;
     isRead: boolean;
@@ -69,30 +69,14 @@ interface TableCardsProps {
   }[];
 }
 
-const TableCards: React.FC<TableCardsProps> = ({ notifications }) => {
-  const columns = ["Date", "Claim Details", "Message"];
-  const tableData = notifications.map((notification) => ({
-    Date: notification.createDate,
-    Message: (
-      <>
-        {notification.notificationParams.message1}
-        <br />
-        {notification.messageTemplate}
-      </>
-    ),
-    "Claim Details": (
-      <>
-        {notification.insuredDetails.firstName} {notification.insuredDetails.lastName}
-        <br />
-        {notification.notificationParams.claimNumber}
-      </>
-    ),
-  }));
+const NotificationAlertComponent: React.FC<NotificationAlertPropsComponent> = ({
+  alertNotifications,
+}) => {
   return (
-    <div className={TableCardsStyle.container}>
-      <CommonTable columns={columns} data={tableData} />
+    <div>
+      <TableCards notifications={alertNotifications} />
     </div>
   );
 };
 
-export default TableCards;
+export default NotificationAlertComponent;

@@ -22,7 +22,9 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {columns.map((column, colIndex) => (
-              <td key={colIndex}>{row[column]}</td>
+              <td key={colIndex} className={CommonTableStyle.tdStyle}>
+                {row[column]}
+              </td>
             ))}
           </tr>
         ))}
