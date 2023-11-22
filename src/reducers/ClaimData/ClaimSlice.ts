@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   claimListData: [],
+  currentPageNumber: 1,
+  totalClaims: 0,
 };
 
 const ClaimSlice = createSlice({
@@ -14,13 +16,14 @@ const ClaimSlice = createSlice({
 
       let newArr = {};
       const claimRes = [];
-      claimData.map((item) => {
+      claimData.claims.map((item) => {
         newArr = {
           claimNumber: item.claimNumber,
           status: item.status.status,
           noOfItems: item.noOfItems,
           noOfItemsPriced: item.noOfItemsPriced,
-          policyHoldersName: item.insuredDetails.lastName,
+          policyHoldersName:
+            item.insuredDetails.lastName + ", " + item.insuredDetails.firstName,
           claimDate: item.createDate,
           lastActive: item.lastActivity,
           lastUpdated: item.lastUpdateDate,
@@ -29,6 +32,8 @@ const ClaimSlice = createSlice({
         claimRes.push(newArr);
       });
       state.claimListData = claimRes;
+      state.currentPageNumber = claimData.currentPageNumber;
+      state.totalClaims = claimData.totalClaims;
     },
   },
 });
