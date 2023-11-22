@@ -11,6 +11,7 @@ enum apiEndPoints {
   randomQuestion = "web/get/selected/question/",
   verifySecurityQuestion = "web/verify/security/answer/",
   claimList = "web/open/claims",
+  notification = "web/notifications",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
