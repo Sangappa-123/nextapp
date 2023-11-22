@@ -16,6 +16,7 @@ import ReactTable from "@/components/common/ReactTable/index";
 
 const OpenClaimTable: React.FC = (props) => {
   const [claimResult, setClaimResult] = React.useState(props.claimListData);
+  const pageLimit = 20;
 
   type ClaimData = {
     claimNumber: string;
@@ -83,7 +84,7 @@ const OpenClaimTable: React.FC = (props) => {
 
   const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
     pageIndex: props.currentPageNumber - 1,
-    pageSize: 20,
+    pageSize: pageLimit,
   });
 
   const pagination = React.useMemo(
@@ -99,7 +100,7 @@ const OpenClaimTable: React.FC = (props) => {
     if (sorting.length > 0) {
       const orderBy = sorting[0].desc ? "desc" : "asc";
       const sortBy = sorting[0].id;
-      fetchClaimList(pageNumber, 20, sortBy, orderBy);
+      fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
     } else {
       fetchClaimList(pageNumber);
     }
@@ -108,7 +109,7 @@ const OpenClaimTable: React.FC = (props) => {
   const table = useReactTable({
     data: claimResult,
     columns,
-    pageCount: Math.ceil(props.totalClaims / 20),
+    pageCount: Math.ceil(props.totalClaims / pageLimit),
     state: {
       sorting,
       pagination,
@@ -124,7 +125,7 @@ const OpenClaimTable: React.FC = (props) => {
 
   return (
     <div className={OpenClaimTableStyle.claimTableContainer}>
-      <ReactTable table={table} totalClaims={props.totalClaims} />
+      <ReactTable table={table} totalClaims={props.totalClaims} pageLimit={pageLimit} />
     </div>
   );
 };

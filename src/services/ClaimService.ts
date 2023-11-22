@@ -27,6 +27,9 @@ export const fetchClaimList = async (
   searchKeyword = "",
   statusIds = null
 ) => {
+  const state = store.getState();
+  searchKeyword = state.claimdata.searchKeyword;
+
   const payload = {
     assignedUserId: localStorage.getItem("userId"),
     pagination: {

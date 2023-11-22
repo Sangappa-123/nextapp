@@ -5,7 +5,7 @@ import ReactTableStyles from "./ReactTable.module.scss";
 import { flexRender } from "@tanstack/react-table";
 
 const ReactTable: React.FC = (props) => {
-  const { table, totalClaims } = props;
+  const { table, totalClaims, pageLimit } = props;
   return (
     <div className={ReactTableStyles.reactTable}>
       <table>
@@ -49,9 +49,10 @@ const ReactTable: React.FC = (props) => {
       </table>
       <div className="h-2" />
       <span>
-        Showing {table.getState().pagination.pageIndex * 20 + 1} to{" "}
-        {totalClaims > table.getState().pagination.pageIndex * 20 + 1 + 20 - 1
-          ? table.getState().pagination.pageIndex * 20 + 1 + 20 - 1
+        Showing {table.getState().pagination.pageIndex * pageLimit + 1} to{" "}
+        {totalClaims >
+        table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
+          ? table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
           : props.totalClaims}{" "}
         of {props.totalClaims} Claims
       </span>
@@ -74,7 +75,7 @@ const ReactTable: React.FC = (props) => {
         {Array(table.getPageCount())
           .fill()
           .map((value, index) => {
-            if (index < 5) {
+            if (index < 10) {
               return (
                 <button
                   key={value}
@@ -86,7 +87,7 @@ const ReactTable: React.FC = (props) => {
               );
             }
           })}
-        {table.getPageCount() > 5 && (
+        {table.getPageCount() > 10 && (
           <>
             <button className="border rounded p-1">...</button>
             <button
