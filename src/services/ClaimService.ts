@@ -2,7 +2,6 @@ import { getHeader } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
 import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
-import HttpService from "@/HttpService";
 
 export const claimList = async (payload: any) => {
   const headersData: object = getHeader();
@@ -45,20 +44,5 @@ export const fetchClaimList = async (
   if (claimListRes.result.status === 200) {
     const claimData = claimListRes.result.data;
     store.dispatch(addClaimListData({ claimData }));
-  }
-};
-
-export const getNotification = async (param: object) => {
-  try {
-    const http = new HttpService();
-    const url = getApiEndPoint("notification");
-    const res = await http.post(url, param);
-    const { data, error } = res;
-    if (data) {
-      return data;
-    }
-    return error;
-  } catch (err) {
-    return err;
   }
 };
