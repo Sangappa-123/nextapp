@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import OpenClaimTableStyle from "./OpenClaimTable.module.scss";
 import { connect } from "react-redux";

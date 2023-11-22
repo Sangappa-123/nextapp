@@ -19,6 +19,7 @@ export const addLocalStorageData = (response: any) => {
   document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
   document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
   document.cookie = `accessToken=${data?.token};max-age=${maxAge}`;
+  document.cookie = `userId=${data?.userId};max-age=${maxAge}`;
 
   // const expiryDuration =  60 * 2;
   // document.cookie = `accessToken=${data?.token}; max-age=${expiryDuration}; path=/;`;

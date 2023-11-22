@@ -1,15 +1,15 @@
 import { cookies } from "next/headers";
 
-function getServerCookie(cname: string) {
+function getServerCookie(cname: string): string | null {
   const cookieStore = cookies();
   if (cookieStore.has(cname)) {
-    const cookie = cookieStore.get(cname);
+    const cookie = cookieStore.get(cname)?.value ?? null;
     return cookie;
   }
   return null;
 }
 
-function getClientCookie(cname: string) {
+function getClientCookie(cname: string): string | null {
   const name = cname + "=";
   const decodedCookie = decodeURIComponent(document.cookie);
   const ca = decodedCookie.split(";");
