@@ -1,12 +1,12 @@
 import React from "react";
-import MessageAlertCards from "./MessageAlertCards";
+import MessageAlertCardsComponent from "./MessageAlertCardsComponent";
 
-const MessageAlertComponent = () => {
+const AlertComponent = () => {
   return (
     <div>
-      <MessageAlertCards />
+      <MessageAlertCardsComponent />
     </div>
   );
 };
 
-export default MessageAlertComponent;
+export default AlertComponent;

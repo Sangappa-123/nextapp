@@ -668,3 +668,21 @@ export const sampleNotifications = [
     status: 200,
   },
 ];
+
+export const sampleNewClaims = {
+  data: {
+    adjuster: null,
+    adjusterCoverageLimit: null,
+    claims: null,
+    numberOfClaimHandle: 0,
+    numberOfItemHandle: 0,
+    replacement: null,
+    avgClosingClaim: "",
+    openClaims: 25,
+    newClaims: 25,
+    closedClaims: 0,
+    totalInvoices: null,
+  },
+  message: "successfully fetched data",
+  status: 200,
+};
