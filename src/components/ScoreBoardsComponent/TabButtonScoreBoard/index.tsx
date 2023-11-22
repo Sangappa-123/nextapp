@@ -28,7 +28,7 @@ const tabData = [
 const TabsButtonScoreBoard = () => {
   return (
     <div>
-      <TabsButtonComponent tabData={tabData} showBorders={true} data={{}} />
+      <TabsButtonComponent tabData={tabData} showBorders={true} />
     </div>
   );
 };
