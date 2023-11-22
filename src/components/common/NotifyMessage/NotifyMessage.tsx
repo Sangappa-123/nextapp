@@ -9,7 +9,6 @@ function NotifyMessage() {
   const notifySelector = useAppSelector((state) => state.notify);
   useEffect(() => {
     for (const notify of notifySelector) {
-      // toast[notify?.status ?? "success"]
       toast[notify?.status ?? "success"](notify?.message, {
         toastId: notify?.id,
         position: notify.position ?? toast.POSITION.TOP_RIGHT,

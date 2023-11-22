@@ -13,12 +13,20 @@ import { saveSecurityQuestion } from "@/services/MyProfileService";
 import { useRouter } from "next/navigation";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import useTranslation from "@/hooks/useTranslation";
+import { securityQuestionTranslateType } from "@/translations/securityQuestionTranslate/en";
+import CustomLoader from "@/components/common/CustomLoader";
 
 interface TypedProp<T> {
   selectOptions: OptionTypedList<T>;
 }
 
 function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>) {
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: securityQuestionTranslateType | undefined } =
+    useTranslation("securityQuestionTranslate");
   const { options } = useSelectOption(selectOptions);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -80,11 +88,19 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
     }
   };
 
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
+
   return (
     <form className="col-12 d-flex flex-column" onSubmit={handleSubmit(submitHandler)}>
       <div className={securityQuestionFormStyle.formContainer}>
-        <div>Security Questions</div>
-        <SecurityQuestionPoints />
+        <div>{translate?.heading}</div>
+        <SecurityQuestionPoints translate={translate} />
         <div className={securityQuestionFormStyle.formGroups}>
           <SecurityFieldComponent
             control={control}
@@ -94,13 +110,12 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
             setValue={setValue}
             inputData={{
               selectName: "question1",
-              selectLabel: "Question 1",
-              selectPlaceholder: "Select Question 1",
-              inputPlaceholder: "Enter answer",
-              inputLabel: "Answer",
+              selectLabel: translate?.inputFields?.question1?.label,
+              selectPlaceholder: translate?.inputFields?.question1?.placeholder,
+              inputPlaceholder: translate?.inputFields?.anwser?.placeholder,
+              inputLabel: translate?.inputFields?.anwser?.label,
               inputId: "answer1",
               inputName: "answer1",
-              valueField: "a",
             }}
           />
           <SecurityFieldComponent
@@ -111,13 +126,12 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
             setValue={setValue}
             inputData={{
               selectName: "question2",
-              selectLabel: "Question 2",
-              selectPlaceholder: "Select Question 2",
-              inputPlaceholder: "Enter answer",
-              inputLabel: "Answer",
+              selectLabel: translate?.inputFields?.question2?.label,
+              selectPlaceholder: translate?.inputFields?.question2?.placeholder,
+              inputPlaceholder: translate?.inputFields?.anwser?.placeholder,
+              inputLabel: translate?.inputFields?.anwser?.label,
               inputId: "answer2",
               inputName: "answer2",
-              valueField: "a",
             }}
           />
           <SecurityFieldComponent
@@ -128,19 +142,18 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
             setValue={setValue}
             inputData={{
               selectName: "question3",
-              selectLabel: "Question 3",
-              selectPlaceholder: "Select Question 3",
-              inputPlaceholder: "Enter answer",
-              inputLabel: "Answer",
+              selectLabel: translate?.inputFields?.question3?.label,
+              selectPlaceholder: translate?.inputFields?.question3?.placeholder,
+              inputPlaceholder: translate?.inputFields?.anwser?.placeholder,
+              inputLabel: translate?.inputFields?.anwser?.label,
               inputId: "answer3",
               inputName: "answer3",
-              valueField: "a",
             }}
           />
         </div>
       </div>
       <GenericButton
-        label="I'm ready"
+        label={translate?.inputFields?.submitBtn ?? ""}
         btnClassname={clsx("my-3", securityQuestionFormStyle.actionBtn)}
         disabled={!isValid}
         type="submit"
