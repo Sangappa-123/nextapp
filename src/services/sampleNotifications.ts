@@ -686,3 +686,39 @@ export const sampleNewClaims = {
   message: "successfully fetched data",
   status: 200,
 };
+
+export const sampleNewClaimsThisQuater = {
+  data: {
+    adjuster: null,
+    adjusterCoverageLimit: null,
+    claims: null,
+    numberOfClaimHandle: 0,
+    numberOfItemHandle: 0,
+    replacement: null,
+    avgClosingClaim: "2 D 23 H 25 M ",
+    openClaims: 106,
+    newClaims: 107,
+    closedClaims: 1,
+    totalInvoices: null,
+  },
+  message: "successfully fetched data",
+  status: 200,
+};
+
+export const sampleNewClaimsThisYear = {
+  data: {
+    adjuster: null,
+    adjusterCoverageLimit: null,
+    claims: null,
+    numberOfClaimHandle: 0,
+    numberOfItemHandle: 0,
+    replacement: null,
+    avgClosingClaim: "2 D 23 H 25 M ",
+    openClaims: 165,
+    newClaims: 166,
+    closedClaims: 1,
+    totalInvoices: null,
+  },
+  message: "successfully fetched data",
+  status: 200,
+};

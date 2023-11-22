@@ -12,7 +12,7 @@ import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
 
 export default function DashboardComponent() {
   return (
-    <div className={CardsStyle.cardddd}>
+    <div className={CardsStyle.card}>
       <div className="row">
         <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
           <Cards className={CardsStyle.cardsStylAdjustAlert}>
