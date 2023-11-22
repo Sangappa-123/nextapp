@@ -1,8 +1,8 @@
 import React from "react";
 import Cards from "../common/Cards";
-import ScoreCardsStyle from "./ScoreBoardsTableCards.module.scss";
+import ScoreCardsStyle from "./ScoreBoardsComponent.module.scss";
 
-const ScoreBoardsTableCards = () => {
+const ScoreBoardsComponent = () => {
   return (
     <div className="row">
       <div className="col-md-4 col-sm-4 col-xs-4">
@@ -27,4 +27,4 @@ const ScoreBoardsTableCards = () => {
   );
 };
 
-export default ScoreBoardsTableCards;
+export default ScoreBoardsComponent;

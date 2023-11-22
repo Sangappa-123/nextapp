@@ -1,6 +1,6 @@
 import React from "react";
 import CommonTable from "@/components/common/CommonTable";
-import TableCardsStyle from "./TableCards.module.scss";
+import TableCardsStyle from "./AlertTableCards.module.scss";
 interface TableCardsProps {
   notifications: {
     createDate: string;
@@ -69,7 +69,7 @@ interface TableCardsProps {
   }[];
 }
 
-const TableCards: React.FC<TableCardsProps> = ({ notifications }) => {
+const AlertTableCards: React.FC<TableCardsProps> = ({ notifications }) => {
   const columns = ["Date", "Claim Details", "Message"];
   const tableData = notifications.map((notification) => ({
     Date: notification.createDate,
@@ -95,4 +95,4 @@ const TableCards: React.FC<TableCardsProps> = ({ notifications }) => {
   );
 };
 
-export default TableCards;
+export default AlertTableCards;

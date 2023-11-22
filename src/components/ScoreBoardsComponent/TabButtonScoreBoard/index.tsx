@@ -1,12 +1,12 @@
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
-import ScoreBoardsTableCards from "@/components/ScoreBoardsTableCards";
+import ScoreBoardsComponent from "..";
 import TabsStyle from "./TabButtonScoreBoard.module.scss";
 
 const tabData = [
-  { name: "This Month", content: <ScoreBoardsTableCards />, className: TabsStyle.tab1 },
+  { name: "This Month", content: <ScoreBoardsComponent />, className: TabsStyle.tab1 },
   {
     name: "This Quater(Oct-Dec)",
-    content: <ScoreBoardsTableCards />,
+    content: <ScoreBoardsComponent />,
     className: TabsStyle.tab2,
   },
   { name: "This Year", content: "ddddd", className: TabsStyle.tab2 },

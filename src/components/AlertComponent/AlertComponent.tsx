@@ -1,5 +1,5 @@
 import React from "react";
-import MessageAlertCards from "@/container/MessageAlertCards";
+import MessageAlertCards from "./MessageAlertCards";
 
 const MessageAlertComponent = () => {
   return (

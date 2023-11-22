@@ -1,8 +1,8 @@
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
-import NotificationAlertComponent from "@/components/NotificationAlertComponent";
-import MessageAlertComponent from "@/components/MessageAlertComponent";
+import NotificationAlertComponent from "@/components/AlertComponent/NotificationAlertComponent";
+import MessageAlertComponent from "@/components/AlertComponent";
 import { sampleNotifications } from "@/services/sampleNotifications";
-import TabsStyle from "./TabsButton.module.scss";
+import TabsStyle from "./AlertTabsButton.module.scss";
 
 const tabData = [
   {
@@ -17,7 +17,7 @@ const tabData = [
   { name: "Messages", content: <MessageAlertComponent />, className: TabsStyle.tab2 },
 ];
 
-const TabsButton = () => {
+const AlertTabsButton = () => {
   return (
     <div>
       <TabsButtonComponent tabData={tabData} showBorders={true} />
@@ -25,4 +25,4 @@ const TabsButton = () => {
   );
 };
 
-export default TabsButton;
+export default AlertTabsButton;

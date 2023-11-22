@@ -1,5 +1,5 @@
 import React from "react";
-import TableCards from "@/container/TableCards";
+import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
 
 interface NotificationAlertPropsComponent {
   alertNotifications: {
@@ -74,7 +74,7 @@ const NotificationAlertComponent: React.FC<NotificationAlertPropsComponent> = ({
 }) => {
   return (
     <div>
-      <TableCards notifications={alertNotifications} />
+      <AlertTableCards notifications={alertNotifications} />
     </div>
   );
 };
