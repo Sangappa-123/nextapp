@@ -12,26 +12,14 @@ type Tab = {
 type TabsProps = {
   tabData: Tab[];
   showBorders?: boolean;
-  data: object;
-  dataType: string | undefined;
 };
 
-const TabsButtonComponent = ({
-  tabData,
-  showBorders = true, // data,
-} // dataType,
-: TabsProps) => {
+const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
-
-  // useEffect(() => {
-  //   if (dataType === "notification") {
-  //     console.log("notification:::::::::", data);
-  //   }
-  // }, []);
 
   return (
     <div className={TabsButtonStyle.tabWidth}>
