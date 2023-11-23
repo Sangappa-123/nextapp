@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import useDashboardAlert from "@/components/common/AlertCards/AlertTableCards/useDashboardAlert";
-import CommonTable from "@/components/common/CommonTable";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import CustomLoader from "@/components/common/CustomLoader";
+import useDashboardAlert from "@/hooks/useDashboardAlert";
+import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
 
 function DashboardNotification({ data }) {
   const { loaded } = useDashboardAlert(data);
@@ -31,7 +31,7 @@ function DashboardNotification({ data }) {
   if (!loaded) {
     return <CustomLoader loaderType="spinner2" />;
   }
-  return <CommonTable columns={columns} data={tableData} />;
+  return <AlertTableCards columns={columns} tableData={tableData} />;
 }
 
 export default DashboardNotification;

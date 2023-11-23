@@ -1,17 +1,10 @@
 "use client";
 import React from "react";
-import CommonTable from "@/components/common/CommonTable";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
+import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
 
 const MessageAlertCardsComponent = () => {
   const columns = ["Date", "Claim Details", "Message"];
-  // const tableData = [
-  //   {
-  //     Date: "",
-  //     "Claim Details": "No Message Found",
-  //     Message: "",
-  //   },
-  // ];
   const messages = useAppSelector((state) => state.alert.messages);
   const tableData = messages.map((message) => ({
     Date: message.createDate,
@@ -30,7 +23,7 @@ const MessageAlertCardsComponent = () => {
       </>
     ),
   }));
-  return <CommonTable columns={columns} data={tableData} />;
+  return <AlertTableCards tableData={tableData} columns={columns} />;
 };
 
 export default MessageAlertCardsComponent;

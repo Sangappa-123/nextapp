@@ -17,9 +17,9 @@ const DashboardAlertSlice = createSlice({
       if (!state.isLoaded) {
         state.isLoaded = true;
         const { notifications, totalCount, page } = action.payload;
-        for (const data of notifications.splice(5)) {
+        for (const data of notifications) {
           console.log(data.notificationPurpose);
-          if (data.notificationPurpose === "ITEM") {
+          if (data.notificationPurpose === "NOTE") {
             state.messages.push(data);
           } else {
             state.notifications.push(data);
