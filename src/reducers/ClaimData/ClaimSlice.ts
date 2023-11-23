@@ -5,6 +5,7 @@ const initialState = {
   currentPageNumber: 1,
   totalClaims: 0,
   searchKeyword: "",
+  statusIds: null
 };
 
 const ClaimSlice = createSlice({
@@ -42,8 +43,14 @@ const ClaimSlice = createSlice({
 
       state.searchKeyword = searchKeyword;
     },
+    addFilterValues(state, action) {
+      const { payload } = action;
+      const { statusIds } = payload;
+
+      state.statusIds = statusIds;
+    }
   },
 });
 export default ClaimSlice;
 
-export const { addClaimListData, addSearchKeyWord } = ClaimSlice.actions;
+export const { addClaimListData, addSearchKeyWord, addFilterValues } = ClaimSlice.actions;

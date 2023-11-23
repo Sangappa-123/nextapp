@@ -29,6 +29,7 @@ export const fetchClaimList = async (
 ) => {
   const state = store.getState();
   searchKeyword = state.claimdata.searchKeyword;
+  statusIds = state.claimdata.statusIds;
 
   const payload = {
     assignedUserId: localStorage.getItem("userId"),
