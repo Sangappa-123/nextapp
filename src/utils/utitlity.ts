@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
-
-function getServerCookie(cname: string): string | null {
+async function getServerCookie(cname: string) {
+  const lib = import("next/headers");
+  const { cookies } = await lib;
   const cookieStore = cookies();
   if (cookieStore.has(cname)) {
     const cookie = cookieStore.get(cname)?.value ?? null;
