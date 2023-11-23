@@ -1,14 +1,13 @@
 import React from "react";
 import GenericComponentHeading from "../GenericComponentHeading";
-import Cards from "../Cards";
-import PendingStyles from "./PendingVendorCards.module.scss";
+import PendingComponent from "@/components/PendingComponent";
 
 const PendingVendorCards: React.FC = () => {
   return (
-    <div>
+    <>
       <GenericComponentHeading title="Pending Vendor Invoices(34)" />
-      <Cards className={PendingStyles.cardsStylAdjustPending}></Cards>
-    </div>
+      <PendingComponent />
+    </>
   );
 };
 
