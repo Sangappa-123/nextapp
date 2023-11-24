@@ -2,6 +2,8 @@
 import React from "react";
 import ReactTableStyles from "./ReactTable.module.scss";
 import { clsx } from "clsx";
+import { MdExpandLess } from "react-icons/md";
+import { MdExpandMore } from "react-icons/md";
 
 import { flexRender } from "@tanstack/react-table";
 
@@ -26,8 +28,18 @@ const ReactTable: React.FC = (props) => {
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                       {{
-                        asc: <span> 🔼</span>,
-                        desc: <span> 🔽</span>,
+                        asc: (
+                          <span>
+                            {" "}
+                            <MdExpandLess />
+                          </span>
+                        ),
+                        desc: (
+                          <span>
+                            {" "}
+                            <MdExpandMore />
+                          </span>
+                        ),
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   )}
@@ -43,7 +55,7 @@ const ReactTable: React.FC = (props) => {
                 <td
                   key={cell.id}
                   className={
-                    showStatusColor && index === table.getState().pagination.pageIndex
+                    showStatusColor && index === 0
                       ? clsx({
                           [ReactTableStyles.All_Items_Priced]:
                             row.original.noOfItems == row.original.noOfItemsPriced,
