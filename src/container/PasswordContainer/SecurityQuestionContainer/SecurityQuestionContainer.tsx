@@ -8,6 +8,11 @@ const pathList = [
     name: "Home",
     path: "/login",
   },
+  {
+    name: "All Claim",
+    path: "/login",
+    active: true,
+  },
 ];
 
 function SecurityQuestionContainer() {
