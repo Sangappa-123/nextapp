@@ -1,53 +1,69 @@
+"use client";
+
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
-import { sampleNewClaims } from "@/services/sampleNotifications";
-import TabsStyle from "./ScoreBoardsComponent.module.scss";
-import ThisMonthScoreBoard from "./ThisMonthScoreBoard";
-import ThisYearScoreBoard from "./ThisYearScoreBoard";
-import { sampleNewClaimsThisQuater } from "@/services/sampleNotifications";
-import { sampleNewClaimsThisYear } from "@/services/sampleNotifications";
-import ThisQuaterScoreBoard from "./ThisQuaterScoreBoard";
+import ScoreCardComponent from "./ScoreCradComponent";
+import { Suspense, useState } from "react";
+import CustomLoader from "../common/CustomLoader";
+import { getClaimScoreCard } from "@/services/ScoreCardService";
 
-const tabData = [
-  {
-    name: "This Month",
-    content: (
-      <ThisMonthScoreBoard
-        newClaims={sampleNewClaims.data.newClaims}
-        closedClaims={sampleNewClaims.data.closedClaims}
-        avgClosingClaim={sampleNewClaims.data.avgClosingClaim}
-      />
-    ),
-    className: TabsStyle.tab1,
-  },
-  {
-    name: "This Quater(Oct-Dec)",
-    content: (
-      <ThisQuaterScoreBoard
-        newClaims={sampleNewClaimsThisQuater.data.newClaims}
-        closedClaims={sampleNewClaimsThisQuater.data.closedClaims}
-        avgClosingClaim={sampleNewClaimsThisQuater.data.avgClosingClaim}
-      />
-    ),
-    className: TabsStyle.tab2,
-  },
-  {
-    name: "This Year(2023)",
-    content: (
-      <ThisYearScoreBoard
-        newClaims={sampleNewClaimsThisYear.data.newClaims}
-        closedClaims={sampleNewClaimsThisYear.data.closedClaims}
-        avgClosingClaim={sampleNewClaimsThisYear.data.avgClosingClaim}
-      />
-    ),
-    className: TabsStyle.tab2,
-  },
-];
+const ScoreBoardsComponent = (props: { data: any }) => {
+  const [scoreData, setScoreData] = useState(props.data);
+  const [isLoading, setIsLoading] = useState(false);
 
-const ScoreBoardsComponent = () => {
+  const scoreDataHandle = async (scoreDataValue: number) => {
+    setIsLoading(true);
+    try {
+      const resp = await getClaimScoreCard(scoreDataValue, true);
+      setScoreData(resp);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const tabData = [
+    {
+      name: "This Month",
+      content: (
+        <ScoreCardComponent
+          isLoading={isLoading}
+          newClaims={scoreData.newClaims}
+          closedClaims={scoreData.closedClaims}
+          avgClosingClaim={!scoreData.avgClosingClaim ? 0 : scoreData.avgClosingClaim}
+        />
+      ),
+      clickable: true,
+      clickHandler: scoreDataHandle,
+    },
+    {
+      name: "This Quater(Oct-Dec)",
+      content: (
+        <ScoreCardComponent
+          isLoading={isLoading}
+          newClaims={scoreData.newClaims}
+          closedClaims={scoreData.closedClaims}
+          avgClosingClaim={!scoreData.avgClosingClaim ? 0 : scoreData.avgClosingClaim}
+        />
+      ),
+      clickable: true,
+      clickHandler: scoreDataHandle,
+    },
+    {
+      name: "This Year(2023)",
+      content: (
+        <ScoreCardComponent
+          isLoading={isLoading}
+          newClaims={scoreData.newClaims}
+          closedClaims={scoreData.closedClaims}
+          avgClosingClaim={!scoreData.avgClosingClaim ? 0 : scoreData.avgClosingClaim}
+        />
+      ),
+      clickable: true,
+      clickHandler: scoreDataHandle,
+    },
+  ];
   return (
-    <div>
-      <TabsButtonComponent tabData={tabData} showBorders={true} />
-    </div>
+    <Suspense fallback={<CustomLoader loaderType="spinner2" />}>
+      <TabsButtonComponent tabData={tabData} showBorders={true} clickable={true} />
+    </Suspense>
   );
 };
 
