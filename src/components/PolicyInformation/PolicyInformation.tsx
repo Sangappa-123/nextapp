@@ -15,9 +15,9 @@ function ClaimpolicyInformation({ register, error }) {
   return (
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 ml-8")}>
-          <label className={ClaimPolicyInformation.labelEmail}>Email</label>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 ml-8 text-right")}>
+          <label className={ClaimPolicyInformation.label}>Email</label>
         </div>
         <div className={clsx("col-lg-3 col-md-4 col-sm-12 mt-2")}>
           <GenericInput
@@ -27,8 +27,8 @@ function ClaimpolicyInformation({ register, error }) {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
             <span style={{ color: "red" }}>*</span> First Name
           </label>
@@ -43,8 +43,8 @@ function ClaimpolicyInformation({ register, error }) {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
             {" "}
             <span style={{ color: "red" }}>*</span> Last Name
@@ -60,9 +60,9 @@ function ClaimpolicyInformation({ register, error }) {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimPolicyInformation.labelMobile}>Mobile Number</label>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimPolicyInformation.label}>Mobile Number</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
@@ -72,11 +72,9 @@ function ClaimpolicyInformation({ register, error }) {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimPolicyInformation.labelSecondaryPhone}>
-            Secondary Phone Number
-          </label>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimPolicyInformation.label}>Secondary Phone Number</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
@@ -86,38 +84,42 @@ function ClaimpolicyInformation({ register, error }) {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimPolicyInformation.labelAddress}>Address</label>
+      <div className="row mt-3 align-items-start">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimPolicyInformation.label}>Address</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="Street Address 1"
-            // className={ClaimPolicyInformation.address}
+            formControlClassname="mb-3"
             {...register("address")}
           />
           <GenericInput
             placeholder="Street Address 2"
-            // className={ClaimPolicyInformation.addressOne}
+            formControlClassname="mb-3"
             {...register("address")}
           />
           <GenericInput
             placeholder="City / Town"
-            // className={ClaimPolicyInformation.addressSecond}
+            formControlClassname="mb-3"
             {...register("address")}
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-4 col-md-2 col-sm-12 mt-4 d-flex")}>
-          <div className="row">
-            <label className="col-lg-8">
+      <div className="row align-items-center">
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 d-flex")}>
+          <div className="col-12 row align-items-center">
+            <label className={clsx("col-8 text-right", ClaimPolicyInformation.label)}>
               <span style={{ color: "red" }}>*</span> State
             </label>
-            <SelectCheckBox options={options} />
+            <SelectCheckBox options={options} className="col-4" />
           </div>
         </div>
-        <div className={clsx("col-lg-4 col-md-2 col-sm-12 mt-4 d-flex")}>
+        <div
+          className={clsx(
+            "col-lg-2 col-md-2 col-sm-12 d-flex align-items-center justify-content-between"
+          )}
+        >
           <label>
             <span style={{ color: "red" }}>*</span> Zip Code
           </label>

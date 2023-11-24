@@ -14,16 +14,17 @@
   font-weight: 570;
   font-size: 13px;
   font-family: "Open Sans", sans-serif;
-  margin-left: 150px;
+  // width: 100%;
+  // margin-left: 150px;
   //   top: 3px;
 }
-.labelEmail {
-  position: relative;
-  font-weight: 570;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  margin-left: 175px;
-}
+// .labelEmail {
+//   position: relative;
+//   font-weight: 570;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   margin-left: 175px;
+// }
 .email {
   position: relative;
   width: 40%;
@@ -39,11 +40,11 @@
   right: 190px;
 }
 
-.emaillabelClassname .firstName::before {
-  content: "  *";
-  color: red;
-  //   margin-left: 2px;
-}
+// .emaillabelClassname .firstName::before {
+//   content: "  *";
+//   color: red;
+//   //   margin-left: 2px;
+// }
 .lastName {
   position: relative;
   width: 40%;
@@ -62,24 +63,24 @@
   height: 30px;
   padding: 3px 10px;
 }
-.labelMobile {
-  position: relative;
-  font-weight: 550;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  margin-left: 125px;
-}
+// .labelMobile {
+//   position: relative;
+//   font-weight: 550;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   margin-left: 125px;
+// }
 .mobile {
   position: relative;
   margin-left: 119px;
 }
-.labelSecondaryPhone {
-  position: relative;
-  font-weight: 550;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  margin-left: 60px;
-}
+// .labelSecondaryPhone {
+//   position: relative;
+//   font-weight: 550;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   margin-left: 60px;
+// }
 .secondaryPhoneNumber {
   width: 40%;
   height: 30px;
@@ -88,13 +89,13 @@
   position: relative;
   margin-left: 159px;
 }
-.labelAddress {
-  position: relative;
-  font-weight: 550;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  margin-left: 165px;
-}
+// .labelAddress {
+//   position: relative;
+//   font-weight: 550;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   margin-left: 165px;
+// }
 .address {
   position: relative;
   height: 30px;
@@ -128,13 +129,13 @@
   position: relative;
   font-size: 12px;
 }
-.labelState {
-  position: relative;
-  font-weight: 550;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  margin-left: 190px;
-}
+// .labelState {
+//   position: relative;
+//   font-weight: 550;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   margin-left: 190px;
+// }
 .zipCode {
   position: relative;
   width: 30%;
@@ -144,12 +145,12 @@
   left: 99px;
   bottom: 16px;
 }
-.labelZipCode {
-  position: relative;
-  font-weight: 550;
-  font-size: 13px;
-  font-family: "Open Sans", sans-serif;
-  bottom: 50px;
-  left: 440px;
-  // margin-right: 180px;
-}
+// .labelZipCode {
+//   position: relative;
+//   font-weight: 550;
+//   font-size: 13px;
+//   font-family: "Open Sans", sans-serif;
+//   bottom: 50px;
+//   left: 440px;
+//   // margin-right: 180px;
+// }

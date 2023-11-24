@@ -13,9 +13,9 @@ function ClaimInformation() {
   return (
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelClaim}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
             {" "}
             <span style={{ color: "red" }}>*</span>Claim#
           </label>
@@ -27,8 +27,8 @@ function ClaimInformation() {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Claim Date</label>
         </div>
         <div className="col-lg-2 col-md-2 col-sm-12">
@@ -39,9 +39,9 @@ function ClaimInformation() {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelInsuranceCompany}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span> Insurance Company
           </label>
         </div>
@@ -52,9 +52,9 @@ function ClaimInformation() {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelAdjusterName}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Adjusters Name
           </label>
         </div>
@@ -65,22 +65,18 @@ function ClaimInformation() {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelLossDamageType}>
-            Loss/Damage Type{" "}
-          </label>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>Loss/Damage Type </label>
         </div>
-        <div className={clsx("col-lg-1 col-md-1 col-sm-12")}>
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12")}>
           {" "}
           <SelectCheckBox options={options} className="selectOptions" />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelClaimDecription}>
-            Claim Description
-          </label>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>Claim Description</label>
         </div>
         <div className="col-lg-2 col-md-2 col-sm-12">
           <GenericInput
@@ -88,9 +84,9 @@ function ClaimInformation() {
           />
         </div>
       </div>
-      <div className="row mt-3">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-          <label className={ClaimInformationStyle.labelClaimDeduction}>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Claim Deductible
           </label>
         </div>
@@ -100,44 +96,44 @@ function ClaimInformation() {
             // className={ClaimInformationStyle.addressOne}
           />
         </div>
-        <div className="row mt-3">
-          <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-            <label className={ClaimInformationStyle.labelMinPrice}>
-              <span style={{ color: "red" }}>*</span>Min. $ Item to Price
-            </label>
-          </div>
-          <div className="col-lg-2 col-md-2 col-sm-12">
-            <GenericInput
-              placeholder="$88.00"
-              //   className={ClaimInformationStyle.addressSecond}
-            />
-          </div>
+      </div>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
+            <span style={{ color: "red" }}>*</span>Min. $ Item to Price
+          </label>
         </div>
-        <div className="row mt-3">
-          <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-            <label className={ClaimInformationStyle.labelTaxRate}>
-              <span style={{ color: "red" }}>*</span>Tax Rate %
-            </label>
-          </div>
-          <div className="col-lg-2 col-md-2 col-sm-12">
-            <GenericInput
-              placeholder="99"
-              //   className={ClaimInformationStyle.addressSecond}
-            />
-          </div>
+        <div className="col-lg-2 col-md-2 col-sm-12">
+          <GenericInput
+            placeholder="$88.00"
+            //   className={ClaimInformationStyle.addressSecond}
+          />
         </div>
-        <div className="row mt-3">
-          <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
-            <label className={ClaimInformationStyle.labelContent}>
-              <span style={{ color: "red" }}>*</span>Content Limits
-            </label>
-          </div>
-          <div className="col-lg-2 col-md-2 col-sm-12">
-            <GenericInput
-              placeholder="$0.00"
-              //   className={ClaimInformationStyle.addressSecond}
-            />
-          </div>
+      </div>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
+            <span style={{ color: "red" }}>*</span>Tax Rate %
+          </label>
+        </div>
+        <div className="col-lg-2 col-md-2 col-sm-12">
+          <GenericInput
+            placeholder="99"
+            //   className={ClaimInformationStyle.addressSecond}
+          />
+        </div>
+      </div>
+      <div className="row mt-3 align-items-center">
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+          <label className={ClaimInformationStyle.label}>
+            <span style={{ color: "red" }}>*</span>Content Limits
+          </label>
+        </div>
+        <div className="col-lg-2 col-md-2 col-sm-12">
+          <GenericInput
+            placeholder="$0.00"
+            //   className={ClaimInformationStyle.addressSecond}
+          />
         </div>
       </div>
     </div>

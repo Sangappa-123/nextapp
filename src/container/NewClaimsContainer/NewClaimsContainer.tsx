@@ -1,5 +1,5 @@
 import React from "react";
-import NewClaimsStyle from "./newClaimsStyle.modules.scss";
+import NewClaimsStyle from "./newClaimsStyle.module.scss";
 import GenericBreadcrumb from "@/components/common/GenericBreadcrumb/index";
 import NewclaimsComponent from "@/components/NewclaimsComponent/index";
 
@@ -17,7 +17,7 @@ const pathList = [
 
 function NewclaimsContainer() {
   return (
-    <div className={NewClaimsStyle.securityQuestionContainer}>
+    <div className={NewClaimsStyle.container}>
       <GenericBreadcrumb dataList={pathList} />
       <p className={NewClaimsStyle.Wizard}>New Claim Wizard</p>
       <hr className={NewClaimsStyle.divider} />
