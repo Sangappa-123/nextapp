@@ -44,7 +44,9 @@ const OpenClaimTable: React.FC = (props) => {
     }),
     columnHelper.accessor((row) => row.status, {
       id: "Status",
-      cell: (info) => <i>{info.getValue()}</i>,
+      cell: (status) => (
+        <div style={{ width: "40px" }}>{status.getValue() as React.ReactNode}</div>
+      ),
       header: () => <span>Status</span>,
       enableSorting: true,
     }),
@@ -125,7 +127,12 @@ const OpenClaimTable: React.FC = (props) => {
 
   return (
     <div className={OpenClaimTableStyle.claimTableContainer}>
-      <ReactTable table={table} totalClaims={props.totalClaims} pageLimit={pageLimit} />
+      <ReactTable
+        table={table}
+        totalClaims={props.totalClaims}
+        pageLimit={pageLimit}
+        showStatusColor={true}
+      />
     </div>
   );
 };

@@ -1,20 +1,84 @@
 .reactTable {
+  padding-bottom: 35px;
   table {
+    width: 100%;
+    margin-top: -1px;
+    border-spacing: 0px;
     th {
       background: #dcdcdc !important;
       padding: 4px !important;
       line-height: unset !important;
       font-size: 13px;
       font-weight: 600;
+      height: 28px;
+      border: 1px solid white;
+      div {
+        display: flex;
+        justify-content: space-between;
+      }
     }
     td {
       border: 1px solid #e7ecf1;
       padding: 4px !important;
-      line-height: unset !important;
+      line-height: 150% !important;
+      font-family: "Open Sans", sans-serif;
       font-size: 11px;
       cursor: pointer !important;
       vertical-align: top;
       display: table-cell;
+      color: #333333;
     }
   }
+  .paginationContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    .paginationText {
+      color: #337ab7;
+      font-weight: 700 !important;
+      font-size: 13px !important;
+    }
+  }
+  .paginationButton {
+    width: 33px;
+    height: 33px;
+
+    padding: 6px 12px;
+    line-height: 1.42857;
+    text-decoration: none;
+    color: #337ab7;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+    &:hover {
+      cursor: pointer;
+      color: #23527c;
+      background-color: #eeeeee;
+      border-color: #ddd;
+    }
+    &:disabled {
+      color: #777777;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      cursor: not-allowed;
+    }
+  }
+  .active {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    cursor: default;
+  }
+  .paginationIcon {
+    font-size: 11px;
+  }
+}
+.All_Items_Priced {
+  border-left: 5px solid #65bf5f !important;
+}
+.Partial_Items_Priced {
+  border-left: 5px solid #feb467 !important;
+}
+.No_Items_Priced {
+  border-left: 5px solid #fa0c04 !important;
 }
