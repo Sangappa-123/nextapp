@@ -7,14 +7,20 @@ type Tab = {
   name: string;
   content: React.ReactNode;
   className?: string;
+  clickHandler: (arg: number) => void;
 };
 
 type TabsProps = {
   tabData: Tab[];
   showBorders?: boolean;
+  clickable?: boolean;
 };
 
-const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {
+const TabsButtonComponent = ({
+  tabData,
+  showBorders = true,
+  clickable = false,
+}: TabsProps) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index: number) => {
@@ -23,7 +29,7 @@ const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {
 
   return (
     <div className={TabsButtonStyle.tabWidth}>
-      <div className="col-md-12 col-sm-12 col-xs-12">
+      <div className="col-md-12 col-sm-12 col-12">
         <div
           className={clsx(
             TabsButtonStyle.tabList,
@@ -37,9 +43,19 @@ const TabsButtonComponent = ({ tabData, showBorders = true }: TabsProps) => {
               className={clsx(
                 TabsButtonStyle.tab,
                 { [TabsButtonStyle.active]: activeTab === index },
-                tab.className
+                tab?.className
               )}
-              onClick={() => handleTabClick(index)}
+              // {onClickHandlere && (
+              //   onClick={() => {handleTabClick(index); tab.scoreDataHandle(index+1);}}
+              // )}
+              onClick={() => {
+                if (clickable) {
+                  handleTabClick(index);
+                  tab.clickHandler(index + 1);
+                } else {
+                  handleTabClick(index);
+                }
+              }}
             >
               {tab.name}
             </div>

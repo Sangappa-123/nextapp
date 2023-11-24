@@ -12,6 +12,7 @@ enum apiEndPoints {
   verifySecurityQuestion = "web/verify/security/answer/",
   claimList = "web/open/claims",
   notification = "web/notifications",
+  scoreCard = "web/claims/scorecard?statusFlag=",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

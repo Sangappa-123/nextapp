@@ -1,8 +1,7 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef } from "react";
 import ReactSelect from "react-select";
 import clsx from "clsx";
 import selectStyle from "./genericSelect.module.scss";
-
 
 interface TypedProps<T> {
   options: T[];
@@ -17,7 +16,7 @@ interface TypedProps<T> {
   [rest: string]: any;
 }
 
-function GenericSelect<T extends {}>(props: TypedProps<T>, ref: any) {
+function GenericSelect<T extends object>(props: TypedProps<T>) {
   const {
     labelText,
     options,
@@ -30,29 +29,29 @@ function GenericSelect<T extends {}>(props: TypedProps<T>, ref: any) {
     labelClassname = "",
     isMulti = false,
     customStyles = "",
-    customMenuWithClear = false, 
+    customMenuWithClear = false,
     selected = null,
     setSelected,
+    isManditaory = true,
     hideSelectedOptions = true,
     ...rest
   } = props;
 
   const handleClear = () => {
     setSelected([]);
-  }
-  
-        const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }) =>
-        !isDisabled ? (
-            <div ref={innerRef} {...innerProps} className={selectStyle.menu}>
-              {customMenuWithClear && (
-                <a
-                    className={selectStyle.clearAllAnchor}
-                    onClick={handleClear}
-                >Clear All</a>
-              )}     
-                {children}
-            </div>
-        ) : null;
+  };
+
+  const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }) =>
+    !isDisabled ? (
+      <div ref={innerRef} {...innerProps} className={selectStyle.menu}>
+        {customMenuWithClear && (
+          <a className={selectStyle.clearAllAnchor} onClick={handleClear}>
+            Clear All
+          </a>
+        )}
+        {children}
+      </div>
+    ) : null;
   return (
     <div
       className={clsx({
@@ -62,23 +61,23 @@ function GenericSelect<T extends {}>(props: TypedProps<T>, ref: any) {
     >
       {labelText && (
         <label
-        className={clsx({
-          [labelClassname]: labelClassname,
-        })}
-      >
-        <span style={{ color: "red" }}>*</span> {labelText}
-      </label>
+          className={clsx({
+            [labelClassname]: labelClassname,
+            "d-none": !isManditaory,
+          })}
+        >
+          <span style={{ color: "red" }}>*</span> {labelText}
+        </label>
       )}
-      
+
       <div>
         <ReactSelect
-        classNames={selectStyle.reactSelectContainer}
+          classNames={selectStyle.reactSelectContainer}
           styles={customStyles}
           components={{ Menu: CustomMenuWithClear }}
-          value={selected} 
+          value={selected}
           onChange={setSelected}
-
-          options={options} 
+          options={options}
           placeholder={placeholder}
           isClearable={true}
           isSearchable={true}

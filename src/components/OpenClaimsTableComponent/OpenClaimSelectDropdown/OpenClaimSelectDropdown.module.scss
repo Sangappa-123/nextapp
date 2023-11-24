@@ -1,14 +1,19 @@
 .textClaimStatus {
-  font-size: 14px;
+  font-size: 13px;
   color: white;
   font-weight: 600;
+  white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+  margin-right: 10px;
+  margin-top: 3px;
 }
 
 .claimStatusContainer {
   display: flex;
-  align-items: center;
+  // align-items: center;
 }
 
-.claimStatusDropdown {
-  margin-left: 10px;
+.selectOption {
+  padding-left: 20px;
 }

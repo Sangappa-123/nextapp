@@ -1,14 +1,17 @@
 import { getClientCookie, getServerCookie } from "./utils/utitlity";
 
+interface IStringIndex {
+  [key: string]: any;
+}
 class HttpService {
   accessToken: string | undefined | null;
   isClient: boolean;
   isPublic: boolean;
-  header: object;
-  constructor(isPublic: boolean = false, isClient: boolean = false) {
+  header: IStringIndex;
+  constructor(obj?: { isPublic?: boolean; isClient?: boolean }) {
     this.accessToken = undefined;
-    this.isClient = isClient;
-    this.isPublic = isPublic;
+    this.isClient = obj?.isClient ?? false;
+    this.isPublic = obj?.isPublic ?? false;
     this.header = {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -47,6 +50,27 @@ class HttpService {
             .catch((error) => reject({ error }));
         } catch (error) {
           console.error("Post API error", error);
+          return reject({ error });
+        }
+      });
+    });
+  }
+  async get(url: string, headers?: object) {
+    return new Promise((resolve, reject) => {
+      this.validateToken().then(() => {
+        try {
+          fetch(url, {
+            method: "GET",
+            headers: { ...this.header, ...headers },
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              const data = result?.data;
+              return resolve({ data });
+            })
+            .catch((error) => reject({ error }));
+        } catch (error) {
+          console.error("Get API error", error);
           return reject({ error });
         }
       });

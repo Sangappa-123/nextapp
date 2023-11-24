@@ -15,31 +15,29 @@ type breadcrumbPropType = {
 
 function GenericBreadcrumb({ dataList = [] }: breadcrumbPropType) {
   return (
-    <div>
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          {dataList.map((path) => (
-            <li
-              key={path.name}
+    <nav aria-label="breadcrumb">
+      <ol className="breadcrumb">
+        {dataList.map((path) => (
+          <li
+            key={path.name}
+            className={clsx({
+              "breadcrumb-item": true,
+            })}
+            aria-current="page"
+          >
+            <Link
               className={clsx({
-                "breadcrumb-item": true,
+                link: true,
+                "link-active": path.active,
               })}
-              aria-current="page"
+              href={path.path}
             >
-              <Link
-                className={clsx({
-                  link: true,
-                  "link-active": path.active,
-                })}
-                href={path.path}
-              >
-                {path.name}
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </nav>
-    </div>
+              {path.name}
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }
 
