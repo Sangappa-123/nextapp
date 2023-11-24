@@ -20,13 +20,13 @@ function OpenClaimsTableComponent(): React.ReactNode {
       </div>
       <div className={OpenClaimsComponentStyleTable.claimContainer}>
         <div className={`row ${OpenClaimsComponentStyleTable.claimContentContainer}`}>
-          <div className="col-lg-3 col-md-4 col-sm-12 d-flex align-items-center">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
             <NewClaimButton />
           </div>
-          <div className="col-lg-3 col-md-4 col-sm-12 d-flex align-items-center offset-md-0 offset-lg-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
             <OpenClaimSelectDropdown />
           </div>
-          <div className="col-lg-4 col-md-4 col-sm-12 d-flex align-items-center">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
             <OpenClaimsSearchBox />
           </div>
         </div>

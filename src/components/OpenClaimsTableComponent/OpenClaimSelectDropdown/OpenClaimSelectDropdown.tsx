@@ -1,7 +1,7 @@
 "use client";
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import OpenClaimsDropdownStyle from "./OpenClaimSelectDropdown.module.scss";
-import { default as ReactSelect } from "react-select";
+// import { default as ReactSelect } from "react-select";
 import GenericSelect from "@/components/common/GenericSelect/index";
 import { fetchClaimList } from "@/services/ClaimService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
@@ -11,79 +11,83 @@ const OpenClaimSelectDropdown: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const options = [
-    { value: 3, label: '3rd Party Vendor'},
-    { value: 1, label: 'Created'},
-    { value: 5, label: 'Supervisor Approval'},
-    { value: 2, label: 'Work In Progress'},
-
-  ]
-  const [selected, setSelected] = useState([{value: 0, label: 'All'}]);
-  useEffect(()=>{
+    { value: 3, label: "3rd Party Vendor" },
+    { value: 1, label: "Created" },
+    { value: 5, label: "Supervisor Approval" },
+    { value: 2, label: "Work In Progress" },
+  ];
+  const [selected, setSelected] = useState([{ value: 0, label: "All" }]);
+  useEffect(() => {
     const selectedValues = [];
-    if(selected.length > 1){
-      selected.map((item)=>{
-        if(item.value !== 0)
-        selectedValues.push(item.value);
+    if (selected.length > 1) {
+      selected.map((item) => {
+        if (item.value !== 0) selectedValues.push(item.value);
       });
       dispatch(addFilterValues({ statusIds: selectedValues }));
       fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
-    }else{
+    } else {
       dispatch(addFilterValues({ statusIds: null }));
       fetchClaimList();
     }
-  },[selected]);
+  }, [selected]);
 
   const customStyles = {
     control: (defaultStyles: any) => ({
       ...defaultStyles,
-      width: '224.6px',
-      minHeight: '28px',
-      maxHeight: '76.28px',
+      width: "227.9px",
+      minHeight: "28px",
+      maxHeight: "76.28px",
+      marginBottom: "3px",
+      "@media only screen and (min-width: 2560px)": {
+        width: "500px",
+        height: "29px",
+        marginBottom: "0px",
+      },
     }),
     option: (defaultStyles: any, state: any) => ({
       ...defaultStyles,
-      backgroundColor: state.isSelected ? '#e1e5ec': 'white',
-      color: '#262626',
+      backgroundColor: state.isSelected ? "#e1e5ec" : "white",
+      color: "#262626",
       fontFamily: '"Open Sans", sans-serif',
-fontSize: "13px",
-      '&:hover': {
-        backgroundColor: '#337ab7',
-      color: 'white',
-
+      fontSize: "13px",
+      "&:hover": {
+        backgroundColor: "#337ab7",
+        color: "white",
       },
-      '&:active': {
-        backgroundColor: '#337ab7',
-      color: 'white',
-
+      "&:active": {
+        backgroundColor: "#337ab7",
+        color: "white",
       },
     }),
     valueContainer: (defaultStyles: any) => {
       return {
         ...defaultStyles,
-        minHeight: '28px',
+        minHeight: "28px",
         fontSize: "12px",
       };
     },
-    indicatorsContainer: (prevStyle, state) => state.isMulti ? ({
-      ...prevStyle,
-      display: 'none',
-  }): null,
+    indicatorsContainer: (prevStyle, state) =>
+      state.isMulti
+        ? {
+            ...prevStyle,
+            display: "none",
+          }
+        : null,
   };
-  
-      return (
+
+  return (
     <div className={OpenClaimsDropdownStyle.claimStatusContainer}>
-      <span className={OpenClaimsDropdownStyle.textClaimStatus}>Claim Status</span>
+      <p className={OpenClaimsDropdownStyle.textClaimStatus}>Claim Status</p>
       <GenericSelect
-            placeholder="Select"
-            options={options}
-            isMulti = {true}
-            customMenuWithClear = {true}
-            customStyles={customStyles}
-            selected = {selected}
-            setSelected = {setSelected}
-            hideSelectedOptions = {false}
-          />
-     
+        placeholder="Select"
+        options={options}
+        isMulti={true}
+        customMenuWithClear={true}
+        customStyles={customStyles}
+        selected={selected}
+        setSelected={setSelected}
+        hideSelectedOptions={false}
+      />
     </div>
   );
 };
