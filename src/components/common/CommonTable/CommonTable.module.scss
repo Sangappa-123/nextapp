@@ -4,16 +4,36 @@
   align-items: flex-start;
   max-height: 200px;
   overflow-y: auto;
+  .theadtyle {
+    position: sticky;
+    top: 0;
+  }
+  tbody {
+    background-color: #fff;
+    // background-color: rgb(235, 226, 226);
+
+    .trStyle {
+      border-bottom: 1px solid rgba($color: #ccc, $alpha: 0.5);
+      padding: 4px 0;
+
+      cursor: pointer;
+      .tdStyle {
+        padding: 6px;
+        text-align: left;
+        word-wrap: break-word;
+        font-size: 11px;
+      }
+      &:hover {
+        box-shadow: -4px 1px 4px #ccc;
+      }
+    }
+  }
 }
 
-.tdStyle {
-  background-color: rgb(235, 226, 226);
-  padding: 6px;
-  // padding-left: 20px;
-  // padding-right: 10px;
-  text-align: left;
-  word-wrap: break-word;
-  font-size: 11px;
+.no-data {
+  text-align: center;
+  color: red;
+  padding: 12px;
 }
 
 .thStyle {
@@ -32,11 +52,3 @@
   // margin-bottom: 20px;
   font-size: 12px;
 }
-
-// .widthTd,
-// .columnSpacing,
-// .columnSpacing2 {
-//   // margin-left: 20px;
-//   padding-left: 20px;
-//   // margin-right: 10px;
-// }

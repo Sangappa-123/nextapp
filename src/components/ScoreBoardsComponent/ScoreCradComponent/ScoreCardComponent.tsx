@@ -24,7 +24,7 @@ const ScoreCardComponent: React.FC<ScoreCardProps> = ({
     );
   }
   return (
-    <div className="row">
+    <div className="row p-3">
       <div className="col-md-4 col-sm-4 col-xs-4">
         <Cards className={ScoreCardsStyle.scoreWidthMonth}>
           <div className={ScoreCardsStyle.alignText}>

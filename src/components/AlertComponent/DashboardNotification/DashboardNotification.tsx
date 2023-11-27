@@ -4,6 +4,7 @@ import { useAppSelector } from "@/hooks/reduxCustomHook";
 import CustomLoader from "@/components/common/CustomLoader";
 import useDashboardAlert from "@/hooks/useDashboardAlert";
 import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
+import alertComponentStyle from "../alertComponent.module.scss";
 
 function DashboardNotification({ data }) {
   const { loaded } = useDashboardAlert(data);
@@ -29,9 +30,17 @@ function DashboardNotification({ data }) {
   }));
 
   if (!loaded) {
-    return <CustomLoader loaderType="spinner2" />;
+    return (
+      <div className={alertComponentStyle.container}>
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
   }
-  return <AlertTableCards columns={columns} tableData={tableData} />;
+  return (
+    <div className={alertComponentStyle.container}>
+      <AlertTableCards columns={columns} tableData={tableData} />
+    </div>
+  );
 }
 
 export default DashboardNotification;

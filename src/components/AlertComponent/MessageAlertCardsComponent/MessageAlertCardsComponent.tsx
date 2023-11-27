@@ -2,6 +2,7 @@
 import React from "react";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
+import alertComponentStyle from "../alertComponent.module.scss";
 
 const MessageAlertCardsComponent = () => {
   const columns = ["Date", "Claim Details", "Message"];
@@ -23,7 +24,11 @@ const MessageAlertCardsComponent = () => {
       </>
     ),
   }));
-  return <AlertTableCards tableData={tableData} columns={columns} />;
+  return (
+    <div className={alertComponentStyle.container}>
+      <AlertTableCards tableData={tableData} columns={columns} />
+    </div>
+  );
 };
 
 export default MessageAlertCardsComponent;
