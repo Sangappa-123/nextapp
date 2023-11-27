@@ -3,7 +3,7 @@ import React from "react";
 import OpenClaimTableStyle from "./OpenClaimTable.module.scss";
 import { connect } from "react-redux";
 import { fetchClaimList } from "@/services/ClaimService";
-
+import { convertToCurrentTimezone } from "@/utils/helper";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -24,7 +24,7 @@ const OpenClaimTable: React.FC = (props) => {
     noOfItems: number;
     noOfItemsPriced: number;
     policyHoldersName: string;
-    claimDate: string;
+    claimDate: Date;
     lastActive: string;
     lastUpdated: string;
   };
@@ -44,11 +44,25 @@ const OpenClaimTable: React.FC = (props) => {
     }),
     columnHelper.accessor((row) => row.status, {
       id: "Status",
-      cell: (status) => (
-        <div style={{ width: "40px" }}>{status.getValue() as React.ReactNode}</div>
-      ),
+      cell: (status) => {
+        return (
+          <div style={{ width: "80px" }}>
+            <span
+              className={`badge badge-secondary 
+                    ${status.getValue() === "Created" && "badge-info"}
+                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
+                    ${status.getValue() === "Work In Progress" && "badge-warning"}
+                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
+                    `}
+            >
+              {status.getValue() as React.ReactNode}
+            </span>
+          </div>
+        );
+      },
       header: () => <span>Status</span>,
       enableSorting: true,
+      size: 100,
     }),
     columnHelper.accessor("noOfItems", {
       id: "itemNumber",
@@ -69,15 +83,26 @@ const OpenClaimTable: React.FC = (props) => {
     columnHelper.accessor("claimDate", {
       id: "Create_Date",
       header: "Claim Date",
+      cell: (info) => {
+        const unixDate = Date.parse(info.renderValue().replace("T", " "));
+        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+        return formatedDate;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("lastActive", {
       header: "Last Active",
       enableSorting: false,
+      size: 450,
     }),
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
+      cell: (info) => {
+        const unixDate = Date.parse(info.renderValue().replace("T", " "));
+        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+        return formatedDate;
+      },
       enableSorting: true,
     }),
   ];

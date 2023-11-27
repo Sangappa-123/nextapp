@@ -4,6 +4,9 @@
     width: 100%;
     margin-top: -1px;
     border-spacing: 0px;
+    tbody tr:nth-child(even) {
+      background-color: #337ab708;
+    }
     th {
       background: #dcdcdc !important;
       padding: 4px !important;
@@ -15,6 +18,16 @@
       div {
         display: flex;
         justify-content: space-between;
+      }
+    }
+    tr {
+      height: 50px;
+      justify-content: flex-start;
+      flex: 1 1 auto;
+      position: relative; /* need this to position inner content */
+      overflow-y: auto;
+      &:hover {
+        background-color: #f3f4f6 !important;
       }
     }
     td {
