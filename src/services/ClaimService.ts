@@ -52,17 +52,18 @@ export const fetchClaimList = async (
   }
 };
 
-export const getNotification = async (param: object) => {
+export const getNotification = async (param: object, isClient: boolean = false) => {
   try {
     const url = getApiEndPoint("notification");
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     const res = await http.post(url, param);
     const { data, error } = res;
     if (data) {
       return data;
     }
-    return error;
+    throw error;
   } catch (err) {
-    return err;
+    console.log("error", err);
+    throw err;
   }
 };

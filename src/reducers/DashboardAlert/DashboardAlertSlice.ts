@@ -1,14 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { getNotification } from "@/services/ClaimService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+interface IStringIndex {
+  [key: string]: any;
+}
 
 const initialState = {
   isLoaded: false,
   isFetching: false,
+  isLastPage: false,
   notifications: [],
   messages: [],
   page: 0,
   totalCount: 0,
   totalPage: 0,
 };
+
+export const fetchAlertNotification = createAsyncThunk(
+  "alert/fetchNotification",
+  async (args, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const id = window?.localStorage?.getItem("userId");
+      const curPage = state?.alert?.page;
+      const response = await getNotification({ id, page: curPage + 1 }, true);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const DashboardAlertSlice = createSlice({
   name: "alert",
   initialState,
@@ -16,9 +38,13 @@ const DashboardAlertSlice = createSlice({
     addAlert(state, action) {
       if (!state.isLoaded) {
         state.isLoaded = true;
-        const { notifications, totalCount, page } = action.payload;
+        const {
+          notifications,
+          totalCount,
+          page,
+        }: { notifications: IStringIndex[]; totalCount: number; page: number } =
+          action.payload;
         for (const data of notifications) {
-          console.log(data.notificationPurpose);
           if (data.notificationPurpose === "NOTE") {
             state.messages.push(data);
           } else {
@@ -31,8 +57,38 @@ const DashboardAlertSlice = createSlice({
       }
       return state;
     },
+    updateAlert(state, action) {
+      const { notifications, totalCount } = action.payload;
+      for (const data of notifications) {
+        if (data.notificationPurpose === "NOTE") {
+          state.messages.push(data);
+        } else {
+          state.notifications.push(data);
+        }
+      }
+      state.totalCount = totalCount;
+      state.page += 1;
+      state.totalPage = Math.ceil(totalCount / 10);
+      state.isLastPage = state.page >= state.totalPage;
+      state.isFetching = false;
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchAlertNotification.pending, (state) => {
+      state.isFetching = true;
+    });
+    builder.addCase(fetchAlertNotification.fulfilled, (state, action) => {
+      DashboardAlertSlice.caseReducers.updateAlert(state, action);
+    });
+    builder.addCase(fetchAlertNotification.rejected, (state) => {
+      state.isFetching = false;
+      state.page += 1;
+      state.isLastPage = state.page >= state.totalCount;
+    });
   },
 });
 
+export const isFetchingSelector = (state) => state.alert.isFetching;
+export const isLastPageSelector = (state) => state.alert.isLastPage;
 export const { addAlert } = DashboardAlertSlice.actions;
 export default DashboardAlertSlice;
