@@ -1,0 +1,24 @@
+.tooltipContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 10%;
+}
+
+.tooltipTrigger {
+  cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  z-index: 1;
+  white-space: nowrap;
+  opacity: 0.9;
+}
