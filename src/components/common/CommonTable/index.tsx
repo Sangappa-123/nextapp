@@ -1,5 +1,6 @@
 import React from "react";
 import CommonTableStyle from "./CommonTable.module.scss";
+import clsx from "clsx";
 
 interface CommonTableProps {
   columns: string[];
@@ -19,15 +20,26 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
         </tr>
       </thead>
       <tbody className={CommonTableStyle.tBodyStyle}>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {columns.map((column, colIndex) => (
-              <td key={colIndex} className={CommonTableStyle.tdStyle}>
-                {row[column]}
-              </td>
-            ))}
+        {data.length > 0 ? (
+          data.map((row, rowIndex) => (
+            <tr key={rowIndex} className={CommonTableStyle.trStyle}>
+              {columns.map((column, colIndex) => (
+                <td key={colIndex} className={CommonTableStyle.tdStyle}>
+                  {row[column]}
+                </td>
+              ))}
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td
+              colSpan={columns.length + 1}
+              className={clsx(CommonTableStyle.tdStyle, CommonTableStyle["no-data"])}
+            >
+              No new messages available
+            </td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );
