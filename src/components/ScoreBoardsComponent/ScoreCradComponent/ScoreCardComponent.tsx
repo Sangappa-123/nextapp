@@ -29,26 +29,20 @@ const ScoreCardComponent: React.FC<ScoreCardProps> = ({
         <Cards className={ScoreCardsStyle.newClaimCard}>
           <div className={ScoreCardsStyle.alignText}>
             <div className={ScoreCardsStyle.claimTypeCount}>{newClaims}</div>
-            <div className="mt-2">
-              <div className={ScoreCardsStyle.claimTypeLabel}>New claims</div>
-            </div>
+            <div className={ScoreCardsStyle.claimTypeLabel}>New claims</div>
           </div>
         </Cards>
       </div>
       <div className="col-md-4 col-sm-4 col-xs-4">
         <Cards className={ScoreCardsStyle.closedClaimCard}>
           <div className={ScoreCardsStyle.claimTypeCount}>{closedClaims}</div>
-          <div className="mt-2">
-            <div className={ScoreCardsStyle.claimTypeLabel}>Closed claims</div>
-          </div>
+          <div className={ScoreCardsStyle.claimTypeLabel}>Closed claims</div>
         </Cards>
       </div>
       <div className="col-md-4 col-sm-4 col-xs-4">
         <Cards className={ScoreCardsStyle.avgClosingTimeCard}>
           <div className={ScoreCardsStyle.claimTypeCount}>{avgClosingClaim}</div>
-          <div className="mt-2">
-            <div className={ScoreCardsStyle.claimTypeLabel}>Avg. Closing Time</div>
-          </div>
+          <div className={ScoreCardsStyle.claimTypeLabel}>Avg. Closing Time</div>
         </Cards>
       </div>
     </div>

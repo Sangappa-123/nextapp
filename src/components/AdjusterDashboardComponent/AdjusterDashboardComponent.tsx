@@ -14,14 +14,12 @@ import { claimList } from "@/services/ClaimService";
 import { cookies } from "next/headers";
 
 export default async function DashboardComponent() {
-
   const cookieStore = cookies();
   let token = "";
-  let userId = ""
+  let userId = "";
   if (cookieStore.has("accessToken")) {
     token = cookieStore.get("accessToken")?.value ?? "";
     userId = cookieStore.get("userId")?.value ?? "";
-
   }
   const payload = {
     assignedUserId: userId,
@@ -34,7 +32,7 @@ export default async function DashboardComponent() {
     searchKeyword: "",
     statusIds: null,
   };
-   const claimListRes = await claimList(payload,token);
+  const claimListRes = await claimList(payload, token);
   if (claimListRes.result.status === 200) {
     return (
       <div className={CardsStyle.card}>
@@ -48,13 +46,23 @@ export default async function DashboardComponent() {
             <Cards className={CardsStyle.cardsStylAdjustScore}>
               <MyScoreBoardCards />
             </Cards>
-            <div className={clsx("row", CardsStyle.cardsStylClaimsRow)}>
-              <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div className="row">
+              <div
+                className={clsx(
+                  "col-lg-6 col-md-6 col-sm-12 col-xs-12",
+                  CardsStyle.attentionPendingContainer
+                )}
+              >
                 <Cards className={CardsStyle.cardsStylClaims}>
                   <ClaimsCards />
                 </Cards>
               </div>
-              <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div
+                className={clsx(
+                  "col-lg-6 col-md-6 col-sm-12 col-xs-12",
+                  CardsStyle.attentionPendingContainer
+                )}
+              >
                 <Cards className={CardsStyle.cardsStylVendor}>
                   <PendingVendorCards />
                 </Cards>
@@ -70,8 +78,5 @@ export default async function DashboardComponent() {
       </div>
     );
   }
-  return(
-    <CustomLoader />
-  )
-  
+  return <CustomLoader />;
 }
