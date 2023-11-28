@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import OpenClaimsText from "./OpenClaimsText";
 import NewClaimButton from "./NewClaimButton";
 import OpenClaimSelectDropdown from "./OpenClaimSelectDropdown";
@@ -10,10 +10,16 @@ import { connect } from "react-redux";
 import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
 function OpenClaimsTableComponent(props): React.ReactNode {
+  const [loading, setLoading] = useState(true);
   React.useEffect(() => {
+    setLoading(false);
     const claimData = props.claimListRes.result.data;
     props.addClaimListData({ claimData });
   }, []);
+
+  if (loading) {
+    return null;
+  }
   return (
     <>
       <div className="mt-4">

@@ -15,7 +15,7 @@ function DashboardNotification({ data }) {
     Date: notification?.createDate,
     Message: (
       <>
-        {notification?.notificationParams?.message1}
+        <b>{notification?.notificationParams?.message1}</b>
         <br />
         {notification?.message}
       </>
