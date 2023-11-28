@@ -8,19 +8,19 @@ const MessageAlertCardsComponent = () => {
   const columns = ["Date", "Claim Details", "Message"];
   const messages = useAppSelector((state) => state.alert.messages);
   const tableData = messages.map((message) => ({
-    Date: message.createDate,
+    Date: message?.createDate,
     Message: (
       <>
-        {message.notificationParams.message1}
+        {message?.notificationParams?.message1}
         <br />
-        {message.messageTemplate}
+        {message?.messageTemplate}
       </>
     ),
     "Claim Details": (
       <>
-        {message.insuredDetails.firstName} {message.insuredDetails.lastName}
+        {message?.insuredDetails?.firstName} {message?.insuredDetails?.lastName}
         <br />
-        {message.notificationParams.claimNumber}
+        {message?.notificationParams?.claimNumber}
       </>
     ),
   }));

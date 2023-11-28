@@ -12,19 +12,19 @@ function DashboardNotification({ data }) {
   const notifications = useAppSelector((state) => state.alert.notifications);
 
   const tableData = notifications.map((notification) => ({
-    Date: notification.createDate,
+    Date: notification?.createDate,
     Message: (
       <>
-        {notification.notificationParams.message1}
+        {notification?.notificationParams?.message1}
         <br />
-        {notification.messageTemplate}
+        {notification?.messageTemplate}
       </>
     ),
     "Claim Details": (
       <>
-        {notification.insuredDetails.firstName} {notification.insuredDetails.lastName}
+        {notification?.insuredDetails?.firstName} {notification?.insuredDetails?.lastName}
         <br />
-        {notification.notificationParams.claimNumber}
+        {notification?.notificationParams?.claimNumber}
       </>
     ),
   }));
