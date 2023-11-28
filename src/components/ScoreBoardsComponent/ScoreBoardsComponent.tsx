@@ -5,6 +5,7 @@ import ScoreCardComponent from "./ScoreCradComponent";
 import { Suspense, useState } from "react";
 import CustomLoader from "../common/CustomLoader";
 import { getClaimScoreCard } from "@/services/ScoreCardService";
+import scoreBoardStyle from "./ScoreBoardsComponent.module.scss";
 
 const ScoreBoardsComponent = (props: { data: any }) => {
   const [scoreData, setScoreData] = useState(props.data);
@@ -62,7 +63,9 @@ const ScoreBoardsComponent = (props: { data: any }) => {
   ];
   return (
     <Suspense fallback={<CustomLoader loaderType="spinner2" />}>
-      <TabsButtonComponent tabData={tabData} showBorders={true} clickable={true} />
+      <div className={scoreBoardStyle.container}>
+        <TabsButtonComponent tabData={tabData} showBorders={true} clickable={true} />
+      </div>
     </Suspense>
   );
 };

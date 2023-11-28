@@ -17,7 +17,7 @@ function DashboardNotification({ data }) {
       <>
         {notification?.notificationParams?.message1}
         <br />
-        {notification?.messageTemplate}
+        {notification?.message}
       </>
     ),
     "Claim Details": (
