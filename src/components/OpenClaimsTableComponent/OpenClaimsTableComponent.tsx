@@ -27,10 +27,10 @@ function OpenClaimsTableComponent(props): React.ReactNode {
       </div>
       <div className={OpenClaimsComponentStyleTable.claimContainer}>
         <div className={`row ${OpenClaimsComponentStyleTable.claimContentContainer}`}>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12">
             <NewClaimButton />
           </div>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2 mb-2">
             <OpenClaimSelectDropdown />
           </div>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">

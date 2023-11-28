@@ -20,8 +20,8 @@
         justify-content: space-between;
       }
     }
-    tr {
-      height: 50px;
+    tbody tr {
+      height: 40px;
       justify-content: flex-start;
       flex: 1 1 auto;
       position: relative; /* need this to position inner content */
@@ -37,7 +37,7 @@
       font-family: "Open Sans", sans-serif;
       font-size: 11px;
       cursor: pointer !important;
-      vertical-align: top;
+      vertical-align: middle;
       display: table-cell;
       color: #333333;
     }
