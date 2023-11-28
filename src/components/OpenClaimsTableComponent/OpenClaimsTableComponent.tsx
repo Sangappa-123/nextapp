@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import OpenClaimsText from "./OpenClaimsText";
 import NewClaimButton from "./NewClaimButton";
@@ -5,14 +6,15 @@ import OpenClaimSelectDropdown from "./OpenClaimSelectDropdown";
 import OpenClaimsSearchBox from "./OpenClaimsSearchBox/OpenClaimsSearchBox";
 import OpenClaimsComponentStyleTable from "./OpenClaimsTableComponent.module.scss";
 import OpenClaimTable from "./OpenClaimTable/index";
-import { fetchClaimList } from "@/services/ClaimService";
+import { connect } from "react-redux";
+import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
-function OpenClaimsTableComponent(): React.ReactNode {
-  const result = fetchClaimList();
-  const { data = [], error }: any = result;
-  if (!error && data) {
-    console.log("Success");
-  }
+function OpenClaimsTableComponent(props): React.ReactNode {
+ 
+  React.useEffect(()=>{
+    const claimData = props.claimListRes.result.data;
+    props.addClaimListData({claimData});
+  },[])
   return (
     <>
       <div className="mt-4">
@@ -38,4 +40,7 @@ function OpenClaimsTableComponent(): React.ReactNode {
     </>
   );
 }
-export default OpenClaimsTableComponent;
+const mapDispatchToProps = {
+  addClaimListData,
+}
+export default connect(null, mapDispatchToProps)(OpenClaimsTableComponent);
