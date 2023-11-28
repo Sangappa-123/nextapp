@@ -33,7 +33,7 @@ function OpenClaimsTableComponent(props): React.ReactNode {
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2 mb-2">
             <OpenClaimSelectDropdown />
           </div>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12">
             <OpenClaimsSearchBox />
           </div>
         </div>
