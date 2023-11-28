@@ -16,8 +16,7 @@ import ReactTable from "@/components/common/ReactTable/index";
 
 const OpenClaimTable: React.FC = (props) => {
   const [claimResult, setClaimResult] = React.useState(props.claimListData);
-  const [loader, setLoader] = React.useState(false);
-  const dataFetchedRef = React.useRef(false);
+  const [loader, setLoader] = React.useState(true);
 
   const pageLimit = 20;
 
@@ -45,28 +44,7 @@ const OpenClaimTable: React.FC = (props) => {
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor((row) => row.status, {
-      id: "Status",
-      cell: (status) => {
-        return (
-          <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary 
-                    ${status.getValue() === "Created" && "badge-info"}
-                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                    ${status.getValue() === "Work In Progress" && "badge-warning"}
-                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                    `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
-          </div>
-        );
-      },
-      header: () => <span>Status</span>,
-      enableSorting: true,
-      size: 100,
-    }),
+
     columnHelper.accessor("noOfItems", {
       id: "itemNumber",
       header: () => `# of Items`,
@@ -98,6 +76,28 @@ const OpenClaimTable: React.FC = (props) => {
       enableSorting: false,
       size: 450,
     }),
+    columnHelper.accessor((row) => row.status, {
+      id: "Status",
+      cell: (status) => {
+        return (
+          <div style={{ width: "80px" }}>
+            <span
+              className={`badge badge-secondary 
+                    ${status.getValue() === "Created" && "badge-info"}
+                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
+                    ${status.getValue() === "Work In Progress" && "badge-warning"}
+                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
+                    `}
+            >
+              {status.getValue() as React.ReactNode}
+            </span>
+          </div>
+        );
+      },
+      header: () => <span>Status</span>,
+      enableSorting: true,
+      size: 100,
+    }),
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
@@ -125,31 +125,31 @@ const OpenClaimTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-
   React.useEffect(() => {
-    
-    (async () => {
-      if (dataFetchedRef.current) return;
-      dataFetchedRef.current = true;
+    setLoader(true);
+
+    if (props.claimListData.length > 0) {
       const pageNumber = pagination.pageIndex + 1;
-      console.log("sorting", sorting);
+      // console.log("sorting", sorting);
+      // console.log("props.claimListData.length", props.claimListData.length);
+
       if (sorting.length > 0) {
         const orderBy = sorting[0].desc ? "desc" : "asc";
         const sortBy = sorting[0].id;
-        fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-      } else if (props.claimListData.length > 0){
-        const result = await fetchClaimList(pageNumber);
-        if(result){
-        setLoader(false);
+        const result = fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+        if (result) {
+          setLoader(false);
         }
-
+      } else {
+        const result = fetchClaimList(pageNumber);
+        if (result) {
+          setLoader(false);
+        }
+      }
+    } else {
+      setLoader(false);
     }
-    })();
-  
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, [sorting, pagination,props.claimListData]);
+  }, [sorting, pagination]);
 
   const table = useReactTable({
     data: claimResult,

@@ -10,11 +10,10 @@ import { connect } from "react-redux";
 import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
 function OpenClaimsTableComponent(props): React.ReactNode {
- 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const claimData = props.claimListRes.result.data;
-    props.addClaimListData({claimData});
-  },[])
+    props.addClaimListData({ claimData });
+  }, []);
   return (
     <>
       <div className="mt-4">
@@ -42,5 +41,5 @@ function OpenClaimsTableComponent(props): React.ReactNode {
 }
 const mapDispatchToProps = {
   addClaimListData,
-}
+};
 export default connect(null, mapDispatchToProps)(OpenClaimsTableComponent);
