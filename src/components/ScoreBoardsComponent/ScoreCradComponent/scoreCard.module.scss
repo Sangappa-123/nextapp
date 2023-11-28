@@ -1,8 +1,23 @@
 .loaderContainer {
-  min-height: 90px;
+  min-height: 122px;
 }
 
-.scoreWidthMonth {
+@mixin scoreWidthMonth {
   min-height: 80px;
   text-align: center;
+}
+
+.newClaimCard {
+  @include scoreWidthMonth;
+  background-color: #fcff7fd1;
+}
+
+.closedClaimCard {
+  @include scoreWidthMonth;
+  background-color: #95fddac7;
+}
+
+.avgClosingTimeCard {
+  @include scoreWidthMonth;
+  background-color: #d1ff7fc7;
 }

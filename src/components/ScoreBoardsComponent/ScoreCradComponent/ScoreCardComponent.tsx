@@ -26,7 +26,7 @@ const ScoreCardComponent: React.FC<ScoreCardProps> = ({
   return (
     <div className="row p-3">
       <div className="col-md-4 col-sm-4 col-xs-4">
-        <Cards className={ScoreCardsStyle.scoreWidthMonth}>
+        <Cards className={ScoreCardsStyle.newClaimCard}>
           <div className={ScoreCardsStyle.alignText}>
             <p>{newClaims}</p>
             <div className="mt-2">
@@ -36,7 +36,7 @@ const ScoreCardComponent: React.FC<ScoreCardProps> = ({
         </Cards>
       </div>
       <div className="col-md-4 col-sm-4 col-xs-4">
-        <Cards className={ScoreCardsStyle.scoreWidthMonth}>
+        <Cards className={ScoreCardsStyle.closedClaimCard}>
           <p>{closedClaims}</p>
           <div className="mt-2">
             <h6>Closed claims</h6>
@@ -44,7 +44,7 @@ const ScoreCardComponent: React.FC<ScoreCardProps> = ({
         </Cards>
       </div>
       <div className="col-md-4 col-sm-4 col-xs-4">
-        <Cards className={ScoreCardsStyle.scoreWidthMonth}>
+        <Cards className={ScoreCardsStyle.avgClosingTimeCard}>
           <p>{avgClosingClaim}</p>
           <div className="mt-2">
             <h6>Avg. Closing Time</h6>
