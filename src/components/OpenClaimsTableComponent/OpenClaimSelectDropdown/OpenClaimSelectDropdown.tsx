@@ -27,9 +27,9 @@ const OpenClaimSelectDropdown: React.FC = () => {
       fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
     } else {
       dispatch(addFilterValues({ statusIds: null }));
-      fetchClaimList();
+      // fetchClaimList();
     }
-  }, [selected]);
+  }, [selected,dispatch]);
 
   const customStyles = {
     control: (defaultStyles: any) => ({

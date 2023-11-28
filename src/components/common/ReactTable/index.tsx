@@ -4,11 +4,18 @@ import ReactTableStyles from "./ReactTable.module.scss";
 import { clsx } from "clsx";
 import { MdExpandLess } from "react-icons/md";
 import { MdExpandMore } from "react-icons/md";
-
+import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
 
 const ReactTable: React.FC = (props) => {
-  const { table, totalClaims, pageLimit, showStatusColor } = props;
+  const { table, totalClaims, pageLimit, showStatusColor , loader} = props;
+  if(loader){
+  return (
+    <div className="p-5">
+        <CustomLoader loaderType="spinner2" />
+    </div>
+  );
+  }
   return (
     <div className={ReactTableStyles.reactTable}>
       <table>
