@@ -1,9 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import NewClaimWizardStyle from "./newClaimWizardFormArrow.module.scss";
+interface NewClaimWizardFormArrowProps {
+  activeSection: number;
+  handleSectionClick: (index: number) => void;
+}
 
-const NewClaimWizardFormArrow: React.FC = () => {
-  const [activeSection, setActiveSection] = useState(0);
+const NewClaimWizardFormArrow: React.FC<NewClaimWizardFormArrowProps> = ({
+  activeSection,
+  handleSectionClick,
+}) => {
   const sectionsTabs = [
     {
       name: "1) Claim and Policy Information",
@@ -34,18 +40,6 @@ const NewClaimWizardFormArrow: React.FC = () => {
     },
   ];
 
-  const handleSectionClick = (index: number) => {
-    if (index === activeSection) {
-      console.log("active");
-      return;
-    }
-    setActiveSection(index);
-  };
-
-  // const handleButtonClick = () => {
-  //   setActiveSection((prev) => prev + 1);
-  // };
-
   return (
     <>
       <div className={`container ${NewClaimWizardStyle.tabsAllStyle}`}>
@@ -59,7 +53,6 @@ const NewClaimWizardFormArrow: React.FC = () => {
           </div>
         ))}
       </div>
-      {/* <button onClick={() => handleButtonClick()}>Save & Next</button> */}
     </>
   );
 };
