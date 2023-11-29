@@ -17,8 +17,8 @@ const NewClaimWizardFormArrow: React.FC<NewClaimWizardFormArrowProps> = ({
         activeSection === 0
           ? NewClaimWizardStyle.orange
           : activeSection > 0
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
     {
       name: "2) Add Items",
@@ -26,8 +26,8 @@ const NewClaimWizardFormArrow: React.FC<NewClaimWizardFormArrowProps> = ({
         activeSection === 1
           ? NewClaimWizardStyle.orange
           : activeSection > 1
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
     {
       name: "3) Assign Items",
@@ -35,8 +35,8 @@ const NewClaimWizardFormArrow: React.FC<NewClaimWizardFormArrowProps> = ({
         activeSection === 2
           ? NewClaimWizardStyle.orange
           : activeSection > 2
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
   ];
 

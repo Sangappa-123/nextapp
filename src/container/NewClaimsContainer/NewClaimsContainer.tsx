@@ -6,7 +6,7 @@ import NewclaimsComponent from "@/components/NewclaimsComponent/index";
 const pathList = [
   {
     name: "Home",
-    path: "/login",
+    path: "/adjuster-dashboard",
   },
   {
     name: "All Claim",

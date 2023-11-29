@@ -11,7 +11,7 @@ import PolicyInformation from "../PolicyInformation/PolicyInformation";
 import ClaimInformation from "../ClaimInformation/ClaimInformation";
 import AddItemsComponent from "./AddItemsComponent";
 import AssignItemsComponent from "./AssignItemsComponent";
-import NewClaimWizardFormArrow from "../NewClaimWizardFormArrow";
+import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow";
 import GenericButton from "../common/GenericButton/index";
 
 function NewclaimsComponent() {
