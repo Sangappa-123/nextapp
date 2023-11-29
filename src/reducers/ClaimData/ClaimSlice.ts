@@ -5,7 +5,8 @@ const initialState = {
   currentPageNumber: 1,
   totalClaims: 0,
   searchKeyword: "",
-  statusIds: null
+  statusIds: null,
+  claimErrorMsg: "",
 };
 
 const ClaimSlice = createSlice({
@@ -18,24 +19,29 @@ const ClaimSlice = createSlice({
 
       let newArr = {};
       const claimRes = [];
-      claimData.claims.map((item) => {
-        newArr = {
-          claimNumber: item.claimNumber,
-          status: item.status.status,
-          noOfItems: item.noOfItems,
-          noOfItemsPriced: item.noOfItemsPriced,
-          policyHoldersName:
-            item.insuredDetails.lastName + ", " + item.insuredDetails.firstName,
-          claimDate: item.createDate,
-          lastActive: item.lastActivity,
-          lastUpdated: item.lastUpdateDate,
-          statusNumber: item.status.id,
-        };
-        claimRes.push(newArr);
-      });
-      state.claimListData = claimRes;
-      state.currentPageNumber = claimData.currentPageNumber;
-      state.totalClaims = claimData.totalClaims;
+      if (claimData.data) {
+        claimData.data.claims.map((item) => {
+          newArr = {
+            claimNumber: item.claimNumber,
+            status: item.status.status,
+            noOfItems: item.noOfItems,
+            noOfItemsPriced: item.noOfItemsPriced,
+            policyHoldersName:
+              item.insuredDetails.lastName + ", " + item.insuredDetails.firstName,
+            claimDate: item.createDate,
+            lastActive: item.lastActivity,
+            lastUpdated: item.lastUpdateDate,
+            statusNumber: item.status.id,
+          };
+          claimRes.push(newArr);
+        });
+        state.claimListData = claimRes;
+        state.currentPageNumber = claimData.data.currentPageNumber;
+        state.totalClaims = claimData.data.totalClaims;
+        state.claimErrorMsg = "";
+      } else {
+        state.claimErrorMsg = claimData.message;
+      }
     },
     addSearchKeyWord(state, action) {
       const { payload } = action;
@@ -48,7 +54,7 @@ const ClaimSlice = createSlice({
       const { statusIds } = payload;
 
       state.statusIds = statusIds;
-    }
+    },
   },
 });
 export default ClaimSlice;

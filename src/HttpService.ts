@@ -63,10 +63,10 @@ class HttpService {
             method: "GET",
             headers: { ...this.header, ...headers },
           })
-            .then((response) => response.json())
-            .then((result) => {
-              const data = result?.data;
-              return resolve({ data });
+            .then((resp) => resp.json())
+            .then((response) => {
+              // const data = result?.data;
+              return resolve({ response });
             })
             .catch((error) => reject({ error }));
         } catch (error) {

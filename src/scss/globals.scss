@@ -46,7 +46,9 @@ ol {
 .position-relative {
   position: relative;
 }
-
+.text-danger {
+  color: #df424f !important;
+}
 a {
   color: $astral;
   text-decoration: none;
@@ -117,3 +119,15 @@ a {
   color: #fff;
   background-color: #343a40;
 }
+.hideInputArrow {
+  & ::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+/* Firefox */
