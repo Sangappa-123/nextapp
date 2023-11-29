@@ -46,7 +46,9 @@ ol {
 .position-relative {
   position: relative;
 }
-
+.text-danger{
+  color: #df424f !important;
+}
 a {
   color: $astral;
   text-decoration: none;

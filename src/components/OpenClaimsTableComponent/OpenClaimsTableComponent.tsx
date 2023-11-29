@@ -13,7 +13,7 @@ function OpenClaimsTableComponent(props): React.ReactNode {
   const [loading, setLoading] = useState(true);
   React.useEffect(() => {
     setLoading(false);
-    const claimData = props.claimListRes.result.data;
+    const claimData = props.claimListRes.result;
     props.addClaimListData({ claimData });
   }, []);
 

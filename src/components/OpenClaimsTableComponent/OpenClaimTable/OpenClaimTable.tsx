@@ -127,8 +127,6 @@ const OpenClaimTable: React.FC = (props) => {
 
   React.useEffect(() => {
     setLoader(true);
-
-    if (props.claimListData.length > 0) {
       const pageNumber = pagination.pageIndex + 1;
       // console.log("sorting", sorting);
       // console.log("props.claimListData.length", props.claimListData.length);
@@ -140,15 +138,13 @@ const OpenClaimTable: React.FC = (props) => {
         if (result) {
           setLoader(false);
         }
-      } else {
+      } else if (sorting.length === 0 && props.claimListData.length > 0) {
         const result = fetchClaimList(pageNumber);
         if (result) {
           setLoader(false);
         }
       }
-    } else {
-      setLoader(false);
-    }
+    
   }, [sorting, pagination]);
 
   const table = useReactTable({
@@ -176,6 +172,7 @@ const OpenClaimTable: React.FC = (props) => {
         pageLimit={pageLimit}
         showStatusColor={true}
         loader={loader}
+        tableDataErrorMsg = {props.claimErrorMsg}
       />
     </div>
   );
@@ -185,5 +182,6 @@ const mapStateToProps = ({ claimdata }) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
+  claimErrorMsg: claimdata.claimErrorMsg
 });
 export default connect(mapStateToProps, null)(OpenClaimTable);

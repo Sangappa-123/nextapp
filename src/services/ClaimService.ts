@@ -52,7 +52,7 @@ export const fetchClaimList = async (
   console.log("claimListRes", claimListRes);
 
   if (claimListRes.result.status === 200) {
-    const claimData = claimListRes.result.data;
+    const claimData = claimListRes.result;
     store.dispatch(addClaimListData({ claimData }));
     return claimData;
   }
