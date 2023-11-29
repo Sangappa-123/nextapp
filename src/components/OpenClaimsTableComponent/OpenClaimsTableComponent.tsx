@@ -1,17 +1,24 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import OpenClaimsText from "./OpenClaimsText";
 import NewClaimButton from "./NewClaimButton";
 import OpenClaimSelectDropdown from "./OpenClaimSelectDropdown";
 import OpenClaimsSearchBox from "./OpenClaimsSearchBox/OpenClaimsSearchBox";
 import OpenClaimsComponentStyleTable from "./OpenClaimsTableComponent.module.scss";
 import OpenClaimTable from "./OpenClaimTable/index";
-import { fetchClaimList } from "@/services/ClaimService";
+import { connect } from "react-redux";
+import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
-function OpenClaimsTableComponent(): React.ReactNode {
-  const result = fetchClaimList();
-  const { data = [], error }: any = result;
-  if (!error && data) {
-    console.log("Success");
+function OpenClaimsTableComponent(props): React.ReactNode {
+  const [loading, setLoading] = useState(true);
+  React.useEffect(() => {
+    setLoading(false);
+    const claimData = props.claimListRes.result;
+    props.addClaimListData({ claimData });
+  }, []);
+
+  if (loading) {
+    return null;
   }
   return (
     <>
@@ -20,13 +27,13 @@ function OpenClaimsTableComponent(): React.ReactNode {
       </div>
       <div className={OpenClaimsComponentStyleTable.claimContainer}>
         <div className={`row ${OpenClaimsComponentStyleTable.claimContentContainer}`}>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12">
             <NewClaimButton />
           </div>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2 mb-2">
             <OpenClaimSelectDropdown />
           </div>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2">
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12">
             <OpenClaimsSearchBox />
           </div>
         </div>
@@ -38,4 +45,7 @@ function OpenClaimsTableComponent(): React.ReactNode {
     </>
   );
 }
-export default OpenClaimsTableComponent;
+const mapDispatchToProps = {
+  addClaimListData,
+};
+export default connect(null, mapDispatchToProps)(OpenClaimsTableComponent);

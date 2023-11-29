@@ -15,9 +15,9 @@ function DashboardNotification({ data }) {
     Date: notification?.createDate,
     Message: (
       <>
-        {notification?.notificationParams?.message1}
+        <b>{notification?.notificationParams?.message1}</b>
         <br />
-        {notification?.messageTemplate}
+        {notification?.message}
       </>
     ),
     "Claim Details": (

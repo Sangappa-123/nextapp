@@ -16,6 +16,8 @@ import ReactTable from "@/components/common/ReactTable/index";
 
 const OpenClaimTable: React.FC = (props) => {
   const [claimResult, setClaimResult] = React.useState(props.claimListData);
+  const [loader, setLoader] = React.useState(true);
+
   const pageLimit = 20;
 
   type ClaimData = {
@@ -42,28 +44,7 @@ const OpenClaimTable: React.FC = (props) => {
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor((row) => row.status, {
-      id: "Status",
-      cell: (status) => {
-        return (
-          <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary 
-                    ${status.getValue() === "Created" && "badge-info"}
-                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                    ${status.getValue() === "Work In Progress" && "badge-warning"}
-                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                    `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
-          </div>
-        );
-      },
-      header: () => <span>Status</span>,
-      enableSorting: true,
-      size: 100,
-    }),
+
     columnHelper.accessor("noOfItems", {
       id: "itemNumber",
       header: () => `# of Items`,
@@ -95,6 +76,28 @@ const OpenClaimTable: React.FC = (props) => {
       enableSorting: false,
       size: 450,
     }),
+    columnHelper.accessor((row) => row.status, {
+      id: "Status",
+      cell: (status) => {
+        return (
+          <div style={{ width: "80px" }}>
+            <span
+              className={`badge badge-secondary 
+                    ${status.getValue() === "Created" && "badge-info"}
+                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
+                    ${status.getValue() === "Work In Progress" && "badge-warning"}
+                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
+                    `}
+            >
+              {status.getValue() as React.ReactNode}
+            </span>
+          </div>
+        );
+      },
+      header: () => <span>Status</span>,
+      enableSorting: true,
+      size: 100,
+    }),
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
@@ -123,14 +126,25 @@ const OpenClaimTable: React.FC = (props) => {
   );
 
   React.useEffect(() => {
-    const pageNumber = pagination.pageIndex + 1;
-    if (sorting.length > 0) {
-      const orderBy = sorting[0].desc ? "desc" : "asc";
-      const sortBy = sorting[0].id;
-      fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-    } else {
-      fetchClaimList(pageNumber);
-    }
+    setLoader(true);
+      const pageNumber = pagination.pageIndex + 1;
+      // console.log("sorting", sorting);
+      // console.log("props.claimListData.length", props.claimListData.length);
+
+      if (sorting.length > 0) {
+        const orderBy = sorting[0].desc ? "desc" : "asc";
+        const sortBy = sorting[0].id;
+        const result = fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+        if (result) {
+          setLoader(false);
+        }
+      } else if (sorting.length === 0 && props.claimListData.length > 0) {
+        const result = fetchClaimList(pageNumber);
+        if (result) {
+          setLoader(false);
+        }
+      }
+    
   }, [sorting, pagination]);
 
   const table = useReactTable({
@@ -157,6 +171,8 @@ const OpenClaimTable: React.FC = (props) => {
         totalClaims={props.totalClaims}
         pageLimit={pageLimit}
         showStatusColor={true}
+        loader={loader}
+        tableDataErrorMsg = {props.claimErrorMsg}
       />
     </div>
   );
@@ -166,5 +182,6 @@ const mapStateToProps = ({ claimdata }) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
+  claimErrorMsg: claimdata.claimErrorMsg
 });
 export default connect(mapStateToProps, null)(OpenClaimTable);
