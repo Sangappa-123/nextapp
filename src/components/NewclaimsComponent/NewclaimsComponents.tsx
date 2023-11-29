@@ -122,7 +122,7 @@ function NewclaimsComponent() {
                   btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
-              <div className="col-lg-1 auto">
+              <div className="col-auto">
                 <GenericButton
                   label="Save & Next"
                   // theme="normal"
@@ -162,7 +162,7 @@ function NewclaimsComponent() {
                   onClick={handleReset}
                 />
               </div>
-              <div className="col-lg-1 auto">
+              <div className="col-auto">
                 <GenericButton
                   label="Save & Next"
                   // theme="normal"
