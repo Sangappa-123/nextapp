@@ -20,16 +20,29 @@ const OpenClaimSelectDropdown: React.FC = () => {
   useEffect(() => {
     const selectedValues = [];
     if (selected.length > 1) {
+      const isFound = selected.some((element) => {
+        return element.value === 0;
+      });
+      if (isFound) {
+        setSelected((current) =>
+          current.filter((item) => {
+            // 👇️ remove object that has id equal to 2
+            return item.value !== 0;
+          })
+        );
+      }
+    }
+    if (selected.length > 0 && selected[0].value !== 0) {
       selected.map((item) => {
         if (item.value !== 0) selectedValues.push(item.value);
       });
       dispatch(addFilterValues({ statusIds: selectedValues }));
       fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
-    } else {
+    } else if (selected.length === 0) {
       dispatch(addFilterValues({ statusIds: null }));
-      // fetchClaimList();
+      fetchClaimList();
     }
-  }, [selected,dispatch]);
+  }, [selected, dispatch]);
 
   const customStyles = {
     control: (defaultStyles: any) => ({

@@ -127,24 +127,23 @@ const OpenClaimTable: React.FC = (props) => {
 
   React.useEffect(() => {
     setLoader(true);
-      const pageNumber = pagination.pageIndex + 1;
-      // console.log("sorting", sorting);
-      // console.log("props.claimListData.length", props.claimListData.length);
+    const pageNumber = pagination.pageIndex + 1;
+    // console.log("sorting", sorting);
+    // console.log("props.claimListData.length", props.claimListData.length);
 
-      if (sorting.length > 0) {
-        const orderBy = sorting[0].desc ? "desc" : "asc";
-        const sortBy = sorting[0].id;
-        const result = fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-        if (result) {
-          setLoader(false);
-        }
-      } else if (sorting.length === 0 && props.claimListData.length > 0) {
-        const result = fetchClaimList(pageNumber);
-        if (result) {
-          setLoader(false);
-        }
+    if (sorting.length > 0) {
+      const orderBy = sorting[0].desc ? "desc" : "asc";
+      const sortBy = sorting[0].id;
+      const result = fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+      if (result) {
+        setLoader(false);
       }
-    
+    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+      const result = fetchClaimList(pageNumber);
+      if (result) {
+        setLoader(false);
+      }
+    }
   }, [sorting, pagination]);
 
   const table = useReactTable({
@@ -172,7 +171,7 @@ const OpenClaimTable: React.FC = (props) => {
         pageLimit={pageLimit}
         showStatusColor={true}
         loader={loader}
-        tableDataErrorMsg = {props.claimErrorMsg}
+        tableDataErrorMsg={props.claimErrorMsg}
       />
     </div>
   );
@@ -182,6 +181,6 @@ const mapStateToProps = ({ claimdata }) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
-  claimErrorMsg: claimdata.claimErrorMsg
+  claimErrorMsg: claimdata.claimErrorMsg,
 });
 export default connect(mapStateToProps, null)(OpenClaimTable);

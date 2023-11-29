@@ -13,6 +13,7 @@ enum apiEndPoints {
   claimList = "web/open/claims",
   notification = "web/notifications",
   scoreCard = "web/claims/scorecard?statusFlag=",
+  deleteNotification = "web/delete/notification",
   immidiateAttentionClaims = "web/get/immediate/attention/claims?userId=",
   invoicelist = "web/get/company/invoicelist",
 }

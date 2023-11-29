@@ -13,6 +13,7 @@ const ClaimsCards: React.FC = async () => {
   }
   try {
     resp = await getImmediateClaims(userId);
+    console.log("resp", resp);
   } catch (error) {
     console.log("getImmediateClaims API error::", error);
   }
@@ -21,7 +22,7 @@ const ClaimsCards: React.FC = async () => {
     return (
       <>
         <GenericComponentHeading
-          title={`Claims Needing Attention${respData.totalClaims}`}
+          title={`Claims Needing Attention (${respData.totalClaims})`}
         />
         <ClaimsComponent claim={respData?.claims[0]} />
       </>

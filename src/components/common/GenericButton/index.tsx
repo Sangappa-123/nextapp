@@ -6,11 +6,19 @@ enum btnThemes {
   lightBlue = "light-blue",
   darkBlue = "dark-blue",
   normal = "normal-button",
+  deleteBtn = "delete-button",
+}
+
+enum btnSize {
+  medium = "medium-btn",
+  large = "large-btn",
+  small = "small-btn",
 }
 
 type genericButtonType = {
   label: string;
   theme?: keyof typeof btnThemes;
+  size?: keyof typeof btnSize;
   btnClassname?: string;
   disabled?: boolean;
   onClickHandler?: (value: any) => void;
@@ -21,6 +29,7 @@ function GenericButton({
   label,
   btnClassname = "",
   theme = "lightBlue",
+  size = "large",
   disabled,
   onClickHandler,
   ...rest
@@ -31,6 +40,7 @@ function GenericButton({
         [buttonStyle[btnThemes[theme]]]: true,
         [buttonStyle.genericBtn]: true,
         [btnClassname]: btnClassname,
+        [buttonStyle[btnSize[size]]]: size,
       })}
       disabled={disabled}
       type="button"

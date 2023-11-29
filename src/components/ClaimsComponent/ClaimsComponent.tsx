@@ -3,7 +3,16 @@ import Cards from "../common/Cards";
 import ClaimsStyle from "./ClaimsComponent.module.scss";
 import ClaimsAllViewButton from "./ClaimsAllViewButton";
 
-const ClaimsComponent: React.FC = (props: any) => {
+type claimType = {
+  claim: {
+    claimNumber: string;
+    adjusterName: string;
+    daysToClose: number;
+    noOfItems: number;
+  };
+};
+
+const ClaimsComponent: React.FC<claimType> = (props) => {
   return (
     <div>
       <Cards className={ClaimsStyle.cardsStylAdjustCalims}>

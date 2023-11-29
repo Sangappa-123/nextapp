@@ -11,7 +11,7 @@ const OpenClaimsSearchBox: React.FC = (props) => {
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
-    if(props.searchKeyword !== "" && e.target.value === ""){
+    if (props.searchKeyword !== "" && e.target.value === "") {
       props.addSearchKeyWord({ searchKeyword: "" });
       fetchClaimList();
     }
@@ -39,10 +39,8 @@ const OpenClaimsSearchBox: React.FC = (props) => {
 
 const mapStateToProps = ({ claimdata }) => ({
   searchKeyword: claimdata.searchKeyword,
-
 });
 const mapDispatchToProps = {
-  addSearchKeyWord
-}
+  addSearchKeyWord,
+};
 export default connect(mapStateToProps, mapDispatchToProps)(OpenClaimsSearchBox);
-

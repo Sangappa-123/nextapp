@@ -4,7 +4,7 @@ import Cards from "../common/Cards";
 import CardsStyle from "./dashboard.module.scss";
 import AlertCards from "../common/AlertCards";
 import MyScoreBoardCards from "../common/MyScoreBoardCards";
-import PendingVendorCards from "../common/PendingVendorCards";
+import PendingVendorCards from "./PendingVendorCards";
 import ClaimsCards from "./ClaimsCards";
 // import OpenClaimsTableContainer from "@/container/OpenClaimsTableContainer";
 // import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
