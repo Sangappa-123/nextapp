@@ -33,6 +33,7 @@ function GenericInput(props: propsType, ref: any) {
     labelClassname = "",
     theme = "default",
     isFixedError = false,
+    inputFieldWrapperClassName = "",
     ...rest
   } = props;
   return (
@@ -50,7 +51,11 @@ function GenericInput(props: propsType, ref: any) {
       >
         {label}
       </label>
-      <div>
+      <div
+        className={clsx({
+          [inputFieldWrapperClassName]: inputFieldWrapperClassName,
+        })}
+      >
         <input
           type="text"
           ref={ref}
