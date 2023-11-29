@@ -72,6 +72,24 @@ const DashboardAlertSlice = createSlice({
       state.isLastPage = state.page >= state.totalPage;
       state.isFetching = false;
     },
+    removeAlertNotification(state, action) {
+      const { id, data } = action.payload;
+      if (data) {
+        const totalCount = data?.totalClaims ?? state.totalCount - 1;
+        state.totalCount = totalCount;
+        state.totalPage = Math.ceil(totalCount / 10);
+        if (state.page > state.totalPage) {
+          state.page = state.totalPage;
+        }
+      }
+      state.notifications = state.notifications.filter((data) => data?.id !== id);
+      return state;
+    },
+    removeAlertMessage(state, action) {
+      const { id } = action.payload;
+      state.messages = state.messages.filter((data) => data?.id !== id);
+      return state;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchAlertNotification.pending, (state) => {
@@ -90,5 +108,6 @@ const DashboardAlertSlice = createSlice({
 
 export const isFetchingSelector = (state) => state.alert.isFetching;
 export const isLastPageSelector = (state) => state.alert.isLastPage;
-export const { addAlert } = DashboardAlertSlice.actions;
+export const { addAlert, removeAlertNotification, removeAlertMessage } =
+  DashboardAlertSlice.actions;
 export default DashboardAlertSlice;

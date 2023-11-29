@@ -76,6 +76,29 @@ class HttpService {
       });
     });
   }
+
+  async delete(url: string, payload: unknown, headers?: object) {
+    return new Promise((resolve, reject) => {
+      this.validateToken().then(() => {
+        try {
+          fetch(url, {
+            method: "DELETE",
+            headers: { ...this.header, ...headers },
+            body: JSON.stringify(payload),
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              const data = result;
+              return resolve({ data });
+            })
+            .catch((error) => reject({ error }));
+        } catch (error) {
+          console.error("Delete API error", error);
+          return reject({ error });
+        }
+      });
+    });
+  }
 }
 
 export default HttpService;

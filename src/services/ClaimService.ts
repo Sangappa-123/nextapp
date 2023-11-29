@@ -6,7 +6,7 @@ import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
 
 export const claimList = async (payload: any, token: any) => {
-  const headersData: {} = getHeaderWithoutToken();
+  const headersData: object = getHeaderWithoutToken();
   // const headersData: object = getHeader();
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("claimList"), {
@@ -29,7 +29,7 @@ export const fetchClaimList = async (
   orderBy = "desc",
   searchKeyword = "",
   statusIds = null
-) => {  
+) => {
   const state = store.getState();
   searchKeyword = state.claimdata.searchKeyword;
   statusIds = state.claimdata.statusIds;
@@ -47,7 +47,7 @@ export const fetchClaimList = async (
     searchKeyword,
     statusIds,
   };
-  
+
   const claimListRes: any = await claimList(payload, token);
   console.log("claimListRes", claimListRes);
 
@@ -68,6 +68,20 @@ export const getNotification = async (param: object, isClient: boolean = false) 
     if (data) {
       return data;
     }
+    throw error;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const deleteNotification = async (param: object) => {
+  try {
+    const url = getApiEndPoint("deleteNotification");
+    const http = new HttpService({ isClient: true });
+    const res = await http.delete(url, param);
+    const { data, error } = res;
+    if (data) return { data };
     throw error;
   } catch (err) {
     console.log("error", err);

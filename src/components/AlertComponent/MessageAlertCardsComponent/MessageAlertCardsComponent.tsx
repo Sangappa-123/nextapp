@@ -5,7 +5,7 @@ import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
 import alertComponentStyle from "../alertComponent.module.scss";
 
 const MessageAlertCardsComponent = () => {
-  const columns = ["Date", "Claim Details", "Message"];
+  const columns = ["Date", "Claim Details", "Message", "action"];
   const messages = useAppSelector((state) => state.alert.messages);
   const tableData = messages.map((message) => ({
     Date: message?.createDate,
