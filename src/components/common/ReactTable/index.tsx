@@ -8,13 +8,12 @@ import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
 
 const ReactTable: React.FC = (props) => {
-  const { table, totalClaims, pageLimit, showStatusColor , loader,tableDataErrorMsg} = props;
-  
+  const { table, totalClaims, pageLimit, showStatusColor, loader, tableDataErrorMsg } =
+    props;
+
   return (
     <div className={ReactTableStyles.reactTable}>
-      {loader && (
-        <CustomLoader loaderType="spinner1" />
-      )}
+      {loader && <CustomLoader loaderType="spinner1" />}
 
       <table>
         <thead>
@@ -59,41 +58,46 @@ const ReactTable: React.FC = (props) => {
           ))}
         </thead>
         <tbody>
-          {tableDataErrorMsg ? (<tr><td colspan="100" className="text-center text-danger">{tableDataErrorMsg}</td></tr>): (<>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell, index) => (
-                <td
-                  key={cell.id}
-                  className={
-                    showStatusColor && index === 0
-                      ? clsx({
-                          [ReactTableStyles.All_Items_Priced]:
-                            row.original.noOfItems == row.original.noOfItemsPriced,
-                          [ReactTableStyles.Partial_Items_Priced]:
-                            row.original.noOfItemsPriced != 0 &&
-                            row.original.noOfItems > row.original.noOfItemsPriced,
-                          [ReactTableStyles.No_Items_Priced]:
-                            row.original.noOfItemsPriced == 0 &&
-                            row.original.noOfItems != 0,
-                        })
-                      : undefined
-                  }
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {tableDataErrorMsg ? (
+            <tr>
+              <td colspan="100" className="text-center text-danger">
+                {tableDataErrorMsg}
+              </td>
             </tr>
-          ))}
-          </>
-
+          ) : (
+            <>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell, index) => (
+                    <td
+                      key={cell.id}
+                      className={
+                        showStatusColor && index === 0
+                          ? clsx({
+                              [ReactTableStyles.All_Items_Priced]:
+                                row.original.noOfItems == row.original.noOfItemsPriced,
+                              [ReactTableStyles.Partial_Items_Priced]:
+                                row.original.noOfItemsPriced != 0 &&
+                                row.original.noOfItems > row.original.noOfItemsPriced,
+                              [ReactTableStyles.No_Items_Priced]:
+                                row.original.noOfItemsPriced == 0 &&
+                                row.original.noOfItems != 0,
+                            })
+                          : undefined
+                      }
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </>
           )}
-
         </tbody>
       </table>
       <div className="h-2" />
       {!tableDataErrorMsg && (
-          <div className={ReactTableStyles.paginationContainer}>
+        <div className={ReactTableStyles.paginationContainer}>
           <span className={ReactTableStyles.paginationText}>
             Showing {table.getState().pagination.pageIndex * pageLimit + 1} to{" "}
             {totalClaims >
@@ -117,7 +121,7 @@ const ReactTable: React.FC = (props) => {
             >
               {"<"}
             </button>
-  
+
             {Array(table.getPageCount())
               .fill()
               .map((value, index) => {
@@ -165,7 +169,6 @@ const ReactTable: React.FC = (props) => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };
