@@ -15,7 +15,7 @@ const ScoreBoardsComponent = (props: { data: any }) => {
     setIsLoading(true);
     try {
       const resp = await getClaimScoreCard(scoreDataValue, true);
-      setScoreData(resp);
+      setScoreData(resp?.data);
     } finally {
       setIsLoading(false);
     }
