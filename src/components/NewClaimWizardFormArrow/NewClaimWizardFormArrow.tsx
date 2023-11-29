@@ -1,13 +1,66 @@
-import React from "react";
-import ArrowStyle from "./newClaimWizardFormArrow.module.scss";
+"use client";
+import React, { useState } from "react";
+import NewClaimWizardStyle from "./newClaimWizardFormArrow.module.scss";
 
 const NewClaimWizardFormArrow: React.FC = () => {
+  const [activeSection, setActiveSection] = useState(0);
+  const sectionsTabs = [
+    {
+      name: "1) Claim and Policy Information",
+      color:
+        activeSection === 0
+          ? NewClaimWizardStyle.orange
+          : activeSection > 0
+            ? NewClaimWizardStyle.green
+            : NewClaimWizardStyle.grey,
+    },
+    {
+      name: "2) Add Items",
+      color:
+        activeSection === 1
+          ? NewClaimWizardStyle.orange
+          : activeSection > 1
+            ? NewClaimWizardStyle.green
+            : NewClaimWizardStyle.grey,
+    },
+    {
+      name: "3) Assign Items",
+      color:
+        activeSection === 2
+          ? NewClaimWizardStyle.orange
+          : activeSection > 2
+            ? NewClaimWizardStyle.green
+            : NewClaimWizardStyle.grey,
+    },
+  ];
+
+  const handleSectionClick = (index: number) => {
+    if (index === activeSection) {
+      console.log("active");
+      return;
+    }
+    setActiveSection(index);
+  };
+
+  // const handleButtonClick = () => {
+  //   setActiveSection((prev) => prev + 1);
+  // };
+
   return (
-    <div className={ArrowStyle.arrowButton}>
-      {/* <div className="row"> */}
-      <div className={ArrowStyle.arrowText}>Claims and Policy Information</div>
-    </div>
-    // </div>
+    <>
+      <div className={`container ${NewClaimWizardStyle.tabsAllStyle}`}>
+        {sectionsTabs.map((sectionsTabs, index) => (
+          <div
+            key={index}
+            className={`col-12 col-sm-6 col-md-4 col-lg-3 ${NewClaimWizardStyle.arrowContainer} ${sectionsTabs.color}`}
+            onClick={() => handleSectionClick(index)}
+          >
+            <span className={NewClaimWizardStyle.tabText}>{sectionsTabs.name}</span>
+          </div>
+        ))}
+      </div>
+      {/* <button onClick={() => handleButtonClick()}>Save & Next</button> */}
+    </>
   );
 };
 
