@@ -12,6 +12,7 @@ import ClaimInformation from "../ClaimInformation/ClaimInformation";
 import AddItemsComponent from "./AddItemsComponent";
 import AssignItemsComponent from "./AssignItemsComponent";
 import NewClaimWizardFormArrow from "../NewClaimWizardFormArrow";
+import GenericButton from "../common/GenericButton/index";
 
 function NewclaimsComponent() {
   const [activeSection, setActiveSection] = useState(0);
@@ -109,9 +110,27 @@ function NewclaimsComponent() {
                 1) Claim and Policy Information{" "}
               </p>
             </div>
-            <button className={NewClaimsStyle.cancelButton}>Cancel</button>
-            <button className={NewClaimsStyle.resetButton}>Reset All</button>
-            <button className={NewClaimsStyle.saveButton}>Save & Next </button>
+            <div className="row justify-content-end mt-4">
+              <div className="col-auto mt-2">
+                <button className={NewClaimsStyle.cancelButton}>Cancel</button>
+              </div>
+              <div className="col-auto ml-2">
+                <GenericButton
+                  label="Reset"
+                  // theme="normal"
+                  type="submit"
+                  btnClassname={NewClaimsStyle.resetBtn}
+                />
+              </div>
+              <div className="col-lg-1 auto">
+                <GenericButton
+                  label="Save & Next"
+                  // theme="normal"
+                  type="submit"
+                  btnClassname={NewClaimsStyle.resetBtn}
+                />
+              </div>
+            </div>{" "}
             <div>
               <GenericComponentHeading
                 title={"Policyholder Information"}
@@ -128,15 +147,30 @@ function NewclaimsComponent() {
               />
               <ClaimInformation control={control} register={register} error={errors} />
             </div>
-            <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
-              Cancel
-            </button>
-            <button className={NewClaimsStyle.resetButton} onClick={handleReset}>
-              Reset All
-            </button>
-            <button type="submit" className={NewClaimsStyle.saveButton}>
-              Save & Next
-            </button>
+            <div className="row justify-content-end mt-4">
+              <div className="col-auto mt-2">
+                <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
+                  Cancel
+                </button>
+              </div>
+              <div className="col-auto ml-2">
+                <GenericButton
+                  label="Reset"
+                  // theme="normal"
+                  type="submit"
+                  btnClassname={NewClaimsStyle.resetBtn}
+                  onClick={handleReset}
+                />
+              </div>
+              <div className="col-lg-1 auto">
+                <GenericButton
+                  label="Save & Next"
+                  // theme="normal"
+                  type="submit"
+                  btnClassname={NewClaimsStyle.resetBtn}
+                />
+              </div>
+            </div>
           </form>
         </Cards>
       )}

@@ -1,7 +1,7 @@
 import React from "react";
 import GenericButton from "@/components/common/GenericButton";
-import NewClaimButtonStyle from "./NewClaimButton.module.scss";
 import { useRouter } from "next/navigation";
+import NewClaimButtonStyle from "./NewClaimButton.module.scss";
 
 const NewClaimButton: React.FC = () => {
   const router = useRouter();
