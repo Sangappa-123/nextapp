@@ -3,12 +3,23 @@ import Cards from "../common/Cards";
 import ViewAllButtonPending from "./ViewAllButtonPending";
 import PendingStyle from "./pendingComponenet.module.scss";
 
-const PendingComponent: React.FC = () => {
+type pendingInvoiceType = {
+  pendingInvoice: {
+    amount: number;
+    claimNumber: string;
+    insuredName: string;
+  };
+};
+
+const PendingComponent: React.FC<pendingInvoiceType> = (props) => {
   return (
     <div>
       <Cards className={PendingStyle.cardsStylAdjustCalims}>
         <div className=" row mt-2">
-          <h6>Pay Artigem Contents $60.00 for claim #flow16112023 (Smith, Gracie)</h6>
+          <h6>
+            Pay Artigem Contents ${props?.pendingInvoice?.amount} for claim #
+            {props?.pendingInvoice?.claimNumber} ({props?.pendingInvoice?.insuredName})
+          </h6>
         </div>
       </Cards>
       <ViewAllButtonPending />
