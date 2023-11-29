@@ -14,7 +14,7 @@ const MyScoreBoardCards: React.FC = async () => {
   return (
     <div>
       <GenericComponentHeading title="My ScoreBoard" />
-      <ScoreBoardsComponent data={resp} />
+      <ScoreBoardsComponent data={resp?.data} />
     </div>
   );
 };
