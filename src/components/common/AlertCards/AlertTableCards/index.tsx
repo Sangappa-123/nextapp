@@ -7,7 +7,6 @@ import useObserver from "@/hooks/useObserver";
 type propsType<T> = {
   tableData: T[];
   columns: string[];
-  showConfirmation: boolean;
 };
 
 const AlertTableCards = <T extends object>({ columns, tableData }: propsType<T>) => {

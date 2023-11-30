@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import AlertTableCards from "@/components/common/AlertCards/AlertTableCards";
 import alertComponentStyle from "../alertComponent.module.scss";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import ConfirmModal from "@/components/common/ConfirmModal";
 import { deleteNotification } from "@/services/ClaimService";
 import { removeAlertMessage } from "@/reducers/DashboardAlert/DashboardAlertSlice";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
@@ -12,9 +11,30 @@ import { addNotification } from "@/reducers/Notification/NotificationSlice";
 const MessageAlertCardsComponent = () => {
   const dispatch = useAppDispatch();
   const columns = ["Date", "Claim Details", "Message", ""];
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
   const messages = useAppSelector((state) => state.alert.messages);
+  const handleDelete = (id: number) => {
+    deleteNotification({ id, page: 1 })
+      .then((res) => {
+        const { data } = res;
+        dispatch(removeAlertMessage({ id, data }));
+        dispatch(
+          addNotification({
+            message: data?.message ?? "Notification Deleted.",
+            id,
+          })
+        );
+      })
+      .catch((err) => {
+        console.log("Delete notification error:", err);
+        dispatch(
+          addNotification({
+            message: "Something went wrong.",
+            id,
+            status: "error",
+          })
+        );
+      });
+  };
   const tableData = messages.map((message) => ({
     Date: message?.createDate,
     "Claim Details": (
@@ -38,10 +58,7 @@ const MessageAlertCardsComponent = () => {
     "": (
       <div className={alertComponentStyle.deleteIconDiv}>
         <RiDeleteBin6Line
-          onClick={() => {
-            setShowConfirmation(true);
-            setSelectedItem(message?.id);
-          }}
+          onClick={() => handleDelete(message?.id)}
           size="18"
           className={alertComponentStyle.deleteIcon}
         />
@@ -49,51 +66,9 @@ const MessageAlertCardsComponent = () => {
     ),
   }));
 
-  const handleClose = () => {
-    setSelectedItem(null);
-    setShowConfirmation(false);
-  };
-
-  const handleDelete = () => {
-    deleteNotification({ id: selectedItem, page: 1 })
-      .then((res) => {
-        const { data } = res;
-        dispatch(removeAlertMessage({ id: selectedItem, data }));
-        dispatch(
-          addNotification({
-            message: data?.message ?? "Notification Deleted.",
-            id: selectedItem,
-          })
-        );
-      })
-      .catch((err) => {
-        console.log("Delete notification error:", err);
-        dispatch(
-          addNotification({
-            message: "Something went wrong.",
-            id: selectedItem,
-            status: "error",
-          })
-        );
-      })
-      .finally(() => {
-        handleClose();
-      });
-  };
-
   return (
     <div className={alertComponentStyle.container}>
-      <ConfirmModal
-        showConfirmation={showConfirmation}
-        closeHandler={handleClose}
-        submitHandler={handleDelete}
-        descText="Do you really want to delete this notification."
-      />
-      <AlertTableCards
-        showConfirmation={showConfirmation}
-        tableData={tableData}
-        columns={columns}
-      />
+      <AlertTableCards tableData={tableData} columns={columns} />
     </div>
   );
 };
