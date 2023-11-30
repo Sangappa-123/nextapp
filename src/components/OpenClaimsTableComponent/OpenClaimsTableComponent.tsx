@@ -11,6 +11,8 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
 function OpenClaimsTableComponent(props): React.ReactNode {
   const [loading, setLoading] = useState(true);
+  const [tableLoader, setTableLoader] = React.useState(false);
+
   React.useEffect(() => {
     setLoading(false);
     const claimData = props.claimListRes.result;
@@ -31,16 +33,16 @@ function OpenClaimsTableComponent(props): React.ReactNode {
             <NewClaimButton />
           </div>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2 mb-2">
-            <OpenClaimSelectDropdown />
+            <OpenClaimSelectDropdown setTableLoader={setTableLoader} />
           </div>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12">
-            <OpenClaimsSearchBox />
+            <OpenClaimsSearchBox setTableLoader={setTableLoader} />
           </div>
         </div>
       </div>
 
       <div className="row">
-        <OpenClaimTable />
+        <OpenClaimTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
       </div>
     </>
   );

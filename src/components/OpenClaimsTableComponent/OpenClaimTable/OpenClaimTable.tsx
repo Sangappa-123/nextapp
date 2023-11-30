@@ -16,7 +16,6 @@ import ReactTable from "@/components/common/ReactTable/index";
 
 const OpenClaimTable: React.FC = (props) => {
   const [claimResult, setClaimResult] = React.useState(props.claimListData);
-  const [loader, setLoader] = React.useState(true);
 
   const pageLimit = 20;
 
@@ -125,26 +124,47 @@ const OpenClaimTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-  React.useEffect(() => {
-    setLoader(true);
-    const pageNumber = pagination.pageIndex + 1;
-    // console.log("sorting", sorting);
-    // console.log("props.claimListData.length", props.claimListData.length);
+  const handleSorting = async (sortingUpdater) => {
+    props.setTableLoader(true);
+
+    const newSortVal = sortingUpdater(sorting);
+    setSorting(newSortVal);
 
     if (sorting.length > 0) {
       const orderBy = sorting[0].desc ? "desc" : "asc";
       const sortBy = sorting[0].id;
-      const result = fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+      const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
       if (result) {
-        setLoader(false);
+        props.setTableLoader(false);
       }
     } else if (sorting.length === 0 && props.claimListData.length > 0) {
-      const result = fetchClaimList(pageNumber);
+      const result = await fetchClaimList();
       if (result) {
-        setLoader(false);
+        props.setTableLoader(false);
       }
     }
-  }, [sorting, pagination]);
+  };
+  const handlePagination = async (updaterFunction) => {
+    props.setTableLoader(true);
+
+    const newValue = updaterFunction(pagination);
+    setPagination(newValue);
+    const pageNumber = pagination.pageIndex + 1;
+
+    if (sorting.length > 0) {
+      const orderBy = sorting[0].desc ? "desc" : "asc";
+      const sortBy = sorting[0].id;
+      const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+      if (result) {
+        props.setTableLoader(false);
+      }
+    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+      const result = await fetchClaimList(pageNumber);
+      if (result) {
+        props.setTableLoader(false);
+      }
+    }
+  };
 
   const table = useReactTable({
     data: claimResult,
@@ -154,8 +174,8 @@ const OpenClaimTable: React.FC = (props) => {
       sorting,
       pagination,
     },
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
+    onPaginationChange: handlePagination,
+    onSortingChange: handleSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
@@ -170,7 +190,7 @@ const OpenClaimTable: React.FC = (props) => {
         totalDataCount={props.totalClaims}
         pageLimit={pageLimit}
         showStatusColor={true}
-        loader={loader}
+        loader={props.tableLoader}
         tableDataErrorMsg={props.claimErrorMsg}
       />
     </div>
@@ -182,5 +202,6 @@ const mapStateToProps = ({ claimdata }) => ({
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
   claimErrorMsg: claimdata.claimErrorMsg,
+  sortedIds: claimdata.statusIds,
 });
 export default connect(mapStateToProps, null)(OpenClaimTable);

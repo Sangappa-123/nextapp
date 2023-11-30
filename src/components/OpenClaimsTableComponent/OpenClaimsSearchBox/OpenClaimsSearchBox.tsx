@@ -9,17 +9,30 @@ import { connect } from "react-redux";
 const OpenClaimsSearchBox: React.FC = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     setSearchValue(e.target.value);
     if (props.searchKeyword !== "" && e.target.value === "") {
+      props.setTableLoader(true);
       props.addSearchKeyWord({ searchKeyword: "" });
-      fetchClaimList();
+      const result = await fetchClaimList();
+      if (result) {
+        props.setTableLoader(false);
+      }
     }
   };
-  const searchKey = (event) => {
+  const searchKey = async (event) => {
     if (event.key === "Enter") {
       props.addSearchKeyWord({ searchKeyword: event.target.value });
-      fetchClaimList(1, 20, "createDate", "desc", event.target.value);
+      const result = await fetchClaimList(
+        1,
+        20,
+        "createDate",
+        "desc",
+        event.target.value
+      );
+      if (result) {
+        props.setTableLoader(false);
+      }
     }
   };
 
