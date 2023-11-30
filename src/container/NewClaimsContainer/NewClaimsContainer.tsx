@@ -6,7 +6,7 @@ import NewclaimsComponent from "@/components/NewclaimsComponent/index";
 const pathList = [
   {
     name: "Home",
-    path: "/login",
+    path: "/adjuster-dashboard",
   },
   {
     name: "All Claim",
@@ -21,7 +21,7 @@ function NewclaimsContainer() {
       <GenericBreadcrumb dataList={pathList} />
       <p className={NewClaimsStyle.Wizard}>New Claim Wizard</p>
       <hr className={NewClaimsStyle.divider} />
-      <div className="container-fluid p-0 pt-3">
+      <div className="container-fluid p-0 pt-2">
         <div className="row m-0">
           {/* <SecurityQuestionComponent /> */}
           <NewclaimsComponent />

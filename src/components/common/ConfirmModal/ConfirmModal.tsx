@@ -7,8 +7,14 @@ type props = {
   showConfirmation: boolean;
   closeHandler?: () => void;
   submitHandler?: () => void;
+  descText?: string;
 };
-function ConfirmModal({ showConfirmation = false, closeHandler, submitHandler }: props) {
+function ConfirmModal({
+  showConfirmation = false,
+  closeHandler,
+  submitHandler,
+  descText = "",
+}: props) {
   return (
     <Modal
       isOpen={showConfirmation}
@@ -34,9 +40,7 @@ function ConfirmModal({ showConfirmation = false, closeHandler, submitHandler }:
     >
       <div className={confirmModalStyle.modalBody}>
         <h3 className={confirmModalStyle.heading}>Are You Sure?</h3>
-        <p className={confirmModalStyle.desc}>
-          Do you really want to delete this notification.
-        </p>
+        {descText && <p className={confirmModalStyle.desc}>{descText}</p>}
       </div>
     </Modal>
   );

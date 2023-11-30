@@ -1,9 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import NewClaimWizardStyle from "./newClaimWizardFormArrow.module.scss";
+interface NewClaimWizardFormArrowProps {
+  activeSection: number;
+  handleSectionClick: (index: number) => void;
+}
 
-const NewClaimWizardFormArrow: React.FC = () => {
-  const [activeSection, setActiveSection] = useState(0);
+const NewClaimWizardFormArrow: React.FC<NewClaimWizardFormArrowProps> = ({
+  activeSection,
+  handleSectionClick,
+}) => {
   const sectionsTabs = [
     {
       name: "1) Claim and Policy Information",
@@ -11,8 +17,8 @@ const NewClaimWizardFormArrow: React.FC = () => {
         activeSection === 0
           ? NewClaimWizardStyle.orange
           : activeSection > 0
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
     {
       name: "2) Add Items",
@@ -20,8 +26,8 @@ const NewClaimWizardFormArrow: React.FC = () => {
         activeSection === 1
           ? NewClaimWizardStyle.orange
           : activeSection > 1
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
     {
       name: "3) Assign Items",
@@ -29,22 +35,10 @@ const NewClaimWizardFormArrow: React.FC = () => {
         activeSection === 2
           ? NewClaimWizardStyle.orange
           : activeSection > 2
-            ? NewClaimWizardStyle.green
-            : NewClaimWizardStyle.grey,
+          ? NewClaimWizardStyle.green
+          : NewClaimWizardStyle.grey,
     },
   ];
-
-  const handleSectionClick = (index: number) => {
-    if (index === activeSection) {
-      console.log("active");
-      return;
-    }
-    setActiveSection(index);
-  };
-
-  // const handleButtonClick = () => {
-  //   setActiveSection((prev) => prev + 1);
-  // };
 
   return (
     <>
@@ -59,7 +53,6 @@ const NewClaimWizardFormArrow: React.FC = () => {
           </div>
         ))}
       </div>
-      {/* <button onClick={() => handleButtonClick()}>Save & Next</button> */}
     </>
   );
 };

@@ -93,6 +93,7 @@ function DashboardNotification({ data }) {
         showConfirmation={showConfirmation}
         closeHandler={handleClose}
         submitHandler={handleDelete}
+        descText="Do you really want to delete this notification."
       />
 
       <AlertTableCards
