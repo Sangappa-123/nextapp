@@ -13,7 +13,12 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
       <thead className={CommonTableStyle.theadtyle}>
         <tr className={CommonTableStyle.trStyle}>
           {columns.map((column, index) => (
-            <th key={index} className={CommonTableStyle.thStyle}>
+            <th
+              key={index}
+              className={clsx(CommonTableStyle.thStyle, {
+                [CommonTableStyle.actionHeadingCol]: !column,
+              })}
+            >
               {column}
             </th>
           ))}
@@ -22,10 +27,29 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
       <tbody className={CommonTableStyle.tBodyStyle}>
         {data.length > 0 ? (
           data.map((row, rowIndex) => (
-            <tr key={rowIndex} className={CommonTableStyle.trStyle}>
+            <tr
+              key={rowIndex}
+              className={CommonTableStyle.trStyle}
+              onMouseOver={(e) => {
+                e.currentTarget
+                  .querySelector("[data-key='action']")
+                  ?.classList?.add(CommonTableStyle.show);
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget
+                  .querySelector("[data-key='action']")
+                  ?.classList?.remove(CommonTableStyle.show);
+              }}
+            >
               {columns.map((column, colIndex) => (
-                <td key={colIndex} className={CommonTableStyle.tdStyle}>
-                  {row[column]}
+                <td key={colIndex} className={clsx(CommonTableStyle.tdStyle)}>
+                  {column ? (
+                    row[column]
+                  ) : (
+                    <span data-key="action" className={CommonTableStyle.actionIcon}>
+                      {row[column]}
+                    </span>
+                  )}
                 </td>
               ))}
             </tr>

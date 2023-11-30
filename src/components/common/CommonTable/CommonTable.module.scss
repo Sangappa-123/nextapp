@@ -8,6 +8,9 @@
     position: sticky;
     top: 0;
   }
+  .actionHeadingCol {
+    min-width: fit-content;
+  }
   tbody {
     background-color: #fff;
     // background-color: rgb(235, 226, 226);
@@ -22,6 +25,12 @@
         text-align: left;
         word-wrap: break-word;
         font-size: 11px;
+      }
+      .actionIcon {
+        visibility: hidden;
+      }
+      .show {
+        visibility: visible;
       }
       &:hover {
         box-shadow: -4px 1px 4px #ccc;
