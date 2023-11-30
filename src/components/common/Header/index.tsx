@@ -36,17 +36,19 @@ const NavBarMenu = () => {
           <input type="text" placeholder="What can we help you find?" />
           <RiSearch2Line className={NavStyle.searchIcon} />
         </div>
-        <div className={NavStyle.userInfo}>
-          <div className={NavStyle.userAvatar}>
-            {loggedInUser.firstName.charAt(0)}
-            {loggedInUser.lastName.charAt(0)}
+        <div className="d-flex align-items-center">
+          <div className={NavStyle.userInfo}>
+            <div className={NavStyle.userAvatar}>
+              {loggedInUser.firstName.charAt(0)}
+              {loggedInUser.lastName.charAt(0)}
+            </div>
+            <div className={NavStyle.userName}>
+              {loggedInUser.firstName} {loggedInUser.lastName}
+            </div>
           </div>
-          <div className={NavStyle.userName}>
-            {loggedInUser.firstName} {loggedInUser.lastName}
+          <div className={NavStyle.signoutText} onClick={signoutHandle}>
+            Sign Out
           </div>
-        </div>
-        <div className={NavStyle.signoutText} onClick={signoutHandle}>
-          Sign Out
         </div>
       </nav>
       <div className={NavStyle.toggleButton} onClick={toggleMenu}>

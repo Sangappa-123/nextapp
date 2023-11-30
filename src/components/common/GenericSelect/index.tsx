@@ -31,9 +31,9 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     customStyles = "",
     customMenuWithClear = false,
     selected = null,
-    setSelected,
     isManditaory = true,
     hideSelectedOptions = true,
+    handleSelectChange,
     ...rest
   } = props;
 
@@ -76,7 +76,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
           styles={customStyles}
           components={{ Menu: CustomMenuWithClear }}
           value={selected}
-          onChange={setSelected}
+          onChange={handleSelectChange}
           options={options}
           placeholder={placeholder}
           isClearable={true}

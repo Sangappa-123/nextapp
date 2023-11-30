@@ -16,6 +16,7 @@ import ReactTable from "@/components/common/ReactTable/index";
 
 const OpenClaimTable: React.FC = (props) => {
   const [claimResult, setClaimResult] = React.useState(props.claimListData);
+
   const pageLimit = 20;
 
   type ClaimData = {
@@ -42,28 +43,7 @@ const OpenClaimTable: React.FC = (props) => {
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor((row) => row.status, {
-      id: "Status",
-      cell: (status) => {
-        return (
-          <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary 
-                    ${status.getValue() === "Created" && "badge-info"}
-                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                    ${status.getValue() === "Work In Progress" && "badge-warning"}
-                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                    `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
-          </div>
-        );
-      },
-      header: () => <span>Status</span>,
-      enableSorting: true,
-      size: 100,
-    }),
+
     columnHelper.accessor("noOfItems", {
       id: "itemNumber",
       header: () => `# of Items`,
@@ -95,6 +75,28 @@ const OpenClaimTable: React.FC = (props) => {
       enableSorting: false,
       size: 450,
     }),
+    columnHelper.accessor((row) => row.status, {
+      id: "Status",
+      cell: (status) => {
+        return (
+          <div style={{ width: "80px" }}>
+            <span
+              className={`badge badge-secondary 
+                    ${status.getValue() === "Created" && "badge-info"}
+                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
+                    ${status.getValue() === "Work In Progress" && "badge-warning"}
+                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
+                    `}
+            >
+              {status.getValue() as React.ReactNode}
+            </span>
+          </div>
+        );
+      },
+      header: () => <span>Status</span>,
+      enableSorting: true,
+      size: 100,
+    }),
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
@@ -122,16 +124,47 @@ const OpenClaimTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-  React.useEffect(() => {
-    const pageNumber = pagination.pageIndex + 1;
+  const handleSorting = async (sortingUpdater) => {
+    props.setTableLoader(true);
+
+    const newSortVal = sortingUpdater(sorting);
+    setSorting(newSortVal);
+
     if (sorting.length > 0) {
       const orderBy = sorting[0].desc ? "desc" : "asc";
       const sortBy = sorting[0].id;
-      fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-    } else {
-      fetchClaimList(pageNumber);
+      const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
+      if (result) {
+        props.setTableLoader(false);
+      }
+    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+      const result = await fetchClaimList();
+      if (result) {
+        props.setTableLoader(false);
+      }
     }
-  }, [sorting, pagination]);
+  };
+  const handlePagination = async (updaterFunction) => {
+    props.setTableLoader(true);
+
+    const newValue = updaterFunction(pagination);
+    setPagination(newValue);
+    const pageNumber = pagination.pageIndex + 1;
+
+    if (sorting.length > 0) {
+      const orderBy = sorting[0].desc ? "desc" : "asc";
+      const sortBy = sorting[0].id;
+      const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+      if (result) {
+        props.setTableLoader(false);
+      }
+    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+      const result = await fetchClaimList(pageNumber);
+      if (result) {
+        props.setTableLoader(false);
+      }
+    }
+  };
 
   const table = useReactTable({
     data: claimResult,
@@ -141,8 +174,8 @@ const OpenClaimTable: React.FC = (props) => {
       sorting,
       pagination,
     },
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
+    onPaginationChange: handlePagination,
+    onSortingChange: handleSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
@@ -154,9 +187,11 @@ const OpenClaimTable: React.FC = (props) => {
     <div className={OpenClaimTableStyle.claimTableContainer}>
       <ReactTable
         table={table}
-        totalClaims={props.totalClaims}
+        totalDataCount={props.totalClaims}
         pageLimit={pageLimit}
         showStatusColor={true}
+        loader={props.tableLoader}
+        tableDataErrorMsg={props.claimErrorMsg}
       />
     </div>
   );
@@ -166,5 +201,7 @@ const mapStateToProps = ({ claimdata }) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
+  claimErrorMsg: claimdata.claimErrorMsg,
+  sortedIds: claimdata.statusIds,
 });
 export default connect(mapStateToProps, null)(OpenClaimTable);

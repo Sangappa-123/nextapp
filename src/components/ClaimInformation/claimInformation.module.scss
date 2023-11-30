@@ -141,6 +141,46 @@
   left: 99px;
   bottom: 16px;
 }
+.formControl {
+  flex-direction: row;
+  align-items: center;
+  width: 10%;
+  gap: 2px;
+  margin-left: 20px;
+  .wrapper {
+    flex: 1;
+    margin: auto;
+    display: flex;
+    .inputField {
+      height: 20px;
+    }
+  }
+}
+
+.formControl1 {
+  flex-direction: row;
+  align-items: center;
+  width: 10%;
+  gap: 2px;
+  margin-left: 20px;
+  .wrapper1 {
+    flex: 1;
+    margin: auto;
+    display: flex;
+    .inputField1 {
+      height: 20px;
+    }
+  }
+}
+
+.textArea {
+  border-radius: 5px;
+}
+.errorMessage {
+  position: relative;
+  left: 280px;
+  bottom: 30px;
+}
 // .labelZipCode {
 //   position: relative;
 //   font-weight: 550;

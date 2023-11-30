@@ -1,5 +1,5 @@
 .loaderContainer {
-  min-height: 122px;
+  min-height: 112px;
 }
 
 @mixin scoreWidthMonth {
@@ -20,4 +20,12 @@
 .avgClosingTimeCard {
   @include scoreWidthMonth;
   background-color: #d1ff7fc7;
+}
+.claimTypeCount {
+  font-size: 16px;
+  font-weight: 600px;
+}
+.claimTypeLabel {
+  font-size: 13px;
+  font-weight: 600;
 }

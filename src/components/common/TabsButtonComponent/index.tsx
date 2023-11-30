@@ -28,7 +28,7 @@ const TabsButtonComponent = ({
   };
 
   return (
-    <div className={TabsButtonStyle.tabWidth}>
+    <div className={TabsButtonStyle.tabContainer}>
       <div className="col-md-12 col-sm-12 col-12">
         <div
           className={clsx(

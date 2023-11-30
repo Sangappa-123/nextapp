@@ -16,7 +16,6 @@ function useObserver() {
   });
 
   useEffect(() => {
-    console.log("invie????", inView, isFetching);
     if (inView && !isFetching && !isLastPage) {
       dispatch(fetchAlertNotification());
     }
