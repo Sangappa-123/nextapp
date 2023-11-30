@@ -7,10 +7,11 @@ import { fetchClaimList } from "@/services/ClaimService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addFilterValues } from "@/reducers/ClaimData/ClaimSlice";
 
-const OpenClaimSelectDropdown: React.FC = () => {
+const OpenClaimSelectDropdown: React.FC = (props) => {
   const dispatch = useAppDispatch();
 
   const options = [
+    { value: 0, label: "All" },
     { value: 3, label: "3rd Party Vendor" },
     { value: 1, label: "Created" },
     { value: 5, label: "Supervisor Approval" },
@@ -33,14 +34,22 @@ const OpenClaimSelectDropdown: React.FC = () => {
       }
     }
     if (selected.length > 0 && selected[0].value !== 0) {
+      props.setTableLoader(true);
       selected.map((item) => {
         if (item.value !== 0) selectedValues.push(item.value);
       });
       dispatch(addFilterValues({ statusIds: selectedValues }));
-      fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
+      const result = fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
+      if (result) {
+        props.setTableLoader(false);
+      }
     } else if (selected.length === 0) {
+      props.setTableLoader(true);
       dispatch(addFilterValues({ statusIds: null }));
-      fetchClaimList();
+      const result = fetchClaimList();
+      if (result) {
+        props.setTableLoader(false);
+      }
     }
   }, [selected, dispatch]);
 
