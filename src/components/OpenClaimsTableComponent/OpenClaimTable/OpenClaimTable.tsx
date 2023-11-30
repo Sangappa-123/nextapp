@@ -167,7 +167,7 @@ const OpenClaimTable: React.FC = (props) => {
     <div className={OpenClaimTableStyle.claimTableContainer}>
       <ReactTable
         table={table}
-        totalClaims={props.totalClaims}
+        totalDataCount={props.totalClaims}
         pageLimit={pageLimit}
         showStatusColor={true}
         loader={loader}

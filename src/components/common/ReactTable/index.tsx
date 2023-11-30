@@ -8,8 +8,14 @@ import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
 
 const ReactTable: React.FC = (props) => {
-  const { table, totalClaims, pageLimit, showStatusColor, loader, tableDataErrorMsg } =
-    props;
+  const {
+    table,
+    totalDataCount = null,
+    pageLimit = null,
+    showStatusColor = null,
+    loader = null,
+    tableDataErrorMsg = null,
+  } = props;
 
   return (
     <div className={ReactTableStyles.reactTable}>
@@ -96,15 +102,15 @@ const ReactTable: React.FC = (props) => {
         </tbody>
       </table>
       <div className="h-2" />
-      {!tableDataErrorMsg && (
+      {!tableDataErrorMsg && pageLimit && (
         <div className={ReactTableStyles.paginationContainer}>
           <span className={ReactTableStyles.paginationText}>
             Showing {table.getState().pagination.pageIndex * pageLimit + 1} to{" "}
-            {totalClaims >
+            {totalDataCount >
             table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
               ? table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
-              : props.totalClaims}{" "}
-            of {props.totalClaims} Claims
+              : props.totalDataCount}{" "}
+            of {props.totalDataCount} Claims
           </span>
           <div className="flex items-center gap-2">
             <button
