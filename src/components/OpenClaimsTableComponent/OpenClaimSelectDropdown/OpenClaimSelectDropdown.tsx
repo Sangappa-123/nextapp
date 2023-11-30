@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import OpenClaimsDropdownStyle from "./OpenClaimSelectDropdown.module.scss";
 // import { default as ReactSelect } from "react-select";
 import GenericSelect from "@/components/common/GenericSelect/index";
@@ -18,40 +18,52 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
     { value: 2, label: "Work In Progress" },
   ];
   const [selected, setSelected] = useState([{ value: 0, label: "All" }]);
-  useEffect(() => {
+
+  const handleSelectChange = async (selectedVal) => {
+    await setSelected(selectedVal);
+    props.setTableLoader(true);
+
     const selectedValues = [];
-    if (selected.length > 1) {
-      const isFound = selected.some((element) => {
-        return element.value === 0;
+    const isFound = selectedVal.some((element) => {
+      return element.value === 0;
+    });
+
+    if (isFound) {
+      setSelected((current) =>
+        current.filter((item) => {
+          return item.value !== 0;
+        })
+      );
+      selectedVal = selectedVal.filter((item) => {
+        return item.value !== 0;
       });
-      if (isFound) {
-        setSelected((current) =>
-          current.filter((item) => {
-            // 👇️ remove object that has id equal to 2
-            return item.value !== 0;
-          })
-        );
-      }
     }
-    if (selected.length > 0 && selected[0].value !== 0) {
-      props.setTableLoader(true);
-      selected.map((item) => {
+
+    if (selectedVal.length > 0 && selectedVal[0].value !== 0) {
+      selectedVal.map((item) => {
         if (item.value !== 0) selectedValues.push(item.value);
       });
+
       dispatch(addFilterValues({ statusIds: selectedValues }));
-      const result = fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
+      const result = await fetchClaimList(
+        1,
+        20,
+        "createDate",
+        "desc",
+        "",
+        selectedValues
+      );
       if (result) {
         props.setTableLoader(false);
       }
-    } else if (selected.length === 0) {
-      props.setTableLoader(true);
+    } else if (selectedVal.length === 0) {
       dispatch(addFilterValues({ statusIds: null }));
-      const result = fetchClaimList();
+      const result = await fetchClaimList();
       if (result) {
         props.setTableLoader(false);
       }
     }
-  }, [selected, dispatch]);
+  };
 
   const customStyles = {
     control: (defaultStyles: any) => ({
@@ -107,7 +119,7 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
         customMenuWithClear={true}
         customStyles={customStyles}
         selected={selected}
-        setSelected={setSelected}
+        handleSelectChange={handleSelectChange}
         hideSelectedOptions={false}
       />
     </div>
