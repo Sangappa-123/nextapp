@@ -130,14 +130,14 @@ const OpenClaimTable: React.FC = (props) => {
     const newSortVal = sortingUpdater(sorting);
     setSorting(newSortVal);
 
-    if (sorting.length > 0) {
-      const orderBy = sorting[0].desc ? "desc" : "asc";
-      const sortBy = sorting[0].id;
+    if (newSortVal.length > 0) {
+      const orderBy = newSortVal[0].desc ? "desc" : "asc";
+      const sortBy = newSortVal[0].id;
       const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
       if (result) {
         props.setTableLoader(false);
       }
-    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+    } else if (newSortVal.length === 0 && props.claimListData.length > 0) {
       const result = await fetchClaimList();
       if (result) {
         props.setTableLoader(false);
@@ -147,10 +147,11 @@ const OpenClaimTable: React.FC = (props) => {
   const handlePagination = async (updaterFunction) => {
     props.setTableLoader(true);
 
-    const newValue = updaterFunction(pagination);
-    setPagination(newValue);
-    const pageNumber = pagination.pageIndex + 1;
+    const newPaginationValue = updaterFunction(pagination);
+    setPagination(newPaginationValue);
+    const pageNumber = newPaginationValue.pageIndex + 1;
 
+    console.log("pageNumber ", pageNumber);
     if (sorting.length > 0) {
       const orderBy = sorting[0].desc ? "desc" : "asc";
       const sortBy = sorting[0].id;
