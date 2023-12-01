@@ -23,10 +23,10 @@ const PendingVendorCards: React.FC = async () => {
     <>
       <GenericComponentHeading
         title={`Pending Vendor Invoices (${
-          pendingInvoices.length > 0 ? pendingInvoices.length : 0
+          pendingInvoices?.length > 0 ? pendingInvoices.length : 0
         })`}
       />
-      {pendingInvoices.length > 0 && (
+      {pendingInvoices?.length > 0 && (
         <PendingComponent pendingInvoice={pendingInvoices[0]} />
       )}
     </>
