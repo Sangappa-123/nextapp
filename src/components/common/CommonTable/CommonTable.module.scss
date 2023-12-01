@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .tableStyle {
   width: 100%;
   border-collapse: collapse;
@@ -41,7 +43,7 @@
 
 .no-data {
   text-align: center;
-  color: red;
+  color: $noRecordRed;
   padding: 12px;
 }
 
