@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { HiOutlineMenu } from "react-icons/hi";
-import NavStyle from "./headerStyle.module.scss";
 import { logoutHandler } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { resetSessionState } from "@/reducers/Session/SessionSlice";
+import NavStyle from "./headerStyle.module.scss";
+import ProfileDetail from "./ProfileDetail";
 
 const NavBarMenu = () => {
   const router = useRouter();
@@ -17,10 +18,6 @@ const NavBarMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
 
-  const loggedInUser = {
-    firstName: "John",
-    lastName: "Doe",
-  };
   const signoutHandle = () => {
     dispatch(resetSessionState());
     logoutHandler();
@@ -36,20 +33,7 @@ const NavBarMenu = () => {
           <input type="text" placeholder="What can we help you find?" />
           <RiSearch2Line className={NavStyle.searchIcon} />
         </div>
-        <div className="d-flex align-items-center">
-          <div className={NavStyle.userInfo}>
-            <div className={NavStyle.userAvatar}>
-              {loggedInUser.firstName.charAt(0)}
-              {loggedInUser.lastName.charAt(0)}
-            </div>
-            <div className={NavStyle.userName}>
-              {loggedInUser.firstName} {loggedInUser.lastName}
-            </div>
-          </div>
-          <div className={NavStyle.signoutText} onClick={signoutHandle}>
-            Sign Out
-          </div>
-        </div>
+        <ProfileDetail signoutHandle={signoutHandle} />
       </nav>
       <div className={NavStyle.toggleButton} onClick={toggleMenu}>
         <HiOutlineMenu />

@@ -4,7 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import React from "react";
 import rootReducer from "@/reducers";
 import { Provider } from "react-redux";
-import { updateLoadingState } from "@/reducers/Session/SessionSlice";
+import { addSessionData, updateLoadingState } from "@/reducers/Session/SessionSlice";
 
 const store = configureStore({
   reducer: rootReducer,
@@ -23,8 +23,16 @@ export function StoreProvider({
   children: React.ReactNode;
   lang: string;
 }) {
-  if (typeof window !== "undefined" && window.localStorage.getItem("lang") !== lang) {
-    window.localStorage.setItem("lang", lang);
+  if (typeof window !== "undefined") {
+    const payload = Object.keys(localStorage).reduce((acc, cur) => {
+      const data = localStorage.getItem(cur);
+      return { ...acc, [cur]: data };
+    }, {});
+    store.dispatch(addSessionData({ ...payload }));
+
+    if (window.localStorage.getItem("lang") !== lang) {
+      window.localStorage.setItem("lang", lang);
+    }
   }
   store.dispatch(updateLoadingState({ lang: lang }));
   return <Provider store={store}>{children}</Provider>;

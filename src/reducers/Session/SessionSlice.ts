@@ -1,7 +1,12 @@
+import type { RootState } from "@/store/store";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+type initialStateType = {
+  [key: string]: any;
+};
+const initialState: initialStateType = {
   lang: "",
+  name: "",
 };
 
 const SessionSlice = createSlice({
@@ -27,3 +32,5 @@ export default SessionSlice;
 
 export const { updateLoadingState, addSessionData, resetSessionState } =
   SessionSlice.actions;
+
+export const nameSelector = (state: RootState) => state?.session?.name;
