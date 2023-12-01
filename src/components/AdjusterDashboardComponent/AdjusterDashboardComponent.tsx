@@ -71,7 +71,7 @@ export default async function DashboardComponent() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-12 col-md-12 col-12 mt-4">
+          <div className="col-lg-12 col-md-12 col-12">
             <OpenClaimsTableComponent claimListRes={claimListRes} />
           </div>
         </div>
