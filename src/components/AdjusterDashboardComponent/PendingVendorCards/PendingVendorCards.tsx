@@ -3,6 +3,8 @@ import GenericComponentHeading from "../../common/GenericComponentHeading";
 import PendingComponent from "@/components/PendingComponent";
 import { cookies } from "next/headers";
 import { getPendingVendorInvoices } from "@/services/AdjusterDashboardService";
+import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
+import pendingVendorCardsStyle from "./pending-vendor-card.module.scss";
 
 const PendingVendorCards: React.FC = async () => {
   const cookieStore = cookies();
@@ -26,8 +28,12 @@ const PendingVendorCards: React.FC = async () => {
           pendingInvoices?.length > 0 ? pendingInvoices.length : 0
         })`}
       />
-      {pendingInvoices?.length > 0 && (
+      {pendingInvoices?.length > 0 ? (
         <PendingComponent pendingInvoice={pendingInvoices[0]} />
+      ) : (
+        <div className={pendingVendorCardsStyle.noRecordContainer}>
+          <NoRecordComponent message="No records available" />
+        </div>
       )}
     </>
   );

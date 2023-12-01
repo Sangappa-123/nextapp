@@ -3,8 +3,10 @@ import GenericComponentHeading from "../../common/GenericComponentHeading";
 import ClaimsComponent from "@/components/ClaimsComponent";
 import { cookies } from "next/headers";
 import { getImmediateClaims } from "@/services/AdjusterDashboardService";
+import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
+import claimAttentionStyle from "./claim-need-attention.module.scss";
 
-const ClaimsCards: React.FC = async () => {
+const ClaimsNeedAttention: React.FC = async () => {
   const cookieStore = cookies();
   let userId;
   let resp;
@@ -24,10 +26,16 @@ const ClaimsCards: React.FC = async () => {
         <GenericComponentHeading
           title={`Claims Needing Attention (${respData.totalClaims})`}
         />
-        <ClaimsComponent claim={respData?.claims[0]} />
+        {respData?.claims.length > 0 ? (
+          <ClaimsComponent claim={respData?.claims[0]} />
+        ) : (
+          <div className={claimAttentionStyle.noRecordContainer}>
+            <NoRecordComponent message="No records available" />
+          </div>
+        )}
       </>
     );
   }
 };
 
-export default ClaimsCards;
+export default ClaimsNeedAttention;

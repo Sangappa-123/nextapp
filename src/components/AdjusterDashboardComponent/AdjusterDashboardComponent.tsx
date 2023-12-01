@@ -5,7 +5,7 @@ import CardsStyle from "./dashboard.module.scss";
 import AlertCards from "../common/AlertCards";
 import MyScoreBoardCards from "../common/MyScoreBoardCards";
 import PendingVendorCards from "./PendingVendorCards";
-import ClaimsCards from "./ClaimsCards";
+import ClaimsNeedAttention from "./ClaimsNeedAttention";
 // import OpenClaimsTableContainer from "@/container/OpenClaimsTableContainer";
 // import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
 import OpenClaimsTableComponent from "../OpenClaimsTableComponent";
@@ -33,7 +33,7 @@ export default async function DashboardComponent() {
     statusIds: null,
   };
   const claimListRes = await claimList(payload, token);
-  if (claimListRes.result.status === 200) {
+  if (claimListRes?.result?.status === 200) {
     return (
       <div className={CardsStyle.card}>
         <div className="row">
@@ -54,7 +54,7 @@ export default async function DashboardComponent() {
                 )}
               >
                 <Cards className={CardsStyle.cardsStylClaims}>
-                  <ClaimsCards />
+                  <ClaimsNeedAttention />
                 </Cards>
               </div>
               <div
@@ -71,7 +71,7 @@ export default async function DashboardComponent() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-12 col-md-12 col-12">
+          <div className="col-lg-12 col-md-12 col-12 mt-4">
             <OpenClaimsTableComponent claimListRes={claimListRes} />
           </div>
         </div>
