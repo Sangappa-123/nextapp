@@ -44,6 +44,9 @@ const DashboardAlertSlice = createSlice({
           page,
         }: { notifications: IStringIndex[]; totalCount: number; page: number } =
           action.payload;
+        if (!notifications) {
+          return state;
+        }
         for (const data of notifications) {
           if (data.notificationPurpose === "NOTE") {
             state.messages.push(data);
