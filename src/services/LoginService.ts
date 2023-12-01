@@ -63,7 +63,7 @@ export const GetComponyBackgroundImage = async () => {
 };
 
 export const login = async (payload: object | undefined) => {
-  const headersData: {} = getHeaderWithoutToken();
+  const headersData: any = getHeaderWithoutToken();
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("login"), {
       method: "POST",
