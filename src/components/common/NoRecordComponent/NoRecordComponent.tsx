@@ -5,7 +5,7 @@ type NoRecordType = {
 };
 
 const NoRecordComponent: React.FC<NoRecordType> = (props) => {
-  return <div className={NoRecordStyle.noReconrdContent}>{props.message}</div>;
+  return <div className={NoRecordStyle.noRecordContent}>{props.message}</div>;
 };
 
 export default NoRecordComponent;
