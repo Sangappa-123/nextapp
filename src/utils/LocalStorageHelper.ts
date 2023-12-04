@@ -33,9 +33,9 @@ export const addLocalStorageData = (response: any) => {
 
   const maxAge = 60 * 60 * 24 * 7; // 7 days
 
-  document.cookie = `resetPassword=${data?.resetPassword};max-age=${maxAge}`;
-  document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
-  document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
+  // document.cookie = `resetPassword=${data?.resetPassword};max-age=${maxAge}`;
+  // document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
+  // document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
   document.cookie = `accessToken=${data?.token};max-age=${maxAge}`;
   document.cookie = `userId=${data?.userId};max-age=${maxAge}`;
 
@@ -65,8 +65,8 @@ export const addLocalStorageData = (response: any) => {
     window.localStorage.setItem("vendorId", data.vendorDetails.vendorId);
   }
   if (data?.role?.length > 0) {
-    window.localStorage.setItem("roleList", data?.role[0]?.roleName);
-    document.cookie = `roleList=${data?.role[0]?.roleName};max-age=${maxAge}`;
+    window.localStorage.setItem("role", data?.role[0]?.roleName);
+    document.cookie = `role=${data?.role[0]?.roleName};max-age=${maxAge}`;
     const screenList = getScreenList(data?.role[0]?.roleName);
     if (screenList) {
       document.cookie = `homeScreen=${screenList?.Home};max-age=${maxAge}`;
