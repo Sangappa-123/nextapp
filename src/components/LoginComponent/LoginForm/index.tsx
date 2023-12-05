@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { object, string, minLength, email, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
@@ -7,14 +7,36 @@ import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";
 import loginFormStyle from "./loginForm.module.scss";
 import { login } from "@/services/LoginService";
-import { getCipherEncryptedText } from "@/utils/helper";
+import { getCipherEncryptedText, logoutHandler } from "@/utils/helper";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { useRouter } from "next/navigation";
-import { addSessionData } from "@/reducers/Session/SessionSlice";
+import { addSessionData, resetSessionState } from "@/reducers/Session/SessionSlice";
 import { loginTranslateType } from "@/translations/loginTranslate/en";
+
+import { useSearchParams } from "next/navigation";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 function LoginForm({ translate }: { translate: loginTranslateType }) {
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const accessDenide = searchParams.get("accessDenide");
+  const [accessDenideFlag, setAccessDenideFlag] = useState(accessDenide);
+  // console.log("access", access);
+
+  useEffect(() => {
+    if (accessDenideFlag === "true") {
+      dispatch(resetSessionState());
+      logoutHandler();
+      dispatch(
+        addNotification({
+          message: "Access denide",
+          id: "access_denide",
+          status: "error",
+        })
+      );
+      setAccessDenideFlag("false");
+    }
+  }, [accessDenideFlag, dispatch]);
   const router = useRouter();
   const schema = object({
     username: string("Your email must be a string.", [
