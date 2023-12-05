@@ -62,14 +62,14 @@ export default function middleware(req: NextRequest) {
         if (!isUrlContain) {
           url.pathname = "/login";
           const redirect = NextResponse.redirect(url);
-          redirect.cookies.set("accessDenide", "true");
+          redirect.cookies.set("accessDenied", "true");
           return redirect;
         }
       }
     } else {
       url.pathname = "/login";
       const redirect = NextResponse.redirect(url);
-      redirect.cookies.set("accessDenide", "true");
+      redirect.cookies.set("accessDenied", "true");
       return redirect;
     }
   }

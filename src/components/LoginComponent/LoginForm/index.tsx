@@ -21,14 +21,14 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
   const router = useRouter();
 
   useEffect(() => {
-    const accessDenideFlag = getClientCookie("accessDenide");
+    const accessDenideFlag = getClientCookie("accessDenied");
     if (accessDenideFlag === "true") {
       dispatch(resetSessionState());
       logoutHandler();
       dispatch(
         addNotification({
-          message: "Access denide",
-          id: "access_denide",
+          message: "Access denied",
+          id: "access_denied",
           status: "error",
         })
       );
