@@ -10,9 +10,9 @@ export const getPendingVendorInvoices = async (payload: object) => {
     const http = new HttpService();
     const url = getApiEndPoint("invoicelist");
     const resp: any = await http.post(url, payload);
-    const { data, error } = resp;
-    if (data) {
-      return data;
+    const { error } = resp;
+    if (!error) {
+      return resp.data;
     }
     return error;
   } catch (err) {
@@ -25,9 +25,9 @@ export const getImmediateClaims = async (param: any): Promise<objectType> => {
     const http = new HttpService();
     const url = getApiEndPoint("immidiateAttentionClaims") + param;
     const resp: objectType = await http.get(url);
-    const { response, error } = resp;
-    if (response) {
-      return response;
+    const { error } = resp;
+    if (!error) {
+      return resp;
     }
     return error;
   } catch (err: any) {
