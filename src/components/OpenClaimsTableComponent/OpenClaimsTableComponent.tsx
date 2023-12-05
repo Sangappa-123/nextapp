@@ -17,7 +17,7 @@ function OpenClaimsTableComponent(props): React.ReactNode {
     setLoading(false);
     const claimData = props.claimListRes.result;
     props.addClaimListData({ claimData });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return null;

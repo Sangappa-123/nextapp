@@ -1,0 +1,22 @@
+.claimTableContainer {
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+}
+.originalItemHeader {
+  margin-left: auto;
+  margin-right: auto;
+  background: #a7c7e7 !important;
+  div {
+    justify-content: center !important;
+  }
+}
+.replacementItemHeader {
+  margin-left: auto;
+  margin-right: auto;
+
+  background: #6495ed !important;
+  div {
+    justify-content: center !important;
+  }
+}

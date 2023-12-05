@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import OpenClaimTableStyle from "./OpenClaimTable.module.scss";
+import ServiceRequestTableStyle from "./ServiceRequestTable.module.scss";
 import { connect } from "react-redux";
 import { fetchClaimList } from "@/services/ClaimService";
 import { convertToCurrentTimezone } from "@/utils/helper";
@@ -13,12 +13,58 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
-import { useRouter } from "next/navigation";
 import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
 
-const OpenClaimTable: React.FC = (props) => {
-  const [claimResult, setClaimResult] = React.useState(props.claimListData);
-  const router = useRouter();
+const ServiceRequestTable: React.FC = (props) => {
+  const serviceData = React.useMemo(() => {
+    return [
+      {
+        assignedDate: null,
+        claimNumber: "EVLINS19THMAY2023",
+        companyDetails: {
+          address: {
+            city: "Lindenhurst",
+            completeAddress: "9020 South Lawrence Dr., Lindenhurst, WA, 98607",
+            id: 2855,
+            state: {
+              id: 48,
+              state: "WA",
+              stateName: null,
+              taxRate: null,
+              timeZone: null,
+              noOfZipcodesWrtState: null,
+              premiumValueWrtState: null,
+              hoPolicyTypes: null,
+              noOfHOPolicyTypeState: null,
+            },
+            streetAddressOne: "9020 South Lawrence Dr.",
+            streetAddressTwo: null,
+            zipcode: "98607",
+          },
+          createdDate: null,
+          crn: null,
+          id: 1,
+          modifiedDate: null,
+          name: "Evolution Insurance Company",
+          branchDetails: null,
+          companyPhoneNumber: null,
+          fax: null,
+        },
+        createDate: "11-17-2023T07:21:10Z",
+        description: "test",
+        isDelete: false,
+        serviceRequestId: 47,
+        serviceRequestInvoices: null,
+        status: null,
+        targetDate: "11-01-2023T00:00:00Z",
+        vendorDetails: null,
+        serviceNumber: "7499143E8A3F",
+        invoiceNumber: null,
+        policyHolder: null,
+      },
+    ];
+  }, []);
+  const [claimResult, setClaimResult] = React.useState(serviceData);
 
   const pageLimit = 20;
 
@@ -33,82 +79,68 @@ const OpenClaimTable: React.FC = (props) => {
     lastUpdated: string;
   };
   React.useEffect(() => {
-    const defaultData: ClaimData[] = [...props.claimListData];
+    const defaultData: ClaimData[] = [...serviceData];
     setClaimResult([...defaultData]);
-  }, [props.claimListData]);
+  }, [serviceData]);
 
   const columnHelper = createColumnHelper<ClaimData>();
 
   const columns = [
-    columnHelper.accessor("claimNumber", {
-      id: "Claim_Number",
-      header: () => `Claim #`,
+    columnHelper.accessor("serviceNumber", {
+      id: "serviceNumber",
+      header: () => `Service Number`,
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
 
-    columnHelper.accessor("noOfItems", {
-      id: "itemNumber",
-      header: () => `# of Items`,
+    columnHelper.accessor("description", {
+      id: "description",
+      header: () => `Request Description`,
       cell: (info) => info.renderValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor("noOfItemsPriced", {
-      header: () => `# of Items Priced`,
+    columnHelper.accessor("vendorDetails", {
+      header: () => `Vendor`,
       cell: (info) => info.renderValue(),
-      enableSorting: false,
-    }),
-    columnHelper.accessor("policyHoldersName", {
-      id: "Insured_Name",
-      header: () => <span>{`PolicyHolder's Name`}</span>,
       enableSorting: true,
     }),
-    columnHelper.accessor("claimDate", {
-      id: "Create_Date",
-      header: "Claim Date",
+    columnHelper.accessor("assignedDate", {
+      id: "assignedDate",
+      header: () => `Assign Date`,
       cell: (info) => {
-        const unixDate = Date.parse(info.renderValue().replace("T", " "));
-        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
-        return formatedDate;
+        if (info.renderValue()) {
+          const unixDate = Date.parse(info.renderValue().replace("T", " "));
+          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+          return formatedDate;
+        }
+        return info.renderValue();
       },
       enableSorting: true,
     }),
-    columnHelper.accessor("lastActive", {
-      header: "Last Active",
-      enableSorting: false,
-      size: 450,
+    columnHelper.accessor("targetDate", {
+      id: "targetDate",
+      header: "Target Completion Date",
+      cell: (info) => {
+        if (info.renderValue()) {
+          const unixDate = Date.parse(info.renderValue().replace("T", " "));
+          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+          return formatedDate;
+        }
+        return info.renderValue();
+      },
+      enableSorting: true,
     }),
     columnHelper.accessor((row) => row.status, {
       id: "Status",
-      cell: (status) => {
-        return (
-          <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary 
-                    ${status.getValue() === "Created" && "badge-info"}
-                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                    ${status.getValue() === "Work In Progress" && "badge-warning"}
-                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                    `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
-          </div>
-        );
-      },
       header: () => <span>Status</span>,
       enableSorting: true,
       size: 100,
     }),
-    columnHelper.accessor("lastUpdated", {
-      id: "Last_Update_Date",
-      header: "Last Updated",
-      cell: (info) => {
-        const unixDate = Date.parse(info.renderValue().replace("T", " "));
-        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
-        return formatedDate;
-      },
-      enableSorting: true,
+    columnHelper.accessor(null, {
+      id: "Action",
+      header: "Action",
+
+      enableSorting: false,
     }),
   ];
 
@@ -168,12 +200,6 @@ const OpenClaimTable: React.FC = (props) => {
       }
     }
   };
-  const handleRowClick = (rowData) => {
-    props.addSelectedClaimDetails({
-      claimData: rowData,
-    });
-    router.replace("/adjuster-property-claim-details");
-  };
 
   const table = useReactTable({
     data: claimResult,
@@ -193,15 +219,13 @@ const OpenClaimTable: React.FC = (props) => {
   });
 
   return (
-    <div className={OpenClaimTableStyle.claimTableContainer}>
+    <div className={ServiceRequestTableStyle.claimTableContainer}>
       <CustomReactTable
         table={table}
         totalDataCount={props.totalClaims}
-        pageLimit={pageLimit}
-        showStatusColor={true}
+        pageLimit={props.totalClaims > 20 ? pageLimit : null}
         loader={props.tableLoader}
         tableDataErrorMsg={props.claimErrorMsg}
-        handleRowClick={handleRowClick}
       />
     </div>
   );
@@ -217,4 +241,4 @@ const mapStateToProps = ({ claimdata }) => ({
 const mapDispatchToProps = {
   addSelectedClaimDetails,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OpenClaimTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceRequestTable);

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ReactTableStyles from "./ReactTable.module.scss";
+import CustomReactTableStyles from "./CustomReactTable.module.scss";
 import { clsx } from "clsx";
 import { MdExpandLess } from "react-icons/md";
 import { MdExpandMore } from "react-icons/md";
@@ -8,7 +8,7 @@ import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
 import NoRecordComponent from "../NoRecordComponent/NoRecordComponent";
 
-const ReactTable: React.FC = (props) => {
+const CustomReactTable: React.FC = (props) => {
   const {
     table,
     totalDataCount = null,
@@ -20,48 +20,51 @@ const ReactTable: React.FC = (props) => {
   } = props;
 
   return (
-    <div className={ReactTableStyles.reactTable}>
+    <div className={CustomReactTableStyles.reactTable}>
       {loader && <CustomLoader loaderType="spinner1" />}
 
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  style={{
-                    width: header.getSize() !== 150 ? header.getSize() : undefined,
-                  }}
-                >
-                  {header.isPlaceholder ? null : (
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {{
-                        asc: (
-                          <span>
-                            {" "}
-                            <MdExpandLess />
-                          </span>
-                        ),
-                        desc: (
-                          <span>
-                            {" "}
-                            <MdExpandMore />
-                          </span>
-                        ),
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  )}
-                </th>
-              ))}
+              {headerGroup &&
+                headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    style={{
+                      width: header.getSize() !== 150 ? header.getSize() : undefined,
+                    }}
+                    className={header.column.columnDef.meta?.headerClass ?? null}
+                    colSpan={header.colSpan}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {{
+                          asc: (
+                            <span>
+                              {" "}
+                              <MdExpandLess />
+                            </span>
+                          ),
+                          desc: (
+                            <span>
+                              {" "}
+                              <MdExpandMore />
+                            </span>
+                          ),
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                ))}
             </tr>
           ))}
         </thead>
@@ -91,12 +94,12 @@ const ReactTable: React.FC = (props) => {
                       className={
                         showStatusColor && index === 0
                           ? clsx({
-                              [ReactTableStyles.All_Items_Priced]:
+                              [CustomReactTableStyles.All_Items_Priced]:
                                 row.original.noOfItems == row.original.noOfItemsPriced,
-                              [ReactTableStyles.Partial_Items_Priced]:
+                              [CustomReactTableStyles.Partial_Items_Priced]:
                                 row.original.noOfItemsPriced != 0 &&
                                 row.original.noOfItems > row.original.noOfItemsPriced,
-                              [ReactTableStyles.No_Items_Priced]:
+                              [CustomReactTableStyles.No_Items_Priced]:
                                 row.original.noOfItemsPriced == 0 &&
                                 row.original.noOfItems != 0,
                             })
@@ -114,8 +117,8 @@ const ReactTable: React.FC = (props) => {
       </table>
       <div className="h-2" />
       {!tableDataErrorMsg && pageLimit && (
-        <div className={ReactTableStyles.paginationContainer}>
-          <span className={ReactTableStyles.paginationText}>
+        <div className={CustomReactTableStyles.paginationContainer}>
+          <span className={CustomReactTableStyles.paginationText}>
             Showing {table.getState().pagination.pageIndex * pageLimit + 1} to{" "}
             {totalDataCount >
             table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
@@ -125,14 +128,14 @@ const ReactTable: React.FC = (props) => {
           </span>
           <div className="flex items-center gap-2">
             <button
-              className={`${ReactTableStyles.paginationButton} ${ReactTableStyles.paginationIcon}`}
+              className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
             >
               {"<<"}
             </button>
             <button
-              className={`${ReactTableStyles.paginationButton} ${ReactTableStyles.paginationIcon}`}
+              className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
@@ -147,8 +150,8 @@ const ReactTable: React.FC = (props) => {
                     <button
                       key={value + "-" + index}
                       className={clsx({
-                        [ReactTableStyles.paginationButton]: true,
-                        [ReactTableStyles.active]:
+                        [CustomReactTableStyles.paginationButton]: true,
+                        [CustomReactTableStyles.active]:
                           index == table.getState().pagination.pageIndex,
                       })}
                       onClick={() => table.setPageIndex(index)}
@@ -160,9 +163,9 @@ const ReactTable: React.FC = (props) => {
               })}
             {table.getPageCount() > 10 && (
               <>
-                <button className={ReactTableStyles.paginationButton}>...</button>
+                <button className={CustomReactTableStyles.paginationButton}>...</button>
                 <button
-                  className={ReactTableStyles.paginationButton}
+                  className={CustomReactTableStyles.paginationButton}
                   onClick={() => table.setPageIndex(table.getPageCount())}
                 >
                   {table.getPageCount()}
@@ -170,14 +173,14 @@ const ReactTable: React.FC = (props) => {
               </>
             )}
             <button
-              className={`${ReactTableStyles.paginationButton} ${ReactTableStyles.paginationIcon}`}
+              className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               {">"}
             </button>
             <button
-              className={`${ReactTableStyles.paginationButton} ${ReactTableStyles.paginationIcon}`}
+              className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
               onClick={() => table.setPageIndex(table.getPageCount())}
               disabled={!table.getCanNextPage()}
             >
@@ -190,4 +193,4 @@ const ReactTable: React.FC = (props) => {
   );
 };
 
-export default ReactTable;
+export default CustomReactTable;

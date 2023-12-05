@@ -8,9 +8,9 @@
       background-color: #337ab708;
     }
     th {
-      background: #dcdcdc !important;
-      padding: 4px !important;
-      line-height: unset !important;
+      background: #dcdcdc;
+      padding: 4px;
+      line-height: unset;
       font-size: 13px;
       font-weight: 600;
       height: 28px;
@@ -26,16 +26,16 @@
       position: relative; /* need this to position inner content */
       overflow-y: auto;
       &:hover {
-        background-color: #f3f4f6 !important;
+        background-color: #f3f4f6;
       }
     }
     td {
       border: 1px solid #e7ecf1;
-      padding: 4px !important;
-      line-height: 150% !important;
+      padding: 4px;
+      line-height: 150%;
       font-family: "Open Sans", sans-serif;
       font-size: 11px;
-      cursor: pointer !important;
+      cursor: pointer;
       vertical-align: middle;
       display: table-cell;
       color: #333333;
@@ -47,8 +47,8 @@
     margin-top: 10px;
     .paginationText {
       color: #337ab7;
-      font-weight: 700 !important;
-      font-size: 13px !important;
+      font-weight: 700;
+      font-size: 13px;
     }
   }
   .paginationButton {
