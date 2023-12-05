@@ -80,8 +80,8 @@ export const deleteNotification = async (param: object) => {
     const url = getApiEndPoint("deleteNotification");
     const http = new HttpService({ isClient: true });
     const res = await http.delete(url, param);
-    const { data, error } = res;
-    if (data) return { data };
+    const { error } = res;
+    if (!error) return res;
     throw error;
   } catch (err) {
     console.log("error", err);

@@ -19,11 +19,11 @@ function DashboardNotification({ data }: { data: unknownObjectType }) {
   const handleDelete = (id: number) => {
     deleteNotification({ id, page: 1 })
       .then((res) => {
-        const { data } = res;
+        const { data, message } = res;
         dispatch(removeAlertNotification({ id, data }));
         dispatch(
           addNotification({
-            message: data?.message ?? "Notification Deleted.",
+            message: message ?? "Notification Deleted.",
             id,
           })
         );
