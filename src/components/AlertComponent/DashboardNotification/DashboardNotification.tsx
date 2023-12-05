@@ -9,8 +9,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { removeAlertNotification } from "@/reducers/DashboardAlert/DashboardAlertSlice";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { deleteNotification } from "@/services/ClaimService";
+import { unknownObjectType } from "@/constants/customTypes";
 
-function DashboardNotification({ data }) {
+function DashboardNotification({ data }: { data: unknownObjectType }) {
   const dispatch = useAppDispatch();
   const { loaded } = useDashboardAlert(data);
   const columns = ["Date", "Claim Details", "Message", ""];

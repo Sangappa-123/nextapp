@@ -1,8 +1,6 @@
+import { unknownObjectType } from "@/constants/customTypes";
 import { getClientCookie, getServerCookie } from "./utils/utitlity";
 
-interface unknownObjectType {
-  [key: string | number]: any;
-}
 class HttpService {
   accessToken: string | undefined | null;
   isClient: boolean;

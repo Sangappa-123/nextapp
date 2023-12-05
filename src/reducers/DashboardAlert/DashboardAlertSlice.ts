@@ -1,10 +1,7 @@
 import { getNotification } from "@/services/ClaimService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "@/store/store";
-
-interface unknownObjectType {
-  [key: string]: any;
-}
+import { unknownObjectType } from "@/constants/customTypes";
 
 interface notificationState {
   isLoaded: boolean;
