@@ -44,8 +44,8 @@ class HttpService {
           })
             .then((response) => response.json())
             .then((result) => {
-              const data = result?.data;
-              return resolve({ data });
+              // const data = result?.data;
+              return resolve(result);
             })
             .catch((error) => reject({ error }));
         } catch (error) {
@@ -55,7 +55,7 @@ class HttpService {
       });
     });
   }
-  async get(url: string, headers?: object) {
+  async get(url: string, headers?: object): Promise<object> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -66,7 +66,7 @@ class HttpService {
             .then((resp) => resp.json())
             .then((response) => {
               // const data = result?.data;
-              return resolve({ response });
+              return resolve(response);
             })
             .catch((error) => reject({ error }));
         } catch (error) {
@@ -88,8 +88,8 @@ class HttpService {
           })
             .then((response) => response.json())
             .then((result) => {
-              const data = result;
-              return resolve({ data });
+              // const data = result;
+              return resolve(result);
             })
             .catch((error) => reject({ error }));
         } catch (error) {
