@@ -65,7 +65,7 @@ export const getNotification = async (param: object, isClient: boolean = false) 
     const http = new HttpService({ isClient });
     const res = await http.post(url, param);
     const { data, error } = res;
-    if (data) {
+    if (!error) {
       return data;
     }
     throw error;

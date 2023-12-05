@@ -1,8 +1,20 @@
 import { getNotification } from "@/services/ClaimService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { RootState } from "@/store/store";
 
-interface IStringIndex {
+interface unknownObjectType {
   [key: string]: any;
+}
+
+interface notificationState {
+  isLoaded: boolean;
+  isFetching: boolean;
+  isLastPage: boolean;
+  notifications: unknownObjectType[];
+  messages: unknownObjectType[];
+  page: number;
+  totalCount: number;
+  totalPage: number;
 }
 
 const initialState = {
@@ -14,13 +26,14 @@ const initialState = {
   page: 0,
   totalCount: 0,
   totalPage: 0,
-};
+} as notificationState;
 
 export const fetchAlertNotification = createAsyncThunk(
   "alert/fetchNotification",
-  async (args, { getState, rejectWithValue }) => {
+  async (_, api) => {
+    const state = api.getState() as RootState;
+    const rejectWithValue = api.rejectWithValue;
     try {
-      const state = getState();
       const id = window?.localStorage?.getItem("userId");
       const curPage = state?.alert?.page;
       const response = await getNotification({ id, page: curPage + 1 }, true);
@@ -42,7 +55,7 @@ const DashboardAlertSlice = createSlice({
           notifications,
           totalCount,
           page,
-        }: { notifications: IStringIndex[]; totalCount: number; page: number } =
+        }: { notifications: unknownObjectType[]; totalCount: number; page: number } =
           action.payload;
         if (!notifications) {
           return state;
@@ -109,8 +122,8 @@ const DashboardAlertSlice = createSlice({
   },
 });
 
-export const isFetchingSelector = (state) => state.alert.isFetching;
-export const isLastPageSelector = (state) => state.alert.isLastPage;
+export const isFetchingSelector = (state: RootState) => state.alert.isFetching;
+export const isLastPageSelector = (state: RootState) => state.alert.isLastPage;
 export const { addAlert, removeAlertNotification, removeAlertMessage } =
   DashboardAlertSlice.actions;
 export default DashboardAlertSlice;

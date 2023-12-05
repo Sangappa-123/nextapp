@@ -1,13 +1,13 @@
 import { getClientCookie, getServerCookie } from "./utils/utitlity";
 
-interface IStringIndex {
-  [key: string]: any;
+interface unknownObjectType {
+  [key: string | number]: any;
 }
 class HttpService {
   accessToken: string | undefined | null;
   isClient: boolean;
   isPublic: boolean;
-  header: IStringIndex;
+  header: unknownObjectType;
   constructor(obj?: { isPublic?: boolean; isClient?: boolean }) {
     this.accessToken = undefined;
     this.isClient = obj?.isClient ?? false;
@@ -33,7 +33,11 @@ class HttpService {
     }
   }
 
-  async post(url: string, payload: unknown, headers?: object) {
+  async post(
+    url: string,
+    payload: unknown,
+    headers?: object
+  ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -55,7 +59,7 @@ class HttpService {
       });
     });
   }
-  async get(url: string, headers?: object): Promise<object> {
+  async get(url: string, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -77,7 +81,11 @@ class HttpService {
     });
   }
 
-  async delete(url: string, payload: unknown, headers?: object) {
+  async delete(
+    url: string,
+    payload: unknown,
+    headers?: object
+  ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {

@@ -75,12 +75,12 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
     };
 
     const resp: any = await saveSecurityQuestion(questionAnswerList);
-    if (resp.result.status === 200) {
+    if (resp.status === 200) {
       router.replace("/adjuster-dashboard");
-    } else if (resp?.result?.errorMessage) {
+    } else if (resp?.errorMessage) {
       dispatch(
         addNotification({
-          message: resp?.result?.errorMessage,
+          message: resp?.errorMessage,
           id: "security-question",
           status: "error",
         })

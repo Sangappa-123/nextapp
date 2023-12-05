@@ -7,7 +7,7 @@ type Tab = {
   name: string;
   content: React.ReactNode;
   className?: string;
-  clickHandler: (arg: number) => void;
+  [key: string]: any;
 };
 
 type TabsProps = {
