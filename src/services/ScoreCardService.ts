@@ -6,9 +6,9 @@ export const getClaimScoreCard = async (param: any, isClient: boolean = false) =
     const http = new HttpService({ isClient });
     const url = getApiEndPoint("scoreCard") + param;
     const resp: any = await http.get(url);
-    const { response, error } = resp;
-    if (response) {
-      return response;
+    const { data, error } = resp;
+    if (data) {
+      return data;
     }
     return error;
   } catch (err) {
