@@ -9,7 +9,7 @@ import { addFilterValues } from "@/reducers/ClaimData/ClaimSlice";
 
 const OpenClaimSelectDropdown: React.FC = (props) => {
   const dispatch = useAppDispatch();
-
+  const { setTableLoader }: any = props;
   const options = [
     { value: 0, label: "All" },
     { value: 3, label: "3rd Party Vendor" },
@@ -19,12 +19,12 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
   ];
   const [selected, setSelected] = useState([{ value: 0, label: "All" }]);
 
-  const handleSelectChange = async (selectedVal) => {
+  const handleSelectChange = async (selectedVal: any) => {
     await setSelected(selectedVal);
-    props.setTableLoader(true);
+    setTableLoader(true);
 
-    const selectedValues = [];
-    const isFound = selectedVal.some((element) => {
+    const selectedValues: any = [];
+    const isFound = selectedVal.some((element: any) => {
       return element.value === 0;
     });
 
@@ -34,13 +34,13 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
           return item.value !== 0;
         })
       );
-      selectedVal = selectedVal.filter((item) => {
+      selectedVal = selectedVal.filter((item: any) => {
         return item.value !== 0;
       });
     }
 
     if (selectedVal.length > 0 && selectedVal[0].value !== 0) {
-      selectedVal.map((item) => {
+      selectedVal.map((item: any) => {
         if (item.value !== 0) selectedValues.push(item.value);
       });
 
@@ -54,13 +54,13 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
         selectedValues
       );
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     } else if (selectedVal.length === 0) {
       dispatch(addFilterValues({ statusIds: null }));
       const result = await fetchClaimList();
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
@@ -100,13 +100,23 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
         fontSize: "12px",
       };
     },
-    indicatorsContainer: (prevStyle, state) =>
+    indicatorsContainer: (prevStyle: any, state: any) =>
       state.isMulti
         ? {
             ...prevStyle,
             display: "none",
           }
         : null,
+  };
+
+  const handleClear = async () => {
+    setTableLoader(true);
+    setSelected([]);
+    dispatch(addFilterValues({ statusIds: null }));
+    const result = await fetchClaimList();
+    if (result) {
+      setTableLoader(false);
+    }
   };
 
   return (
@@ -121,6 +131,7 @@ const OpenClaimSelectDropdown: React.FC = (props) => {
         selected={selected}
         handleSelectChange={handleSelectChange}
         hideSelectedOptions={false}
+        handleClear={handleClear}
       />
     </div>
   );

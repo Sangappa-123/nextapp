@@ -1,13 +1,11 @@
+import { unknownObjectType } from "@/constants/customTypes";
 import { getClientCookie, getServerCookie } from "./utils/utitlity";
 
-interface IStringIndex {
-  [key: string]: any;
-}
 class HttpService {
   accessToken: string | undefined | null;
   isClient: boolean;
   isPublic: boolean;
-  header: IStringIndex;
+  header: unknownObjectType;
   constructor(obj?: { isPublic?: boolean; isClient?: boolean }) {
     this.accessToken = undefined;
     this.isClient = obj?.isClient ?? false;
@@ -33,7 +31,11 @@ class HttpService {
     }
   }
 
-  async post(url: string, payload: unknown, headers?: object) {
+  async post(
+    url: string,
+    payload: unknown,
+    headers?: object
+  ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -44,8 +46,8 @@ class HttpService {
           })
             .then((response) => response.json())
             .then((result) => {
-              const data = result?.data;
-              return resolve({ data });
+              // const data = result?.data;
+              return resolve(result);
             })
             .catch((error) => reject({ error }));
         } catch (error) {
@@ -55,7 +57,7 @@ class HttpService {
       });
     });
   }
-  async get(url: string, headers?: object) {
+  async get(url: string, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -66,7 +68,7 @@ class HttpService {
             .then((resp) => resp.json())
             .then((response) => {
               // const data = result?.data;
-              return resolve({ response });
+              return resolve(response);
             })
             .catch((error) => reject({ error }));
         } catch (error) {
@@ -77,7 +79,11 @@ class HttpService {
     });
   }
 
-  async delete(url: string, payload: unknown, headers?: object) {
+  async delete(
+    url: string,
+    payload: unknown,
+    headers?: object
+  ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         try {
@@ -88,8 +94,8 @@ class HttpService {
           })
             .then((response) => response.json())
             .then((result) => {
-              const data = result;
-              return resolve({ data });
+              // const data = result;
+              return resolve(result);
             })
             .catch((error) => reject({ error }));
         } catch (error) {

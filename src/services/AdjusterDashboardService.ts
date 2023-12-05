@@ -1,14 +1,18 @@
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import HttpService from "@/HttpService";
 
+interface objectType {
+  [key: string | number]: any;
+}
+
 export const getPendingVendorInvoices = async (payload: object) => {
   try {
     const http = new HttpService();
     const url = getApiEndPoint("invoicelist");
-    const resp: any = await http.post(url, payload);
-    const { data, error } = resp;
-    if (data) {
-      return data;
+    const resp = await http.post(url, payload);
+    const { error } = resp;
+    if (!error) {
+      return resp.data;
     }
     return error;
   } catch (err) {
@@ -16,17 +20,17 @@ export const getPendingVendorInvoices = async (payload: object) => {
   }
 };
 
-export const getImmediateClaims = async (param: any) => {
+export const getImmediateClaims = async (param: any): Promise<objectType> => {
   try {
     const http = new HttpService();
     const url = getApiEndPoint("immidiateAttentionClaims") + param;
-    const resp: any = await http.get(url);
-    const { response, error } = resp;
-    if (response) {
-      return response;
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
     }
     return error;
-  } catch (err) {
+  } catch (err: any) {
     return err;
   }
 };

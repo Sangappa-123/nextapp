@@ -17,7 +17,16 @@ import { useRouter } from "next/navigation";
 import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
 
 const OpenClaimTable: React.FC = (props) => {
-  const [claimResult, setClaimResult] = React.useState(props.claimListData);
+  const {
+    claimListData,
+    currentPageNumber,
+    setTableLoader,
+    addSelectedClaimDetails,
+    totalClaims,
+    tableLoader,
+    claimErrorMsg,
+  }: any = props;
+  const [claimResult, setClaimResult] = React.useState(claimListData);
   const router = useRouter();
 
   const pageLimit = 20;
@@ -33,9 +42,9 @@ const OpenClaimTable: React.FC = (props) => {
     lastUpdated: string;
   };
   React.useEffect(() => {
-    const defaultData: ClaimData[] = [...props.claimListData];
+    const defaultData: ClaimData[] = [...claimListData];
     setClaimResult([...defaultData]);
-  }, [props.claimListData]);
+  }, [claimListData]);
 
   const columnHelper = createColumnHelper<ClaimData>();
 
@@ -67,9 +76,12 @@ const OpenClaimTable: React.FC = (props) => {
       id: "Create_Date",
       header: "Claim Date",
       cell: (info) => {
-        const unixDate = Date.parse(info.renderValue().replace("T", " "));
-        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
-        return formatedDate;
+        if (info.renderValue()) {
+          const unixDate = Date.parse(info.renderValue().replace("T", " "));
+          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+          return formatedDate;
+        }
+        return null;
       },
       enableSorting: true,
     }),
@@ -104,9 +116,12 @@ const OpenClaimTable: React.FC = (props) => {
       id: "Last_Update_Date",
       header: "Last Updated",
       cell: (info) => {
-        const unixDate = Date.parse(info.renderValue().replace("T", " "));
-        const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
-        return formatedDate;
+        if (info.renderValue()) {
+          const unixDate = Date.parse(info.renderValue().replace("T", " "));
+          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+          return formatedDate;
+        }
+        return null;
       },
       enableSorting: true,
     }),
@@ -115,7 +130,7 @@ const OpenClaimTable: React.FC = (props) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: props.currentPageNumber - 1,
+    pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
   });
 
@@ -127,8 +142,8 @@ const OpenClaimTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-  const handleSorting = async (sortingUpdater) => {
-    props.setTableLoader(true);
+  const handleSorting = async (sortingUpdater: any) => {
+    setTableLoader(true);
 
     const newSortVal = sortingUpdater(sorting);
     setSorting(newSortVal);
@@ -138,17 +153,17 @@ const OpenClaimTable: React.FC = (props) => {
       const sortBy = newSortVal[0].id;
       const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (newSortVal.length === 0 && props.claimListData.length > 0) {
+    } else if (newSortVal.length === 0 && claimListData.length > 0) {
       const result = await fetchClaimList();
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
-  const handlePagination = async (updaterFunction) => {
-    props.setTableLoader(true);
+  const handlePagination = async (updaterFunction: any) => {
+    setTableLoader(true);
 
     const newPaginationValue = updaterFunction(pagination);
     setPagination(newPaginationValue);
@@ -159,17 +174,17 @@ const OpenClaimTable: React.FC = (props) => {
       const sortBy = sorting[0].id;
       const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+    } else if (sorting.length === 0 && claimListData.length > 0) {
       const result = await fetchClaimList(pageNumber);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
-  const handleRowClick = (rowData) => {
-    props.addSelectedClaimDetails({
+  const handleRowClick = (rowData: any) => {
+    addSelectedClaimDetails({
       claimData: rowData,
     });
     router.replace("/adjuster-property-claim-details");
@@ -178,7 +193,7 @@ const OpenClaimTable: React.FC = (props) => {
   const table = useReactTable({
     data: claimResult,
     columns,
-    pageCount: Math.ceil(props.totalClaims / pageLimit),
+    pageCount: Math.ceil(totalClaims / pageLimit),
     state: {
       sorting,
       pagination,
@@ -196,18 +211,18 @@ const OpenClaimTable: React.FC = (props) => {
     <div className={OpenClaimTableStyle.claimTableContainer}>
       <CustomReactTable
         table={table}
-        totalDataCount={props.totalClaims}
+        totalDataCount={totalClaims}
         pageLimit={pageLimit}
         showStatusColor={true}
-        loader={props.tableLoader}
-        tableDataErrorMsg={props.claimErrorMsg}
+        loader={tableLoader}
+        tableDataErrorMsg={claimErrorMsg}
         handleRowClick={handleRowClick}
       />
     </div>
   );
 };
 
-const mapStateToProps = ({ claimdata }) => ({
+const mapStateToProps = ({ claimdata }: any) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,

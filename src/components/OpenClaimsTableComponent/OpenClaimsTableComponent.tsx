@@ -9,7 +9,7 @@ import OpenClaimTable from "./OpenClaimTable/index";
 import { connect } from "react-redux";
 import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
-function OpenClaimsTableComponent(props): React.ReactNode {
+function OpenClaimsTableComponent(props: any): React.ReactNode {
   const [loading, setLoading] = useState(true);
   const [tableLoader, setTableLoader] = React.useState(false);
 

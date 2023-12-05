@@ -17,7 +17,7 @@ const CustomReactTable: React.FC = (props) => {
     loader = null,
     tableDataErrorMsg = null,
     handleRowClick = null,
-  } = props;
+  }: any = props;
 
   return (
     <div className={CustomReactTableStyles.reactTable}>
@@ -25,10 +25,10 @@ const CustomReactTable: React.FC = (props) => {
 
       <table>
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map((headerGroup: any) => (
             <tr key={headerGroup.id}>
               {headerGroup &&
-                headerGroup.headers.map((header) => (
+                headerGroup.headers.map((header: any) => (
                   <th
                     key={header.id}
                     style={{
@@ -71,13 +71,13 @@ const CustomReactTable: React.FC = (props) => {
         <tbody>
           {tableDataErrorMsg ? (
             <tr>
-              <td colspan="100" className="text-center text-danger">
+              <td colSpan={100} className="text-center text-danger">
                 <NoRecordComponent message={tableDataErrorMsg} />
               </td>
             </tr>
           ) : (
             <>
-              {table.getRowModel().rows.map((row) => (
+              {table.getRowModel().rows.map((row: any) => (
                 <tr
                   key={row.id}
                   {...(handleRowClick
@@ -88,7 +88,7 @@ const CustomReactTable: React.FC = (props) => {
                       }
                     : {})}
                 >
-                  {row.getVisibleCells().map((cell, index) => (
+                  {row.getVisibleCells().map((cell: any, index: number) => (
                     <td
                       key={cell.id}
                       className={
@@ -123,8 +123,8 @@ const CustomReactTable: React.FC = (props) => {
             {totalDataCount >
             table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
               ? table.getState().pagination.pageIndex * pageLimit + 1 + pageLimit - 1
-              : props.totalDataCount}{" "}
-            of {props.totalDataCount} Claims
+              : totalDataCount}{" "}
+            of {totalDataCount} Claims
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -143,7 +143,7 @@ const CustomReactTable: React.FC = (props) => {
             </button>
 
             {Array(table.getPageCount())
-              .fill()
+              .fill(table.getPageCount())
               .map((value, index) => {
                 if (index < 10) {
                   return (

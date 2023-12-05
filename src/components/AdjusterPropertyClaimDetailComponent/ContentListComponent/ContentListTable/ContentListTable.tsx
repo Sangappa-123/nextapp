@@ -12,178 +12,58 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
-import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
 
 const ContentListTable: React.FC = (props) => {
+  const {
+    currentPageNumber,
+    setTableLoader,
+    totalClaims,
+    tableLoader,
+    claimErrorMsg,
+  }: any = props;
+
   const contentListData = React.useMemo(() => {
     return [
       {
-        acv: null,
-        acvTax: null,
-        acvTotal: null,
         description: "Test",
-        ageMonths: 0,
-        ageYears: 1,
+
         category: {
-          aggregateLimit: null,
-          annualDepreciation: null,
-          description: null,
-          id: 2,
           name: "Art",
-          usefulYears: null,
-          specialCase: null,
-          depreciation: null,
-          firstYearDepreciation: null,
-          correspondYearDepreciation: null,
-          maxDepreciation: null,
-          flatDepreciation: null,
-          minPricePoint: null,
-          maxPricePoint: null,
-          associateSubCat: null,
-          categoryId: null,
         },
-        claimId: null,
-        claimNumber: null,
-        id: 585673,
-        itemName: null,
-        itemNumber: 1,
-        itemType: null,
-        itemUID: "365EE5573985",
+
         quantity: 1,
-        rcv: null,
+
         rcvTotal: null,
         status: {
           id: 2,
           status: "ASSIGNED",
         },
-        subCategory: {
-          aggregateLimit: null,
-          annualDepreciation: null,
-          description: null,
-          id: 12,
-          name: "Objects of Art, Sculptures, Figurines Etc. Over $100 Value",
-          usefulYears: null,
-          specialCase: null,
-          depreciation: null,
-          firstYearDepreciation: null,
-          correspondYearDepreciation: null,
-          maxDepreciation: null,
-          flatDepreciation: null,
-          minPricePoint: null,
-          maxPricePoint: null,
-          associateSubCat: null,
-          categoryId: null,
-        },
-        taxRate: 3,
-        contentService: {
-          description: null,
-          id: 1,
-          isAvailable: null,
-          isDefault: null,
-          isminimumServiceFee: null,
-          service: "Quote With Contact",
-          serviceCharge: null,
-          subServices: null,
-        },
+
         totalStatedAmount: 20,
-        associate: null,
         vendorName: "Artigem",
         adjusterDescription: null,
-        quoteDate: null,
-        quotedBy: null,
-        unitCost: 20,
-        subItems: null,
-        attachments: null,
-        cashPayoutExposure: null,
-        noOfUnreadComment: null,
-        totalNoOfComments: null,
-        applyTax: true,
-        standardCost: null,
-        standardDescription: null,
-        standardItemRetailer: null,
-        standardItemSource: null,
-        holdOverPaid: null,
-        holdOverRemaining: null,
-        replacementExposure: null,
-        cashPaid: null,
-        replacedItemPrice: null,
         itemTag: null,
-        condition: {
-          conditionId: 3,
-          conditionName: "Average",
-        },
-        replacementQty: null,
-        individualLimitAmount: null,
-        replaced: false,
-        approved: false,
-        scheduledItem: false,
+
+        cashPayoutExposure: null,
       },
       {
-        acv: null,
-        acvTax: null,
-        acvTotal: null,
         description: "Test item no schedule",
-        ageMonths: 0,
-        ageYears: 0,
+
         category: null,
-        claimId: null,
-        claimNumber: null,
-        id: 585674,
-        itemName: null,
-        itemNumber: 2,
-        itemType: null,
-        itemUID: "759F6B884437",
+
         quantity: 2,
-        rcv: null,
         rcvTotal: null,
         status: {
           id: 2,
           status: "ASSIGNED",
         },
-        subCategory: null,
-        taxRate: 3,
-        contentService: {
-          description: null,
-          id: 1,
-          isAvailable: null,
-          isDefault: null,
-          isminimumServiceFee: null,
-          service: "Quote With Contact",
-          serviceCharge: null,
-          subServices: null,
-        },
+
         totalStatedAmount: 40,
-        associate: null,
         vendorName: "Artigem",
         adjusterDescription: null,
-        quoteDate: null,
-        quotedBy: null,
-        unitCost: 20,
-        subItems: null,
-        attachments: null,
-        cashPayoutExposure: null,
-        noOfUnreadComment: null,
-        totalNoOfComments: null,
-        applyTax: true,
-        standardCost: null,
-        standardDescription: null,
-        standardItemRetailer: null,
-        standardItemSource: null,
-        holdOverPaid: null,
-        holdOverRemaining: null,
-        replacementExposure: null,
-        cashPaid: null,
-        replacedItemPrice: null,
+
         itemTag: null,
-        condition: {
-          conditionId: 3,
-          conditionName: "Average",
-        },
-        replacementQty: null,
-        individualLimitAmount: null,
-        replaced: false,
-        approved: false,
-        scheduledItem: false,
+        cashPayoutExposure: null,
       },
     ];
   }, []);
@@ -191,22 +71,25 @@ const ContentListTable: React.FC = (props) => {
 
   const pageLimit = 20;
 
-  type ClaimData = {
-    claimNumber: string;
-    status: string;
-    noOfItems: number;
-    noOfItemsPriced: number;
-    policyHoldersName: string;
-    claimDate: Date;
-    lastActive: string;
-    lastUpdated: string;
+  type ContentListData = {
+    status: object | null;
+    category: object | null;
+    description: string | null;
+    quantity: number | null;
+    totalStatedAmount: number | null;
+    itemTag: string | null;
+    vendorName: string | null;
+    adjusterDescription: string | null;
+    rcvTotal: number | null;
+    cashPayoutExposure: number | null;
   };
+
   React.useEffect(() => {
-    const defaultData: ClaimData[] = [...contentListData];
+    const defaultData: ContentListData[] = [...contentListData];
     setClaimResult([...defaultData]);
   }, [contentListData]);
 
-  const columnHelper = createColumnHelper<ClaimData>();
+  const columnHelper = createColumnHelper<ContentListData>();
 
   const columns = [
     columnHelper.group({
@@ -309,7 +192,7 @@ const ContentListTable: React.FC = (props) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: props.currentPageNumber - 1,
+    pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
   });
 
@@ -321,8 +204,8 @@ const ContentListTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-  const handleSorting = async (sortingUpdater) => {
-    props.setTableLoader(true);
+  const handleSorting = async (sortingUpdater: any) => {
+    setTableLoader(true);
 
     const newSortVal = sortingUpdater(sorting);
     setSorting(newSortVal);
@@ -332,17 +215,17 @@ const ContentListTable: React.FC = (props) => {
       const sortBy = newSortVal[0].id;
       const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (newSortVal.length === 0 && props.claimListData.length > 0) {
+    } else if (newSortVal.length === 0 && contentListData.length > 0) {
       const result = await fetchClaimList();
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
-  const handlePagination = async (updaterFunction) => {
-    props.setTableLoader(true);
+  const handlePagination = async (updaterFunction: any) => {
+    setTableLoader(true);
 
     const newPaginationValue = updaterFunction(pagination);
     setPagination(newPaginationValue);
@@ -353,12 +236,12 @@ const ContentListTable: React.FC = (props) => {
       const sortBy = sorting[0].id;
       const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+    } else if (sorting.length === 0 && contentListData.length > 0) {
       const result = await fetchClaimList(pageNumber);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
@@ -366,7 +249,7 @@ const ContentListTable: React.FC = (props) => {
   const table = useReactTable({
     data: claimResult,
     columns,
-    pageCount: Math.ceil(props.totalClaims / pageLimit),
+    pageCount: Math.ceil(totalClaims / pageLimit),
     state: {
       sorting,
       pagination,
@@ -384,23 +267,21 @@ const ContentListTable: React.FC = (props) => {
     <div className={ContentListTableStyle.claimTableContainer}>
       <CustomReactTable
         table={table}
-        totalDataCount={props.totalClaims}
-        pageLimit={props.totalClaims > 20 ? pageLimit : null}
-        loader={props.tableLoader}
-        tableDataErrorMsg={props.claimErrorMsg}
+        totalDataCount={totalClaims}
+        pageLimit={totalClaims > 20 ? pageLimit : null}
+        loader={tableLoader}
+        tableDataErrorMsg={claimErrorMsg}
       />
     </div>
   );
 };
 
-const mapStateToProps = ({ claimdata }) => ({
+const mapStateToProps = ({ claimdata }: any) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
   claimErrorMsg: claimdata.claimErrorMsg,
   sortedIds: claimdata.statusIds,
 });
-const mapDispatchToProps = {
-  addSelectedClaimDetails,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContentListTable);
+
+export default connect(mapStateToProps, null)(ContentListTable);

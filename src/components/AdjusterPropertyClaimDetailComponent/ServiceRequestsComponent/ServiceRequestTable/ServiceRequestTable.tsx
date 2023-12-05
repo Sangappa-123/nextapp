@@ -13,9 +13,16 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
-import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
 
 const ServiceRequestTable: React.FC = (props) => {
+  const {
+    currentPageNumber,
+    setTableLoader,
+    totalClaims,
+    tableLoader,
+    claimErrorMsg,
+  }: any = props;
+
   const serviceData = React.useMemo(() => {
     return [
       {
@@ -147,7 +154,7 @@ const ServiceRequestTable: React.FC = (props) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: props.currentPageNumber - 1,
+    pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
   });
 
@@ -159,8 +166,8 @@ const ServiceRequestTable: React.FC = (props) => {
     [pageIndex, pageSize]
   );
 
-  const handleSorting = async (sortingUpdater) => {
-    props.setTableLoader(true);
+  const handleSorting = async (sortingUpdater: any) => {
+    setTableLoader(true);
 
     const newSortVal = sortingUpdater(sorting);
     setSorting(newSortVal);
@@ -170,17 +177,17 @@ const ServiceRequestTable: React.FC = (props) => {
       const sortBy = newSortVal[0].id;
       const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (newSortVal.length === 0 && props.claimListData.length > 0) {
+    } else if (newSortVal.length === 0 && serviceData.length > 0) {
       const result = await fetchClaimList();
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
-  const handlePagination = async (updaterFunction) => {
-    props.setTableLoader(true);
+  const handlePagination = async (updaterFunction: any) => {
+    setTableLoader(true);
 
     const newPaginationValue = updaterFunction(pagination);
     setPagination(newPaginationValue);
@@ -191,12 +198,12 @@ const ServiceRequestTable: React.FC = (props) => {
       const sortBy = sorting[0].id;
       const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
-    } else if (sorting.length === 0 && props.claimListData.length > 0) {
+    } else if (sorting.length === 0 && serviceData.length > 0) {
       const result = await fetchClaimList(pageNumber);
       if (result) {
-        props.setTableLoader(false);
+        setTableLoader(false);
       }
     }
   };
@@ -204,7 +211,7 @@ const ServiceRequestTable: React.FC = (props) => {
   const table = useReactTable({
     data: claimResult,
     columns,
-    pageCount: Math.ceil(props.totalClaims / pageLimit),
+    pageCount: Math.ceil(totalClaims / pageLimit),
     state: {
       sorting,
       pagination,
@@ -222,23 +229,21 @@ const ServiceRequestTable: React.FC = (props) => {
     <div className={ServiceRequestTableStyle.claimTableContainer}>
       <CustomReactTable
         table={table}
-        totalDataCount={props.totalClaims}
-        pageLimit={props.totalClaims > 20 ? pageLimit : null}
-        loader={props.tableLoader}
-        tableDataErrorMsg={props.claimErrorMsg}
+        totalDataCount={totalClaims}
+        pageLimit={totalClaims > 20 ? pageLimit : null}
+        loader={tableLoader}
+        tableDataErrorMsg={claimErrorMsg}
       />
     </div>
   );
 };
 
-const mapStateToProps = ({ claimdata }) => ({
+const mapStateToProps = ({ claimdata }: any) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
   claimErrorMsg: claimdata.claimErrorMsg,
   sortedIds: claimdata.statusIds,
 });
-const mapDispatchToProps = {
-  addSelectedClaimDetails,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceRequestTable);
+
+export default connect(mapStateToProps, null)(ServiceRequestTable);

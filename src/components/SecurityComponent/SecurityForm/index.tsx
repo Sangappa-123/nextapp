@@ -56,10 +56,10 @@ function SecurityForm() {
       };
     }
     const resp: any = await changePassword(payload);
-    if (resp.result.status === 200) {
+    if (resp.status === 200) {
       dispatch(
         addNotification({
-          message: resp?.result?.message,
+          message: resp?.message,
           id: "password-update",
         })
       );
@@ -71,10 +71,10 @@ function SecurityForm() {
       } else {
         router.replace("/adjuster-dashboard");
       }
-    } else if (resp?.result?.errorMessage) {
+    } else if (resp?.errorMessage) {
       dispatch(
         addNotification({
-          message: resp?.result?.errorMessage,
+          message: resp?.errorMessage,
           id: "password-update",
           status: "error",
         })

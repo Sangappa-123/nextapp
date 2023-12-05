@@ -5,7 +5,10 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
 
-export const claimList = async (payload: any, token: any) => {
+interface objectType {
+  [key: string | number]: any;
+}
+export const claimList = async (payload: any, token: any): Promise<objectType> => {
   const headersData: object = getHeaderWithoutToken();
   // const headersData: object = getHeader();
   return new Promise((resolve, rejects) => {
@@ -53,7 +56,7 @@ export const fetchClaimList = async (
 
   if (claimListRes.result.status === 200) {
     const claimData = claimListRes.result;
-    store.dispatch(addClaimListData({ claimData }));
+    store.dispatch(addClaimListData({ claimData: claimData }));
     return claimData;
   }
   return null;
@@ -65,7 +68,7 @@ export const getNotification = async (param: object, isClient: boolean = false) 
     const http = new HttpService({ isClient });
     const res = await http.post(url, param);
     const { data, error } = res;
-    if (data) {
+    if (!error) {
       return data;
     }
     throw error;
@@ -80,8 +83,8 @@ export const deleteNotification = async (param: object) => {
     const url = getApiEndPoint("deleteNotification");
     const http = new HttpService({ isClient: true });
     const res = await http.delete(url, param);
-    const { data, error } = res;
-    if (data) return { data };
+    const { error } = res;
+    if (!error) return res;
     throw error;
   } catch (err) {
     console.log("error", err);

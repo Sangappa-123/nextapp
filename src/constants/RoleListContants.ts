@@ -192,32 +192,31 @@
         Home: "/adjuster-dashboard",
         Screens: [
           {
-            ScreenCode: "AdjusterDashboard",
-            URL: "adjuster-dashboard",
+            URL: "/adjuster-dashboard",
           },
           {
-            ScreenCode: "BillsAndPayments",
-            URL: "bills-and-payments",
+            URL: "/adjuster-property-claim-details",
           },
           {
-            ScreenCode: "AdjusterAllClaims",
-            URL: "adjuster-all-claims",
+            URL: "/bills-and-payments",
           },
           {
-            ScreenCode: "ClaimReports",
-            URL: "claim-reports",
+            URL: "/adjuster-all-claims",
           },
           {
-            ScreenCode: "helpAndfrequentlyaskedquestions",
-            URL: "help-and-frequently-asked-questions",
+            URL: "/claim-reports",
           },
           {
-            ScreenCode: "cliamlifecyclefaq",
+            URL: "/help-and-frequently-asked-questions",
+          },
+          {
             URL: "cliam-life-cycle-faq",
           },
           {
-            ScreenCode: "AdjusterSalvageReports",
-            URL: "adjuster-salvage-reports",
+            URL: "/adjuster-salvage-reports",
+          },
+          {
+            URL: "/new-claim",
           },
         ],
       },

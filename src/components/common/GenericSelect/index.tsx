@@ -34,14 +34,11 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     isManditaory = true,
     hideSelectedOptions = true,
     handleSelectChange,
+    handleClear,
     ...rest
   } = props;
 
-  const handleClear = () => {
-    setSelected([]);
-  };
-
-  const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }) =>
+  const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }: any) =>
     !isDisabled ? (
       <div ref={innerRef} {...innerProps} className={selectStyle.menu}>
         {customMenuWithClear && (

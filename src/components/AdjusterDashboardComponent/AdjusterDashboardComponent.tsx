@@ -32,8 +32,8 @@ export default async function DashboardComponent() {
     searchKeyword: "",
     statusIds: null,
   };
-  const claimListRes = await claimList(payload, token);
-  if (claimListRes && claimListRes?.result?.status === 200) {
+  const claimListRes: any = await claimList(payload, token);
+  if (claimListRes?.result?.status === 200) {
     return (
       <div className={CardsStyle.card}>
         <div className="row">

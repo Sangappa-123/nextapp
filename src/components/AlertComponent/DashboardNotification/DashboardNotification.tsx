@@ -9,8 +9,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { removeAlertNotification } from "@/reducers/DashboardAlert/DashboardAlertSlice";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { deleteNotification } from "@/services/ClaimService";
+import { unknownObjectType } from "@/constants/customTypes";
 
-function DashboardNotification({ data }) {
+function DashboardNotification({ data }: { data: unknownObjectType }) {
   const dispatch = useAppDispatch();
   const { loaded } = useDashboardAlert(data);
   const columns = ["Date", "Claim Details", "Message", ""];
@@ -18,11 +19,11 @@ function DashboardNotification({ data }) {
   const handleDelete = (id: number) => {
     deleteNotification({ id, page: 1 })
       .then((res) => {
-        const { data } = res;
+        const { data, message } = res;
         dispatch(removeAlertNotification({ id, data }));
         dispatch(
           addNotification({
-            message: data?.message ?? "Notification Deleted.",
+            message: message ?? "Notification Deleted.",
             id,
           })
         );

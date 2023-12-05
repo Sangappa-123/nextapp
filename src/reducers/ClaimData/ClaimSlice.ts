@@ -19,9 +19,9 @@ const ClaimSlice = createSlice({
       const { claimData } = payload;
 
       let newArr = {};
-      const claimRes = [];
+      const claimRes: any = [];
       if (claimData.data) {
-        claimData.data.claims.map((item) => {
+        claimData.data.claims.map((item: any) => {
           newArr = {
             claimNumber: item.claimNumber,
             status: item.status.status,

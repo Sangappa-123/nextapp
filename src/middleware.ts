@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { i18n } from "@/i18n.config";
 import { match as matchLocale } from "@formatjs/intl-localematcher"; // used to matching from list
 import Negotiator from "negotiator"; // used to get request headers
+import { cookies } from "next/headers";
+import { getRoleBasedUrlList } from "./utils/helper";
 
 function getLocale(request: NextRequest): string | undefined {
   const negotiatorHeaders: Record<string, string> = {};
@@ -14,14 +16,30 @@ function getLocale(request: NextRequest): string | undefined {
   return locale;
 }
 export default function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
+  // const pathname = req.nextUrl.pathname;
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken");
+  const url = req.nextUrl.clone();
+  const pathname = url?.pathname;
+  // console.log("pathname>> ", pathname);
+
+  const noRoleCheckRoutes = [
+    "/",
+    "/login",
+    "/forgot-password",
+    "/reset-password",
+    "/security",
+    "/security-questions",
+  ];
+
   const tempLocale = pathname.trim().split("/")[1];
   let urlHasLocale = false;
+
   if (tempLocale.length === 2) {
     urlHasLocale = true;
   }
   if ((urlHasLocale && pathname === `/${tempLocale}`) || pathname == "/") {
-    const url = req.nextUrl.clone();
+    console.log("url>> ", url);
     if (urlHasLocale) {
       url.pathname = `/${tempLocale}/login`;
     } else {
@@ -32,7 +50,26 @@ export default function middleware(req: NextRequest) {
       redirect.cookies.set("lang", tempLocale);
     }
     return redirect;
-    // return NextResponse.redirect(url)
+    // role based access
+  } else if (!noRoleCheckRoutes.includes(pathname)) {
+    const userRole = cookieStore.get("role");
+    const url = req.nextUrl.clone();
+    console.log("userRole", userRole?.value);
+    if (accessToken && userRole?.value) {
+      const urlList = getRoleBasedUrlList(userRole?.value);
+      if (urlList?.Screens) {
+        const isUrlContain = urlList?.Screens?.some((screen) => screen.URL === pathname);
+        if (!isUrlContain) {
+          url.pathname = "/login";
+          url.search = "accessDenide=true";
+          return NextResponse.redirect(url);
+        }
+      }
+    } else {
+      url.pathname = "/login";
+      url.search = "accessDenide=true";
+      return NextResponse.redirect(url);
+    }
   }
 
   /*------------For localization---------------*/
