@@ -61,14 +61,16 @@ export default function middleware(req: NextRequest) {
         const isUrlContain = urlList?.Screens?.some((screen) => screen.URL === pathname);
         if (!isUrlContain) {
           url.pathname = "/login";
-          url.search = "accessDenide=true";
-          return NextResponse.redirect(url);
+          const redirect = NextResponse.redirect(url);
+          redirect.cookies.set("accessDenied", "true");
+          return redirect;
         }
       }
     } else {
       url.pathname = "/login";
-      url.search = "accessDenide=true";
-      return NextResponse.redirect(url);
+      const redirect = NextResponse.redirect(url);
+      redirect.cookies.set("accessDenied", "true");
+      return redirect;
     }
   }
 
