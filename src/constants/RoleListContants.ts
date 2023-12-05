@@ -212,6 +212,9 @@
           {
             URL: "/adjuster-salvage-reports",
           },
+          {
+            URL: "/new-claim",
+          },
         ],
       },
       {
