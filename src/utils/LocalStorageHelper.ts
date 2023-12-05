@@ -1,20 +1,4 @@
-import RoleListConstants from "@/constants/RoleListContants";
-
-const getScreenList = (role: string) => {
-  const rolesObj = RoleListConstants();
-  console.log("roleList", rolesObj?.RoleList);
-
-  const roles = rolesObj?.RoleList?.filter((rolesArray) =>
-    rolesArray.Roles.includes(role)
-  );
-  if (roles.length > 0) {
-    const screenList = roles[0];
-    console.log("screenList", screenList);
-
-    return screenList;
-  }
-  return null;
-};
+import { getRoleBasedUrlList } from "./helper";
 
 export const addLocalStorageData = (response: any) => {
   const { data } = response;
@@ -64,15 +48,13 @@ export const addLocalStorageData = (response: any) => {
   if (data.vendorDetails !== null && data.vendorDetails !== undefined) {
     window.localStorage.setItem("vendorId", data.vendorDetails.vendorId);
   }
+  // adding role based screen list to local storage
   if (data?.role?.length > 0) {
     window.localStorage.setItem("role", data?.role[0]?.roleName);
     document.cookie = `role=${data?.role[0]?.roleName};max-age=${maxAge}`;
-    const screenList = getScreenList(data?.role[0]?.roleName);
+    const screenList = getRoleBasedUrlList(data?.role[0]?.roleName);
     if (screenList) {
       document.cookie = `homeScreen=${screenList?.Home};max-age=${maxAge}`;
-      document.cookie = `screenList=${JSON.stringify(
-        screenList?.Screens
-      )};max-age=${maxAge}`;
       window.localStorage.setItem("screenList", JSON.stringify(screenList?.Screens));
       window.localStorage.setItem("homeScreen", screenList?.Home);
     }

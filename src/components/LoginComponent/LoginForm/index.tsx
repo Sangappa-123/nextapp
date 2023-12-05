@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { object, string, minLength, email, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
@@ -13,17 +13,15 @@ import { useRouter } from "next/navigation";
 import { addSessionData, resetSessionState } from "@/reducers/Session/SessionSlice";
 import { loginTranslateType } from "@/translations/loginTranslate/en";
 
-import { useSearchParams } from "next/navigation";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { getClientCookie } from "@/utils/utitlity";
 
 function LoginForm({ translate }: { translate: loginTranslateType }) {
   const dispatch = useAppDispatch();
-  const searchParams = useSearchParams();
-  const accessDenide = searchParams.get("accessDenide");
-  const [accessDenideFlag, setAccessDenideFlag] = useState(accessDenide);
-  // console.log("access", access);
+  const router = useRouter();
 
   useEffect(() => {
+    const accessDenideFlag = getClientCookie("accessDenide");
     if (accessDenideFlag === "true") {
       dispatch(resetSessionState());
       logoutHandler();
@@ -34,10 +32,9 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
           status: "error",
         })
       );
-      setAccessDenideFlag("false");
     }
-  }, [accessDenideFlag, dispatch]);
-  const router = useRouter();
+  }, [dispatch]);
+
   const schema = object({
     username: string("Your email must be a string.", [
       minLength(1, translate?.inputErrors?.userNameRequired),
@@ -87,7 +84,12 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
       ) {
         router.push("/security-question");
       } else {
-        router.push("/adjuster-dashboard");
+        const homePageRoute: string | null = localStorage.getItem("homeScreen");
+        if (homePageRoute) {
+          router.push(homePageRoute);
+        } else {
+          router.push("/login");
+        }
       }
     }
   };
