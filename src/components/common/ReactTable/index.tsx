@@ -15,6 +15,7 @@ const ReactTable: React.FC = (props) => {
     showStatusColor = null,
     loader = null,
     tableDataErrorMsg = null,
+    handleRowClick = null,
   } = props;
 
   return (
@@ -73,7 +74,16 @@ const ReactTable: React.FC = (props) => {
           ) : (
             <>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
+                <tr
+                  key={row.id}
+                  {...(handleRowClick
+                    ? {
+                        onClick: () => {
+                          handleRowClick(row.original);
+                        },
+                      }
+                    : {})}
+                >
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={cell.id}
@@ -134,7 +144,7 @@ const ReactTable: React.FC = (props) => {
                 if (index < 10) {
                   return (
                     <button
-                      key={value}
+                      key={value + "-" + index}
                       className={clsx({
                         [ReactTableStyles.paginationButton]: true,
                         [ReactTableStyles.active]:
