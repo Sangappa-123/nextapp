@@ -6,6 +6,7 @@ import { MdExpandLess } from "react-icons/md";
 import { MdExpandMore } from "react-icons/md";
 import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
+import NoRecordComponent from "../NoRecordComponent/NoRecordComponent";
 
 const ReactTable: React.FC = (props) => {
   const {
@@ -68,7 +69,7 @@ const ReactTable: React.FC = (props) => {
           {tableDataErrorMsg ? (
             <tr>
               <td colspan="100" className="text-center text-danger">
-                {tableDataErrorMsg}
+                <NoRecordComponent message={tableDataErrorMsg} />
               </td>
             </tr>
           ) : (

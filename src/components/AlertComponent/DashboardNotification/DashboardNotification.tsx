@@ -63,6 +63,7 @@ function DashboardNotification({ data }) {
         />
       </div>
     ),
+    isRead: notification?.isRead,
   }));
 
   if (!loaded) {

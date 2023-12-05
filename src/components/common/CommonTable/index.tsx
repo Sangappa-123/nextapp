@@ -29,7 +29,9 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
           data.map((row, rowIndex) => (
             <tr
               key={rowIndex}
-              className={CommonTableStyle.trStyle}
+              className={clsx(CommonTableStyle.trStyle, {
+                [CommonTableStyle.readMsg]: row?.isRead,
+              })}
               onMouseOver={(e) => {
                 e.currentTarget
                   .querySelector("[data-key='action']")

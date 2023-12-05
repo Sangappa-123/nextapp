@@ -1,6 +1,24 @@
+import RoleListConstants from "@/constants/RoleListContants";
+
+const getScreenList = (role: string) => {
+  const rolesObj = RoleListConstants();
+  console.log("roleList", rolesObj?.RoleList);
+
+  const roles = rolesObj?.RoleList?.filter((rolesArray) =>
+    rolesArray.Roles.includes(role)
+  );
+  if (roles.length > 0) {
+    const screenList = roles[0];
+    console.log("screenList", screenList);
+
+    return screenList;
+  }
+  return null;
+};
+
 export const addLocalStorageData = (response: any) => {
   const { data } = response;
-  localStorage.setItem("isLogined", "true");
+  localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("accessToken", data.token);
   localStorage.setItem("userName", data.email);
   localStorage.setItem("userLastName", data.lastName);
@@ -15,9 +33,9 @@ export const addLocalStorageData = (response: any) => {
 
   const maxAge = 60 * 60 * 24 * 7; // 7 days
 
-  document.cookie = `resetPassword=${data?.resetPassword};max-age=${maxAge}`;
-  document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
-  document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
+  // document.cookie = `resetPassword=${data?.resetPassword};max-age=${maxAge}`;
+  // document.cookie = `forgotPassword=${data?.forgotPassword};max-age=${maxAge}`;
+  // document.cookie = `securityQuestionsExists=${data?.securityQuestionsExists};max-age=${maxAge}`;
   document.cookie = `accessToken=${data?.token};max-age=${maxAge}`;
   document.cookie = `userId=${data?.userId};max-age=${maxAge}`;
 
@@ -46,8 +64,17 @@ export const addLocalStorageData = (response: any) => {
   if (data.vendorDetails !== null && data.vendorDetails !== undefined) {
     window.localStorage.setItem("vendorId", data.vendorDetails.vendorId);
   }
-  if (data.role.length > 0) {
-    window.localStorage.setItem("roleList", data.role[0]?.roleName);
+  if (data?.role?.length > 0) {
+    window.localStorage.setItem("role", data?.role[0]?.roleName);
+    document.cookie = `role=${data?.role[0]?.roleName};max-age=${maxAge}`;
+    const screenList = getScreenList(data?.role[0]?.roleName);
+    if (screenList) {
+      document.cookie = `homeScreen=${screenList?.Home};max-age=${maxAge}`;
+      document.cookie = `screenList=${JSON.stringify(
+        screenList?.Screens
+      )};max-age=${maxAge}`;
+      window.localStorage.setItem("screenList", JSON.stringify(screenList?.Screens));
+      window.localStorage.setItem("homeScreen", screenList?.Home);
+    }
   }
-  // else window.localStorage.setItem("VendorId", null);
 };

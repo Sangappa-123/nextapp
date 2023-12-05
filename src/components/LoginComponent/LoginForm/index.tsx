@@ -47,25 +47,25 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
     dispatch(addSessionData(localStorage));
     if (loginRes.result.status === 200001) {
       if (localStorage.getItem("resetPassword") === "true") {
-        router.replace("/security");
+        router.push("/security");
       } else if (
         localStorage.getItem("forgotPassword") === "true" &&
         localStorage.getItem("securityQuestionsExists") == "false"
       ) {
-        router.replace("/security");
+        router.push("/security");
       } else if (
         localStorage.getItem("forgotPassword") === "true" &&
         localStorage.getItem("securityQuestionsExists") === "true"
       ) {
-        router.replace("/reset-password");
+        router.push("/reset-password");
       } else if (
         localStorage.getItem("forgotPassword") === "false" &&
         localStorage.getItem("securityQuestionsExists") === "false" &&
         localStorage.getItem("resetPassword") === "false"
       ) {
-        router.replace("/security-question");
+        router.push("/security-question");
       } else {
-        router.replace("/adjuster-dashboard");
+        router.push("/adjuster-dashboard");
       }
     }
   };

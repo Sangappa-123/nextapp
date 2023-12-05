@@ -64,6 +64,7 @@ const MessageAlertCardsComponent = () => {
         />
       </div>
     ),
+    isRead: message?.isRead,
   }));
 
   return (
