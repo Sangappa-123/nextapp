@@ -5,6 +5,10 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 // import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
+import {
+  PENDING_INVOICE_TABLE_LIMIT,
+  URGENT_CLAIM_TABLE_LIMIT,
+} from "@/constants/constants";
 
 interface objectType {
   [key: string | number]: any;
@@ -89,7 +93,7 @@ type urgentClaimReq = {
 };
 export const fetchUrgentClaimList = async ({
   pageNumber = 1,
-  limit = 20,
+  limit = URGENT_CLAIM_TABLE_LIMIT,
   sortBy = "createDate",
   orderBy = "desc",
   searchKeyword = "",
@@ -136,6 +140,38 @@ export const fetchUrgentClaimList = async ({
   //   return urgentClaimData;
   // }
   // return null;
+};
+
+type pendingInvoiceReq = {
+  pageNumber?: number;
+  limit?: number;
+  sortBy?: string;
+  orderBy?: string;
+  searchKeyword?: string;
+  userId: string | null;
+};
+export const fetchPendingInvoice = async ({
+  pageNumber = 1,
+  limit = PENDING_INVOICE_TABLE_LIMIT,
+  sortBy = "createDate",
+  orderBy = "desc",
+  searchKeyword = "",
+  userId,
+}: pendingInvoiceReq) => {
+  const url = getApiEndPoint("pendingInvoiceUrl");
+  const payload = {
+    userId,
+    pagination: {
+      pageNumber: pageNumber,
+      limit: limit,
+      sortBy,
+      orderBy,
+    },
+    searchKeyword,
+  };
+  const http = new HttpService();
+  const res = await http.post(url, payload);
+  return res;
 };
 
 export const getNotification = async (param: object, isClient: boolean = false) => {

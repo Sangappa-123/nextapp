@@ -1,36 +1,30 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UrgentClaimSearchBox from "./UrgentClaimSearchBox/UrgentClaimSearchBox";
 import UrgentClaimTablecomStyle from "./UrgentClaimTableComponent.module.scss";
 import UrgentClaimTable from "./UrgentClaimTable/index";
-import { connect } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
 import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
-import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
 
 interface typedProp {
   initData: unknownObjectType | null;
 }
 
-function UrgentClaimTableComponent(props: typedProp): React.ReactNode {
-  const { initData, addUrgentClaimListData, urgentClaimListData } = props;
-  console.log("checking props", urgentClaimListData);
+const UrgentClaimTableComponent: React.FC<typedProp & connectorType> = (props) => {
+  const { initData, addUrgentClaimListData } = props;
+  console.log("checking props", initData);
+  const [loaded, setLoaded] = useState(false);
 
-  //   const [loading, setLoading] = useState(true);
   const [tableLoader, setTableLoader] = React.useState(false);
 
   useEffect(() => {
     addUrgentClaimListData(initData);
-  }, [addUrgentClaimListData, initData]);
-  //   React.useEffect(() => {
-  //     setLoading(false);
-  //     const claimData = props.urgentClaimListRes.result;
-  //     props.addUrgentClaimListData({ claimData });
-  //   }, []);
+    setLoaded(true);
+    // eslint-disable-next-line
+  }, []);
 
-  // if (loading) {
-  //   return null;
-  // }
+  if (!loaded) return null;
   return (
     <>
       <div className="mt-4">{/* <OpenClaimsText /> */}</div>
@@ -53,12 +47,12 @@ function UrgentClaimTableComponent(props: typedProp): React.ReactNode {
       </div>
     </>
   );
-}
-const mapStateToProps = ({ urgentclaimdata: { urgentClaimListData } }: RootState) => ({
-  urgentClaimListData,
-});
+};
 
 const mapDispatchToProps = {
   addUrgentClaimListData,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(UrgentClaimTableComponent);
+
+const connector = connect(null, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(UrgentClaimTableComponent);

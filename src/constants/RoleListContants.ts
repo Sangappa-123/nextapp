@@ -195,6 +195,9 @@
             URL: "/claims-need-attention",
           },
           {
+            URL: "/pending-vendor-invoices",
+          },
+          {
             URL: "/adjuster-dashboard",
           },
           {

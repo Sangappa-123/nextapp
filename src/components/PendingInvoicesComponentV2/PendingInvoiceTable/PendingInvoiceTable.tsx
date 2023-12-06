@@ -1,6 +1,5 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import OpenClaimTableStyle from "./UrgentClaimTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import GenericBreadcrumb from "@/components/common/GenericBreadcrumb/index";
 import clsx from "clsx";
@@ -15,7 +14,8 @@ import {
 import CustomReactTable from "@/components/common/CustomReactTable";
 import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
-import { URGENT_CLAIM_TABLE_LIMIT } from "@/constants/constants";
+import pendingInvoiceStyle from "./pendingInvoiceTable.module.scss";
+import { PENDING_INVOICE_TABLE_LIMIT } from "@/constants/constants";
 
 const pathList = [
   {
@@ -23,7 +23,7 @@ const pathList = [
     path: "/adjuster-dashboard",
   },
   {
-    name: "Claims Exceeding Time limits",
+    name: "Pending Vendor Invoices",
     path: "/login",
     active: true,
   },
@@ -34,88 +34,85 @@ type typedProp = {
   setTableLoader: any;
 };
 
-const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
+const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
   const {
     claimListData,
     currentPageNumber,
-    totalClaims,
+    totalinvoice,
     claimErrorMsg,
     tableLoader,
     setTableLoader,
   } = props;
-  const pageLimit = URGENT_CLAIM_TABLE_LIMIT;
+  const pageLimit = PENDING_INVOICE_TABLE_LIMIT;
 
   type ClaimData = {
     claimNumber: string;
-    adjusterName: string;
-    claimStatus: string;
-    contractedTimes: string;
-    noOfItems: number;
-    policyHolderName: string;
+    invoiceNumber: string;
+    vendorName: string;
+    createdBy: string;
+    amount: number;
     createDate: string;
-    elapsedTime: number;
-    lastNote: unknownObjectType;
+    status: unknownObjectType;
   };
 
   const columnHelper = createColumnHelper<ClaimData>();
   const columns = [
     columnHelper.accessor("claimNumber", {
-      id: "claimNumber",
       header: "Claim #",
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor("claimStatus", {
-      id: "Claim_Status",
-      header: `Status`,
-      cell: (status) => {
-        return (
-          <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary
-                      ${status.getValue() === "Created" && "badge-info"}
-                      ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                      ${status.getValue() === "Work In Progress" && "badge-warning"}
-                      ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                      `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
-          </div>
-        );
-      },
+    columnHelper.accessor("invoiceNumber", {
+      header: "Invoice Number",
+      cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor("contractedTimes", {
-      id: "contractedTimes",
-      header: "Contracted End Time",
-      cell: "Contracted Times",
+    columnHelper.accessor("vendorName", {
+      header: "Vendor",
+      cell: (info) => info.getValue(),
+      enableSorting: true,
     }),
-    columnHelper.accessor("noOfItems", {
-      id: "noOfItems",
-      header: "# of Items",
-      cell: (noOfItems) => noOfItems.getValue(),
+    columnHelper.accessor("createdBy", {
+      header: "Created By",
+      cell: (info) => info.getValue(),
+      enableSorting: true,
     }),
-    columnHelper.accessor("policyHolderName", {
-      id: "policyHolderName",
-      header: "Policyholder's Name",
-      cell: (policyHolderName) => policyHolderName.getValue(),
+    columnHelper.accessor("amount", {
+      header: "Invoice Amount",
+      cell: (info) => <span>{`$${info.getValue().toFixed(2)}`}</span>,
+      enableSorting: true,
     }),
     columnHelper.accessor("createDate", {
-      id: "createDate",
-      header: () => "Claim Date",
-      cell: (createDate) => createDate.getValue(),
+      header: "Invoice Date",
+      cell: (info) => info.getValue(),
+      enableSorting: true,
     }),
-    columnHelper.accessor("elapsedTime", {
-      id: "elapsedTime",
-      header: "Elapsed Time Days",
-      cell: (elapsedTime) => elapsedTime.getValue(),
+    columnHelper.accessor("status", {
+      header: "Status Days",
+      cell: (info) => info.getValue()?.name,
+      enableSorting: true,
     }),
-    columnHelper.accessor("lastNote", {
-      id: "lastNote",
-      header: "Last Note",
-      cell: (elapsedTime) => elapsedTime.getValue()?.message,
-    }),
+    // columnHelper.accessor("claimStatus", {
+    //   id: "Claim_Status",
+    //   header: `Status`,
+    //   cell: (status) => {
+    //     return (
+    //       <div style={{ width: "80px" }}>
+    //         <span
+    //           className={`badge badge-secondary
+    //                   ${status.getValue() === "Created" && "badge-info"}
+    //                   ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
+    //                   ${status.getValue() === "Work In Progress" && "badge-warning"}
+    //                   ${status.getValue() === "Supervisor Approval" && "badge-success"}
+    //                   `}
+    //         >
+    //           {status.getValue() as React.ReactNode}
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    //   enableSorting: true,
+    // }),
   ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -143,7 +140,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
   const table = useReactTable({
     data: claimListData,
     columns,
-    pageCount: Math.ceil(totalClaims / pageLimit),
+    pageCount: Math.ceil(totalinvoice / pageLimit),
     state: {
       sorting,
       pagination,
@@ -162,19 +159,19 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
       <div>
         <GenericBreadcrumb dataList={pathList} />
       </div>
-      <hr className={OpenClaimTableStyle.divider} />
+      <hr className={pendingInvoiceStyle.divider} />
       <div
         className={clsx(
           "col-lg-12 col-md-12 col-12 m-2",
-          OpenClaimTableStyle.tableHeading
+          pendingInvoiceStyle.tableHeading
         )}
       >
-        <label>{`Claims Exceeding Time Limits (${totalClaims})`}</label>
+        <label>{`Pending Vendor Invoices (${totalinvoice})`}</label>
       </div>
-      <div className={OpenClaimTableStyle.claimTableContainer}>
+      <div className={pendingInvoiceStyle.claimTableContainer}>
         <CustomReactTable
           table={table}
-          totalDataCount={totalClaims}
+          totalDataCount={totalinvoice}
           pageLimit={pageLimit}
           loader={tableLoader}
           tableDataErrorMsg={claimErrorMsg}
@@ -185,14 +182,19 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
 };
 
 const mapStateToProps = ({
-  urgentclaimdata: { urgentClaimListData, currentPageNumber, totalClaims, claimErrorMsg },
+  pendingInvoice: {
+    pendingInvoiceListData,
+    currentPageNumber,
+    totalinvoice,
+    claimErrorMsg,
+  },
 }: RootState) => ({
-  claimListData: urgentClaimListData,
+  claimListData: pendingInvoiceListData,
   currentPageNumber,
-  totalClaims,
+  totalinvoice,
   claimErrorMsg,
 });
 
 const connector = connect(mapStateToProps, null);
 type connectorType = ConnectedProps<typeof connector>;
-export default connector(UrgentClaimTable);
+export default connector(PendingInvoiceTable);

@@ -17,6 +17,7 @@ enum apiEndPoints {
   immidiateAttentionClaims = "web/get/immediate/attention/claims?userId=",
   invoicelist = "web/get/company/invoicelist",
   urgentClaimUrl = "web/get/all/immediate/claims",
+  pendingInvoiceUrl = "web/get/company/pending/invoicelist",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
