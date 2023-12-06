@@ -192,6 +192,9 @@
         Home: "/adjuster-dashboard",
         Screens: [
           {
+            URL: "/claims-need-attention",
+          },
+          {
             URL: "/adjuster-dashboard",
           },
           {

@@ -2,7 +2,7 @@ import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
 import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
-import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
+// import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
 
@@ -79,41 +79,63 @@ export const urgentClaimList = async (payload: any, token: any) => {
   });
 };
 
-export const fetchUrgentClaimList = async (
+type urgentClaimReq = {
+  pageNumber?: number;
+  limit?: number;
+  sortBy?: string;
+  orderBy?: string;
+  searchKeyword?: string;
+  userId: string | null;
+};
+export const fetchUrgentClaimList = async ({
   pageNumber = 1,
   limit = 20,
   sortBy = "createDate",
   orderBy = "desc",
   searchKeyword = "",
-  statusIds = null
-) => {
-  const state = store.getState();
-  searchKeyword = state.urgentclaimdata.searchKeyword;
-  statusIds = state.urgentclaimdata.statusIds;
-  const userId = await getClientCookie("userId");
-  const token = await getClientCookie("accessToken");
-
+  userId,
+}: urgentClaimReq) => {
+  const url = getApiEndPoint("immidiateAttentionClaims");
   const payload = {
-    assignedUserId: userId,
+    userId,
     pagination: {
-      pageNumber,
-      limit,
+      pageNumber: pageNumber,
+      limit: limit,
       sortBy,
       orderBy,
     },
     searchKeyword,
-    statusIds,
   };
+  const http = new HttpService();
+  const res = await http.post(url, payload);
+  return res;
+  // const state = store.getState();
+  // searchKeyword = state.urgentclaimdata.searchKeyword;
+  // statusIds = state.urgentclaimdata.statusIds;
+  // const userId = await getClientCookie("userId");
+  // const token = await getClientCookie("accessToken");
 
-  const urgentClaimListRes: any = await urgentClaimList(payload, token);
-  console.log("UrgentclaimListRes", urgentClaimListRes);
+  // const payload = {
+  //   assignedUserId: userId,
+  //   pagination: {
+  //     pageNumber,
+  //     limit,
+  //     sortBy,
+  //     orderBy,
+  //   },
+  //   searchKeyword,
+  //   statusIds,
+  // };
 
-  if (urgentClaimListRes.result.status === 200) {
-    const urgentClaimData = urgentClaimListRes.result;
-    store.dispatch(addUrgentClaimListData({ urgentClaimData }));
-    return urgentClaimData;
-  }
-  return null;
+  // const urgentClaimListRes: any = await urgentClaimList(payload, token);
+  // console.log("UrgentclaimListRes", urgentClaimListRes);
+
+  // if (urgentClaimListRes.result.status === 200) {
+  //   const urgentClaimData = urgentClaimListRes.result;
+  //   store.dispatch(addUrgentClaimListData({ urgentClaimData }));
+  //   return urgentClaimData;
+  // }
+  // return null;
 };
 
 export const getNotification = async (param: object, isClient: boolean = false) => {

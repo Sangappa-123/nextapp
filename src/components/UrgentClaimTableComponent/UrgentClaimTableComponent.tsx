@@ -1,26 +1,36 @@
 "use client";
-// import React, { useState } from "react";
+import React, { useEffect } from "react";
 import UrgentClaimSearchBox from "./UrgentClaimSearchBox/UrgentClaimSearchBox";
-import UrgentClaimTablecomStyle from "./UrgentClaimTableCom.module.scss";
+import UrgentClaimTablecomStyle from "./UrgentClaimTableComponent.module.scss";
 import UrgentClaimTable from "./UrgentClaimTable/index";
 import { connect } from "react-redux";
 import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
+import { RootState } from "@/store/store";
+import { unknownObjectType } from "@/constants/customTypes";
 
-function UrgentClaimTableCom(props): React.ReactNode {
-  console.log(props, "checking props");
+interface typedProp {
+  initData: unknownObjectType | null;
+}
+
+function UrgentClaimTableComponent(props: typedProp): React.ReactNode {
+  const { initData, addUrgentClaimListData, urgentClaimListData } = props;
+  console.log("checking props", urgentClaimListData);
 
   //   const [loading, setLoading] = useState(true);
-  //   const [tableLoader, setTableLoader] = React.useState(false);
+  const [tableLoader, setTableLoader] = React.useState(false);
 
+  useEffect(() => {
+    addUrgentClaimListData(initData);
+  }, [addUrgentClaimListData, initData]);
   //   React.useEffect(() => {
   //     setLoading(false);
   //     const claimData = props.urgentClaimListRes.result;
   //     props.addUrgentClaimListData({ claimData });
   //   }, []);
 
-  if (loading) {
-    return null;
-  }
+  // if (loading) {
+  //   return null;
+  // }
   return (
     <>
       <div className="mt-4">{/* <OpenClaimsText /> */}</div>
@@ -44,7 +54,11 @@ function UrgentClaimTableCom(props): React.ReactNode {
     </>
   );
 }
+const mapStateToProps = ({ urgentclaimdata: { urgentClaimListData } }: RootState) => ({
+  urgentClaimListData,
+});
+
 const mapDispatchToProps = {
   addUrgentClaimListData,
 };
-export default connect(null, mapDispatchToProps)(UrgentClaimTableCom);
+export default connect(mapStateToProps, mapDispatchToProps)(UrgentClaimTableComponent);
