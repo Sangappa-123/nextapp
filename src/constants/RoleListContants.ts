@@ -192,6 +192,9 @@
         Home: "/adjuster-dashboard",
         Screens: [
           {
+            URL: "/claims-need-attention",
+          },
+          {
             URL: "/adjuster-dashboard",
           },
           {
@@ -217,6 +220,15 @@
           },
           {
             URL: "/new-claim",
+          },
+          {
+            URL: "/adjuster-property-claim-details",
+          },
+          {
+            URL: "/adjuster-dashboard/claims-need-attention",
+          },
+          {
+            URL: "/adjuster-dashboard/pending-vendor-invoices",
           },
         ],
       },

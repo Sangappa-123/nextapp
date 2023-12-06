@@ -14,8 +14,10 @@ enum apiEndPoints {
   notification = "web/notifications",
   scoreCard = "web/claims/scorecard?statusFlag=",
   deleteNotification = "web/delete/notification",
-  immidiateAttentionClaims = "web/get/immediate/attention/claims?userId=",
+  // immidiateAttentionClaims = "web/get/immediate/attention/claims?userId=",
   invoicelist = "web/get/company/invoicelist",
+  // urgentClaimUrl = "web/get/all/immediate/claims",
+  immidiateAttentionClaims = "web/get/all/immediate/claims",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
