@@ -63,21 +63,21 @@ export const fetchClaimList = async (
   return null;
 };
 
-export const urgentClaimList = async (payload: any, token: any) => {
-  const headersData: object = getHeaderWithoutToken();
-  return new Promise((resolve, rejects) => {
-    fetch(getApiEndPoint("immidiateAttentionClaims"), {
-      method: "POST",
-      headers: { ...headersData, "X-Auth-Token": token },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        return resolve({ result });
-      })
-      .catch((error) => rejects({ error }));
-  });
-};
+// export const urgentClaimList = async (payload: any, token: any) => {
+//   const headersData: object = getHeaderWithoutToken();
+//   return new Promise((resolve, rejects) => {
+//     fetch(getApiEndPoint("urgentClaimUrl"), {
+//       method: "POST",
+//       headers: { ...headersData, "X-Auth-Token": token },
+//       body: JSON.stringify(payload),
+//     })
+//       .then((response) => response.json())
+//       .then((result) => {
+//         return resolve({ result });
+//       })
+//       .catch((error) => rejects({ error }));
+//   });
+// };
 
 type urgentClaimReq = {
   pageNumber?: number;
@@ -95,7 +95,7 @@ export const fetchUrgentClaimList = async ({
   searchKeyword = "",
   userId,
 }: urgentClaimReq) => {
-  const url = getApiEndPoint("immidiateAttentionClaims");
+  const url = getApiEndPoint("urgentClaimUrl");
   const payload = {
     userId,
     pagination: {
