@@ -2,21 +2,26 @@
 import React from "react";
 import ContentListTableStyle from "./ContentListTable.module.scss";
 import { connect } from "react-redux";
-import { fetchClaimList } from "@/services/ClaimService";
+// import { fetchClaimList } from "@/services/ClaimService";
 import {
   createColumnHelper,
   getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
+  // getSortedRowModel,
+  // SortingState,
   useReactTable,
-  PaginationState,
+  // PaginationState,
+  getFilteredRowModel,
+  ColumnFiltersState,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 
 const ContentListTable: React.FC = (props) => {
   const {
-    currentPageNumber,
-    setTableLoader,
+    // currentPageNumber,
+    // setTableLoader,
     totalClaims,
     tableLoader,
     claimErrorMsg,
@@ -100,21 +105,35 @@ const ContentListTable: React.FC = (props) => {
       ),
       id: "clear",
       columns: [
-        columnHelper.accessor(null, {
+        columnHelper.accessor("[]", {
           header: () => "[]",
           id: "check",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor((row, i) => i + 1, {
           header: () => "Item #",
           id: "item",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor((row) => (row.status ? row.status.status : null), {
           header: () => "Status",
           id: "status",
+          // cell: (info) =>{
+          //   if (info.renderValue()) {
+          //     return info.renderValue().status;
+          //   }
+          //   return null;
+          // }
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor((row) => (row.category ? row.category.name : null), {
           header: () => "Catogory",
           id: "catogory",
+          // cell: (info) =>{
+          //   if (info.renderValue()) {
+          //     return info.renderValue().name;
+          //   }
+          //   return null;
+          // }
         }),
       ],
     }),
@@ -125,19 +144,21 @@ const ContentListTable: React.FC = (props) => {
         headerClass: ContentListTableStyle.originalItemHeader,
       },
       columns: [
-        columnHelper.accessor(null, {
+        columnHelper.accessor("description", {
           header: () => "Description",
           id: "Description",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor("quantity", {
           header: () => "Qty",
           id: "qty",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor("totalStatedAmount", {
           header: () => "Total Price",
           id: "total-price",
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor("itemTag", {
           header: () => "Item Tag",
           id: "item-tag",
         }),
@@ -150,9 +171,10 @@ const ContentListTable: React.FC = (props) => {
         headerClass: ContentListTableStyle.originalItemHeader,
       },
       columns: [
-        columnHelper.accessor(null, {
+        columnHelper.accessor("vendorName", {
           header: () => "Vendor",
           id: "vendor",
+          enableColumnFilter: false,
         }),
       ],
     }),
@@ -163,17 +185,20 @@ const ContentListTable: React.FC = (props) => {
         headerClass: ContentListTableStyle.replacementItemHeader,
       },
       columns: [
-        columnHelper.accessor(null, {
+        columnHelper.accessor("adjusterDescription", {
           header: () => "Replacment Description",
           id: "Replacement_Description",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor("rcvTotal", {
           header: () => "Replacment Cost",
           id: "replacment",
+          enableColumnFilter: false,
         }),
-        columnHelper.accessor(null, {
+        columnHelper.accessor("cashPayoutExposure", {
           header: () => "Cash Exposure",
           id: "cash-exposure",
+          enableColumnFilter: false,
         }),
       ],
     }),
@@ -181,86 +206,96 @@ const ContentListTable: React.FC = (props) => {
       header: "",
       id: "actionItem",
       columns: [
-        columnHelper.accessor(null, {
+        columnHelper.accessor("Action", {
           header: () => "Action",
           id: "Action",
+          cell: () => <a href="">Action</a>,
+          enableColumnFilter: false,
         }),
       ],
     }),
   ];
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  // const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: currentPageNumber - 1,
-    pageSize: pageLimit,
-  });
+  // const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
+  //   pageIndex: currentPageNumber - 1,
+  //   pageSize: pageLimit,
+  // });
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
+  // const pagination = React.useMemo(
+  //   () => ({
+  //     pageIndex,
+  //     pageSize,
+  //   }),
+  //   [pageIndex, pageSize]
+  // );
 
-  const handleSorting = async (sortingUpdater: any) => {
-    setTableLoader(true);
+  // const handleSorting = async (sortingUpdater: any) => {
+  //   setTableLoader(true);
 
-    const newSortVal = sortingUpdater(sorting);
-    setSorting(newSortVal);
+  //   const newSortVal = sortingUpdater(sorting);
+  //   setSorting(newSortVal);
 
-    if (newSortVal.length > 0) {
-      const orderBy = newSortVal[0].desc ? "desc" : "asc";
-      const sortBy = newSortVal[0].id;
-      const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
-      if (result) {
-        setTableLoader(false);
-      }
-    } else if (newSortVal.length === 0 && contentListData.length > 0) {
-      const result = await fetchClaimList();
-      if (result) {
-        setTableLoader(false);
-      }
-    }
-  };
-  const handlePagination = async (updaterFunction: any) => {
-    setTableLoader(true);
+  //   if (newSortVal.length > 0) {
+  //     const orderBy = newSortVal[0].desc ? "desc" : "asc";
+  //     const sortBy = newSortVal[0].id;
+  //     const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
+  //     if (result) {
+  //       setTableLoader(false);
+  //     }
+  //   } else if (newSortVal.length === 0 && contentListData.length > 0) {
+  //     const result = await fetchClaimList();
+  //     if (result) {
+  //       setTableLoader(false);
+  //     }
+  //   }
+  // };
+  // const handlePagination = async (updaterFunction: any) => {
+  //   setTableLoader(true);
 
-    const newPaginationValue = updaterFunction(pagination);
-    setPagination(newPaginationValue);
-    const pageNumber = newPaginationValue.pageIndex + 1;
+  //   const newPaginationValue = updaterFunction(pagination);
+  //   setPagination(newPaginationValue);
+  //   const pageNumber = newPaginationValue.pageIndex + 1;
 
-    if (sorting.length > 0) {
-      const orderBy = sorting[0].desc ? "desc" : "asc";
-      const sortBy = sorting[0].id;
-      const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-      if (result) {
-        setTableLoader(false);
-      }
-    } else if (sorting.length === 0 && contentListData.length > 0) {
-      const result = await fetchClaimList(pageNumber);
-      if (result) {
-        setTableLoader(false);
-      }
-    }
-  };
+  //   if (sorting.length > 0) {
+  //     const orderBy = sorting[0].desc ? "desc" : "asc";
+  //     const sortBy = sorting[0].id;
+  //     const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
+  //     if (result) {
+  //       setTableLoader(false);
+  //     }
+  //   } else if (sorting.length === 0 && contentListData.length > 0) {
+  //     const result = await fetchClaimList(pageNumber);
+  //     if (result) {
+  //       setTableLoader(false);
+  //     }
+  //   }
+  // };
 
   const table = useReactTable({
     data: claimResult,
     columns,
     pageCount: Math.ceil(totalClaims / pageLimit),
     state: {
-      sorting,
-      pagination,
+      // sorting,
+      // pagination,
+      columnFilters,
     },
-    onPaginationChange: handlePagination,
-    onSortingChange: handleSorting,
+    // onPaginationChange: handlePagination,
+    // onSortingChange: handleSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    enableSorting: false,
   });
 
   return (

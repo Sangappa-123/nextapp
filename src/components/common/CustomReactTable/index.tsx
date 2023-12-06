@@ -8,6 +8,8 @@ import CustomLoader from "@/components/common/CustomLoader";
 import { flexRender } from "@tanstack/react-table";
 import NoRecordComponent from "../NoRecordComponent/NoRecordComponent";
 
+import Filter from "./Filter";
+
 const CustomReactTable: React.FC = (props) => {
   const {
     table,
@@ -61,6 +63,12 @@ const CustomReactTable: React.FC = (props) => {
                             </span>
                           ),
                         }[header.column.getIsSorted() as string] ?? null}
+
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
                       </div>
                     )}
                   </th>

@@ -223,6 +223,7 @@ const ServiceRequestTable: React.FC = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
+    enableColumnFilters: false,
   });
 
   return (

@@ -205,6 +205,8 @@ const OpenClaimTable: React.FC = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
+    enableColumnFilters: false,
+    enableSorting: true,
   });
 
   return (
