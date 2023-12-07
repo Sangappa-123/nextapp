@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import OpenClaimTableStyle from "./UrgentClaimTable.module.scss";
+import urgentTableStyle from "./UrgentClaimTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import GenericBreadcrumb from "@/components/common/GenericBreadcrumb/index";
 import clsx from "clsx";
@@ -16,6 +16,7 @@ import CustomReactTable from "@/components/common/CustomReactTable";
 import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
+import UrgentClaimSearchBox from "../UrgentClaimSearchBox";
 
 const pathList = [
   {
@@ -162,16 +163,20 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
       <div>
         <GenericBreadcrumb dataList={pathList} />
       </div>
-      <hr className={OpenClaimTableStyle.divider} />
+      <hr className={urgentTableStyle.divider} />
       <div
-        className={clsx(
-          "col-lg-12 col-md-12 col-12 m-2",
-          OpenClaimTableStyle.tableHeading
-        )}
+        className={clsx("col-lg-12 col-md-12 col-12 m-2", urgentTableStyle.tableHeading)}
       >
         <label>{`Claims Exceeding Time Limits (${totalClaims})`}</label>
       </div>
-      <div className={OpenClaimTableStyle.claimTableContainer}>
+      <div className={urgentTableStyle.claimContainer}>
+        <div className={`row ${urgentTableStyle.claimContentContainer}`}>
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
+            <UrgentClaimSearchBox setTableLoader={setTableLoader} />
+          </div>
+        </div>
+      </div>
+      <div className={urgentTableStyle.claimTableContainer}>
         <CustomReactTable
           table={table}
           totalDataCount={totalClaims}

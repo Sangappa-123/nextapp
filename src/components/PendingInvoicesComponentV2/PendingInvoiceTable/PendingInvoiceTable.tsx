@@ -16,6 +16,7 @@ import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
 import pendingInvoiceStyle from "./pendingInvoiceTable.module.scss";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
+import PendingInvoiceSearchBox from "../PendingInvoiceSearchBox";
 
 const pathList = [
   {
@@ -167,6 +168,13 @@ const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
         )}
       >
         <label>{`Pending Vendor Invoices (${totalinvoice})`}</label>
+      </div>
+      <div className={pendingInvoiceStyle.claimContainer}>
+        <div className={`row ${pendingInvoiceStyle.claimContentContainer}`}>
+          <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
+            <PendingInvoiceSearchBox setTableLoader={setTableLoader} />
+          </div>
+        </div>
       </div>
       <div className={pendingInvoiceStyle.claimTableContainer}>
         <CustomReactTable
