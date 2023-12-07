@@ -15,7 +15,7 @@ import {
 import CustomReactTable from "@/components/common/CustomReactTable";
 import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
-import { URGENT_CLAIM_TABLE_LIMIT } from "@/constants/constants";
+import { TABLE_LIMIT_20 } from "@/constants/constants";
 
 const pathList = [
   {
@@ -43,7 +43,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
     tableLoader,
     setTableLoader,
   } = props;
-  const pageLimit = URGENT_CLAIM_TABLE_LIMIT;
+  const pageLimit = TABLE_LIMIT_20;
 
   type ClaimData = {
     claimNumber: string;

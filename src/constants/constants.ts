@@ -1,2 +1,2 @@
-export const PENDING_INVOICE_TABLE_LIMIT = 20;
-export const URGENT_CLAIM_TABLE_LIMIT = 20;
+export const TABLE_LIMIT_10 = 10;
+export const TABLE_LIMIT_20 = 20;

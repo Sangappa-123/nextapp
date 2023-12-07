@@ -55,7 +55,7 @@ export const getRoleBasedUrlList = (role: string) => {
   );
   if (roles?.length > 0) {
     const screenList = roles[0];
-    console.log("screenList", screenList);
+    // console.log("screenList", screenList);
 
     return screenList;
   }

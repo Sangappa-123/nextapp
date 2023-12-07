@@ -5,10 +5,7 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 // import { addUrgentClaimListData } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
-import {
-  PENDING_INVOICE_TABLE_LIMIT,
-  URGENT_CLAIM_TABLE_LIMIT,
-} from "@/constants/constants";
+import { TABLE_LIMIT_20 } from "@/constants/constants";
 
 interface objectType {
   [key: string | number]: any;
@@ -93,7 +90,7 @@ type urgentClaimReq = {
 };
 export const fetchUrgentClaimList = async ({
   pageNumber = 1,
-  limit = URGENT_CLAIM_TABLE_LIMIT,
+  limit = TABLE_LIMIT_20,
   sortBy = "createDate",
   orderBy = "desc",
   searchKeyword = "",
@@ -152,7 +149,7 @@ type pendingInvoiceReq = {
 };
 export const fetchPendingInvoice = async ({
   pageNumber = 1,
-  limit = PENDING_INVOICE_TABLE_LIMIT,
+  limit = TABLE_LIMIT_20,
   sortBy = "createDate",
   orderBy = "desc",
   searchKeyword = "",
