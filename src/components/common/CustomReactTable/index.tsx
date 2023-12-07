@@ -10,7 +10,7 @@ import NoRecordComponent from "../NoRecordComponent/NoRecordComponent";
 
 import Filter from "./Filter";
 
-const CustomReactTable: React.FC = React.memo((props) => {
+const CustomReactTable: React.FC<any> = React.memo((props) => {
   const {
     table,
     totalDataCount = null,
@@ -19,7 +19,7 @@ const CustomReactTable: React.FC = React.memo((props) => {
     loader = null,
     tableDataErrorMsg = null,
     handleRowClick = null,
-  }: any = props;
+  } = props;
 
   return (
     <div className={CustomReactTableStyles.reactTable}>

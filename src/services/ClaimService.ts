@@ -147,14 +147,17 @@ type pendingInvoiceReq = {
   searchKeyword?: string;
   userId: string | null;
 };
-export const fetchPendingInvoice = async ({
-  pageNumber = 1,
-  limit = TABLE_LIMIT_20,
-  sortBy = "createDate",
-  orderBy = "desc",
-  searchKeyword = "",
-  userId,
-}: pendingInvoiceReq) => {
+export const fetchPendingInvoice = async (
+  {
+    pageNumber = 1,
+    limit = TABLE_LIMIT_20,
+    sortBy = "createDate",
+    orderBy = "desc",
+    searchKeyword = "",
+    userId,
+  }: pendingInvoiceReq,
+  isClient?: boolean
+) => {
   const url = getApiEndPoint("pendingInvoiceUrl");
   const payload = {
     userId,
@@ -166,7 +169,7 @@ export const fetchPendingInvoice = async ({
     },
     searchKeyword,
   };
-  const http = new HttpService();
+  const http = new HttpService({ isClient });
   const res = await http.post(url, payload);
   return res;
 };

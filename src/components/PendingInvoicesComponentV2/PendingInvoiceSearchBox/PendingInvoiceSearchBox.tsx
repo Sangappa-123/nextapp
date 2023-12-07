@@ -2,37 +2,28 @@
 import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import pendingSearchStyle from "./pendingInvoiceSearchBox.module.scss";
-import { fetchUrgentClaimList } from "@/services/ClaimService";
-import { addSearchKeyWord } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
-import { connect } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
+import { handlePendingInvoiceSearch } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
-const UrgentClaimSearchBox: React.FC = (props) => {
+const UrgentClaimSearchBox: React.FC<connectorType> = (props) => {
+  const { handlePendingInvoiceSearch } = props;
   const [searchValue, setSearchValue] = React.useState("");
 
-  const handleSearch = async (e) => {
-    setSearchValue(e.target.value);
-    if (props.searchKeyword !== "" && e.target.value === "") {
-      props.setTableLoader(true);
-      props.addSearchKeyWord({ searchKeyword: "" });
-      const result = await fetchUrgentClaimList();
-      if (result) {
-        props.setTableLoader(false);
-      }
+  const fetchSearchedData = async (searchKeyword: string) => {
+    handlePendingInvoiceSearch({ searchKeyword });
+  };
+
+  const handleSearch = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    if (value === "") {
+      fetchSearchedData(value);
     }
   };
-  const searchKey = async (event) => {
-    if (event.key === "Enter") {
-      props.addSearchKeyWord({ searchKeyword: event.target.value });
-      const result = await fetchUrgentClaimList(
-        1,
-        20,
-        "createDate",
-        "desc",
-        event.target.value
-      );
-      if (result) {
-        props.setTableLoader(false);
-      }
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      fetchSearchedData(searchValue);
     }
   };
 
@@ -44,16 +35,17 @@ const UrgentClaimSearchBox: React.FC = (props) => {
         placeholder="Search..."
         value={searchValue}
         onChange={handleSearch}
-        onKeyDown={searchKey}
+        onKeyDown={handleKeyDown}
       />
     </div>
   );
 };
 
-const mapStateToProps = ({ urgentclaimdata }) => ({
-  searchKeyword: urgentclaimdata.searchKeyword,
-});
 const mapDispatchToProps = {
-  addSearchKeyWord,
+  handlePendingInvoiceSearch,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(UrgentClaimSearchBox);
+
+const connector = connect(null, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+
+export default connector(UrgentClaimSearchBox);

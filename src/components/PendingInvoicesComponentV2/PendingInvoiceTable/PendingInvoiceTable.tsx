@@ -17,6 +17,11 @@ import { unknownObjectType } from "@/constants/customTypes";
 import pendingInvoiceStyle from "./pendingInvoiceTable.module.scss";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
 import PendingInvoiceSearchBox from "../PendingInvoiceSearchBox";
+import { useAppSelector } from "@/hooks/reduxCustomHook";
+import {
+  handlePendingInvoicePagination,
+  isFetchingPendingInvoiceSelector,
+} from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
 const pathList = [
   {
@@ -30,19 +35,16 @@ const pathList = [
   },
 ];
 
-type typedProp = {
-  tableLoader: boolean;
-  setTableLoader: any;
-};
-
-const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
+const PendingInvoiceTable: React.FC<connectorType> = (props) => {
+  const isFetching = useAppSelector(isFetchingPendingInvoiceSelector);
   const {
     claimListData,
     currentPageNumber,
     totalinvoice,
     claimErrorMsg,
-    tableLoader,
-    setTableLoader,
+    handlePendingInvoicePagination,
+    // tableLoader,
+    // setTableLoader,
   } = props;
   const pageLimit = TABLE_LIMIT_20;
 
@@ -134,8 +136,12 @@ const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
   const handleSorting = async () => {
     console.log("hhhhhhhh", setSorting, setPagination);
   };
-  const handlePagination = async () => {
-    setTableLoader(true);
+  const handlePagination = async (updaterFunction: any) => {
+    // setTableLoader(true);
+    const newPaginationValue = updaterFunction(pagination);
+    setPagination(newPaginationValue);
+    const pageNumber = newPaginationValue.pageIndex + 1;
+    handlePendingInvoicePagination({ pageNumber });
   };
 
   const table = useReactTable({
@@ -153,6 +159,7 @@ const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
+    enableColumnFilters: false,
   });
 
   return (
@@ -172,7 +179,7 @@ const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
       <div className={pendingInvoiceStyle.claimContainer}>
         <div className={`row ${pendingInvoiceStyle.claimContentContainer}`}>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
-            <PendingInvoiceSearchBox setTableLoader={setTableLoader} />
+            <PendingInvoiceSearchBox />
           </div>
         </div>
       </div>
@@ -181,7 +188,7 @@ const PendingInvoiceTable: React.FC<typedProp & connectorType> = (props) => {
           table={table}
           totalDataCount={totalinvoice}
           pageLimit={pageLimit}
-          loader={tableLoader}
+          loader={isFetching}
           tableDataErrorMsg={claimErrorMsg}
         />
       </div>
@@ -203,6 +210,10 @@ const mapStateToProps = ({
   claimErrorMsg,
 });
 
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = {
+  handlePendingInvoicePagination,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(PendingInvoiceTable);

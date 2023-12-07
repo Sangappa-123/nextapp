@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ConnectedProps, connect } from "react-redux";
 import { addPendingInvoice } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 import PendingInvoiceTable from "./PendingInvoiceTable";
+import Loading from "@/app/[lang]/loading";
 
 interface typedProp {
   initData: unknownObjectType | null;
@@ -12,7 +13,6 @@ interface typedProp {
 const PendingInvoicesComponent: React.FC<connectorType & typedProp> = (props) => {
   const { initData, addPendingInvoice } = props;
   const [loaded, setLoaded] = useState(false);
-  const [tableLoader, setTableLoader] = React.useState(false);
 
   useEffect(() => {
     addPendingInvoice(initData);
@@ -20,12 +20,12 @@ const PendingInvoicesComponent: React.FC<connectorType & typedProp> = (props) =>
     // eslint-disable-next-line
   }, []);
 
-  if (!loaded) return null;
+  if (!loaded) return <Loading />;
 
   return (
     <>
       <div className="row">
-        <PendingInvoiceTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
+        <PendingInvoiceTable />
       </div>
     </>
   );
