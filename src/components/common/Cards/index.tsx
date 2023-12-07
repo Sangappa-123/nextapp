@@ -1,4 +1,5 @@
 import React, { ReactNode, HTMLAttributes } from "react";
+import cardDefaultStyle from "./Cards.module.scss";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   width?: string;
@@ -10,15 +11,14 @@ const Cards: React.FC<CardProps> = ({ width, height, children, className, ...res
   const cardStyle = {
     width: width,
     height: height,
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    padding: "10px",
-    // marginTop: "10px",
-    boxShadow: "0px 3px 6px 0px #ddd",
   };
 
   return (
-    <div style={cardStyle} className={className} {...rest}>
+    <div
+      style={cardStyle}
+      className={`${cardDefaultStyle.cardDefaultCSS} ${className}`}
+      {...rest}
+    >
       {children}
     </div>
   );
