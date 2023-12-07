@@ -1,13 +1,15 @@
+import React from "react";
 import UrgentClaimTableComponent from "@/components/UrgentClaimTableComponent";
 import { unknownObjectType } from "@/constants/customTypes";
 import { fetchUrgentClaimList } from "@/services/ClaimService";
-import React from "react";
+import { getServerCookie } from "@/utils/utitlity";
 
 async function UrgentClaimContainer() {
   let initData: unknownObjectType | null = null;
+  const userId = await getServerCookie("userId");
   try {
     const res = await fetchUrgentClaimList({
-      userId: "14",
+      userId,
     });
     initData = res;
   } catch (error) {

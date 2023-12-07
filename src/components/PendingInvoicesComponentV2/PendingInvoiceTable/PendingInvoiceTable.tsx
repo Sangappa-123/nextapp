@@ -17,11 +17,7 @@ import { unknownObjectType } from "@/constants/customTypes";
 import pendingInvoiceStyle from "./pendingInvoiceTable.module.scss";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
 import PendingInvoiceSearchBox from "../PendingInvoiceSearchBox";
-import { useAppSelector } from "@/hooks/reduxCustomHook";
-import {
-  handlePendingInvoicePagination,
-  isFetchingPendingInvoiceSelector,
-} from "@/reducers/PendingInvoice/PendingInvoiceSlice";
+import { handlePendingInvoicePagination } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
 const pathList = [
   {
@@ -36,15 +32,13 @@ const pathList = [
 ];
 
 const PendingInvoiceTable: React.FC<connectorType> = (props) => {
-  const isFetching = useAppSelector(isFetchingPendingInvoiceSelector);
   const {
     claimListData,
     currentPageNumber,
     totalinvoice,
     claimErrorMsg,
     handlePendingInvoicePagination,
-    // tableLoader,
-    // setTableLoader,
+    isFetching,
   } = props;
   const pageLimit = TABLE_LIMIT_20;
 
@@ -95,27 +89,6 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
       cell: (info) => info.getValue()?.name,
       enableSorting: true,
     }),
-    // columnHelper.accessor("claimStatus", {
-    //   id: "Claim_Status",
-    //   header: `Status`,
-    //   cell: (status) => {
-    //     return (
-    //       <div style={{ width: "80px" }}>
-    //         <span
-    //           className={`badge badge-secondary
-    //                   ${status.getValue() === "Created" && "badge-info"}
-    //                   ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-    //                   ${status.getValue() === "Work In Progress" && "badge-warning"}
-    //                   ${status.getValue() === "Supervisor Approval" && "badge-success"}
-    //                   `}
-    //         >
-    //           {status.getValue() as React.ReactNode}
-    //         </span>
-    //       </div>
-    //     );
-    //   },
-    //   enableSorting: true,
-    // }),
   ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -136,8 +109,8 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
   const handleSorting = async () => {
     console.log("hhhhhhhh", setSorting, setPagination);
   };
+
   const handlePagination = async (updaterFunction: any) => {
-    // setTableLoader(true);
     const newPaginationValue = updaterFunction(pagination);
     setPagination(newPaginationValue);
     const pageNumber = newPaginationValue.pageIndex + 1;
@@ -202,12 +175,14 @@ const mapStateToProps = ({
     currentPageNumber,
     totalinvoice,
     claimErrorMsg,
+    isFetchingPendingInvoice,
   },
 }: RootState) => ({
   claimListData: pendingInvoiceListData,
   currentPageNumber,
   totalinvoice,
   claimErrorMsg,
+  isFetching: isFetchingPendingInvoice,
 });
 
 const mapDispatchToProps = {

@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   pendingInvoiceListData: [],
-  currentPageNumber: -1,
+  currentPageNumber: 1,
   totalinvoice: 0,
   searchKeyword: "",
   claimErrorMsg: "",

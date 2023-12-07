@@ -16,6 +16,7 @@ import CustomReactTable from "@/components/common/CustomReactTable";
 import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
+import { handleUrgentClaimPagination } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import UrgentClaimSearchBox from "../UrgentClaimSearchBox";
 
 const pathList = [
@@ -30,19 +31,14 @@ const pathList = [
   },
 ];
 
-type typedProp = {
-  tableLoader: boolean;
-  setTableLoader: any;
-};
-
-const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
+const UrgentClaimTable: React.FC<connectorType> = (props) => {
   const {
     claimListData,
     currentPageNumber,
     totalClaims,
     claimErrorMsg,
-    tableLoader,
-    setTableLoader,
+    handleUrgentClaimPagination,
+    isFetching,
   } = props;
   const pageLimit = TABLE_LIMIT_20;
 
@@ -122,7 +118,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: currentPageNumber - 1,
+    pageIndex: currentPageNumber ?? 1 - 1,
     pageSize: pageLimit,
   });
 
@@ -137,8 +133,12 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
   const handleSorting = async () => {
     console.log("hhhhhhhh", setSorting, setPagination);
   };
-  const handlePagination = async () => {
-    setTableLoader(true);
+
+  const handlePagination = async (updaterFunction: any) => {
+    const newPaginationValue = updaterFunction(pagination);
+    setPagination(newPaginationValue);
+    const pageNumber = newPaginationValue.pageIndex + 1;
+    handleUrgentClaimPagination({ pageNumber });
   };
 
   const table = useReactTable({
@@ -156,6 +156,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
+    enableColumnFilters: false,
   });
 
   return (
@@ -172,7 +173,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
       <div className={urgentTableStyle.claimContainer}>
         <div className={`row ${urgentTableStyle.claimContentContainer}`}>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
-            <UrgentClaimSearchBox setTableLoader={setTableLoader} />
+            <UrgentClaimSearchBox />
           </div>
         </div>
       </div>
@@ -181,7 +182,7 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
           table={table}
           totalDataCount={totalClaims}
           pageLimit={pageLimit}
-          loader={tableLoader}
+          loader={isFetching}
           tableDataErrorMsg={claimErrorMsg}
         />
       </div>
@@ -190,14 +191,23 @@ const UrgentClaimTable: React.FC<typedProp & connectorType> = (props) => {
 };
 
 const mapStateToProps = ({
-  urgentclaimdata: { urgentClaimListData, currentPageNumber, totalClaims, claimErrorMsg },
+  urgentclaimdata: {
+    urgentClaimListData,
+    currentPageNumber,
+    totalClaims,
+    claimErrorMsg,
+    isFetchingUrgentClaim,
+  },
 }: RootState) => ({
   claimListData: urgentClaimListData,
   currentPageNumber,
   totalClaims,
   claimErrorMsg,
+  isFetching: isFetchingUrgentClaim,
 });
 
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = { handleUrgentClaimPagination };
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(UrgentClaimTable);

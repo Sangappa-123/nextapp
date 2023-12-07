@@ -88,14 +88,17 @@ type urgentClaimReq = {
   searchKeyword?: string;
   userId: string | null;
 };
-export const fetchUrgentClaimList = async ({
-  pageNumber = 1,
-  limit = TABLE_LIMIT_20,
-  sortBy = "createDate",
-  orderBy = "desc",
-  searchKeyword = "",
-  userId,
-}: urgentClaimReq) => {
+export const fetchUrgentClaimList = async (
+  {
+    pageNumber = 1,
+    limit = TABLE_LIMIT_20,
+    sortBy = "createDate",
+    orderBy = "desc",
+    searchKeyword = "",
+    userId,
+  }: urgentClaimReq,
+  isClient = false
+) => {
   const url = getApiEndPoint("urgentClaimUrl");
   const payload = {
     userId,
@@ -107,7 +110,7 @@ export const fetchUrgentClaimList = async ({
     },
     searchKeyword,
   };
-  const http = new HttpService();
+  const http = new HttpService({ isClient });
   const res = await http.post(url, payload);
   return res;
   // const state = store.getState();
