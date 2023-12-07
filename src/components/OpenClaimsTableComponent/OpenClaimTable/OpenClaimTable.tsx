@@ -184,10 +184,12 @@ const OpenClaimTable: React.FC = (props) => {
     }
   };
   const handleRowClick = (rowData: any) => {
+    document.cookie = `claimId=${rowData?.claimId};`;
+
     addSelectedClaimDetails({
       claimData: rowData,
     });
-    router.replace("/adjuster-property-claim-details");
+    router.push(`/adjuster-property-claim-details?claimId=${rowData?.claimId}`);
   };
 
   const table = useReactTable({

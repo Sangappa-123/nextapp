@@ -20,59 +20,14 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 
 const ContentListTable: React.FC = (props) => {
   const {
-    // currentPageNumber,
-    // setTableLoader,
+    claimContentListData,
+    setTableLoader,
     totalClaims,
     tableLoader,
     claimErrorMsg,
   }: any = props;
 
-  const contentListData = React.useMemo(() => {
-    return [
-      {
-        description: "Test",
-
-        category: {
-          name: "Art",
-        },
-
-        quantity: 1,
-
-        rcvTotal: null,
-        status: {
-          id: 2,
-          status: "ASSIGNED",
-        },
-
-        totalStatedAmount: 20,
-        vendorName: "Artigem",
-        adjusterDescription: null,
-        itemTag: null,
-
-        cashPayoutExposure: null,
-      },
-      {
-        description: "Test item no schedule",
-
-        category: null,
-
-        quantity: 2,
-        rcvTotal: null,
-        status: {
-          id: 2,
-          status: "ASSIGNED",
-        },
-
-        totalStatedAmount: 40,
-        vendorName: "Artigem",
-        adjusterDescription: null,
-
-        itemTag: null,
-        cashPayoutExposure: null,
-      },
-    ];
-  }, []);
-  const [claimResult, setClaimResult] = React.useState(contentListData);
+  const [claimResult, setClaimResult] = React.useState(claimContentListData);
 
   const pageLimit = 20;
 
@@ -90,9 +45,9 @@ const ContentListTable: React.FC = (props) => {
   };
 
   React.useEffect(() => {
-    const defaultData: ContentListData[] = [...contentListData];
+    const defaultData: ContentListData[] = [...claimContentListData];
     setClaimResult([...defaultData]);
-  }, [contentListData]);
+  }, [claimContentListData]);
 
   const columnHelper = createColumnHelper<ContentListData>();
 
@@ -245,7 +200,7 @@ const ContentListTable: React.FC = (props) => {
   //     if (result) {
   //       setTableLoader(false);
   //     }
-  //   } else if (newSortVal.length === 0 && contentListData.length > 0) {
+  //   } else if (newSortVal.length === 0 && claimContentListData.length > 0) {
   //     const result = await fetchClaimList();
   //     if (result) {
   //       setTableLoader(false);
@@ -266,7 +221,7 @@ const ContentListTable: React.FC = (props) => {
   //     if (result) {
   //       setTableLoader(false);
   //     }
-  //   } else if (sorting.length === 0 && contentListData.length > 0) {
+  //   } else if (sorting.length === 0 && claimContentListData.length > 0) {
   //     const result = await fetchClaimList(pageNumber);
   //     if (result) {
   //       setTableLoader(false);
@@ -311,12 +266,9 @@ const ContentListTable: React.FC = (props) => {
   );
 };
 
-const mapStateToProps = ({ claimdata }: any) => ({
-  claimListData: claimdata.claimListData,
-  currentPageNumber: claimdata.currentPageNumber,
-  totalClaims: claimdata.totalClaims,
-  claimErrorMsg: claimdata.claimErrorMsg,
-  sortedIds: claimdata.statusIds,
+const mapStateToProps = ({ claimContentdata }: any) => ({
+  claimContentListData: claimContentdata.claimContentListData,
+ 
 });
 
 export default connect(mapStateToProps, null)(ContentListTable);

@@ -33,6 +33,7 @@ const ClaimSlice = createSlice({
             lastActive: item.lastActivity,
             lastUpdated: item.lastUpdateDate,
             statusNumber: item.status.id,
+            claimId: item.claimId
           };
           claimRes.push(newArr);
         });

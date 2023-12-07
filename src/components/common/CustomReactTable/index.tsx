@@ -21,6 +21,8 @@ const CustomReactTable: React.FC = (props) => {
     handleRowClick = null,
   }: any = props;
 
+  const [showFilterBLock  , setShowFilterBLock] = React.useState(null);
+
   return (
     <div className={CustomReactTableStyles.reactTable}>
       {loader && <CustomLoader loaderType="spinner1" />}
@@ -66,7 +68,10 @@ const CustomReactTable: React.FC = (props) => {
 
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter column={header.column} table={table} />
+                            <Filter column={header.column} table={table} 
+                            showFilterBLock={showFilterBLock}
+                            setShowFilterBLock={setShowFilterBLock}
+                            />
                           </div>
                         ) : null}
                       </div>

@@ -11,6 +11,7 @@ enum apiEndPoints {
   randomQuestion = "web/get/selected/question/",
   verifySecurityQuestion = "web/verify/security/answer/",
   claimList = "web/open/claims",
+  claimContentList = "web/adjuster/claim/line/items",
   notification = "web/notifications",
   scoreCard = "web/claims/scorecard?statusFlag=",
   deleteNotification = "web/delete/notification",

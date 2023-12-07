@@ -33,7 +33,7 @@ export default async function DashboardComponent() {
     statusIds: null,
   };
   const claimListRes: any = await claimList(payload, token);
-  if (claimListRes?.result?.status === 200) {
+  if (claimListRes?.result?.status === 200 && claimListRes?.result?.data) {
     return (
       <div className={CardsStyle.card}>
         <div className="row">

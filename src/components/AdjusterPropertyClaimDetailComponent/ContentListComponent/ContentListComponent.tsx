@@ -1,10 +1,23 @@
+"use client";
 import React from "react";
 import ContentListTable from "./ContentListTable";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import ContentListComponentStyle from "./ContentListComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
+import { connect } from "react-redux";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+import { fetchClaimContentList } from "@/services/ClaimContentListService";
 
-function ContentListComponent() {
+function ContentListComponent(props: any) {
+  const {claimContentListRes} = props;
+  const [tableLoader, setTableLoader] = React.useState(false);
+
+  React.useEffect(() => {
+    fetchClaimContentList();
+    const claimContentData = claimContentListRes.result;
+    props.addClaimContentListData({ claimContentData });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="row">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
@@ -67,8 +80,13 @@ function ContentListComponent() {
           <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12"></div>
         </div>
       </div>
-      <ContentListTable />
+      <ContentListTable 
+      setTableLoader={setTableLoader}
+       tableLoader={tableLoader} />
     </div>
   );
 }
-export default ContentListComponent;
+const mapDispatchToProps = {
+  addClaimContentListData,
+};
+export default connect(null,mapDispatchToProps)(ContentListComponent);
