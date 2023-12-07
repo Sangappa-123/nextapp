@@ -118,7 +118,7 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: currentPageNumber ?? 1 - 1,
+    pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
   });
 
