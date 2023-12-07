@@ -5,7 +5,7 @@ import pendingSearchStyle from "./pendingInvoiceSearchBox.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { handlePendingInvoiceSearch } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
-const UrgentClaimSearchBox: React.FC<connectorType> = (props) => {
+const PendingInvoiceSearchBox: React.FC<connectorType> = (props) => {
   const { handlePendingInvoiceSearch } = props;
   const [searchValue, setSearchValue] = React.useState("");
 
@@ -48,4 +48,4 @@ const mapDispatchToProps = {
 const connector = connect(null, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 
-export default connector(UrgentClaimSearchBox);
+export default connector(PendingInvoiceSearchBox);
