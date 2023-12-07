@@ -84,7 +84,7 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
       ) {
         router.push("/security-question");
       } else {
-        const homePageRoute: string | null = localStorage.getItem("homeScreen");
+        const homePageRoute = getClientCookie("homeScreen");
         if (homePageRoute) {
           router.push(homePageRoute);
         } else {

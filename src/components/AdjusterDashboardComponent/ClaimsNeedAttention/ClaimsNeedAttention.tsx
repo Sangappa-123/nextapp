@@ -15,7 +15,6 @@ const ClaimsNeedAttention: React.FC = async () => {
   }
   try {
     resp = await getImmediateClaims(userId);
-    console.log("resp", resp);
   } catch (error) {
     console.log("getImmediateClaims API error::", error);
   }

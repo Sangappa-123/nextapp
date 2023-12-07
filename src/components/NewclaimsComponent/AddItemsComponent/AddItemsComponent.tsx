@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import GenericButton from "@/components/common/GenericButton";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import AddStyle from "./addItemsComponent.module.scss";
+import AddItemsTableComponent from "./AddItemsTableComponent";
 
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
 }
 
-function AddItemsComponent({ onAssignItemsClick }: AddItemsComponentProps) {
+const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClick }) => {
   const [isAssignItemsDisabled, setAssignItemsDisabled] = useState(true);
   return (
     <div>
@@ -23,7 +24,8 @@ function AddItemsComponent({ onAssignItemsClick }: AddItemsComponentProps) {
           <div className="col-auto">
             <GenericButton
               label="Previous"
-              theme="normal"
+              theme="lightBlue"
+              size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
             />
@@ -31,7 +33,8 @@ function AddItemsComponent({ onAssignItemsClick }: AddItemsComponentProps) {
           <div className="col-auto">
             <GenericButton
               label="Assign Items"
-              theme="normal"
+              theme="lightBlue"
+              size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
               disabled={isAssignItemsDisabled}
@@ -50,10 +53,43 @@ function AddItemsComponent({ onAssignItemsClick }: AddItemsComponentProps) {
         />
       </div>
       <div>
-        <button onClick={onAssignItemsClick}>Assign Items</button>
+        <AddItemsTableComponent onAssignItemsClick={onAssignItemsClick} />
+      </div>
+      <div className="row justify-content-end">
+        <div className="col-auto">
+          <GenericButton
+            label="Cancel"
+            theme="lightBlue"
+            size="small"
+            type="submit"
+            btnClassname={AddStyle.newClaimBtn}
+          />
+        </div>
+        <div className="col-auto">
+          <GenericButton
+            label="Previous"
+            theme="lightBlue"
+            size="small"
+            type="submit"
+            btnClassname={AddStyle.newClaimBtn}
+          />
+        </div>
+        <div className="col-auto">
+          <GenericButton
+            label="Assign Items"
+            theme="lightBlue"
+            size="small"
+            type="submit"
+            btnClassname={AddStyle.newClaimBtn}
+            disabled={isAssignItemsDisabled}
+            onClick={() => {
+              setAssignItemsDisabled(true);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default AddItemsComponent;
