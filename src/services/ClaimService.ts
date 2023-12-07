@@ -167,7 +167,7 @@ export const fetchPendingInvoice = async (
       sortBy,
       orderBy,
     },
-    searchKeyword,
+    searchString: searchKeyword,
   };
   const http = new HttpService({ isClient });
   const res = await http.post(url, payload);

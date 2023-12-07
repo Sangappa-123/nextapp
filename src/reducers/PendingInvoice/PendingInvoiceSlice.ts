@@ -86,14 +86,15 @@ const PendingInvoiceSlice = createSlice({
     addPendingInvoice(state, action) {
       const { payload } = action;
       const { data, message } = payload;
-      console.log("==========", payload);
       if (!data) {
-        return { ...initialState, claimErrorMsg: message };
+        state.pendingInvoiceListData = initialState.pendingInvoiceListData;
+        state.claimErrorMsg = message;
+        state.currentPageNumber = initialState.currentPageNumber;
+        state.totalinvoice = initialState.totalinvoice;
       } else {
-        state.pendingInvoiceListData = data.invoices;
+        state.pendingInvoiceListData = data?.invoices ?? [];
         state.currentPageNumber = data.currentPageNumber;
         state.totalinvoice = data.totalinvoice;
-        // state.totalPageSize = Math.ceil(data.totalinvoice / data.totalPageSize);
         state.claimErrorMsg = initialState.claimErrorMsg;
       }
       return state;
