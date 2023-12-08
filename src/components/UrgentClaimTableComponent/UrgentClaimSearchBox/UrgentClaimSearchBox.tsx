@@ -5,11 +5,14 @@ import UrgentClaimSearchStyle from "./UrgentClaimSearchBox.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { handleUrgentClaimSearch } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 
-const UrgentClaimSearchBox: React.FC<connectorType> = (props) => {
-  const { handleUrgentClaimSearch } = props;
+type propType = {
+  resetPage: () => void;
+};
+const UrgentClaimSearchBox: React.FC<connectorType & propType> = (props) => {
+  const { handleUrgentClaimSearch, resetPage } = props;
   const [searchValue, setSearchValue] = React.useState("");
   const fetchSearchedData = async (searchKeyword: string) => {
-    console.log("========", searchKeyword);
+    resetPage();
     handleUrgentClaimSearch({ searchKeyword });
   };
   const handleSearch = async (e: React.FocusEvent<HTMLInputElement>) => {

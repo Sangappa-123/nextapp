@@ -177,7 +177,7 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
       <div className={urgentTableStyle.claimContainer}>
         <div className={`row ${urgentTableStyle.claimContentContainer}`}>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
-            <UrgentClaimSearchBox />
+            <UrgentClaimSearchBox resetPage={resetPage} />
           </div>
         </div>
       </div>
