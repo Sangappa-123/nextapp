@@ -15,7 +15,6 @@ function useCustomForm<T extends BaseSchema>(schema: T) {
     setError,
     clearErrors,
     getValues,
-    setField,
   } = useForm<Output<typeof schema>>({
     resolver: valibotResolver(schema),
   });
@@ -31,7 +30,6 @@ function useCustomForm<T extends BaseSchema>(schema: T) {
     setError,
     clearErrors,
     getValues,
-    setField,
   };
 }
 
