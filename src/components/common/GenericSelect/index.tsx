@@ -11,7 +11,6 @@ interface TypedProps<T> {
   errorMsg?: string;
   errorMsgClassname?: string;
   formControlClassname?: string;
-  inputFieldClassname?: string;
   labelClassname?: string;
   isFixedError?: string;
   disabled?: boolean;
@@ -30,7 +29,6 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     formControlClassname = "",
     labelClassname = "",
     isMulti = false,
-    inputFieldClassname = "",
     customStyles = "",
     customMenuWithClear = false,
     selected = null,
@@ -87,7 +85,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
           isMulti={isMulti}
           classNames={{
             container: () => selectStyle.reactSelectContainer,
-            control: () => disabled && selectStyle.disabled,
+            control: () => (disabled ? selectStyle.disabled : ""),
           }}
           {...rest}
         />
@@ -96,7 +94,6 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
             [selectStyle["error-msg"]]: true,
             "d-none": !showError,
             [errorMsgClassname]: errorMsgClassname,
-            [inputFieldClassname]: inputFieldClassname,
             "position-absolute": isFixedError,
           })}
         >
