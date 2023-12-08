@@ -18,6 +18,12 @@ enum apiEndPoints {
   invoicelist = "web/get/company/invoicelist",
   urgentClaimUrl = "web/get/all/immediate/claims",
   pendingInvoiceUrl = "web/get/company/pending/invoicelist",
+  postEmail = "web/policyholder/info",
+  getPolicyType = "web/policytypes?stateId=",
+  detailsClaim = "web/claim/details",
+  stateOption = "web/states",
+  lossTypeOption = "web/claim/loss/types",
+  homeOwnersType = "web/claim/get/category/coverage",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

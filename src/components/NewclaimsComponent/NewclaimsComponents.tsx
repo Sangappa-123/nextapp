@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Cards from "../common/Cards/index";
-import { object, email, string, minLength } from "valibot";
+import { object, email, string, minLength, number, boolean } from "valibot";
 import { useRouter } from "next/navigation";
 import useCustomForm from "@/hooks/useCustomForm";
 import NewClaimsStyle from "./newClaimStyle.module.scss";
@@ -11,8 +11,11 @@ import PolicyInformation from "../PolicyInformation/PolicyInformation";
 import ClaimInformation from "../ClaimInformation/ClaimInformation";
 import AddItemsComponent from "./AddItemsComponent";
 import AssignItemsComponent from "./AssignItemsComponent";
-import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow";
+import clsx from "clsx";
+// import { fetchPolicyType, fetchState, validateEmail } from "@/services/ClaimService";
+import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
+import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 
 function NewclaimsComponent() {
   const [activeSection, setActiveSection] = useState(0);
@@ -34,36 +37,65 @@ function NewclaimsComponent() {
     address: string("Address"),
     address1: string("Address one"),
     address2: string("Address two"),
+    // state: object({
+    //   label: string("Select Question", [minLength(1, "Select Question")]),
+    //   value: string("Select Question"),
+    // }),
     state: object({
-      label: string("Select Question", [minLength(1, "Select Question")]),
-      value: string("Select Question"),
+      state: string("state"),
+      id: number("id"),
     }),
     // claim schema
-    claim: string("Claim"),
-    claimDate: string("Claim Date"),
+    claim: string("Claim", [minLength(1, "Please enter the claim number.")]),
+    claimDate: string("claimDate"),
+    // claimDate: {
+    //   type: "string",
+    //   format: "date-time",
+    // },
     insuranceCompany: string("insurance company"),
     adjusterName: string("adjuster name"),
     claimDescription: string("claim description"),
     claimDeductible: string("claim deductible"),
-    minItemPrice: string("Min Item Price"),
+    minItemPrice: string("Min Item Price", [
+      minLength(1, "Please enter the minimum valueof item to price"),
+    ]),
     taxRate: string("Tax Rate"),
-    contentLimits: string("Content Limits"),
+    contentLimits: string("Content Limits", [minLength(1, "Policy number")]),
     lossType: object({
-      label: string("Select Question", [minLength(1, "Select Question")]),
-      value: string("Select Question"),
+      id: number("id"),
+      name: string("name"),
+      active: boolean("active"),
     }),
     homeOwnersPolicyType: object({
-      label: string("Select Question", [minLength(1, "Select Question")]),
-      value: string("Select Question"),
+      id: number("id"),
+      typeName: string("typeName"),
     }),
     // applyTax: string("yes"),
   });
 
-  const { register, handleSubmit, formState, control } = useCustomForm(schema);
+  const {
+    register,
+    handleSubmit,
+    formState,
+    control,
+    resetField,
+    setValue,
+    reset,
+    setError,
+    clearErrors,
+    getValues,
+    setField,
+  } = useCustomForm(schema);
   const { errors } = formState;
   console.log("logss", errors);
 
-  // const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
+  const [homeOwnerType, setHomeOwnerType] = useState([]);
+
+  const updateHomeOwnerType = (data: []) => {
+    setHomeOwnerType(data);
+    console.log("updateHomeOwnerType", data);
+  };
 
   const formSubmit = async (data: any) => {
     try {
@@ -79,8 +111,8 @@ function NewclaimsComponent() {
     router.replace("/adjuster-dashboard");
   };
 
-  const handleReset = () => {
-    console.log("hwlllo");
+  const showConfirmation = () => {
+    setShow(true);
   };
 
   const handleSectionClick = (index: number) => {
@@ -91,6 +123,15 @@ function NewclaimsComponent() {
 
   const handleAssignItemsClick = () => {
     setActiveSection(2);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
+  const handleReset = () => {
+    reset();
+    handleClose();
   };
 
   return (
@@ -110,7 +151,9 @@ function NewclaimsComponent() {
                 1) Claim and Policy Information{" "}
               </p>
             </div>
-            <div className="row justify-content-end mt-4">
+            <div
+              className={clsx("row justify-content-end mt-4", NewClaimsStyle.upButtons)}
+            >
               <div className="col-auto mt-2">
                 <button className={NewClaimsStyle.cancelButton}>Cancel</button>
               </div>
@@ -118,8 +161,9 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Reset"
                   // theme="normal"
-                  type="submit"
+                  // type="submit"
                   btnClassname={NewClaimsStyle.resetBtn}
+                  onClick={showConfirmation}
                 />
               </div>
               <div className="col-auto">
@@ -137,7 +181,16 @@ function NewclaimsComponent() {
                 customHeadingClassname={NewClaimsStyle.PolicyholderText}
                 customTitleClassname={NewClaimsStyle.customTitleClassname}
               />
-              <PolicyInformation register={register} error={errors} control={control} />
+              <PolicyInformation
+                register={register}
+                error={errors}
+                control={control}
+                setValue={setValue}
+                updateHomeOwnerType={updateHomeOwnerType}
+                resetField={resetField}
+                getValues={getValues}
+                setField={setField}
+              />
             </div>
             <div>
               <GenericComponentHeading
@@ -145,9 +198,19 @@ function NewclaimsComponent() {
                 customHeadingClassname={NewClaimsStyle.PolicyholderText}
                 customTitleClassname={NewClaimsStyle.customTitleClassname}
               />
-              <ClaimInformation control={control} register={register} error={errors} />
+              <ClaimInformation
+                control={control}
+                register={register}
+                error={errors}
+                setError={setError}
+                clearErrors={clearErrors}
+                homeOwnerTypeOptions={homeOwnerType}
+                getValues={getValues}
+              />
             </div>
-            <div className="row justify-content-end mt-4">
+            <div
+              className={clsx("row justify-content-end mt-4", NewClaimsStyle.downButtons)}
+            >
               <div className="col-auto mt-2">
                 <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
                   Cancel
@@ -157,10 +220,23 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Reset"
                   // theme="normal"
-                  type="submit"
+                  // type="submit"
                   btnClassname={NewClaimsStyle.resetBtn}
-                  onClick={handleReset}
+                  onClick={showConfirmation}
                 />
+                {show && (
+                  <div>
+                    <ConfirmModal
+                      showConfirmation={true}
+                      closeHandler={handleClose}
+                      submitBtnText="Yes"
+                      closeBtnText="No"
+                      descText="Are you sure you want to discard the entered claim information?"
+                      modalHeading="Reset Information"
+                      submitHandler={handleReset}
+                    />
+                  </div>
+                )}
               </div>
               <div className="col-auto">
                 <GenericButton
