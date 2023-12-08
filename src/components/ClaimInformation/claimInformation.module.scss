@@ -6,20 +6,6 @@
   // margin-left: 155px;
   //   top: 3px;
 }
-// .labelInsuranceCompany {
-//   position: relative;
-//   font-weight: 570;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 90px;
-// }
-// .labelClaim {
-//   position: relative;
-//   font-weight: 570;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 175px;
-// }
 .claim {
   position: relative;
   width: 40%;
@@ -35,11 +21,6 @@
   right: 190px;
 }
 
-// .emaillabelClassname .firstName::before {
-//   content: "  *";
-//   color: red;
-//   //   margin-left: 2px;
-// }
 .insuranceCompany {
   position: relative;
   width: 40%;
@@ -175,53 +156,19 @@
 
 .textArea {
   border-radius: 5px;
+  padding: 5px;
 }
 .errorMessage {
   position: relative;
   left: 280px;
   bottom: 30px;
 }
-// .labelZipCode {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   bottom: 50px;
-//   left: 440px;
-//   // margin-right: 180px;
-// }
-// .labelMinPrice {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 88px;
-// }
-// .labelClaimDecription {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 113px;
-// }
-// .labelClaimDeduction {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 113px;
-// }
-// .labelTaxRate {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 141px;
-// }
-// .labelContent {
-//   position: relative;
-//   font-weight: 550;
-//   font-size: 13px;
-//   font-family: "Open Sans", sans-serif;
-//   margin-left: 125px;
-// }
+
+.fileType {
+  font-size: 13px;
+  color: #337ab7;
+  cursor: pointer;
+}
+.fileType:hover {
+  color: #23527c;
+}

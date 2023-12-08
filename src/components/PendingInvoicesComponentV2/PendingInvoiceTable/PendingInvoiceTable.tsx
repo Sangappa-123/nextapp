@@ -17,7 +17,10 @@ import { unknownObjectType } from "@/constants/customTypes";
 import pendingInvoiceStyle from "./pendingInvoiceTable.module.scss";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
 import PendingInvoiceSearchBox from "../PendingInvoiceSearchBox";
-import { handlePendingInvoicePagination } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
+import {
+  handlePendingInvoicePagination,
+  handlePendingInvoiceSort,
+} from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
 const pathList = [
   {
@@ -37,8 +40,9 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     currentPageNumber,
     totalinvoice,
     claimErrorMsg,
-    handlePendingInvoicePagination,
     isFetching,
+    handlePendingInvoicePagination,
+    handlePendingInvoiceSort,
   } = props;
   const pageLimit = TABLE_LIMIT_20;
 
@@ -51,6 +55,8 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     createDate: string;
     status: unknownObjectType;
   };
+
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const columnHelper = createColumnHelper<ClaimData>();
   const columns = [
@@ -67,12 +73,12 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     columnHelper.accessor("vendorName", {
       header: "Vendor",
       cell: (info) => info.getValue(),
-      enableSorting: true,
+      enableSorting: false,
     }),
     columnHelper.accessor("createdBy", {
       header: "Created By",
       cell: (info) => info.getValue(),
-      enableSorting: true,
+      enableSorting: false,
     }),
     columnHelper.accessor("amount", {
       header: "Invoice Amount",
@@ -91,8 +97,6 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     }),
   ];
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
@@ -106,8 +110,18 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     [pageIndex, pageSize]
   );
 
-  const handleSorting = async () => {
-    console.log("hhhhhhhh", setSorting, setPagination);
+  const resetPage = () => {
+    setPagination({
+      pageIndex: 0,
+      pageSize: pageLimit,
+    });
+  };
+
+  const handleSorting = async (sortingUpdater: any) => {
+    const newSortVal: SortingState = sortingUpdater(sorting);
+    setSorting(newSortVal);
+    resetPage();
+    handlePendingInvoiceSort(newSortVal[0]);
   };
 
   const handlePagination = async (updaterFunction: any) => {
@@ -152,7 +166,7 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
       <div className={pendingInvoiceStyle.claimContainer}>
         <div className={`row ${pendingInvoiceStyle.claimContentContainer}`}>
           <div className="col-lg-4 col-md-6 col-sm-12 col-12 ms-auto">
-            <PendingInvoiceSearchBox />
+            <PendingInvoiceSearchBox resetPage={resetPage} />
           </div>
         </div>
       </div>
@@ -187,6 +201,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = {
   handlePendingInvoicePagination,
+  handlePendingInvoiceSort,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

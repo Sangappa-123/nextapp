@@ -1,19 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Controller } from "react-hook-form";
 import GenericInput from "../common/GenericInput/index";
 import clsx from "clsx";
 import ClaimInformationStyle from "./claimInformation.module.scss";
 import Tooltip from "../common/ToolTip/index";
 import GenericSelect from "../common/GenericSelect/index";
+import DateTimePicker from "../common/DateTimePicker/index";
+// import Cards from "../common/Cards/index";
+import {
+  fetchHomeOwnersType,
+  fetchLossType,
+  validateClaim,
+} from "@/services/ClaimService";
 
-function ClaimInformation({ register, error, control }) {
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+function ClaimInformation({
+  register,
+  error,
+  control,
+  setError,
+  clearErrors,
+  homeOwnerTypeOptions,
+  getValues,
+}: any) {
+  // const options = [
+  //   { value: "chocolate", label: "Chocolate" },
+  //   { value: "strawberry", label: "Strawberry" },
+  //   { value: "vanilla", label: "Vanilla" },
+  // ];
   const [topping, setTopping] = useState("yes");
-  // const [disabled, setDisabled] = useState(false);
+  const [lossType, setLossType] = useState([]);
+  // const [file, setFile] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<React.SetStateAction<null> | Date>(
+    null
+  );
+
+  const handleDateChange = (date: React.SetStateAction<null> | Date) => {
+    setSelectedDate(date);
+  };
 
   const onOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setTopping(e.target.value);
@@ -23,6 +46,77 @@ function ClaimInformation({ register, error, control }) {
     // }
   };
 
+  const claimHandler = (claim: string) => {
+    if (!claim) return;
+    validateClaim({
+      claimNumber: claim,
+    })
+      .then((res) => {
+        console.log("claim res", res, res.data);
+        if (res.data)
+          setError("claim", {
+            type: "manual",
+            message: "The claim number already exists",
+          });
+        // else if (res.data === null) {
+        //   setError("claim", {
+        //     type: "manual",
+        //     message: "p;ease enter the claims",
+        //   });
+        else {
+          clearErrors("claim");
+        }
+      })
+      .catch((error: any) => console.log("claim error", error));
+    // console.log("e", e.target.value);
+  };
+  useEffect(() => {
+    fetchLossType()
+      .then((res) => {
+        console.log("loss", res);
+        setLossType(res.data);
+        // console.log(
+        //   "stateObject",
+        //   res.data.map((item: { state: string }) => {
+        //     item;
+        //   })
+        // );
+
+        // setStateId(res.data.address.state.id);
+      })
+      .catch((error) => console.log(" Losserrr", error));
+  }, []);
+  const { onBlur: blurHandler, ...rest } = register("claim");
+  console.log("rest", { ...rest });
+
+  const fileOpen = (e: any) => {
+    console.log("file", e.target.files);
+    // var files = e.target.files;
+    // for (var i = 0; i < files.length; i++) {
+    //   var file = files[i];
+    //   var reader = new FileReader();
+    //   reader.file = file;
+    //   reader.fileName = files[i].name;
+    //   reader.fileType = files[i].type;
+    //   reader.fileExtension = files[i].name.substr(files[i].name.lastIndexOf("."));
+    //   reader.onload = scope.ItemContentsImageLoaded;
+    //   reader.readAsDataURL(file);
+    // }
+  };
+
+  const coverageApiCall = (stateId: number, policyTypeId: number) => {
+    const [state, homeOwnerPlocyType] = getValues(["state", "homeOwnersPolicyType"]);
+    console.log("getValues", state?.id, homeOwnerPlocyType?.id);
+    stateId = state?.id;
+    policyTypeId = homeOwnerPlocyType?.id;
+    fetchHomeOwnersType(stateId, policyTypeId)
+      .then((res) => {
+        console.log("coverage", res);
+      })
+      .catch((error) => console.log(" Losserrr", error));
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
@@ -38,7 +132,12 @@ function ClaimInformation({ register, error, control }) {
             placeholder="Claim#"
             showError={error["claim"]}
             errorMsg={error?.claim?.message}
-            {...register("claim")}
+            {...rest}
+            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+              blurHandler(e);
+              console.log("e", e.target.value);
+              claimHandler(e.target.value);
+            }}
           />
         </div>
       </div>
@@ -47,11 +146,46 @@ function ClaimInformation({ register, error, control }) {
           <label className={ClaimInformationStyle.label}>Claim Date</label>
         </div>
         <div className="col-lg-2 col-md-2 col-sm-12">
-          <GenericInput
+          {/* <GenericInput
             placeholder="First Name"
             type="Date"
             {...register("claimDate")}
             // className={ClaimInformationStyle.claimDate}
+          /> */}
+          <Controller
+            control={control}
+            name="claimDate"
+            rules={{ required: true }}
+            // {...register("claimDate")}
+            render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
+              // console.log("console", { ...rest });
+              return (
+                <DateTimePicker
+                  name="claimDate"
+                  // labelText="Select"
+                  // isRequired={true}
+                  placeholderText="12/06/2023"
+                  showError={true}
+                  errorMsg="kkkk"
+                  errorMsgClassname="erressage"
+                  labelClassname="labeext"
+                  formControlClassname="forontrol"
+                  value={selectedDate}
+                  onChange={(e) => {
+                    fieldOnChange(e);
+                    console.log("date", e?.toDateString());
+                    handleDateChange(e);
+                  }}
+                  dateFormat="MM/dd/yyyy"
+                  // showTimeSelect={true}
+                  enableTime={true}
+                  time_24hr={true}
+                  minDate={new Date()}
+                  maxDate={null}
+                  {...rest}
+                />
+              );
+            }}
           />
         </div>
       </div>
@@ -93,9 +227,20 @@ function ClaimInformation({ register, error, control }) {
             control={control}
             name="lossType"
             rules={{ required: true }}
-            render={({ field: { ...rest } }: any) => {
+            render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
               // console.log("console", { ...rest });
-              return <GenericSelect options={options} {...rest} />;
+              return (
+                <GenericSelect
+                  options={lossType}
+                  {...rest}
+                  onChange={(e: any) => {
+                    fieldOnChange(e);
+                    console.log("onselect", e?.name);
+                  }}
+                  getOptionLabel={(option: { name: any }) => option.name}
+                  getOptionValue={(option: { id: any }) => option.id}
+                />
+              );
             }}
           />
           {/* <Controller
@@ -148,12 +293,23 @@ function ClaimInformation({ register, error, control }) {
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <div className="row d-flex">
-            <label className={ClaimInformationStyle.label}>
-              <span style={{ color: "red" }}>*</span>Min. $ Item to Price
-              <div className="col-lg-2 col-md-2 col-sm-12">
-                <Tooltip text={"hello"} />
-              </div>
-            </label>{" "}
+            <div className="col-lg-10 mt-1">
+              <label className={ClaimInformationStyle.label}>
+                <span style={{ color: "red" }}>*</span>Min. $ Item to Price
+                <div className="col-lg-2 col-md-2 col-sm-12"></div>
+              </label>{" "}
+            </div>
+            <div className="col-lg-2 mt-2">
+              <Tooltip
+                text={
+                  <span>
+                    The minimum dollar value of the item <br /> needs to be priced by the
+                    carrier.Anything
+                    <br /> less than this can be accepted at the <br /> items face value
+                  </span>
+                }
+              />
+            </div>
           </div>
         </div>
         <div className="col-lg-2 col-md-2 col-sm-12">
@@ -246,24 +402,39 @@ function ClaimInformation({ register, error, control }) {
             <span style={{ color: "red" }}>*</span>Home Owners Policy Type
           </label>
         </div>
-        <div className="col-1">
+        <div className="col-2">
           <Controller
             control={control}
             name="homeOwnersPolicyType"
-            rules={{ required: true }}
-            render={({ field: { ...rest } }: any) => {
+            // rules={{ required: true }}
+            render={({ field: { onChange: onSelect, ...rest } }: any) => {
               console.log("console", { ...rest });
               return (
                 <GenericSelect
-                  options={options}
+                  options={homeOwnerTypeOptions}
                   // {...register("homeOwnersPolicyType")}
                   {...rest}
-                  disabled={"homeOwnersPolicyType"}
+                  disabled={!homeOwnerTypeOptions.length}
+                  getOptionLabel={(option: { typeName: any }) => option.typeName}
+                  getOptionValue={(option: { id: any }) => option.id}
+                  onChange={(e: any) => {
+                    onSelect(e);
+                    coverageApiCall(e.stateId, e.policyTypeId);
+                  }}
+                  // inputFieldClassname="hideInputArrow"
+                  // classNames={{
+                  //   control: () => ClaimInformationStyle.disabledSelect,
+                  // }}
                 />
               );
             }}
           />
         </div>
+        {/* {
+          <div>
+            <Cards className={ClaimInformationStyle.cards}></Cards>
+          </div>
+        } */}
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
@@ -271,13 +442,24 @@ function ClaimInformation({ register, error, control }) {
             <span style={{ color: "red" }}>*</span>Attachments
           </label>
         </div>
-        <div className="col-1">
+        <div className={clsx("col-2 mt-2")}>
+          {" "}
+          <label
+            onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
+            role="button"
+            className={ClaimInformationStyle.fileType}
+          >
+            Click to add attachments
+          </label>
+          {/* <input type="file" />  */}
           <input
             type="file"
-            // value="Click to add attachments"
             className={ClaimInformationStyle.file}
-          />{" "}
-          {/* <a onClick={openFile}>Click to add attachments</a> */}
+            onChange={(e) => fileOpen(e)}
+            hidden
+            ref={fileInputRef}
+            accept=".png,.jpg,.jpeg,.pdf"
+          />
         </div>
       </div>
     </div>

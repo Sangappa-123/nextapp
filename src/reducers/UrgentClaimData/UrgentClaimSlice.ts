@@ -78,6 +78,44 @@ export const handleUrgentClaimSearch = createAsyncThunk(
   }
 );
 
+export const handleUrgentClaimSort = createAsyncThunk(
+  "urgentClaim/sort",
+  async ({ id = "createdDate", desc = true }: { id: string; desc: boolean }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    const state = api.getState() as RootState;
+    try {
+      const sortBy = id;
+      const orderBy = desc ? "desc" : "asc";
+      const userId = state.session.userId;
+      const pageNumber = 1;
+      const searchKeyword = state.urgentclaimdata.searchKeyword;
+      const limit = TABLE_LIMIT_20;
+      api.dispatch(
+        updateUrgentClaim({
+          searchKeyword,
+          sortBy,
+          orderBy,
+          currentPageNumber: pageNumber,
+        })
+      );
+      const res = await fetchUrgentClaimList(
+        {
+          userId,
+          pageNumber,
+          sortBy,
+          orderBy,
+          searchKeyword,
+          limit,
+        },
+        true
+      );
+      return res;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const UrgentClaimSlice = createSlice({
   initialState,
   name: "urgentclaimdata",
@@ -121,6 +159,16 @@ const UrgentClaimSlice = createSlice({
       UrgentClaimSlice.caseReducers.addUrgentClaimListData(state, action);
     });
     builder.addCase(handleUrgentClaimSearch.rejected, (state) => {
+      state.isFetchingUrgentClaim = false;
+    });
+    builder.addCase(handleUrgentClaimSort.pending, (state) => {
+      state.isFetchingUrgentClaim = true;
+    });
+    builder.addCase(handleUrgentClaimSort.fulfilled, (state, action) => {
+      state.isFetchingUrgentClaim = false;
+      UrgentClaimSlice.caseReducers.addUrgentClaimListData(state, action);
+    });
+    builder.addCase(handleUrgentClaimSort.rejected, (state) => {
       state.isFetchingUrgentClaim = false;
     });
   },

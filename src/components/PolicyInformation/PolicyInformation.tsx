@@ -1,18 +1,124 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ClaimPolicyInformation from "./policyInformation.module.scss";
 import { Controller } from "react-hook-form";
 import GenericInput from "../common/GenericInput/index";
 import clsx from "clsx";
 import GenericSelect from "../common/GenericSelect/index";
+import { fetchPolicyType, fetchState, validateEmail } from "@/services/ClaimService";
+import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
+import { unknownObjectType } from "@/constants/customTypes";
 
-function ClaimpolicyInformation({ register, error, control }) {
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+function ClaimpolicyInformation({
+  register,
+  error,
+  control,
+  setValue,
+  updateHomeOwnerType,
+  resetField,
+  getValues,
+}: any) {
+  // const options = [
+  //   { value: "chocolate", label: "Chocolate" },
+  //   { value: "strawberry", label: "Strawberry" },
+  //   { value: "vanilla", label: "Vanilla" },
+  // ];
+  const [options, setOptions] = useState([]);
+  const [show, setShow] = useState(false);
+  // const [stateId, setStateId] = useState(null);
+  const [policyDetails, setpolicyDetails] = useState<unknownObjectType | null>(null);
+
+  const { onChange: emailChange, ...rest } = register("email");
+
+  const verifyEmail = (email: string) => {
+    validateEmail({
+      email: email,
+    })
+      .then((res) => {
+        console.log("result", res.data);
+        setShow(true);
+        console.log("resss", res.data.address.state.id);
+        setpolicyDetails(res.data);
+        // console.log("set", setpolicyDetails(res.data));
+        // setStateId(res.data.address.state.id);
+      })
+
+      .catch((error) => console.log("verify errr", error));
+  };
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
+  const handleGetData = () => {
+    console.log("policyDetails", policyDetails?.firstName);
+    setValue("firstname", policyDetails?.firstName),
+      setValue("lastname", policyDetails?.lastName);
+    setValue("mobilenumber", policyDetails?.cellPhone);
+    setValue("secondaryPhonenumber", policyDetails?.dayTimePhone);
+    setValue("address", policyDetails?.address.streetAddressOne);
+    setValue("address1", policyDetails?.address.streetAddressTwo);
+    setValue("address2", policyDetails?.address.city);
+    setValue("state", policyDetails?.address.state);
+    setValue("zipcode", policyDetails?.address.zipcode);
+    setValue("claim", policyDetails?.insuranceNumber);
+    setValue("claimDate", policyDetails?.claimDate);
+    setValue("insuranceCompany", policyDetails?.insuranceCompany);
+    setValue("adjusterName", policyDetails?.adjusterName);
+    setValue("claimDescription", policyDetails?.claimDescription);
+    setValue("claimDeductible", policyDetails?.claimDeductible);
+    setValue("minItemPrice", policyDetails?.minItemPrice);
+    setValue("taxRate", policyDetails?.taxRate);
+    setValue("contentLimits", policyDetails?.contentLimits);
+    setValue("lossType", policyDetails?.lossType);
+    setValue("homeOwnersPolicyType", policyDetails?.homeOwnersPolicyType);
+
+    // fetchPolicyType(stateId)
+    //   .then((res: any) => {
+    //     console.log("state", res);
+    //   })
+    //   .catch((error: any) => console.log("verify errr", error));
+
+    handleClose();
+  };
+  useEffect(() => {
+    fetchState({
+      isTaxRate: false,
+      isTimeZone: false,
+    })
+      .then((res) => {
+        console.log("state", res);
+        setOptions(res.data);
+        // console.log(
+        //   "stateObject",
+        //   res.data.map((item: { state: string }) => {
+        //     item;
+        //   })
+        // );
+
+        // setStateId(res.data.address.state.id);
+      })
+      .catch((error) => console.log("state errr", error));
+  }, []);
+
+  /* eslint-disable no-useless-escape */
+  const regex: RegExp =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const getPolicyType = (id: number) => {
+    console.log("onwers logs");
+    const stateId = getValues("state")?.id;
+    if (!stateId) return;
+    fetchPolicyType(id)
+      .then((res) => {
+        console.log("id", id);
+        console.log("policy", res.data);
+        updateHomeOwnerType(res.data);
+      })
+      .catch((error) => console.log("policy errr", error));
+  };
+
   return (
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
@@ -23,13 +129,33 @@ function ClaimpolicyInformation({ register, error, control }) {
         <div className={clsx("col-lg-3 col-md-4 col-sm-12 mt-2")}>
           <GenericInput
             placeholder="E-mail"
-            // className={ClaimPolicyInformation.email}
             showError={error["email"]}
             errorMsg={error?.email?.message}
             isFixedError={true}
-            {...register("email")}
-            // pattern=" /^[A-Z0-9. _%+-]+@[A-Z0-9. -]+\."
+            onChange={(e: any) => {
+              emailChange(e);
+              const emailValue = e.target.value;
+              if (emailValue.match(regex) != null) {
+                console.log(emailValue);
+                verifyEmail(emailValue);
+              }
+              // /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            }}
+            {...rest}
           />
+          {show && (
+            <div>
+              <ConfirmModal
+                showConfirmation={true}
+                closeHandler={handleClose}
+                submitBtnText="Yes"
+                closeBtnText="No"
+                descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
+                modalHeading="Policyhlder Info"
+                submitHandler={() => handleGetData()}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="row mt-3 align-items-center">
@@ -45,6 +171,7 @@ function ClaimpolicyInformation({ register, error, control }) {
             errorMsg={error?.firstname?.message}
             // className={ClaimPolicyInformation.firstName}
             {...register("firstname")}
+            singleValue
           />
         </div>
       </div>
@@ -72,6 +199,8 @@ function ClaimpolicyInformation({ register, error, control }) {
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
+            textContentType="telephoneNumber"
+            keyboardType="phone-pad"
             // className={ClaimPolicyInformation.mobile}
             {...register("mobilenumber")}
           />
@@ -112,56 +241,58 @@ function ClaimpolicyInformation({ register, error, control }) {
         </div>
       </div>
       <div className="row align-items-center">
-        <div className={clsx("col-lg-3 col-md-2 col-sm-12 d-flex")}>
-          <div className="col-12 row align-items-center d-flex">
-            <label
-              className={clsx("col-8 text-right mt-3", ClaimPolicyInformation.label)}
-            >
+        <div className="row">
+          <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+            <label className={clsx(ClaimPolicyInformation.label)}>
               <span style={{ color: "red" }}>*</span> State
             </label>
-            <div className="col-12 row align-items-center d-flex ml-8">
-              <Controller
-                control={control}
-                name="state"
-                // rules={{ required: true }}
-                render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
-                  <GenericSelect
-                    // labelText={selectLabel}
-                    // placeholder={selectPlaceholder}
-                    options={options}
-                    name="state"
-                    // showError={errors[selectName]}
-                    // errorMsg={errors[selectName]?.message}
-                    // name={selectName}
-                    className="col-4"
-                    onChange={(e: any) => {
-                      fieldOnChange(e);
-                    }}
-                    {...rest}
-                  />
-                )}
-              />
-            </div>
-            {/* <SelectCheckBox options={options} className="col-4" /> */}
           </div>
-        </div>
-        <div
-          className={clsx(
-            "col-lg-2 col-md-2 col-sm-12 d-flex align-items-center justify-content-between"
-          )}
-        >
-          <label>
-            <span style={{ color: "red" }}>*</span> Zip Code
-          </label>
-          <GenericInput
-            placeholder="Zip Code"
-            {...register("zipcode")}
-            showError={error["zipcode"]}
-            errorMsg={error?.zipcode?.message}
-          />{" "}
+          <div className="col-lg-2">
+            <Controller
+              control={control}
+              name="state"
+              // rules={{ required: true }}
+              render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
+                <GenericSelect
+                  // labelText={selectLabel}
+                  // placeholder={selectPlaceholder}
+                  options={options}
+                  name="state"
+                  // format="(###) ###-####"
+                  onChange={(e: any) => {
+                    fieldOnChange(e);
+                    resetField("lossType");
+                    console.log("onselect", e?.state);
+                    if (e) getPolicyType(e.id);
+                    else updateHomeOwnerType([]);
+                  }}
+                  {...rest}
+                  getOptionLabel={(option: { state: any }) => option.state}
+                  getOptionValue={(option: { id: any }) => option.id}
+                />
+              )}
+            />
+          </div>
+          {/* <SelectCheckBox options={options} className="col-4" /> */}
+          {/* <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right ")}> */}
+          {/* <div className="row"> */}
+          <div className={clsx("col-auto mt-2")}>
+            <label className={clsx(ClaimPolicyInformation.label)}>
+              <span style={{ color: "red" }}>*</span> Zip Code
+            </label>
+          </div>
+          <div className={clsx("col-lg-2 col-md-2 col-sm-12  justify-content-left")}>
+            <GenericInput
+              placeholder="Zip Code"
+              {...register("zipcode")}
+              showError={error["zipcode"]}
+              errorMsg={error?.zipcode?.message}
+            />{" "}
+          </div>
         </div>
       </div>
     </div>
+    // </div>
   );
 }
 

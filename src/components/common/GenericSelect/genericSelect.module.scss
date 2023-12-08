@@ -18,6 +18,13 @@
     font-size: 13px;
     color: $errorRed;
   }
+  .reactSelectContainer {
+    .disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
 }
 .indicatorSeparator {
   display: none;

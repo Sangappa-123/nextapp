@@ -79,6 +79,43 @@ export const handlePendingInvoiceSearch = createAsyncThunk(
   }
 );
 
+export const handlePendingInvoiceSort = createAsyncThunk(
+  "pendingInvoice/sort",
+  async ({ id = "createdDate", desc = true }: { id: string; desc: boolean }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    const state = api.getState() as RootState;
+    try {
+      const sortBy = id;
+      const orderBy = desc ? "desc" : "asc";
+      const userId = state.session.userId;
+      const pageNumber = 1;
+      const searchKeyword = state.pendingInvoice.searchKeyword;
+      const limit = TABLE_LIMIT_20;
+      api.dispatch(
+        updatePendingInvoice({
+          searchKeyword,
+          sortBy,
+          orderBy,
+          currentPageNumber: pageNumber,
+        })
+      );
+      const res = await fetchPendingInvoice(
+        {
+          userId,
+          pageNumber,
+          sortBy,
+          orderBy,
+          searchKeyword,
+          limit,
+        },
+        true
+      );
+      return res;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 const PendingInvoiceSlice = createSlice({
   initialState,
   name: "pendingInvoice",
@@ -122,6 +159,17 @@ const PendingInvoiceSlice = createSlice({
       PendingInvoiceSlice.caseReducers.addPendingInvoice(state, action);
     });
     builder.addCase(handlePendingInvoiceSearch.rejected, (state) => {
+      state.isFetchingPendingInvoice = false;
+    });
+
+    builder.addCase(handlePendingInvoiceSort.pending, (state) => {
+      state.isFetchingPendingInvoice = true;
+    });
+    builder.addCase(handlePendingInvoiceSort.fulfilled, (state, action) => {
+      state.isFetchingPendingInvoice = false;
+      PendingInvoiceSlice.caseReducers.addPendingInvoice(state, action);
+    });
+    builder.addCase(handlePendingInvoiceSort.rejected, (state) => {
       state.isFetchingPendingInvoice = false;
     });
   },

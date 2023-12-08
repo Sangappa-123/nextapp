@@ -7,28 +7,36 @@ type props = {
   showConfirmation: boolean;
   closeHandler?: () => void;
   submitHandler?: () => void;
-  descText?: string;
+  closeBtnText?: string;
+  submitBtnText: string;
+  descText: string;
+  headingText?: string;
+  modalHeading: string;
 };
 function ConfirmModal({
   showConfirmation = false,
   closeHandler,
   submitHandler,
+  closeBtnText = "",
+  submitBtnText = "",
   descText = "",
+  headingText = "",
+  modalHeading = "",
 }: props) {
   return (
     <Modal
       isOpen={showConfirmation}
-      headingName="Confirm Deletion"
+      headingName={modalHeading}
       onClose={() => closeHandler && closeHandler()}
       footerContent={
         <div className={confirmModalStyle.modalFooter}>
           <GenericButton
-            label="Close"
+            label={closeBtnText}
             size="medium"
             onClickHandler={() => closeHandler && closeHandler()}
           />
           <GenericButton
-            label="Delete"
+            label={submitBtnText}
             theme="deleteBtn"
             size="medium"
             onClickHandler={() => submitHandler && submitHandler()}
@@ -39,7 +47,7 @@ function ConfirmModal({
       modalClassName={confirmModalStyle.modal}
     >
       <div className={confirmModalStyle.modalBody}>
-        <h3 className={confirmModalStyle.heading}>Are You Sure?</h3>
+        {headingText && <h3 className={confirmModalStyle.heading}>{headingText}</h3>}
         {descText && <p className={confirmModalStyle.desc}>{descText}</p>}
       </div>
     </Modal>

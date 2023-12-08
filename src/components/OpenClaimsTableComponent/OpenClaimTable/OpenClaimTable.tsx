@@ -78,7 +78,8 @@ const OpenClaimTable: React.FC = (props) => {
       cell: (info) => {
         if (info.renderValue()) {
           const unixDate = Date.parse(info.renderValue().replace("T", " "));
-          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
+          const formatedDate =
+            convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A") + "dwedewd";
           return formatedDate;
         }
         return null;
@@ -95,16 +96,7 @@ const OpenClaimTable: React.FC = (props) => {
       cell: (status) => {
         return (
           <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary 
-                    ${status.getValue() === "Created" && "badge-info"}
-                    ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                    ${status.getValue() === "Work In Progress" && "badge-warning"}
-                    ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                    `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
+            <span>{status.getValue() as React.ReactNode}</span>
           </div>
         );
       },

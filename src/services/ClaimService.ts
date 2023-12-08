@@ -194,15 +194,67 @@ export const getNotification = async (param: object, isClient: boolean = false) 
 };
 
 export const deleteNotification = async (param: object) => {
-  try {
-    const url = getApiEndPoint("deleteNotification");
-    const http = new HttpService({ isClient: true });
-    const res = await http.delete(url, param);
-    const { error } = res;
-    if (!error) return res;
-    throw error;
-  } catch (err) {
-    console.log("error", err);
-    throw err;
-  }
+  const url = getApiEndPoint("deleteNotification");
+  const http = new HttpService({ isClient: true });
+  const res = await http.delete(url, param);
+  const { error } = res;
+  if (!error) return res;
+  throw error;
+};
+
+export const validateEmail = async (param: object) => {
+  const url = getApiEndPoint("postEmail");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, param);
+  const { data, error } = res;
+  if (data) return { data };
+  throw error;
+};
+
+export const fetchPolicyType = async (id: number) => {
+  const url = getApiEndPoint("getPolicyType") + id;
+  const http = new HttpService({ isClient: true });
+  const res = await http.get(url);
+  const { data, error } = res;
+  console.log("logggg", res);
+  if (data) return { data };
+  throw error;
+};
+
+export const validateClaim = async (param: object) => {
+  const url = getApiEndPoint("detailsClaim");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, param);
+  console.log("logggg", res);
+  return res;
+};
+
+export const fetchState = async (param: object) => {
+  const url = getApiEndPoint("stateOption");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, param);
+  console.log("logggg", res);
+  return res;
+};
+export const fetchLossType = async () => {
+  const url = getApiEndPoint("lossTypeOption");
+  const http = new HttpService({ isClient: true });
+  const res = await http.get(url);
+  console.log("logggg", res);
+  return res;
+};
+
+export const fetchHomeOwnersType = async (stateId: number, policyTypeId: number) => {
+  const url =
+    getApiEndPoint("homeOwnersType") +
+    "?stateId=" +
+    stateId +
+    "&policyTypeId=" +
+    policyTypeId;
+  const http = new HttpService({ isClient: true });
+  const res = await http.get(url);
+  const { data, error } = res;
+  console.log("coverage", res);
+  if (data) return { data };
+  throw error;
 };
