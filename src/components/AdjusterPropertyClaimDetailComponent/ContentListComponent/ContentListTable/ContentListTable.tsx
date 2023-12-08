@@ -16,20 +16,16 @@ import {
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
 } from "@tanstack/react-table";
+
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 
 const ContentListTable: React.FC = (props) => {
-  const {
-    claimContentListData,
-    setTableLoader,
-    totalClaims,
-    tableLoader,
-    claimErrorMsg,
-  }: any = props;
+  const { claimContentListData, totalClaims, tableLoader, claimErrorMsg }: any = props;
 
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
 
   const pageLimit = 20;
+  const fetchSize = 20;
 
   type ContentListData = {
     status: object | null;
@@ -46,7 +42,7 @@ const ContentListTable: React.FC = (props) => {
 
   React.useEffect(() => {
     const defaultData: ContentListData[] = [...claimContentListData];
-    setClaimResult([...defaultData]);
+    setClaimResult([...defaultData.slice(0, fetchSize)]);
   }, [claimContentListData]);
 
   const columnHelper = createColumnHelper<ContentListData>();
@@ -171,77 +167,27 @@ const ContentListTable: React.FC = (props) => {
     }),
   ];
 
-  // const [sorting, setSorting] = React.useState<SortingState>([]);
-
-  // const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-  //   pageIndex: currentPageNumber - 1,
-  //   pageSize: pageLimit,
-  // });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-  // const pagination = React.useMemo(
-  //   () => ({
-  //     pageIndex,
-  //     pageSize,
-  //   }),
-  //   [pageIndex, pageSize]
-  // );
+  const fetchNextPage = () => {
+    const nextPageData = claimContentListData.slice(
+      claimResult.length,
+      claimResult.length + fetchSize
+    );
+    setClaimResult([...claimResult, ...nextPageData]);
 
-  // const handleSorting = async (sortingUpdater: any) => {
-  //   setTableLoader(true);
-
-  //   const newSortVal = sortingUpdater(sorting);
-  //   setSorting(newSortVal);
-
-  //   if (newSortVal.length > 0) {
-  //     const orderBy = newSortVal[0].desc ? "desc" : "asc";
-  //     const sortBy = newSortVal[0].id;
-  //     const result = await fetchClaimList(1, pageLimit, sortBy, orderBy);
-  //     if (result) {
-  //       setTableLoader(false);
-  //     }
-  //   } else if (newSortVal.length === 0 && claimContentListData.length > 0) {
-  //     const result = await fetchClaimList();
-  //     if (result) {
-  //       setTableLoader(false);
-  //     }
-  //   }
-  // };
-  // const handlePagination = async (updaterFunction: any) => {
-  //   setTableLoader(true);
-
-  //   const newPaginationValue = updaterFunction(pagination);
-  //   setPagination(newPaginationValue);
-  //   const pageNumber = newPaginationValue.pageIndex + 1;
-
-  //   if (sorting.length > 0) {
-  //     const orderBy = sorting[0].desc ? "desc" : "asc";
-  //     const sortBy = sorting[0].id;
-  //     const result = await fetchClaimList(pageNumber, pageLimit, sortBy, orderBy);
-  //     if (result) {
-  //       setTableLoader(false);
-  //     }
-  //   } else if (sorting.length === 0 && claimContentListData.length > 0) {
-  //     const result = await fetchClaimList(pageNumber);
-  //     if (result) {
-  //       setTableLoader(false);
-  //     }
-  //   }
-  // };
+    return true;
+  };
 
   const table = useReactTable({
     data: claimResult,
     columns,
     pageCount: Math.ceil(totalClaims / pageLimit),
     state: {
-      // sorting,
-      // pagination,
       columnFilters,
     },
-    // onPaginationChange: handlePagination,
-    // onSortingChange: handleSorting,
+
     getCoreRowModel: getCoreRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
@@ -261,6 +207,9 @@ const ContentListTable: React.FC = (props) => {
         pageLimit={totalClaims > 20 ? pageLimit : null}
         loader={tableLoader}
         tableDataErrorMsg={claimErrorMsg}
+        fetchNextPage={fetchNextPage}
+        totalFetched={claimResult.length}
+        totalDBRowCount={claimContentListData.length}
       />
     </div>
   );
@@ -268,7 +217,6 @@ const ContentListTable: React.FC = (props) => {
 
 const mapStateToProps = ({ claimContentdata }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
- 
 });
 
 export default connect(mapStateToProps, null)(ContentListTable);

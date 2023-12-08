@@ -11,7 +11,6 @@ enum apiEndPoints {
   randomQuestion = "web/get/selected/question/",
   verifySecurityQuestion = "web/verify/security/answer/",
   claimList = "web/open/claims",
-  claimContentList = "web/adjuster/claim/line/items",
   notification = "web/notifications",
   scoreCard = "web/claims/scorecard?statusFlag=",
   deleteNotification = "web/delete/notification",
@@ -19,6 +18,8 @@ enum apiEndPoints {
   invoicelist = "web/get/company/invoicelist",
   urgentClaimUrl = "web/get/all/immediate/claims",
   pendingInvoiceUrl = "web/get/company/pending/invoicelist",
+  claimContentList = "web/adjuster/claim/line/items",
+  serviceRequest = "web/servicerequests",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

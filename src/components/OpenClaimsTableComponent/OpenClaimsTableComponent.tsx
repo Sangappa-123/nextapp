@@ -11,7 +11,7 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 
 function OpenClaimsTableComponent(props: any): React.ReactNode {
   const [loading, setLoading] = useState(true);
-  const [tableLoader, setTableLoader] = React.useState(false);
+  const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setLoading(false);

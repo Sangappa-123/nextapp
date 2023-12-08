@@ -75,22 +75,20 @@ const ServiceRequestTable: React.FC = (props) => {
 
   const pageLimit = 20;
 
-  type ClaimData = {
-    claimNumber: string;
+  type ServiceRequestData = {
+    serviceNumber: string;
+    description: string;
+    vendorDetails: string;
+    assignedDate: Date;
+    targetDate: Date;
     status: string;
-    noOfItems: number;
-    noOfItemsPriced: number;
-    policyHoldersName: string;
-    claimDate: Date;
-    lastActive: string;
-    lastUpdated: string;
   };
   React.useEffect(() => {
-    const defaultData: ClaimData[] = [...serviceData];
+    const defaultData: ServiceRequestData[] = [...serviceData];
     setClaimResult([...defaultData]);
   }, [serviceData]);
 
-  const columnHelper = createColumnHelper<ClaimData>();
+  const columnHelper = createColumnHelper<ServiceRequestData>();
 
   const columns = [
     columnHelper.accessor("serviceNumber", {

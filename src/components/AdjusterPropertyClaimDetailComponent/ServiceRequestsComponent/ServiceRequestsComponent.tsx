@@ -1,10 +1,20 @@
+"use client";
 import React from "react";
 import ServiceRequestTable from "./ServiceRequestTable/ServiceRequestTable";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import ServiceRequestComponentStyle from "./ServiceRequestsComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
+import { connect } from "react-redux";
+import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 
-function ServiceRequestsComponent() {
+function ServiceRequestsComponent(props: any) {
+  const { serviceRequestListRes } = props;
+
+  React.useEffect(() => {
+    const claimServiceRequestData = serviceRequestListRes.result;
+    props.addserviceRequestData({ claimServiceRequestData });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="row">
       <div className={`${ServiceRequestComponentStyle.serviceHeaderContainer} mt-4`}>
@@ -36,4 +46,7 @@ function ServiceRequestsComponent() {
     </div>
   );
 }
-export default ServiceRequestsComponent;
+const mapDispatchToProps = {
+  addserviceRequestData,
+};
+export default connect(null, mapDispatchToProps)(ServiceRequestsComponent);

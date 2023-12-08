@@ -6,14 +6,12 @@ import ContentListComponentStyle from "./ContentListComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
-import { fetchClaimContentList } from "@/services/ClaimContentListService";
 
 function ContentListComponent(props: any) {
-  const {claimContentListRes} = props;
+  const { claimContentListRes } = props;
   const [tableLoader, setTableLoader] = React.useState(false);
 
   React.useEffect(() => {
-    fetchClaimContentList();
     const claimContentData = claimContentListRes.result;
     props.addClaimContentListData({ claimContentData });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -80,13 +78,11 @@ function ContentListComponent(props: any) {
           <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12"></div>
         </div>
       </div>
-      <ContentListTable 
-      setTableLoader={setTableLoader}
-       tableLoader={tableLoader} />
+      <ContentListTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
     </div>
   );
 }
 const mapDispatchToProps = {
   addClaimContentListData,
 };
-export default connect(null,mapDispatchToProps)(ContentListComponent);
+export default connect(null, mapDispatchToProps)(ContentListComponent);
