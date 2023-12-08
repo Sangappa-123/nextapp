@@ -40,8 +40,8 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     currentPageNumber,
     totalinvoice,
     claimErrorMsg,
-    handlePendingInvoicePagination,
     isFetching,
+    handlePendingInvoicePagination,
     handlePendingInvoiceSort,
   } = props;
   const pageLimit = TABLE_LIMIT_20;

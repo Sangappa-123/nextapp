@@ -16,7 +16,10 @@ import CustomReactTable from "@/components/common/CustomReactTable";
 import { RootState } from "@/store/store";
 import { unknownObjectType } from "@/constants/customTypes";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
-import { handleUrgentClaimPagination } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
+import {
+  handleUrgentClaimPagination,
+  handleUrgentClaimSort,
+} from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import UrgentClaimSearchBox from "../UrgentClaimSearchBox";
 
 const pathList = [
@@ -37,10 +40,12 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
     currentPageNumber,
     totalClaims,
     claimErrorMsg,
-    handleUrgentClaimPagination,
     isFetching,
+    handleUrgentClaimPagination,
+    handleUrgentClaimSort,
   } = props;
   const pageLimit = TABLE_LIMIT_20;
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   type ClaimData = {
     claimNumber: string;
@@ -57,13 +62,11 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
   const columnHelper = createColumnHelper<ClaimData>();
   const columns = [
     columnHelper.accessor("claimNumber", {
-      id: "claimNumber",
       header: "Claim #",
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
     columnHelper.accessor("claimStatus", {
-      id: "Claim_Status",
       header: `Status`,
       cell: (status) => {
         return (
@@ -75,38 +78,38 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
       enableSorting: true,
     }),
     columnHelper.accessor("contractedTimes", {
-      id: "contractedTimes",
       header: "Contracted End Time",
       cell: "Contracted Times",
+      enableSorting: false,
     }),
     columnHelper.accessor("noOfItems", {
-      id: "noOfItems",
       header: "# of Items",
       cell: (noOfItems) => noOfItems.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("policyHolderName", {
-      id: "policyHolderName",
       header: "Policyholder's Name",
       cell: (policyHolderName) => policyHolderName.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("createDate", {
-      id: "createDate",
       header: () => "Claim Date",
       cell: (createDate) => createDate.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("elapsedTime", {
       id: "elapsedTime",
       header: "Elapsed Time Days",
       cell: (elapsedTime) => elapsedTime.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("lastNote", {
       id: "lastNote",
       header: "Last Note",
       cell: (elapsedTime) => elapsedTime.getValue()?.message,
+      enableSorting: false,
     }),
   ];
-
-  const [sorting, setSorting] = useState<SortingState>([]);
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: currentPageNumber - 1,
@@ -121,8 +124,18 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
     [pageIndex, pageSize]
   );
 
-  const handleSorting = async () => {
-    console.log("hhhhhhhh", setSorting, setPagination);
+  const resetPage = () => {
+    setPagination({
+      pageIndex: 0,
+      pageSize: pageLimit,
+    });
+  };
+
+  const handleSorting = async (sortingUpdater: any) => {
+    const newSortVal: SortingState = sortingUpdater(sorting);
+    setSorting(newSortVal);
+    resetPage();
+    handleUrgentClaimSort(newSortVal[0]);
   };
 
   const handlePagination = async (updaterFunction: any) => {
@@ -197,7 +210,7 @@ const mapStateToProps = ({
   isFetching: isFetchingUrgentClaim,
 });
 
-const mapDispatchToProps = { handleUrgentClaimPagination };
+const mapDispatchToProps = { handleUrgentClaimPagination, handleUrgentClaimSort };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
