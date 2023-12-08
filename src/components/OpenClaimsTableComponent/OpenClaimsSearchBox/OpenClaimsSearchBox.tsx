@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 
 const OpenClaimsSearchBox: React.FC = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
-  const { setTableLoader, searchKeyword, addSearchKeyWord }: any = props;
+  const { setTableLoader, searchKeyword, addSearchKeyWord }: React.SetStateAction<any> =
+    props;
 
   const handleSearch = async (e: any) => {
     setSearchValue(e.target.value);

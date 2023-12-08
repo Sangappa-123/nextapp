@@ -71,18 +71,21 @@ const ServiceRequestTable: React.FC = (props) => {
       },
     ];
   }, []);
-  const [claimResult, setClaimResult] = React.useState(serviceData);
+  const [claimResult, setClaimResult] = React.useState<any>(serviceData);
 
   const pageLimit = 20;
 
-  type ServiceRequestData = {
-    serviceNumber: string;
-    description: string;
-    vendorDetails: string;
-    assignedDate: Date;
-    targetDate: Date;
-    status: string;
-  };
+  interface ServiceRequestData {
+    [key: string | number]: any;
+  }
+  // type ServiceRequestData = {
+  //   serviceNumber: string;
+  //   description: string;
+  //   vendorDetails: string;
+  //   assignedDate: Date;
+  //   targetDate: Date;
+  //   status: string;
+  // };
   React.useEffect(() => {
     const defaultData: ServiceRequestData[] = [...serviceData];
     setClaimResult([...defaultData]);
@@ -141,7 +144,7 @@ const ServiceRequestTable: React.FC = (props) => {
       enableSorting: true,
       size: 100,
     }),
-    columnHelper.accessor(null, {
+    columnHelper.accessor("", {
       id: "Action",
       header: "Action",
 

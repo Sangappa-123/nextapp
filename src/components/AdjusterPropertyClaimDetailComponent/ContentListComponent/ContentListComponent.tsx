@@ -9,7 +9,7 @@ import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice"
 
 function ContentListComponent(props: any) {
   const { claimContentListRes } = props;
-  const [tableLoader, setTableLoader] = React.useState(false);
+  const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes.result;

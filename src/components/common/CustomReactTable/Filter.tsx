@@ -15,7 +15,7 @@ export default function Filter({
   showFilterBLock: React.SetStateAction<string | null>;
   setShowFilterBLock: React.SetStateAction<any>;
 }) {
-  const [currentValue, setCurrentValue] = React.useState([]);
+  const [currentValue, setCurrentValue] = React.useState<React.SetStateAction<any>>([]);
 
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id);
 
@@ -88,7 +88,7 @@ export default function Filter({
     console.log("showFilterBLock", showFilterBLock);
     setShowFilterBLock(columnId);
   };
-  const handleChecked = (e: any) => {
+  const handleChecked = (e: { target: { value: React.SetStateAction<any> } }) => {
     console.log("value", e.target.value);
     setCurrentValue([...currentValue, e.target.value]);
   };

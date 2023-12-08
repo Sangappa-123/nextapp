@@ -27,19 +27,22 @@ const ContentListTable: React.FC = (props) => {
   const pageLimit = 20;
   const fetchSize = 20;
 
-  type ContentListData = {
-    status: object | null;
-    category: object | null;
-    description: string | null;
-    quantity: number | null;
-    totalStatedAmount: number | null;
-    itemTag: string | null;
-    vendorName: string | null;
-    adjusterDescription: string | null;
-    rcvTotal: number | null;
-    cashPayoutExposure: number | null;
-  };
+  // type ContentListData = {
+  //   status: object | null;
+  //   category: object | null;
+  //   description: string | null;
+  //   quantity: number | null;
+  //   totalStatedAmount: number | null;
+  //   itemTag: string | null;
+  //   vendorName: string | null;
+  //   adjusterDescription: string | null;
+  //   rcvTotal: number | null;
+  //   cashPayoutExposure: number | null;
+  // };
 
+  interface ContentListData {
+    [key: string | number]: any;
+  }
   React.useEffect(() => {
     const defaultData: ContentListData[] = [...claimContentListData];
     setClaimResult([...defaultData.slice(0, fetchSize)]);

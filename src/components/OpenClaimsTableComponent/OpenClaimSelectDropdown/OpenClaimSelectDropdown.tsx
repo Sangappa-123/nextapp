@@ -9,7 +9,7 @@ import { addFilterValues } from "@/reducers/ClaimData/ClaimSlice";
 
 const OpenClaimSelectDropdown: React.FC = (props) => {
   const dispatch = useAppDispatch();
-  const { setTableLoader }: any = props;
+  const { setTableLoader }: React.SetStateAction<any> = props;
   const options = [
     { value: 0, label: "All" },
     { value: 3, label: "3rd Party Vendor" },

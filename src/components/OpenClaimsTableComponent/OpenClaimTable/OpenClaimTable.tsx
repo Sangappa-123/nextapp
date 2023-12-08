@@ -25,22 +25,26 @@ const OpenClaimTable: React.FC = (props) => {
     totalClaims,
     tableLoader,
     claimErrorMsg,
-  }: any = props;
+  }: React.SetStateAction<any> = props;
   const [claimResult, setClaimResult] = React.useState(claimListData);
   const router = useRouter();
 
   const pageLimit = 20;
 
-  type ClaimData = {
-    claimNumber: string;
-    status: string;
-    noOfItems: number;
-    noOfItemsPriced: number;
-    policyHoldersName: string;
-    claimDate: Date;
-    lastActive: string;
-    lastUpdated: string;
-  };
+  // type ClaimData = {
+  //   claimNumber: string;
+  //   status: string;
+  //   noOfItems: number;
+  //   noOfItemsPriced: number;
+  //   policyHoldersName: string;
+  //   claimDate: Date;
+  //   lastActive: string;
+  //   lastUpdated: string;
+  // };
+
+  interface ClaimData {
+    [key: string | number]: any;
+  }
   React.useEffect(() => {
     const defaultData: ClaimData[] = [...claimListData];
     setClaimResult([...defaultData]);
@@ -77,7 +81,8 @@ const OpenClaimTable: React.FC = (props) => {
       header: "Claim Date",
       cell: (info) => {
         if (info.renderValue()) {
-          const unixDate = Date.parse(info.renderValue().replace("T", " "));
+          const dateVal = info.renderValue().replace("T", " ");
+          const unixDate = Date.parse(dateVal);
           const formatedDate =
             convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A") + "dwedewd";
           return formatedDate;
