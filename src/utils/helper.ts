@@ -42,8 +42,7 @@ export const convertToCurrentTimezone = (
   unixDate: number,
   dateFormat = "MM/DD/YYYY h:mm A"
 ) => {
-  const timeZone = dayjs.tz.guess();
-  return dayjs(unixDate).utc("z").local().tz(timeZone).format(dateFormat);
+  return dayjs(unixDate).utc(true).format(dateFormat);
 };
 
 export const getRoleBasedUrlList = (role: string) => {
