@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { toast } from "react-toastify";
+import { ToastPosition, TypeOptions } from "react-toastify";
 
-export interface message {
+export interface notificationType {
   message: string;
   id: string;
-  status?: string;
-  position?: string;
+  status?: TypeOptions;
+  position?: ToastPosition;
 }
-type NotifyType = message[];
+export type NotifyType = notificationType[];
 
 const initVal: NotifyType = [];
 

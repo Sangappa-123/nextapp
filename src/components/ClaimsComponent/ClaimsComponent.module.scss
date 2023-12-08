@@ -1,15 +1,14 @@
 @use "@/scss/colors.scss" as *;
 
 .cardsStylAdjustCalims {
-  // min-width: 200px;
   min-height: 100px;
   border-radius: 6px;
   margin-top: 10px;
-  background-color: #ffb27f54;
+  cursor: pointer;
 
-  // &:hover {
-  //   background-color: #f1ecec;
-  // }
+  &:hover {
+    background-color: $mystic;
+  }
   * {
     font-weight: normal;
   }
