@@ -28,13 +28,12 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
   const [contentLoader, setContentLoader] = React.useState(false);
+  const [showScroller, setShowScroller] = React.useState(false);
 
-  //called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
   const fetchMoreOnBottomReached = React.useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
-        //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
 
         const bottom = scrollHeight - scrollTop === clientHeight;
         if (bottom && scrollTop !== 0 && totalFetched < totalDBRowCount) {
@@ -44,15 +43,17 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
           if (result) {
             setContentLoader(false);
           }
-          console.log("full down", scrollHeight, scrollTop, clientHeight);
         }
       }
     },
     [fetchNextPage, totalFetched, totalDBRowCount]
   );
 
-  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   React.useEffect(() => {
+    const { scrollHeight }: any = tableContainerRef.current;
+    if (scrollHeight >= 600 && fetchNextPage) {
+      setShowScroller(true);
+    }
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached]);
 
@@ -61,7 +62,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       <div
         className={clsx({
           [CustomReactTableStyles.reactTable]: true,
-          [CustomReactTableStyles.reactTableScroll]: fetchNextPage,
+          [CustomReactTableStyles.reactTableScroll]: showScroller,
         })}
         {...(fetchNextPage
           ? {
