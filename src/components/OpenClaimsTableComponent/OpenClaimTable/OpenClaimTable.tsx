@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import OpenClaimTableStyle from "./OpenClaimTable.module.scss";
-import { connect } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
 import { fetchClaimList } from "@/services/ClaimService";
 import { convertToCurrentTimezone } from "@/utils/helper";
 import {
@@ -16,7 +16,10 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { useRouter } from "next/navigation";
 import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
 
-const OpenClaimTable: React.FC = (props) => {
+interface typeProps {
+  [key: string | number]: any;
+}
+const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
   const {
     claimListData,
     currentPageNumber,
@@ -25,7 +28,7 @@ const OpenClaimTable: React.FC = (props) => {
     totalClaims,
     tableLoader,
     claimErrorMsg,
-  }: React.SetStateAction<any> = props;
+  } = props;
   const [claimResult, setClaimResult] = React.useState(claimListData);
   const router = useRouter();
 
@@ -233,4 +236,7 @@ const mapStateToProps = ({ claimdata }: any) => ({
 const mapDispatchToProps = {
   addSelectedClaimDetails,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OpenClaimTable);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(OpenClaimTable);

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import ContentListTableStyle from "./ContentListTable.module.scss";
-import { connect } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
 // import { fetchClaimList } from "@/services/ClaimService";
 import {
   createColumnHelper,
@@ -19,8 +19,11 @@ import {
 
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 
-const ContentListTable: React.FC = (props) => {
-  const { claimContentListData, totalClaims, tableLoader, claimErrorMsg }: any = props;
+interface typeProps {
+  [key: string | number]: any;
+}
+const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
+  const { claimContentListData, totalClaims, tableLoader, claimErrorMsg } = props;
 
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
 
@@ -221,5 +224,6 @@ const ContentListTable: React.FC = (props) => {
 const mapStateToProps = ({ claimContentdata }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
 });
-
-export default connect(mapStateToProps, null)(ContentListTable);
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ContentListTable);
