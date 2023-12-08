@@ -5,12 +5,16 @@ import pendingSearchStyle from "./pendingInvoiceSearchBox.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { handlePendingInvoiceSearch } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
 
-const PendingInvoiceSearchBox: React.FC<connectorType> = (props) => {
-  const { handlePendingInvoiceSearch } = props;
-  const [searchValue, setSearchValue] = React.useState("");
+type propType = {
+  resetPage: () => void;
+};
 
+const PendingInvoiceSearchBox: React.FC<connectorType & propType> = (props) => {
+  const { handlePendingInvoiceSearch, resetPage } = props;
+  const [searchValue, setSearchValue] = React.useState("");
   const fetchSearchedData = async (searchKeyword: string) => {
     handlePendingInvoiceSearch({ searchKeyword });
+    resetPage();
   };
 
   const handleSearch = async (e: React.FocusEvent<HTMLInputElement>) => {
