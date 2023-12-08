@@ -9,17 +9,14 @@
 
 .newClaimCard {
   @include scoreWidthMonth;
-  background-color: #fcff7fd1;
 }
 
 .closedClaimCard {
   @include scoreWidthMonth;
-  background-color: #95fddac7;
 }
 
 .avgClosingTimeCard {
   @include scoreWidthMonth;
-  background-color: #d1ff7fc7;
 }
 .claimTypeCount {
   font-size: 16px;

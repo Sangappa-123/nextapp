@@ -68,16 +68,7 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
       cell: (status) => {
         return (
           <div style={{ width: "80px" }}>
-            <span
-              className={`badge badge-secondary
-                      ${status.getValue() === "Created" && "badge-info"}
-                      ${status.getValue() === "3rd Party Vendor" && "badge-primaryCustom"}
-                      ${status.getValue() === "Work In Progress" && "badge-warning"}
-                      ${status.getValue() === "Supervisor Approval" && "badge-success"}
-                      `}
-            >
-              {status.getValue() as React.ReactNode}
-            </span>
+            <span>{status.getValue() as React.ReactNode}</span>
           </div>
         );
       },
