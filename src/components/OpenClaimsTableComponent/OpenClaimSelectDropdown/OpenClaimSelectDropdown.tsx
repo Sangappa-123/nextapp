@@ -7,7 +7,10 @@ import { fetchClaimList } from "@/services/ClaimService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addFilterValues } from "@/reducers/ClaimData/ClaimSlice";
 
-const OpenClaimSelectDropdown: React.FC = (props) => {
+interface typeProps {
+  setTableLoader: React.SetStateAction<any>;
+}
+const OpenClaimSelectDropdown: React.FC<typeProps> = (props) => {
   const dispatch = useAppDispatch();
   const { setTableLoader }: React.SetStateAction<any> = props;
   const options = [

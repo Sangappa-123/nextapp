@@ -4,9 +4,12 @@ import { RiSearch2Line } from "react-icons/ri";
 import OpenClaimsSearchStyle from "./OpenClaimsSearchBox.module.scss";
 import { fetchClaimList } from "@/services/ClaimService";
 import { addSearchKeyWord } from "@/reducers/ClaimData/ClaimSlice";
-import { connect } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
 
-const OpenClaimsSearchBox: React.FC = (props) => {
+interface typeProps {
+  setTableLoader: React.SetStateAction<any>;
+}
+const OpenClaimsSearchBox: React.FC<connectorType & typeProps> = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
   const { setTableLoader, searchKeyword, addSearchKeyWord }: React.SetStateAction<any> =
     props;
@@ -58,4 +61,7 @@ const mapStateToProps = ({ claimdata }: any) => ({
 const mapDispatchToProps = {
   addSearchKeyWord,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OpenClaimsSearchBox);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(OpenClaimsSearchBox);
