@@ -84,7 +84,6 @@ function NewclaimsComponent() {
     setError,
     clearErrors,
     getValues,
-    setField,
   } = useCustomForm(schema);
   const { errors } = formState;
   console.log("logss", errors);
@@ -95,6 +94,7 @@ function NewclaimsComponent() {
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
     console.log("updateHomeOwnerType", data);
+    console.log("homeOwnerType", homeOwnerType);
   };
 
   const formSubmit = async (data: any) => {
@@ -189,7 +189,6 @@ function NewclaimsComponent() {
                 updateHomeOwnerType={updateHomeOwnerType}
                 resetField={resetField}
                 getValues={getValues}
-                setField={setField}
               />
             </div>
             <div>
@@ -206,6 +205,7 @@ function NewclaimsComponent() {
                 clearErrors={clearErrors}
                 homeOwnerTypeOptions={homeOwnerType}
                 getValues={getValues}
+                setValue={setValue}
               />
             </div>
             <div
