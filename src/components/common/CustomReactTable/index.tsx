@@ -22,6 +22,8 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
+    filterApiCall = null,
+    customFilterValues = null,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -55,7 +57,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       setShowScroller(true);
     }
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached]);
+  }, [fetchMoreOnBottomReached, fetchNextPage]);
 
   return (
     <>
@@ -67,7 +69,6 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
         {...(fetchNextPage
           ? {
               onScroll: (e) => {
-                console.log("onScroll");
                 fetchMoreOnBottomReached(e.target as HTMLDivElement);
               },
             }
@@ -91,33 +92,34 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <span>
-                                {" "}
-                                <MdExpandLess />
-                              </span>
-                            ),
-                            desc: (
-                              <span>
-                                {" "}
-                                <MdExpandMore />
-                              </span>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? null}
-
+                        <div className="d-flex flex-direction-row">
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : "",
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <span>
+                                  {" "}
+                                  <MdExpandLess />
+                                </span>
+                              ),
+                              desc: (
+                                <span>
+                                  {" "}
+                                  <MdExpandMore />
+                                </span>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                           {header.column.getCanFilter() ? (
                             <div>
                               <Filter
@@ -125,6 +127,9 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 table={table}
                                 showFilterBLock={showFilterBLock}
                                 setShowFilterBLock={setShowFilterBLock}
+                                filterApiCall={filterApiCall}
+                                defaultAllChecked={true}
+                                customFilterValues={customFilterValues}
                               />
                             </div>
                           ) : null}

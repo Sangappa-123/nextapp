@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import OpenClaimsText from "./OpenClaimsText";
 import NewClaimButton from "./NewClaimButton";
-import OpenClaimSelectDropdown from "./OpenClaimSelectDropdown";
 import OpenClaimsSearchBox from "./OpenClaimsSearchBox/OpenClaimsSearchBox";
 import OpenClaimsComponentStyleTable from "./OpenClaimsTableComponent.module.scss";
 import OpenClaimTable from "./OpenClaimTable/index";
@@ -29,12 +28,10 @@ function OpenClaimsTableComponent(props: any): React.ReactNode {
       </div>
       <div className={OpenClaimsComponentStyleTable.claimContainer}>
         <div className={`row ${OpenClaimsComponentStyleTable.claimContentContainer}`}>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 d-flex">
+          <div className="col-lg-8 col-md-6 col-sm-12 col-12 d-flex mb-2">
             <NewClaimButton />
           </div>
-          <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt-2 mb-2">
-            <OpenClaimSelectDropdown setTableLoader={setTableLoader} />
-          </div>
+
           <div className="col-lg-4 col-md-6 col-sm-12 col-12">
             <OpenClaimsSearchBox setTableLoader={setTableLoader} />
           </div>

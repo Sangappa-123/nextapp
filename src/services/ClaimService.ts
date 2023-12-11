@@ -54,7 +54,6 @@ export const fetchClaimList = async (
   };
 
   const claimListRes: any = await claimList(payload, token);
-  console.log("claimListRes", claimListRes);
 
   if (claimListRes.result.status === 200) {
     const claimData = claimListRes.result;
