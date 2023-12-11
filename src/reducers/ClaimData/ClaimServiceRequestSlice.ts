@@ -15,7 +15,7 @@ const ClaimServiceRequestSlice = createSlice({
 
       let newArr = {};
       const claimRes: any = [];
-      if (claimServiceRequestData.data) {
+      if (claimServiceRequestData?.data) {
         claimServiceRequestData.data.map((item: any) => {
           newArr = {
             description: item.description,

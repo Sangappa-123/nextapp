@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import Cards from "../common/Cards";
 import ClaimsStyle from "./ClaimsComponent.module.scss";
 import ClaimsAllViewButton from "./ClaimsAllViewButton";
+import { useRouter } from "next/navigation";
 
 type claimType = {
   claim: {
@@ -13,8 +16,9 @@ type claimType = {
 };
 
 const ClaimsComponent: React.FC<claimType> = (props) => {
+  const router = useRouter();
   return (
-    <div>
+    <div onClick={() => router.push("/adjuster-property-claim-details")}>
       <Cards className={ClaimsStyle.cardsStylAdjustCalims}>
         <div className="row mt-2">
           <div className="col-lg-6 col-md-12 col-sm-12">

@@ -19,7 +19,7 @@ function ServiceRequestsComponent(props: any) {
     <div className="row">
       <div className={`${ServiceRequestComponentStyle.serviceHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title={`Service Requests`}
+          title="Service Requests"
           customHeadingClassname={ServiceRequestComponentStyle.serviceHeader}
         />
       </div>

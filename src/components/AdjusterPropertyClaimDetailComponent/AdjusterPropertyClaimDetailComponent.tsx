@@ -1,11 +1,25 @@
-import ContentListComponent from "./ContentListComponent/ContentListComponent";
-import ServiceRequestsComponent from "./ServiceRequestsComponent/ServiceRequestsComponent";
 import { cookies } from "next/headers";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
 import CustomLoader from "../common/CustomLoader/index";
+import GenericBreadcrumb from "../common/GenericBreadcrumb";
+import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
+import GenericComponentHeading from "../common/GenericComponentHeading";
+import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
 
 async function AdjusterPropertyClaimDetailComponent() {
+  const pathList = [
+    {
+      name: "Home",
+      path: "/adjuster-dashboard",
+      // active: true,
+    },
+    {
+      name: "055CLM5122023Avi",
+      path: "/adjuster-property-claim-details",
+      active: true,
+    },
+  ];
   const cookieStore = cookies();
   let token = "";
   let claimId = "";
@@ -27,11 +41,19 @@ async function AdjusterPropertyClaimDetailComponent() {
   ) {
     return (
       <div className="row">
-        <div className="col-lg-12 col-md-12 col-12">
-          <ServiceRequestsComponent serviceRequestListRes={serviceRequestListRes} />
+        <GenericBreadcrumb dataList={pathList} />
+        <div className={claimDetailStyle.headingContainer}>
+          <GenericComponentHeading
+            customHeadingClassname={claimDetailStyle.headingContainer}
+            customTitleClassname={claimDetailStyle.headingTxt}
+            title="Claim# 055CLM5122023Avi - Kumar, Avinash"
+          />
         </div>
-        <div className="col-lg-12 col-md-12 col-12">
-          <ContentListComponent claimContentListRes={claimContentListRes} />
+        <div>
+          <ClaimDetailTabsComponent
+            serviceRequestListRes={serviceRequestListRes}
+            claimContentListRes={claimContentListRes}
+          />
         </div>
       </div>
     );
