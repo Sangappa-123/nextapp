@@ -11,10 +11,17 @@ import {
   SortingState,
   useReactTable,
   PaginationState,
+  getFilteredRowModel,
+  ColumnFiltersState,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { useRouter } from "next/navigation";
-import { addSelectedClaimDetails } from "@/reducers/ClaimData/ClaimSlice";
+import {
+  addSelectedClaimDetails,
+  addFilterValues,
+} from "@/reducers/ClaimData/ClaimSlice";
 
 interface typeProps {
   [key: string | number]: any;
@@ -28,6 +35,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     totalClaims,
     tableLoader,
     claimErrorMsg,
+    addFilterValues,
   } = props;
   const [claimResult, setClaimResult] = React.useState(claimListData);
   const router = useRouter();
@@ -61,24 +69,15 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       header: () => `Claim #`,
       cell: (info) => info.getValue(),
       enableSorting: true,
-    }),
-
-    columnHelper.accessor("noOfItems", {
-      id: "itemNumber",
-      header: () => `# of Items`,
-      cell: (info) => info.renderValue(),
-      enableSorting: true,
-    }),
-    columnHelper.accessor("noOfItemsPriced", {
-      header: () => `# of Items Priced`,
-      cell: (info) => info.renderValue(),
-      enableSorting: false,
+      enableColumnFilter: false,
     }),
     columnHelper.accessor("policyHoldersName", {
       id: "Insured_Name",
       header: () => <span>{`PolicyHolder's Name`}</span>,
       enableSorting: true,
+      enableColumnFilter: false,
     }),
+
     columnHelper.accessor("claimDate", {
       id: "Create_Date",
       header: "Claim Date",
@@ -92,11 +91,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
         return null;
       },
       enableSorting: true,
-    }),
-    columnHelper.accessor("lastActive", {
-      header: "Last Active",
-      enableSorting: false,
-      size: 450,
+      enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.status, {
       id: "Status",
@@ -111,6 +106,28 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       enableSorting: true,
       size: 100,
     }),
+    columnHelper.accessor("noOfItems", {
+      id: "itemNumber",
+      header: () => `# of Items`,
+      cell: (info) => info.renderValue(),
+      enableSorting: true,
+      enableColumnFilter: false,
+    }),
+
+    columnHelper.accessor("noOfItemsPriced", {
+      header: () => `# of Items Priced`,
+      cell: (info) => info.renderValue(),
+      enableSorting: false,
+      enableColumnFilter: false,
+    }),
+
+    columnHelper.accessor("lastActive", {
+      header: "Last Active",
+      enableSorting: false,
+      size: 450,
+      enableColumnFilter: false,
+    }),
+
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
@@ -123,6 +140,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
         return null;
       },
       enableSorting: true,
+      enableColumnFilter: false,
     }),
   ];
 
@@ -132,6 +150,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     pageIndex: currentPageNumber - 1,
     pageSize: pageLimit,
   });
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const pagination = React.useMemo(
     () => ({
@@ -191,6 +210,44 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     router.push(`/adjuster-property-claim-details?claimId=${rowData?.claimId}`);
   };
 
+  const customFilterValues = [
+    {
+      name: "3rd Party Vendor",
+      value: 3,
+    },
+    {
+      name: "Created",
+      value: 1,
+    },
+    {
+      name: "Supervisor Approval",
+      value: 5,
+    },
+    {
+      name: "Work In Progress",
+      value: 2,
+    },
+  ];
+  const filterApiCall = async (values: any) => {
+    setTableLoader(true);
+
+    let selectedValues: any = [];
+    if (values.length > 0) {
+      customFilterValues.map((item) => {
+        if (values.includes(item.name)) {
+          selectedValues.push(item.value);
+        }
+      });
+    } else {
+      selectedValues = [];
+    }
+
+    addFilterValues({ statusIds: selectedValues });
+    const result = await fetchClaimList(1, 20, "createDate", "desc", "", selectedValues);
+    if (result) {
+      setTableLoader(false);
+    }
+  };
   const table = useReactTable({
     data: claimResult,
     columns,
@@ -198,15 +255,19 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     state: {
       sorting,
       pagination,
+      columnFilters,
     },
     onPaginationChange: handlePagination,
     onSortingChange: handleSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
-    enableColumnFilters: false,
     enableSorting: true,
   });
 
@@ -220,6 +281,8 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
         loader={tableLoader}
         tableDataErrorMsg={claimErrorMsg}
         handleRowClick={handleRowClick}
+        filterApiCall={filterApiCall}
+        customFilterValues={customFilterValues}
       />
     </div>
   );
@@ -234,6 +297,7 @@ const mapStateToProps = ({ claimdata }: any) => ({
 });
 const mapDispatchToProps = {
   addSelectedClaimDetails,
+  addFilterValues,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

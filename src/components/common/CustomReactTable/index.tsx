@@ -22,19 +22,20 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
+    filterApiCall = null,
+    customFilterValues = null,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
   const [contentLoader, setContentLoader] = React.useState(false);
+  const [showScroller, setShowScroller] = React.useState(false);
 
-  //called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
   const fetchMoreOnBottomReached = React.useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
-        //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
 
         const bottom = scrollHeight - scrollTop === clientHeight;
         if (bottom && scrollTop !== 0 && totalFetched < totalDBRowCount) {
@@ -44,29 +45,30 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
           if (result) {
             setContentLoader(false);
           }
-          console.log("full down", scrollHeight, scrollTop, clientHeight);
         }
       }
     },
     [fetchNextPage, totalFetched, totalDBRowCount]
   );
 
-  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   React.useEffect(() => {
+    const { scrollHeight }: any = tableContainerRef.current;
+    if (scrollHeight >= 600 && fetchNextPage) {
+      setShowScroller(true);
+    }
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached]);
+  }, [fetchMoreOnBottomReached, fetchNextPage]);
 
   return (
     <>
       <div
         className={clsx({
           [CustomReactTableStyles.reactTable]: true,
-          [CustomReactTableStyles.reactTableScroll]: fetchNextPage,
+          [CustomReactTableStyles.reactTableScroll]: showScroller,
         })}
         {...(fetchNextPage
           ? {
               onScroll: (e) => {
-                console.log("onScroll");
                 fetchMoreOnBottomReached(e.target as HTMLDivElement);
               },
             }
@@ -90,33 +92,34 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <span>
-                                {" "}
-                                <MdExpandLess />
-                              </span>
-                            ),
-                            desc: (
-                              <span>
-                                {" "}
-                                <MdExpandMore />
-                              </span>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? null}
-
+                        <div className="d-flex flex-direction-row">
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : "",
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <span>
+                                  {" "}
+                                  <MdExpandLess />
+                                </span>
+                              ),
+                              desc: (
+                                <span>
+                                  {" "}
+                                  <MdExpandMore />
+                                </span>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                           {header.column.getCanFilter() ? (
                             <div>
                               <Filter
@@ -124,6 +127,9 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 table={table}
                                 showFilterBLock={showFilterBLock}
                                 setShowFilterBLock={setShowFilterBLock}
+                                filterApiCall={filterApiCall}
+                                defaultAllChecked={true}
+                                customFilterValues={customFilterValues}
                               />
                             </div>
                           ) : null}

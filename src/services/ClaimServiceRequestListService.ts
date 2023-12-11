@@ -36,7 +36,6 @@ export const fetchClaimContentList = async () => {
   };
 
   const serviceRequestRes: any = await serviceRequestList(payload, token);
-  console.log("serviceRequestRes", serviceRequestRes);
 
   if (serviceRequestRes.result.status === 200) {
     const claimserviceRequestData = serviceRequestRes.result;

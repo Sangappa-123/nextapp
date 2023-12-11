@@ -24,7 +24,6 @@ export const claimContentList = async (payload: any, token: any): Promise<object
 };
 
 export const fetchClaimContentList = async () => {
- 
   const claimId = await getClientCookie("claimId");
 
   const token = await getClientCookie("accessToken");
@@ -34,7 +33,6 @@ export const fetchClaimContentList = async () => {
   };
 
   const claimcontentListRes: any = await claimContentList(payload, token);
-  console.log("claimcontentListRes", claimcontentListRes);
 
   if (claimcontentListRes.result.status === 200) {
     const claimContentData = claimcontentListRes.result;
