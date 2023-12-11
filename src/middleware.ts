@@ -58,7 +58,15 @@ export default function middleware(req: NextRequest) {
     if (accessToken && userRole?.value) {
       const urlList = getRoleBasedUrlList(userRole?.value);
       if (urlList?.Screens) {
-        const isUrlContain = urlList?.Screens?.some((screen) => screen.URL === pathname);
+        const isUrlContain = urlList?.Screens?.some((screen) => {
+          if (screen.URL.includes("{ID}")) {
+            const screenUrl = screen.URL.split("/")[1];
+            const pathUrl = pathname.split("/")[1];
+            return screenUrl === pathUrl;
+          } else {
+            return screen.URL === pathname;
+          }
+        });
         if (!isUrlContain) {
           url.pathname = "/login";
           const redirect = NextResponse.redirect(url);
