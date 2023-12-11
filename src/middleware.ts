@@ -29,7 +29,7 @@ export default function middleware(req: NextRequest) {
     "/forgot-password",
     "/reset-password",
     "/security",
-    "/security-questions",
+    "/security-question",
   ];
 
   const tempLocale = pathname.trim().split("/")[1];
