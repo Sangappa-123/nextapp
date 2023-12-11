@@ -86,8 +86,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
         if (info.renderValue()) {
           const dateVal = info.renderValue().replace("T", " ");
           const unixDate = Date.parse(dateVal);
-          const formatedDate =
-            convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A") + "dwedewd";
+          const formatedDate = convertToCurrentTimezone(unixDate, "MM/DD/YYYY h:mm A");
           return formatedDate;
         }
         return null;
