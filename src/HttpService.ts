@@ -5,17 +5,21 @@ class HttpService {
   accessToken: string | undefined | null;
   isClient: boolean;
   isPublic: boolean;
+  isFormData: boolean;
   header: unknownObjectType;
-  constructor(obj?: { isPublic?: boolean; isClient?: boolean }) {
+  constructor(obj?: { isPublic?: boolean; isClient?: boolean; isFormData?: boolean }) {
     this.accessToken = undefined;
     this.isClient = obj?.isClient ?? false;
     this.isPublic = obj?.isPublic ?? false;
+    this.isFormData = obj?.isFormData ?? false;
     this.header = {
-      "Content-Type": "application/json",
       Accept: "application/json",
       "X-originator": process.env.NEXT_PUBLIC_XORIGINATOR,
       "Time-Zone": Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
+    if (!this.isFormData) {
+      this.header["Content-Type"] = "application/json";
+    }
     //  this.validateToken();
   }
 
@@ -31,18 +35,16 @@ class HttpService {
     }
   }
 
-  async post(
-    url: string,
-    payload: unknown,
-    headers?: object
-  ): Promise<unknownObjectType> {
+  async post(url: string, payload: any, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
+        const bodyData = this.isFormData ? payload : JSON.stringify(payload);
         try {
           fetch(url, {
             method: "POST",
             headers: { ...this.header, ...headers },
-            body: JSON.stringify(payload),
+            // body: JSON.stringify(payload),
+            body: bodyData,
           })
             .then((response) => response.json())
             .then((result) => {
