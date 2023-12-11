@@ -26,6 +26,7 @@ enum apiEndPoints {
   stateOption = "web/states",
   lossTypeOption = "web/claim/loss/types",
   homeOwnersType = "web/claim/get/category/coverage",
+  excelcsvuploaddata = "web/read/postloss/items",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

@@ -19,7 +19,13 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
         </div>
         <div className="row justify-content-end mt-2">
           <div className="col-auto">
-            <button className={AddStyle.cancelButton}>Cancel</button>
+            <GenericButton
+              label="Cancel"
+              theme="lightBlue"
+              size="small"
+              type="submit"
+              btnClassname={AddStyle.newClaimBtn}
+            />
           </div>
           <div className="col-auto">
             <GenericButton

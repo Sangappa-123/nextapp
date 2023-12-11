@@ -233,6 +233,9 @@
           {
             URL: "/adjuster-dashboard/pending-vendor-invoices",
           },
+          {
+            URL: "/uploadItemsFromCSV",
+          },
         ],
       },
       {
