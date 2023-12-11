@@ -69,11 +69,6 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       cell: (info) => info.renderValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor("noOfItemsPriced", {
-      header: () => `# of Items Priced`,
-      cell: (info) => info.renderValue(),
-      enableSorting: false,
-    }),
     columnHelper.accessor("policyHoldersName", {
       id: "Insured_Name",
       header: () => <span>{`PolicyHolder's Name`}</span>,
@@ -94,11 +89,6 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       },
       enableSorting: true,
     }),
-    columnHelper.accessor("lastActive", {
-      header: "Last Active",
-      enableSorting: false,
-      size: 450,
-    }),
     columnHelper.accessor((row) => row.status, {
       id: "Status",
       cell: (status) => {
@@ -112,6 +102,18 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       enableSorting: true,
       size: 100,
     }),
+    columnHelper.accessor("noOfItemsPriced", {
+      header: () => `# of Items Priced`,
+      cell: (info) => info.renderValue(),
+      enableSorting: false,
+    }),
+   
+    columnHelper.accessor("lastActive", {
+      header: "Last Active",
+      enableSorting: false,
+      size: 450,
+    }),
+    
     columnHelper.accessor("lastUpdated", {
       id: "Last_Update_Date",
       header: "Last Updated",
@@ -207,7 +209,6 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
-    enableColumnFilters: false,
     enableSorting: true,
   });
 
