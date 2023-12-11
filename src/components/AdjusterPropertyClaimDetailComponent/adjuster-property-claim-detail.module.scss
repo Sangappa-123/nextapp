@@ -1,0 +1,11 @@
+@use "@/scss/colors.scss" as *;
+
+.headingContainer {
+  padding: 8px 0 5px 5px;
+  font-weight: 400;
+}
+.headingTxt {
+  color: $doveGray;
+  padding: 1px;
+  font-size: 18px;
+}

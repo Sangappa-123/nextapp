@@ -1,0 +1,22 @@
+@use "@/scss/colors.scss" as *;
+.snapShotcardContainer {
+  min-height: 350px;
+  margin-top: 10px;
+  .contentCardsContainer {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+
+    .snapShotContentCard {
+      border-top: 3px solid $lightBlue2;
+
+      .cardItemContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+  }
+}
