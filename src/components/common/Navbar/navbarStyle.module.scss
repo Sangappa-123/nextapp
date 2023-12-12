@@ -7,7 +7,9 @@
   display: flex;
   flex-direction: row;
   background-color: #337ab7;
-
+  position: sticky;
+  top: 0;
+  z-index: 9999;
   .navItems {
     position: relative;
     display: flex;

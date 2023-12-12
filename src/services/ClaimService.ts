@@ -257,3 +257,10 @@ export const fetchHomeOwnersType = async (stateId: number, policyTypeId: number)
   if (data) return { data };
   throw error;
 };
+
+export const fetchExcelCsvTableData = async (payload: any) => {
+  const url = getApiEndPoint("excelcsvuploaddata");
+  const http = new HttpService({ isClient: true, isFormData: true });
+  const res = await http.post(url, payload);
+  return res;
+};

@@ -1,7 +1,10 @@
 import React from "react";
 import GenericButton from "@/components/common/GenericButton";
+import { useRouter } from "next/navigation";
 
 const LoadFileAddItemButton: React.FC = () => {
+  const router = useRouter();
+
   return (
     <>
       <GenericButton
@@ -9,6 +12,7 @@ const LoadFileAddItemButton: React.FC = () => {
         theme="lightBlue"
         size="small"
         type="submit"
+        onClickHandler={() => router.push("/uploadItemsFromCSV")}
       />
     </>
   );

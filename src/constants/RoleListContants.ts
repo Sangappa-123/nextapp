@@ -192,6 +192,9 @@
         Home: "/adjuster-dashboard",
         Screens: [
           {
+            URL: "/adjuster-line-item-detail/{ID}/{ID}",
+          },
+          {
             URL: "/claims-need-attention",
           },
           {
@@ -232,6 +235,9 @@
           },
           {
             URL: "/adjuster-dashboard/pending-vendor-invoices",
+          },
+          {
+            URL: "/uploadItemsFromCSV",
           },
         ],
       },

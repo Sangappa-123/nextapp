@@ -1,0 +1,37 @@
+@use "@/scss/colors.scss" as *;
+
+.root {
+  border: 1px solid $lightGrey;
+  height: fit-content;
+  .searchContainer {
+    padding: 10px 15px;
+    .searchWraper {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 0;
+      .limitSearchSection {
+        display: flex;
+        column-gap: 16px;
+        align-items: center;
+        .inputSection {
+          display: flex;
+          column-gap: 16px;
+          .formGroup {
+            input {
+              border: none;
+              border-bottom: 1px solid #ddd;
+              outline: none;
+              padding: 4px;
+              &:focus {
+                border-color: $astral;
+              }
+            }
+            .priceRangeLabel {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

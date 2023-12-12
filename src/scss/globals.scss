@@ -22,6 +22,7 @@ ol {
   max-height: 100vh;
   height: 100vh;
   overflow: hidden;
+  color: $mineShaft;
 }
 
 .d-none {
@@ -83,4 +84,6 @@ a {
   }
 }
 
-/* Firefox */
+.m-auto {
+  margin: auto;
+}

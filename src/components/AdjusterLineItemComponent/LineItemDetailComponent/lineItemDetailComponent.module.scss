@@ -1,0 +1,14 @@
+.root {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  padding-bottom: 16px;
+  .topItemSection,
+  .bottomItemSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+  }
+}
