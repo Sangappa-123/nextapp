@@ -204,7 +204,7 @@
             URL: "/adjuster-dashboard",
           },
           {
-            URL: "/adjuster-property-claim-details",
+            URL: "/adjuster-property-claim-details/{ID}",
           },
           {
             URL: "/bills-and-payments",
@@ -226,9 +226,6 @@
           },
           {
             URL: "/new-claim",
-          },
-          {
-            URL: "/adjuster-property-claim-details",
           },
           {
             URL: "/adjuster-dashboard/claims-need-attention",

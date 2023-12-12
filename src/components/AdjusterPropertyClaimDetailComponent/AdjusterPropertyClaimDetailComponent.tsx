@@ -7,7 +7,7 @@ import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
 
-async function AdjusterPropertyClaimDetailComponent() {
+async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: string }) {
   const pathList = [
     {
       name: "Home",
@@ -22,10 +22,8 @@ async function AdjusterPropertyClaimDetailComponent() {
   ];
   const cookieStore = cookies();
   let token = "";
-  let claimId = "";
   if (cookieStore.has("accessToken")) {
     token = cookieStore.get("accessToken")?.value ?? "";
-    claimId = cookieStore.get("claimId")?.value ?? "";
   }
   const payload = {
     claimId: claimId,

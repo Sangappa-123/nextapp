@@ -7,7 +7,7 @@ const initialState = {
   searchKeyword: "",
   statusIds: null,
   claimErrorMsg: "",
-  claimDetail: {},
+  claimId: null,
 };
 
 const ClaimSlice = createSlice({
@@ -33,7 +33,7 @@ const ClaimSlice = createSlice({
             lastActive: item.lastActivity,
             lastUpdated: item.lastUpdateDate,
             statusNumber: item.status.id,
-            claimId: item.claimId
+            claimId: item.claimId,
           };
           claimRes.push(newArr);
         });
@@ -57,19 +57,15 @@ const ClaimSlice = createSlice({
 
       state.statusIds = statusIds;
     },
-    addSelectedClaimDetails(state, action) {
+    addSelectedClaimId(state, action) {
       const { payload } = action;
-      const { claimData } = payload;
+      const { claimId } = payload;
 
-      state.claimDetail = claimData;
+      state.claimId = claimId;
     },
   },
 });
 export default ClaimSlice;
 
-export const {
-  addClaimListData,
-  addSearchKeyWord,
-  addFilterValues,
-  addSelectedClaimDetails,
-} = ClaimSlice.actions;
+export const { addClaimListData, addSearchKeyWord, addFilterValues, addSelectedClaimId } =
+  ClaimSlice.actions;

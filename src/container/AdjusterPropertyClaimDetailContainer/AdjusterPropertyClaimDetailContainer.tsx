@@ -1,9 +1,9 @@
 import AdjusterPropertyClaimDetailComponent from "@/components/AdjusterPropertyClaimDetailComponent";
 
-function AdjusterPropertyClaimDetailContainer() {
+function AdjusterPropertyClaimDetailContainer({ claimId }: { claimId: string }) {
   return (
     <>
-      <AdjusterPropertyClaimDetailComponent />
+      <AdjusterPropertyClaimDetailComponent claimId={claimId} />
     </>
   );
 }
