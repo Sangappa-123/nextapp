@@ -60,9 +60,21 @@ export default function middleware(req: NextRequest) {
       if (urlList?.Screens) {
         const isUrlContain = urlList?.Screens?.some((screen) => {
           if (screen.URL.includes("{ID}")) {
-            const screenUrl = screen.URL.split("/")[1];
-            const pathUrl = pathname.split("/")[1];
-            return screenUrl === pathUrl;
+            const screenUrl = screen.URL.split("/");
+            const pathUrl = pathname.split("/");
+
+            if (pathUrl.length === screenUrl.length) {
+              let isValid = true;
+              for (const i in screenUrl) {
+                console.log(screenUrl[i], pathUrl[i]);
+                if (screenUrl[i] !== "{ID}" && screenUrl[i] !== pathUrl[i]) {
+                  isValid = false;
+                  break;
+                }
+              }
+              return isValid;
+            }
+            return false;
           } else {
             return screen.URL === pathname;
           }
