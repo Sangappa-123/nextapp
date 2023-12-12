@@ -240,11 +240,11 @@ const ServiceRequestTable: React.FC = (props) => {
   );
 };
 
-const mapStateToProps = ({ claimdata }: any) => ({
+const mapStateToProps = ({ claimdata, claimServiceRequestdata }: any) => ({
   claimListData: claimdata.claimListData,
   currentPageNumber: claimdata.currentPageNumber,
   totalClaims: claimdata.totalClaims,
-  claimErrorMsg: claimdata.claimErrorMsg,
+  claimErrorMsg: claimServiceRequestdata.claimErrorMsg,
   sortedIds: claimdata.statusIds,
 });
 
