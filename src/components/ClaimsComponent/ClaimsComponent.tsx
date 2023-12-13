@@ -12,13 +12,18 @@ type claimType = {
     adjusterName: string;
     daysToClose: number;
     noOfItems: number;
+    claimId: number;
   };
 };
 
 const ClaimsComponent: React.FC<claimType> = (props) => {
   const router = useRouter();
   return (
-    <div onClick={() => router.push("/adjuster-property-claim-details")}>
+    <div
+      onClick={() =>
+        router.push(`/adjuster-property-claim-details/${props?.claim?.claimId}`)
+      }
+    >
       <Cards className={ClaimsStyle.cardsStylAdjustCalims}>
         <div className="row mt-2">
           <div className="col-lg-6 col-md-12 col-sm-12">
