@@ -6,12 +6,15 @@ import ClaimInformationStyle from "./claimInformation.module.scss";
 import Tooltip from "../common/ToolTip/index";
 import GenericSelect from "../common/GenericSelect/index";
 import DateTimePicker from "../common/DateTimePicker/index";
-// import Cards from "../common/Cards/index";
+import Cards from "../common/Cards/index";
+// import SearchBoxAssignItems from "./SearchBoxAssignItems";
 import {
   fetchHomeOwnersType,
   fetchLossType,
   validateClaim,
+  getCategories,
 } from "@/services/ClaimService";
+import CategoryCoverage from "./CategoryCoverage";
 
 function ClaimInformation({
   register,
@@ -29,11 +32,19 @@ function ClaimInformation({
   // ];
   const [topping, setTopping] = useState("yes");
   const [lossType, setLossType] = useState([]);
-  // const [file, setFile] = useState(null);
+  const [Data, setData] = useState([]);
+  const [hide, setHide] = useState(false);
+  // const [lists, setList] = useState(Data);
+  const [show, setShow] = useState(false);
+  // const [filteredData] = useState([]);
+  const [searchQuery] = useState("");
+  const [categoriesData, setCategoriesData] = useState([]);
+
   const [selectedDate, setSelectedDate] = useState<React.SetStateAction<null> | Date>(
     null
   );
 
+  console.log("homeOwnerTypeOptions", homeOwnerTypeOptions);
   const handleDateChange = (date: React.SetStateAction<null> | Date) => {
     setSelectedDate(date);
   };
@@ -70,22 +81,53 @@ function ClaimInformation({
       .catch((error: any) => console.log("claim error", error));
     // console.log("e", e.target.value);
   };
-  useEffect(() => {
-    fetchLossType()
-      .then((res) => {
-        console.log("loss", res);
-        setLossType(res.data);
-        // console.log(
-        //   "stateObject",
-        //   res.data.map((item: { state: string }) => {
-        //     item;
-        //   })
-        // );
 
-        // setStateId(res.data.address.state.id);
+  const handleDelete = (categoryId: any) => {
+    console.log("categoty.id", categoryId);
+    const newList = Data.filter(
+      (li: { categoryId: any }) => li.categoryId !== categoryId
+    );
+    console.log("newList", newList);
+
+    setData(newList);
+  };
+  useEffect(() => {
+    fetchLossType().then((res) => {
+      console.log("loss", res);
+      setLossType(res.data);
+      // console.log(
+      //   "stateObject",
+      //   res.data.map((item: { state: string }) => {
+      //     item;
+      //   })
+      // );
+
+      // setStateId(res.data.address.state.id);
+    });
+    getCategories()
+      .then((res: any) => {
+        console.log("categoriesapi", res);
+        setCategoriesData(res.data);
       })
       .catch((error) => console.log(" Losserrr", error));
+
+    // setFilteredData(
+    //   categoriesData.filter((el) =>
+    //     el.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+    //   )
+    // );
+    // console.log("setFilteredData", filteredData);
   }, []);
+
+  const handleInputChange = (e: any) => {
+    setData((prev) => {
+      // prev.push(e);
+      console.log("prev", prev);
+      return [...prev, e];
+    });
+    console.log("ee", e);
+  };
+
   const { onBlur: blurHandler, ...rest } = register("claim");
   console.log("rest", { ...rest });
 
@@ -112,8 +154,15 @@ function ClaimInformation({
     fetchHomeOwnersType(stateId, policyTypeId)
       .then((res) => {
         console.log("coverage", res);
+        setData(res.data);
+        console.log("namme", Data);
       })
       .catch((error) => console.log(" Losserrr", error));
+    setHide(true);
+  };
+
+  const handleShow = () => {
+    setShow(true);
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -127,7 +176,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Claim#
           </label>
         </div>
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2")}>
+        <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           <GenericInput
             placeholder="Claim#"
             showError={error["claim"]}
@@ -145,7 +194,7 @@ function ClaimInformation({
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Claim Date</label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           {/* <GenericInput
             placeholder="First Name"
             type="Date"
@@ -156,7 +205,6 @@ function ClaimInformation({
             control={control}
             name="claimDate"
             rules={{ required: true }}
-            // {...register("claimDate")}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
               // console.log("console", { ...rest });
               return (
@@ -171,6 +219,7 @@ function ClaimInformation({
                   labelClassname="labeext"
                   formControlClassname="forontrol"
                   value={selectedDate}
+                  {...register("claimDate")}
                   onChange={(e) => {
                     fieldOnChange(e);
                     console.log("date", e?.toDateString());
@@ -195,7 +244,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span> Insurance Company
           </label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="Insurance Company"
             {...register("insuranceCompany")}
@@ -209,7 +258,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Adjusters Name
           </label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="Adjuster's Name"
             {...register("adjusterName")}
@@ -221,7 +270,7 @@ function ClaimInformation({
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Loss/Damage Type </label>
         </div>
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12")}>
+        <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           {" "}
           <Controller
             control={control}
@@ -266,7 +315,7 @@ function ClaimInformation({
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Claim Description</label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <textarea
             {...register("claimDescription")}
             className={ClaimInformationStyle.textArea}
@@ -279,7 +328,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Claim Deductible
           </label>
         </div>
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12")}>
+        <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           <GenericInput
             placeholder="$999.00"
             type="number"
@@ -312,7 +361,7 @@ function ClaimInformation({
             </div>
           </div>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="$88.00"
             type="number"
@@ -331,7 +380,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Tax Rate %
           </label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="99"
             type="number"
@@ -382,7 +431,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Content Limits
           </label>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="$0.00"
             type="number"
@@ -419,7 +468,7 @@ function ClaimInformation({
                   getOptionValue={(option: { id: any }) => option.id}
                   onChange={(e: any) => {
                     onSelect(e);
-                    coverageApiCall(e.stateId, e.policyTypeId);
+                    coverageApiCall(e?.stateId, e?.policyTypeId);
                   }}
                   // inputFieldClassname="hideInputArrow"
                   // classNames={{
@@ -430,11 +479,121 @@ function ClaimInformation({
             }}
           />
         </div>
-        {/* {
-          <div>
-            <Cards className={ClaimInformationStyle.cards}></Cards>
-          </div>
-        } */}
+      </div>
+      <div className="row mt-3 align-items-center">
+        {hide ? (
+          <>
+            <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+              <label className={ClaimInformationStyle.label}>
+                <span style={{ color: "red" }}>*</span>Special Limit
+              </label>
+            </div>
+            <div className={clsx("col-2 mt-2", ClaimInformationStyle.specialLimit)}>
+              {" "}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(getValues("homeOwnersPolicyType")?.specialLimit)}
+            </div>
+            <div>
+              <Cards className={clsx("mt-8", ClaimInformationStyle.cards)}>
+                <div className="row">
+                  <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
+                    Category Coverages
+                  </div>
+                  <div className={clsx("col-lg-1", ClaimInformationStyle.category)}>
+                    Category
+                  </div>
+                  <div
+                    className={clsx("col-sm-2", ClaimInformationStyle.aggregateCoverage)}
+                  >
+                    Aggregate Coverage
+                  </div>
+                  <div className={clsx("col-sm-2", ClaimInformationStyle.itemLimit)}>
+                    Individual Item Limit
+                  </div>
+                </div>
+                <div className="row">
+                  <div className=""></div>
+                  <>
+                    <ul>
+                      {Data.map((value: any, i) => (
+                        <CategoryCoverage
+                          data={value}
+                          key={i}
+                          handleDelete={handleDelete}
+                          register={register}
+                        />
+                      ))}
+                    </ul>
+                    {/* </div> */}
+                  </>
+                </div>
+                {show && (
+                  <div
+                    className={clsx(
+                      "row ml-12",
+                      ClaimInformationStyle.specialCategoryDiv
+                    )}
+                  >
+                    <div className={clsx("col-lg-4 ", ClaimInformationStyle.search)}>
+                      {/* <SearchBoxAssignItems /> */}
+
+                      <GenericSelect
+                        placeholder="Enter Category"
+                        value={searchQuery}
+                        name="Category"
+                        options={categoriesData}
+                        getOptionLabel={(option: { categoryName: any }) =>
+                          option?.categoryName
+                        }
+                        getOptionValue={(option: { categoryId: any }) =>
+                          option.categoryId
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div
+                      className={clsx(
+                        "col-lg-3 col-md-3 col-sm-3",
+                        ClaimInformationStyle.categoryInput
+                      )}
+                    >
+                      <GenericInput
+                        placeholder="$0.00"
+                        type="number"
+                        inputFieldClassname="hideInputArrow"
+                        onChange={(e: any) => e.target.value}
+                      />
+                    </div>
+                    <div
+                      className={clsx(
+                        "col-lg-3",
+                        ClaimInformationStyle.specialcategoryInput
+                      )}
+                    >
+                      <GenericInput
+                        placeholder="$0.00"
+                        type="number"
+                        inputFieldClassname="hideInputArrow"
+                        onChange={(e: any) => e.target.value}
+                      />
+                    </div>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className={clsx(ClaimInformationStyle.specialCategory)}
+                  onClick={() => handleShow()}
+                >
+                  Add another special category
+                </button>
+              </Cards>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>

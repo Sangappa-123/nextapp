@@ -192,6 +192,9 @@
         Home: "/adjuster-dashboard",
         Screens: [
           {
+            URL: "/adjuster-line-item-detail/{ID}/{ID}",
+          },
+          {
             URL: "/claims-need-attention",
           },
           {
@@ -201,7 +204,7 @@
             URL: "/adjuster-dashboard",
           },
           {
-            URL: "/adjuster-property-claim-details",
+            URL: "/adjuster-property-claim-details/{ID}",
           },
           {
             URL: "/bills-and-payments",
@@ -224,12 +227,9 @@
           {
             URL: "/new-claim",
           },
-          {
-            URL: "/adjuster-property-claim-details",
-          },
-          {
-            URL: "/adjuster-dashboard/claims-need-attention",
-          },
+          // {
+          //   URL: "/adjuster-dashboard/claims-need-attention",
+          // },
           {
             URL: "/adjuster-dashboard/pending-vendor-invoices",
           },

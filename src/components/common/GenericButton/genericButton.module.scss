@@ -44,7 +44,7 @@
 }
 
 .normal-button {
-  background-color: $grey3;
+  background-color: $lightBtn;
   padding: 2px 12px;
   line-height: 18px;
   margin-left: auto;
@@ -53,6 +53,9 @@
   font-weight: 600;
   font-size: 13px;
   color: $mineShaft;
+  &:hover {
+    background-color: $grey3;
+  }
 }
 
 .delete-button {

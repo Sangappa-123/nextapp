@@ -17,11 +17,13 @@ export default function Filter({
   table: React.SetStateAction<any>;
   showFilterBLock: React.SetStateAction<string | null>;
   setShowFilterBLock: React.SetStateAction<any>;
-  defaultAllChecked: React.SetStateAction<boolean | null>;
+  defaultAllChecked: React.SetStateAction<boolean | undefined>;
   filterApiCall: React.SetStateAction<any | null>;
   customFilterValues: React.SetStateAction<any | null>;
 }) {
   const [currentValue, setCurrentValue] = React.useState<React.SetStateAction<any>>([]);
+  const [isSelectAllChecked, setIsSelectAllChecked] =
+    React.useState<React.SetStateAction<any>>(false);
   const [preCheckedValue, setPreCheckedValue] =
     React.useState<React.SetStateAction<boolean>>(false);
 
@@ -117,7 +119,7 @@ export default function Filter({
     } else {
       setCurrentValue([...currentValue, e.target.value]);
     }
-    // column.setFilterValue(e.target.value);
+    column.setFilterValue([...currentValue, e.target.value]);
   };
   const handleSubmit = () => {
     // console.log("currentValue", currentValue);
@@ -149,6 +151,45 @@ export default function Filter({
     }
     return false;
   };
+  const handleSelectAll = () => {
+    if (customFilterValues) {
+      if (customFilterValues.length !== currentValue.length) {
+        const custArr: any = [];
+        customFilterValues.map((item: any) => {
+          custArr.push(item.name);
+        });
+        setCurrentValue(custArr);
+      } else {
+        setCurrentValue([]);
+      }
+    } else {
+      if (sortedUniqueValues.length !== currentValue.length) {
+        const custArr: any = [];
+        sortedUniqueValues.map((item: any) => {
+          custArr.push(item);
+        });
+        setCurrentValue(custArr);
+      } else {
+        setCurrentValue([]);
+      }
+    }
+  };
+  React.useEffect(() => {
+    if (customFilterValues) {
+      if (customFilterValues.length !== currentValue.length) {
+        setIsSelectAllChecked(false);
+      } else {
+        setIsSelectAllChecked(true);
+      }
+    } else {
+      if (sortedUniqueValues.length !== currentValue.length) {
+        setIsSelectAllChecked(false);
+      } else {
+        setIsSelectAllChecked(true);
+      }
+    }
+  }, [currentValue]);
+
   return (
     <div className="position-relative">
       <span onClick={() => handleFilterIconClick(column.id)}>
@@ -163,14 +204,15 @@ export default function Filter({
               id="selectAll"
               name="selectAll"
               value="all"
-              defaultChecked={true}
+              onChange={handleSelectAll}
+              checked={isSelectAllChecked}
             />
             <label> Select All</label>
           </div>
           <div className={CustomReactTableStyles.filterContents}>
             {typeof firstValue === "number" ? (
               <>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -181,7 +223,7 @@ export default function Filter({
                   />
                   $0.00 - $24.99
                 </div>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -193,7 +235,7 @@ export default function Filter({
                   $25.00 - $99.99{" "}
                 </div>
 
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -204,7 +246,7 @@ export default function Filter({
                   />
                   $100.00 - $999.99
                 </div>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -223,7 +265,10 @@ export default function Filter({
                     {customFilterValues
                       .slice(0, 5000)
                       .map((value: any, index: number) => (
-                        <div className="mb-2" key={index}>
+                        <div
+                          className={CustomReactTableStyles.filterContainer}
+                          key={index}
+                        >
                           <input
                             type="checkbox"
                             className={CustomReactTableStyles.filterCheckBox}
@@ -242,13 +287,16 @@ export default function Filter({
                     {sortedUniqueValues
                       .slice(0, 5000)
                       .map((value: any, index: number) => (
-                        <div className="mb-2" key={index}>
+                        <div
+                          className={CustomReactTableStyles.filterContainer}
+                          key={index}
+                        >
                           <input
                             type="checkbox"
                             className={CustomReactTableStyles.filterCheckBox}
                             id="selectAll"
                             name="selectAll"
-                            value={value}
+                            value={value ?? ""}
                             onChange={handleChecked}
                             checked={isChecked(value)}
                           />

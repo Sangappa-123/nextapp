@@ -11,12 +11,27 @@ interface dataType {
 
 type breadcrumbPropType = {
   dataList: dataType[];
+  customClassname?: string;
+  customNavClassname?: string;
 };
 
-function GenericBreadcrumb({ dataList = [] }: breadcrumbPropType) {
+function GenericBreadcrumb({
+  dataList = [],
+  customClassname = "",
+  customNavClassname = "",
+}: breadcrumbPropType) {
   return (
-    <nav aria-label="breadcrumb">
-      <ol className="breadcrumb">
+    <nav
+      aria-label="breadcrumb"
+      className={clsx({
+        [customNavClassname]: customNavClassname,
+      })}
+    >
+      <ol
+        className={clsx("breadcrumb", {
+          [customClassname]: customClassname,
+        })}
+      >
         {dataList.map((path) => (
           <li
             key={path.name}

@@ -1,0 +1,13 @@
+.root {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .headingTitle {
+    color: #666;
+    padding: 1px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 25px;
+  }
+}

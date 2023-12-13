@@ -1,11 +1,11 @@
 import AdjusterPropertyClaimDetailContainer from "@/container/AdjusterPropertyClaimDetailContainer";
 import { Suspense } from "react";
-import Loading from "../../loading";
+import Loading from "../../../loading";
 
-export default function Page() {
+export default function Page({ params }: { params: { claimId: string } }) {
   return (
     <Suspense fallback={<Loading />}>
-      <AdjusterPropertyClaimDetailContainer />
+      <AdjusterPropertyClaimDetailContainer claimId={params.claimId} />
     </Suspense>
   );
 }

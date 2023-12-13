@@ -27,7 +27,8 @@ export const serviceRequestList = async (
 };
 
 export const fetchClaimContentList = async () => {
-  const claimId = await getClientCookie("claimId");
+  const state = store.getState();
+  const claimId = state.claimdata.claimId;
 
   const token = await getClientCookie("accessToken");
 
