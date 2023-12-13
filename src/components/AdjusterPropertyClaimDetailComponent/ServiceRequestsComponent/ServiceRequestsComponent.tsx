@@ -9,11 +9,13 @@ import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestS
 
 function ServiceRequestsComponent(props: any) {
   const { serviceRequestListRes } = props;
-  console.log("serviceRequestListRes", serviceRequestListRes);
   React.useEffect(() => {
-    const claimServiceRequestData = serviceRequestListRes.result;
-    props.addserviceRequestData({ claimServiceRequestData });
+    const claimServiceRequestList = serviceRequestListRes.result;
+
+    props.addserviceRequestData({ claimServiceRequestList });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
   return (
     <div className="row">
@@ -42,7 +44,7 @@ function ServiceRequestsComponent(props: any) {
           <div className="col-lg-6 col-md-6 col-sm-12 col-12"></div>
         </div>
       </div>
-      <ServiceRequestTable />
+      <ServiceRequestTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
     </div>
   );
 }

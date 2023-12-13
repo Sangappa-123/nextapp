@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  claimServiceRequestData: [],
+  claimServiceRequestList: [],
   claimErrorMsg: "",
 };
 
@@ -11,30 +11,27 @@ const ClaimServiceRequestSlice = createSlice({
   reducers: {
     addserviceRequestData(state, action) {
       const { payload } = action;
-      const { claimServiceRequestData } = payload;
+      const { claimServiceRequestList } = payload;
 
       let newArr = {};
       const claimRes: any = [];
-      if (claimServiceRequestData?.data) {
-        claimServiceRequestData.data.map((item: any) => {
+      if (claimServiceRequestList?.data) {
+        claimServiceRequestList.data.map((item: any) => {
           newArr = {
             description: item.description,
+            serviceNumber: item.serviceNumber,
+            vendorDetails: item.vendorDetails,
+            assignedDate: item.assignedDate,
+            targetDate: item.targetDate,
             status: item.status,
-            category: item.category,
-            quantity: item.quantity,
-            rcvTotal: item.rcvTotal,
-            totalStatedAmount: item.totalStatedAmount,
-            vendorName: item.vendorName,
-            adjusterDescription: item.adjusterDescription,
-            itemTag: item.itemTag,
-            cashPayoutExposure: item.cashPayoutExposure,
           };
           claimRes.push(newArr);
         });
-        state.claimServiceRequestData = claimRes;
+        state.claimServiceRequestList = claimRes;
         state.claimErrorMsg = "";
+        state.totalClaims = claimRes.length;
       } else {
-        state.claimErrorMsg = claimServiceRequestData.message;
+        state.claimErrorMsg = claimServiceRequestList.message;
       }
     },
   },

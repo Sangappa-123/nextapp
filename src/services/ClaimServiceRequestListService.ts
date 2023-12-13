@@ -39,11 +39,11 @@ export const fetchClaimContentList = async () => {
   const serviceRequestRes: any = await serviceRequestList(payload, token);
 
   if (serviceRequestRes.result.status === 200) {
-    const claimserviceRequestData = serviceRequestRes.result;
+    const claimServiceRequestList = serviceRequestRes.result;
     store.dispatch(
-      addserviceRequestData({ claimserviceRequestData: claimserviceRequestData })
+      addserviceRequestData({ claimServiceRequestList: claimServiceRequestList })
     );
-    return claimserviceRequestData;
+    return claimServiceRequestList;
   }
   return null;
 };
