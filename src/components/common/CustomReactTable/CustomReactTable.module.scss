@@ -147,7 +147,9 @@
     border-radius: 5px 5px 0 0;
     font-size: 13px;
     text-transform: uppercase;
-    width: max-content;
+    label {
+      white-space: nowrap;
+    }
   }
   .filterContents {
     display: flex;
