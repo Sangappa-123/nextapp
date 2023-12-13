@@ -8,88 +8,51 @@ import {
   useReactTable,
   // PaginationState,
 } from "@tanstack/react-table";
+// import { useDispatch } from "react-redux";
 // import { TABLE_LIMIT_20 } from "@/constants/constants";
+import { ConnectedProps, connect } from "react-redux";
 // import { useSelector } from "react-redux";
-// import { RootState } from "@/store/store";
+import ExcelSheetTableStyle from "./ExcelSheetTable.module.scss";
+import { RootState } from "@/store/store";
+import { setExcelCsvUploadData } from "@/services/excelCsvUploadSlice";
 import CustomReactTable from "@/components/common/CustomReactTable";
 
-interface ExcelTableData {
-  slNo: number;
-  brand: string;
-  model: string;
-  description: string;
-  ageInYear: number;
-  ageInMonth: number;
-  condition: string;
-  purchasedFrom: string;
-  purchasedMethod: string;
-  quantity: number;
-  statedValue: number;
-  roomName: string;
-  roomType: string;
-  totalCost: number;
-  category: string;
-  subCategory: string;
-  action: string;
-}
 interface ExcelSheetTableProps {
-  postLossItemDetails: ExcelTableData[];
+  postLossItemDetails: any[];
 }
 
-const ExcelSheetTable: React.FC<ExcelSheetTableProps> = () => {
-  // console.log('ddddd', postLossItemDetails);
-  // const { postLossItemDetails } = useSelector(
-  //   (state: RootState) => state.excelCsvUpload
-  // ) || { postLossItemDetails: [] };
+const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) => {
+  // const dispatch = useDispatch();
+  const { postLossItemDetails } = props;
+  console.log("postLossItemDetails", postLossItemDetails);
 
-  // const data = useMemo(
-  //   () =>
-  //     postLossItemDetails.map((item) => ({
-  //       slNo: item + 1,
-  //       brand: item.brand,
-  //       model: item.model,
-  //       description: item.description,
-  //       ageInYear: item.ageInYear,
-  //       ageInMonth: item.ageInMonth,
-  //       condition: item.condition,
-  //       purchasedFrom: item.purchaseFrom,
-  //       purchasedMethod: item.purchaseMethod,
-  //       quantity: item.quantity,
-  //       statedValue: item.replacementCost,
-  //       roomName: item.room,
-  //       roomType: item.roomType,
-  //       totalCost: item.totalCost,
-  //       category: item.category,
-  //       subCategory: item.subCategory,
-  //       action: item.addedByMobile,
-  //     })),
-  //   [postLossItemDetails]
-  // );
+  type ExcelTableData = {
+    id: number;
+    brand: string | null;
+    model: string | null;
+    description: string;
+    ageInYear: number | null;
+    ageInMonth: number | null;
+    condition: string | null;
+    purchasedFrom: string | null;
+    purchasedMethod: string | null;
+    quantity: string | null;
+    statedValue: number;
+    roomType: string | null;
+    roomName: string | null;
+    totalCost: number;
+    category: string | null;
+    subCategory: string | null;
+    action: () => void;
+  };
 
-  const data: ExcelTableData[] = [
-    {
-      slNo: 1,
-      brand: "ss",
-      model: "ss",
-      description: "ss",
-      ageInYear: 2,
-      ageInMonth: 1,
-      condition: "2",
-      purchasedFrom: "s",
-      purchasedMethod: "w",
-      quantity: 2,
-      statedValue: 2,
-      roomName: "s",
-      roomType: "2",
-      totalCost: 2,
-      category: "2",
-      subCategory: "2",
-      action: "2",
-    },
-  ];
+  // useEffect(() => {
+  //   console.log('Updated:', postLossItemDetails);
+  // }, [postLossItemDetails]);
+
   const columnHelper = createColumnHelper<ExcelTableData>();
   const columns = [
-    columnHelper.accessor("slNo", {
+    columnHelper.accessor("id", {
       header: "Sl No #",
       cell: (info) => info.getValue(),
       enableSorting: true,
@@ -144,8 +107,8 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps> = () => {
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
-    columnHelper.accessor("quantity", {
-      header: "Quantity",
+    columnHelper.accessor("roomType", {
+      header: "Room Type",
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
@@ -171,14 +134,18 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps> = () => {
     }),
     columnHelper.accessor("action", {
       header: "Action",
-      cell: (info) => info.getValue(),
-      enableSorting: true,
+      cell: () => <button className={ExcelSheetTableStyle.removeButton}>Remove</button>,
+      enableSorting: false,
     }),
   ];
 
+  const data = React.useMemo(() => postLossItemDetails, [postLossItemDetails]);
+  console.log("dddd", data);
+
   const table = useReactTable({
-    data,
+    data: postLossItemDetails,
     columns,
+    enableColumnFilters: false,
     getCoreRowModel: getCoreRowModel<ExcelTableData>(),
   });
 
@@ -189,5 +156,14 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps> = () => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default ExcelSheetTable;
+const mapStateToProps = (state: RootState) => ({
+  postLossItemDetails: state.excelCsvUpload.postLossItemDetails,
+});
+
+const mapDispatchToProps = {
+  setExcelCsvUploadData,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ExcelSheetTable);
