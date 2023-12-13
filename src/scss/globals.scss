@@ -72,6 +72,7 @@ a {
 }
 .Toastify__toast-container {
   width: fit-content;
+  z-index: 999999;
 }
 .hideInputArrow {
   & ::-webkit-outer-spin-button,
