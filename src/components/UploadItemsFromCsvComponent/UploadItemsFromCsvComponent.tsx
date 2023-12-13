@@ -29,6 +29,14 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const [excelData, setExcelData] = useState<any[] | null>(null);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
+  const handleCancelClick = () => {
+    setSelectedFile(null);
+    setIsFileChosen(false);
+    setIsFileUploaded(false);
+    setIsLoading(false);
+    setUploadProgress(0);
+    setExcelData(null);
+  };
   const serverAddress = process.env.NEXT_PUBLIC_SERVER_ADDRESS;
   const itemTemplate = process.env.NEXT_PUBLIC_ITEM_TEMPLATE;
 
@@ -47,11 +55,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
       setUploadProgress(isXlsx ? 0 : 90);
     }
   };
-
-  // const handleRemoveRow = (id: number) => {
-  //   console.log('idddddddddddddddddddddd', id);
-  //   dispatch(removeRowById(id));
-  // };
 
   const handleStartUpload = async () => {
     if (selectedFile && selectedFile.name.endsWith(".xlsx")) {
@@ -112,7 +115,18 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
       hiddenFileInput.current?.setAttribute("value", "");
     }
     setUploadProgress(0);
+    setExcelData(null);
   }, [selectedFile]);
+
+  // const handleCancelClick = () => {
+  //   setIsCancelButtonClicked(true);
+  //   setSelectedFile(null);
+  //   setIsFileChosen(false);
+  //   setIsFileUploaded(false);
+  //   setIsLoading(false);
+  //   setUploadProgress(0);
+  //   setExcelData(null);
+  // };
 
   return (
     <>
@@ -247,6 +261,9 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                           theme="lightBlue"
                           size="small"
                           type="submit"
+                          onClick={() => {
+                            handleCancelClick();
+                          }}
                         />
                       </div>
                       <div className="col-auto">

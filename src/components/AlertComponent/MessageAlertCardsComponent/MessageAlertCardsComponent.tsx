@@ -21,6 +21,7 @@ const MessageAlertCardsComponent = () => {
           addNotification({
             message: message ?? "Notification Deleted.",
             id,
+            status: "success",
           })
         );
       })

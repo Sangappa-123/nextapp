@@ -61,6 +61,7 @@ function SecurityForm() {
         addNotification({
           message: resp?.message,
           id: "password-update",
+          status: "success",
         })
       );
       if (
