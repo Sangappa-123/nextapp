@@ -9,7 +9,7 @@ const PolicyHoldersComponent: React.FC = () => {
     <>
       <Cards className={PolicyHolderCradStyle.policyHolderCradContainer}>
         <GenericComponentHeading title="Policyholder's Task" />
-        <div>
+        <div className={PolicyHolderCradStyle.taskContentContainer}>
           <NoRecordComponent message="No task available" />
         </div>
         <div className="text-right">
