@@ -10,7 +10,9 @@ function OrginalItemForm() {
       <div className={orginalItemFormStyle.heading}>Original Item</div>
       <div className={orginalItemFormStyle.formContainer}>
         <div className={clsx(orginalItemFormStyle.formGroup, orginalItemFormStyle.row1)}>
-          <label htmlFor="itemDesc">Original Item Description</label>
+          <label htmlFor="itemDesc" className={orginalItemFormStyle.label}>
+            Original Item Description
+          </label>
           <textarea id="itemDesc" className={orginalItemFormStyle.textarea} />
         </div>
         <div
@@ -22,11 +24,15 @@ function OrginalItemForm() {
         >
           <div className={orginalItemFormStyle.categorySelect}>
             <div className={orginalItemFormStyle.formControl}>
-              <label htmlFor="category">Category</label>
+              <label htmlFor="category" className={orginalItemFormStyle.label}>
+                Category
+              </label>
               <GenericSelect id="subCategory" />
             </div>
             <div className={orginalItemFormStyle.formControl}>
-              <label htmlFor="subCategory">Sub-Category</label>
+              <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
+                Sub-Category
+              </label>
               <GenericSelect id="subCategory" />
             </div>
           </div>
@@ -36,19 +42,25 @@ function OrginalItemForm() {
           </div>
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <label htmlFor="cost_per_unit">Cost Per Unit</label>
-          <GenericInput id="cost_per_unit" />
+          <label htmlFor="cost_per_unit" className={orginalItemFormStyle.label}>
+            Cost Per Unit
+          </label>
+          <GenericInput id="cost_per_unit" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <label htmlFor="qty_lost">Qty Lost / Damaged</label>
-          <GenericInput id="qty_lost" />
+          <label htmlFor="qty_lost" className={orginalItemFormStyle.label}>
+            Qty Lost / Damaged
+          </label>
+          <GenericInput id="qty_lost" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <label htmlFor="total_lost">Total Cost</label>
-          <GenericInput id="total_lost" />
+          <label htmlFor="total_lost" className={orginalItemFormStyle.label}>
+            Total Cost
+          </label>
+          <GenericInput id="total_lost" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div className={clsx(orginalItemFormStyle.itemAge)}>
-          <label>Age of Item</label>
+          <label className={orginalItemFormStyle.label}>Age of Item</label>
           <div className={orginalItemFormStyle.itemAgeFormGroup}>
             <GenericInput
               label="(Years)"
@@ -63,7 +75,7 @@ function OrginalItemForm() {
           </div>
         </div>
         <div className={orginalItemFormStyle.tax}>
-          <label>Apply Taxes(10%)</label>
+          <label className={orginalItemFormStyle.label}>Apply Taxes(10%)</label>
           <div className={orginalItemFormStyle.taxFormGroup}>
             <GenericInput
               type="radio"
@@ -85,10 +97,13 @@ function OrginalItemForm() {
           </div>
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Brand / Manufacturer" />
+          <GenericInput
+            label="Brand / Manufacturer"
+            labelClassname={orginalItemFormStyle.label}
+          />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Model" />
+          <GenericInput label="Model" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div
           className={clsx(
@@ -96,10 +111,16 @@ function OrginalItemForm() {
             orginalItemFormStyle.startFromCol1
           )}
         >
-          <GenericInput label="Purchased From" />
+          <GenericInput
+            label="Purchased From"
+            labelClassname={orginalItemFormStyle.label}
+          />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Purchase Method" />
+          <GenericInput
+            label="Purchase Method"
+            labelClassname={orginalItemFormStyle.label}
+          />
         </div>
         <div
           className={clsx(
@@ -107,10 +128,10 @@ function OrginalItemForm() {
             orginalItemFormStyle.startFromCol1
           )}
         >
-          <GenericInput label="Condition" />
+          <GenericInput label="Condition" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Room" />
+          <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} />
         </div>
         <div
           className={clsx(
@@ -118,7 +139,7 @@ function OrginalItemForm() {
             orginalItemFormStyle.scheduledItem
           )}
         >
-          <label>Scheduled Item</label>
+          <label className={orginalItemFormStyle.label}>Scheduled Item</label>
           <div className={orginalItemFormStyle.scheduledItemFormGroup}>
             <GenericInput
               type="radio"
@@ -145,7 +166,7 @@ function OrginalItemForm() {
             orginalItemFormStyle.startFromCol1
           )}
         >
-          <label>Pictures, Recipts etc.</label>
+          <label className={orginalItemFormStyle.label}>Pictures, Recipts etc.</label>
           <a href="#">Click to add attachment(s)</a>
         </div>
       </div>
