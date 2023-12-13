@@ -9,7 +9,7 @@ import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestS
 
 function ServiceRequestsComponent(props: any) {
   const { serviceRequestListRes } = props;
-
+  console.log("serviceRequestListRes", serviceRequestListRes);
   React.useEffect(() => {
     const claimServiceRequestData = serviceRequestListRes.result;
     props.addserviceRequestData({ claimServiceRequestData });

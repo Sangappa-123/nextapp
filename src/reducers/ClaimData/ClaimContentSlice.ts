@@ -28,7 +28,8 @@ const ClaimContentSlice = createSlice({
             adjusterDescription: item.adjusterDescription,
             itemTag: item.itemTag,
             cashPayoutExposure: item.cashPayoutExposure,
-
+            claimId: item.id,
+            itemId: item.id,
           };
           claimRes.push(newArr);
         });
@@ -38,12 +39,8 @@ const ClaimContentSlice = createSlice({
         state.claimErrorMsg = claimContentData.message;
       }
     },
-   
   },
 });
 export default ClaimContentSlice;
 
-export const {
-  addClaimContentListData,
- 
-} = ClaimContentSlice.actions;
+export const { addClaimContentListData } = ClaimContentSlice.actions;

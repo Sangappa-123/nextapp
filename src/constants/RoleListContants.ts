@@ -227,9 +227,9 @@
           {
             URL: "/new-claim",
           },
-          {
-            URL: "/adjuster-dashboard/claims-need-attention",
-          },
+          // {
+          //   URL: "/adjuster-dashboard/claims-need-attention",
+          // },
           {
             URL: "/adjuster-dashboard/pending-vendor-invoices",
           },

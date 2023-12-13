@@ -1,0 +1,30 @@
+@use "@/scss/colors.scss" as *;
+
+.actionBtnContainer {
+  padding-right: 5px;
+  color: $astral;
+  cursor: pointer;
+
+  .editActionBtn {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .actionBtns {
+    display: flex;
+    gap: 5px;
+    .updateActionBtn {
+      display: flex;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .cancelActionBtn {
+      display: flex;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

@@ -16,6 +16,8 @@ import {
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 
@@ -24,24 +26,12 @@ interface typeProps {
 }
 const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   const { claimContentListData, totalClaims, tableLoader, claimErrorMsg } = props;
+  const router = useRouter();
 
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
 
   const pageLimit = 20;
   const fetchSize = 20;
-
-  // type ContentListData = {
-  //   status: object | null;
-  //   category: object | null;
-  //   description: string | null;
-  //   quantity: number | null;
-  //   totalStatedAmount: number | null;
-  //   itemTag: string | null;
-  //   vendorName: string | null;
-  //   adjusterDescription: string | null;
-  //   rcvTotal: number | null;
-  //   cashPayoutExposure: number | null;
-  // };
 
   interface ContentListData {
     [key: string | number]: any;
@@ -62,10 +52,20 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       ),
       id: "clear",
       columns: [
-        columnHelper.accessor("[]", {
-          header: () => "[]",
+        columnHelper.accessor("", {
+          header: () => (
+            <input type="checkbox" className={ContentListTableStyle.checkbox} />
+          ),
+          meta: {
+            headerClass: ContentListTableStyle.checkHeader,
+          },
           id: "check",
           enableColumnFilter: false,
+          cell: () => (
+            <div className="d-flex justify-content-center">
+              <input type="checkbox" className={ContentListTableStyle.checkbox} />
+            </div>
+          ),
         }),
         columnHelper.accessor((row, i) => i + 1, {
           header: () => "Item #",
@@ -75,6 +75,13 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         columnHelper.accessor((row) => (row.status ? row.status.status : null), {
           header: () => "Status",
           id: "status",
+          // filterFn: (rows: any, columnIds: string[], filterValues: string[]) => {
+          //   console.log("filterUpdater",filterValues);
+          //   if (!filterValues || filterValues.length === 0) {
+          //     return rows;
+          //   }
+          //   return rows.filter(row => filterValues.includes(row.values[columnIds[0]]));
+          // },
           // cell: (info) =>{
           //   if (info.renderValue()) {
           //     return info.renderValue().status;
@@ -166,7 +173,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         columnHelper.accessor("Action", {
           header: () => "Action",
           id: "Action",
-          cell: () => <a href="">Action</a>,
+          cell: () => <RiDeleteBin5Fill color="grey" size="17px" />,
           enableColumnFilter: false,
         }),
       ],
@@ -184,7 +191,27 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
+  const filterApiCall = (currentValue: any) => {
+    // console.log("columnFilters",columnFilters);
 
+    // console.log("columnFilters currentValue",currentValue);
+
+    const newCLaim = claimResult.filter((item: any) => {
+      if (currentValue.some((row: any) => item.status.status.includes(row))) return item;
+    });
+    console.log("columnFilters newCLaim", newCLaim);
+
+    setClaimResult(newCLaim);
+  };
+  // const handleFilter = async (filterUpdater: any) => {
+  //   const newVal = filterUpdater(columnFilters);
+
+  //   console.log("filterUpdater newVal", newVal);
+  //   setColumnFilters(newVal);
+  // };
+  const handleRowClick = (rowData: any) => {
+    router.push(`/adjuster-line-item-detail/${rowData?.claimId}/${rowData.itemId}`);
+  };
   const table = useReactTable({
     data: claimResult,
     columns,
@@ -203,6 +230,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     enableSorting: false,
+    manualFiltering: true,
   });
 
   return (
@@ -216,6 +244,8 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         fetchNextPage={fetchNextPage}
         totalFetched={claimResult.length}
         totalDBRowCount={claimContentListData.length}
+        filterApiCall={filterApiCall}
+        handleRowClick={handleRowClick}
       />
     </div>
   );

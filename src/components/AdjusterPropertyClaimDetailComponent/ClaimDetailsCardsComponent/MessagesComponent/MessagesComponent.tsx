@@ -9,7 +9,7 @@ const MessagesComponent: React.FC = () => {
     <>
       <Cards className={MessageCardStyle.messageCradContainer}>
         <GenericComponentHeading title="Messages" />
-        <div>
+        <div className={MessageCardStyle.messageListContainer}>
           <NoRecordComponent message="No New Message" />
         </div>
         <div className="text-right">

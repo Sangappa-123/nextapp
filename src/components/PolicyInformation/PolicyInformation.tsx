@@ -252,54 +252,54 @@ function ClaimpolicyInformation({
         </div>
       </div>
       <div className="row align-items-center">
-        <div className="row">
-          <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
-            <label className={clsx(ClaimPolicyInformation.label)}>
-              <span style={{ color: "red" }}>*</span> State
-            </label>
-          </div>
-          <div className="col-lg-2">
-            <Controller
-              control={control}
-              name="state"
-              // rules={{ required: true }}
-              render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
-                <GenericSelect
-                  // labelText={selectLabel}
-                  // placeholder={selectPlaceholder}
-                  options={options}
-                  name="state"
-                  onChange={(e: any) => {
-                    fieldOnChange(e);
-                    resetField("homeOwnersPolicyType");
-                    console.log("onselect", e?.state);
-                    if (e) getPolicyType(e.id);
-                    else updateHomeOwnerType([]);
-                  }}
-                  {...rest}
-                  getOptionLabel={(option: { state: any }) => option.state}
-                  getOptionValue={(option: { id: any }) => option.id}
-                />
-              )}
-            />
-          </div>
-          {/* <SelectCheckBox options={options} className="col-4" /> */}
-          {/* <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right ")}> */}
-          {/* <div className="row"> */}
-          <div className={clsx("col-auto mt-2")}>
-            <label className={clsx(ClaimPolicyInformation.label)}>
-              <span style={{ color: "red" }}>*</span> Zip Code
-            </label>
-          </div>
-          <div className={clsx("col-lg-2 col-md-2 col-sm-12  justify-content-left")}>
-            <GenericInput
-              placeholder="Zip Code"
-              {...register("zipcode")}
-              showError={error["zipcode"]}
-              errorMsg={error?.zipcode?.message}
-            />{" "}
-          </div>
+        {/* <div className="row"> */}
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12 text-right")}>
+          <label className={clsx(ClaimPolicyInformation.label)}>
+            <span style={{ color: "red" }}>*</span> State
+          </label>
         </div>
+        <div className="col-lg-2">
+          <Controller
+            control={control}
+            name="state"
+            // rules={{ required: true }}
+            render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
+              <GenericSelect
+                // labelText={selectLabel}
+                // placeholder={selectPlaceholder}
+                options={options}
+                name="state"
+                onChange={(e: any) => {
+                  fieldOnChange(e);
+                  resetField("homeOwnersPolicyType");
+                  console.log("onselect", e?.state);
+                  if (e) getPolicyType(e.id);
+                  else updateHomeOwnerType([]);
+                }}
+                {...rest}
+                getOptionLabel={(option: { state: any }) => option.state}
+                getOptionValue={(option: { id: any }) => option.id}
+              />
+            )}
+          />
+        </div>
+        {/* <SelectCheckBox options={options} className="col-4" /> */}
+        {/* <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right ")}> */}
+        {/* <div className="row"> */}
+        <div className={clsx("col-auto")}>
+          <label className={clsx(ClaimPolicyInformation.label)}>
+            <span style={{ color: "red" }}>*</span> Zip Code
+          </label>
+        </div>
+        <div className={clsx("col-lg-2 col-md-2 col-sm-12  justify-content-left")}>
+          <GenericInput
+            placeholder="Zip Code"
+            {...register("zipcode")}
+            showError={error["zipcode"]}
+            errorMsg={error?.zipcode?.message}
+          />{" "}
+        </div>
+        {/* </div> */}
       </div>
     </div>
     // </div>

@@ -17,7 +17,7 @@ function ContentListComponent(props: any) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="row">
+    <div className="row mb-4">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
         <GenericComponentHeading
           title="Content List"

@@ -40,6 +40,7 @@ function ForgotPasswordForm({ translate }: { translate: forgotPwdTranslateType }
       const notifyPayload = {
         message: `An email has been sent to ${data.email} with details to reset password.`,
         id: "reset-email",
+        status: "success",
       };
       dispatch(addNotification(notifyPayload));
       router.replace("/login");

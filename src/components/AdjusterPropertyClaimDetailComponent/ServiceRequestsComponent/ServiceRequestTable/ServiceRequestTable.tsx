@@ -21,9 +21,10 @@ const ServiceRequestTable: React.FC = (props) => {
     totalClaims,
     tableLoader,
     claimErrorMsg,
-  }: any = props;
+  } // claimServiceRequestdata,
+  : any = props;
 
-  const serviceData = React.useMemo(() => {
+  const claimServiceRequestdata = React.useMemo(() => {
     return [
       {
         assignedDate: null,
@@ -71,25 +72,18 @@ const ServiceRequestTable: React.FC = (props) => {
       },
     ];
   }, []);
-  const [claimResult, setClaimResult] = React.useState<any>(serviceData);
+  const [claimResult, setClaimResult] = React.useState<any>(claimServiceRequestdata);
 
   const pageLimit = 20;
 
   interface ServiceRequestData {
     [key: string | number]: any;
   }
-  // type ServiceRequestData = {
-  //   serviceNumber: string;
-  //   description: string;
-  //   vendorDetails: string;
-  //   assignedDate: Date;
-  //   targetDate: Date;
-  //   status: string;
-  // };
+
   React.useEffect(() => {
-    const defaultData: ServiceRequestData[] = [...serviceData];
+    const defaultData: ServiceRequestData[] = [...claimServiceRequestdata];
     setClaimResult([...defaultData]);
-  }, [serviceData]);
+  }, [claimServiceRequestdata]);
 
   const columnHelper = createColumnHelper<ServiceRequestData>();
 
@@ -180,7 +174,7 @@ const ServiceRequestTable: React.FC = (props) => {
       if (result) {
         setTableLoader(false);
       }
-    } else if (newSortVal.length === 0 && serviceData.length > 0) {
+    } else if (newSortVal.length === 0 && claimServiceRequestdata.length > 0) {
       const result = await fetchClaimList();
       if (result) {
         setTableLoader(false);
@@ -201,7 +195,7 @@ const ServiceRequestTable: React.FC = (props) => {
       if (result) {
         setTableLoader(false);
       }
-    } else if (sorting.length === 0 && serviceData.length > 0) {
+    } else if (sorting.length === 0 && claimServiceRequestdata.length > 0) {
       const result = await fetchClaimList(pageNumber);
       if (result) {
         setTableLoader(false);
@@ -232,7 +226,7 @@ const ServiceRequestTable: React.FC = (props) => {
       <CustomReactTable
         table={table}
         totalDataCount={totalClaims}
-        pageLimit={totalClaims > 20 ? pageLimit : null}
+        // pageLimit={totalClaims > 20 ? pageLimit : null}
         loader={tableLoader}
         tableDataErrorMsg={claimErrorMsg}
       />
@@ -240,12 +234,10 @@ const ServiceRequestTable: React.FC = (props) => {
   );
 };
 
-const mapStateToProps = ({ claimdata, claimServiceRequestdata }: any) => ({
-  claimListData: claimdata.claimListData,
-  currentPageNumber: claimdata.currentPageNumber,
-  totalClaims: claimdata.totalClaims,
+const mapStateToProps = ({ claimServiceRequestdata }: any) => ({
+  claimServiceRequestdata: claimServiceRequestdata.claimServiceRequestdata,
+
   claimErrorMsg: claimServiceRequestdata.claimErrorMsg,
-  sortedIds: claimdata.statusIds,
 });
 
 export default connect(mapStateToProps, null)(ServiceRequestTable);

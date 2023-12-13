@@ -101,6 +101,45 @@
   // border-color: #dddddd;
   // border-radius: 4px;
 }
+.infomationStyle {
+  font-size: 18px;
+  font-weight: normal;
+  color: #2ab4c0;
+}
+
+.pTitleText {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 75px;
+}
+
+.pTitleTextRows {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 72px;
+}
+.pTitleTextRowsProcess {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 49px;
+}
+
+.pTitleTextRowsFailed {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 66px;
+}
+.spanTitle {
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 10px;
+  color: #333333;
+  // font-family: 'Open Sans", sans-serif',
+}
 
 @media only screen and (min-width: 2560px) {
   .formControl {
