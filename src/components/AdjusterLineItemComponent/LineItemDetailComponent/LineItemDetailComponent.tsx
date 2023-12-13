@@ -4,6 +4,7 @@ import GroupedActionButtons from "./GroupedActionButtons";
 import OrginalItemForm from "./OrginalItemForm";
 import ReplacementItemSection from "./ReplacementItemSection";
 import WebComparables from "./WebComparables";
+import AddedComparables from "./AddedComparables";
 
 function LineItemDetailComponent() {
   return (
@@ -20,6 +21,7 @@ function LineItemDetailComponent() {
       </div>
       <div className={lineItemDetailComponentStyle.bottomItemSection}>
         <WebComparables />
+        <AddedComparables />
       </div>
       <div></div>
     </form>

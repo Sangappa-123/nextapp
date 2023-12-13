@@ -1,25 +1,26 @@
 .root {
-  display: grid;
-  grid-template-columns: 3fr 200px;
-  align-items: center;
+  display: flex;
   column-gap: 16px;
+  align-items: center;
 
   .searchBox {
     position: relative;
     background-color: #fff;
     border: 2px solid #ccc;
     border-radius: 5px;
-    // padding: 5px;
-    padding-left: 15px;
-    padding-bottom: 2px;
+    padding: 2px 5px 2px 30px;
+
     width: 100%;
-    max-height: 32px;
+    height: 38px;
+    max-width: 500px;
     // margin-top: 10px;
     input {
       border: none;
       outline: none;
-      width: calc(100% - 25px);
-      padding-left: 20px;
+      // width: calc(100% - 25px);
+      width: 100%;
+      height: 100%;
+      padding: 2px;
     }
     .searchIcon {
       position: absolute;
@@ -28,5 +29,9 @@
       transform: translateY(-50%);
       color: #777;
     }
+  }
+  .selectFormControl {
+    max-width: 200px;
+    width: 100%;
   }
 }
