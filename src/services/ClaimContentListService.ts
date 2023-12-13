@@ -24,7 +24,8 @@ export const claimContentList = async (payload: any, token: any): Promise<object
 };
 
 export const fetchClaimContentList = async () => {
-  const claimId = await getClientCookie("claimId");
+  const state = store.getState();
+  const claimId = state.claimdata.claimId;
 
   const token = await getClientCookie("accessToken");
 

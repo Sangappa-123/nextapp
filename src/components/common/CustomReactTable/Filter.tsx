@@ -17,11 +17,13 @@ export default function Filter({
   table: React.SetStateAction<any>;
   showFilterBLock: React.SetStateAction<string | null>;
   setShowFilterBLock: React.SetStateAction<any>;
-  defaultAllChecked: React.SetStateAction<boolean | null>;
+  defaultAllChecked: React.SetStateAction<boolean | undefined>;
   filterApiCall: React.SetStateAction<any | null>;
   customFilterValues: React.SetStateAction<any | null>;
 }) {
   const [currentValue, setCurrentValue] = React.useState<React.SetStateAction<any>>([]);
+  const [isSelectAllChecked, setIsSelectAllChecked] =
+    React.useState<React.SetStateAction<any>>(false);
   const [preCheckedValue, setPreCheckedValue] =
     React.useState<React.SetStateAction<boolean>>(false);
 
@@ -149,6 +151,29 @@ export default function Filter({
     }
     return false;
   };
+  const handleSelectAll = () => {
+    if (customFilterValues) {
+      if (customFilterValues.length !== currentValue.length) {
+        const custArr: any = [];
+        customFilterValues.map((item: any) => {
+          custArr.push(item.name);
+        });
+        setCurrentValue(custArr);
+      } else {
+        setCurrentValue([]);
+      }
+    }
+  };
+  React.useEffect(() => {
+    if (customFilterValues) {
+      if (customFilterValues.length !== currentValue.length) {
+        setIsSelectAllChecked(false);
+      } else {
+        setIsSelectAllChecked(true);
+      }
+    }
+  }, [currentValue]);
+
   return (
     <div className="position-relative">
       <span onClick={() => handleFilterIconClick(column.id)}>
@@ -163,7 +188,8 @@ export default function Filter({
               id="selectAll"
               name="selectAll"
               value="all"
-              defaultChecked={true}
+              onChange={handleSelectAll}
+              checked={isSelectAllChecked}
             />
             <label> Select All</label>
           </div>

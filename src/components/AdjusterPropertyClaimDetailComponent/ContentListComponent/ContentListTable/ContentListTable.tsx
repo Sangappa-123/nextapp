@@ -223,6 +223,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
 const mapStateToProps = ({ claimContentdata }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
+  claimErrorMsg: claimContentdata.claimErrorMsg,
 });
 const connector = connect(mapStateToProps, null);
 type connectorType = ConnectedProps<typeof connector>;

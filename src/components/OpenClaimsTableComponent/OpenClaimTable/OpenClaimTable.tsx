@@ -18,10 +18,7 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { useRouter } from "next/navigation";
-import {
-  addSelectedClaimDetails,
-  addFilterValues,
-} from "@/reducers/ClaimData/ClaimSlice";
+import { addSelectedClaimId, addFilterValues } from "@/reducers/ClaimData/ClaimSlice";
 
 interface typeProps {
   [key: string | number]: any;
@@ -31,7 +28,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     claimListData,
     currentPageNumber,
     setTableLoader,
-    addSelectedClaimDetails,
+    addSelectedClaimId,
     totalClaims,
     tableLoader,
     claimErrorMsg,
@@ -202,12 +199,10 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     }
   };
   const handleRowClick = (rowData: any) => {
-    document.cookie = `claimId=${rowData?.claimId};`;
-
-    addSelectedClaimDetails({
-      claimData: rowData,
+    addSelectedClaimId({
+      claimId: rowData,
     });
-    router.push(`/adjuster-property-claim-details?claimId=${rowData?.claimId}`);
+    router.push(`/adjuster-property-claim-details/${rowData?.claimId}`);
   };
 
   const customFilterValues = [
@@ -296,7 +291,7 @@ const mapStateToProps = ({ claimdata }: any) => ({
   sortedIds: claimdata.statusIds,
 });
 const mapDispatchToProps = {
-  addSelectedClaimDetails,
+  addSelectedClaimId,
   addFilterValues,
 };
 
