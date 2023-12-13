@@ -311,7 +311,7 @@ export default function Filter({
           <div className={CustomReactTableStyles.actionButtons}>
             <a onClick={() => setShowFilterBLock(null)}>Cancel</a>
             <GenericButton
-              label="Ok"
+              label="OK"
               theme="lightBlue"
               size="small"
               type="submit"
