@@ -119,7 +119,7 @@ export default function Filter({
     } else {
       setCurrentValue([...currentValue, e.target.value]);
     }
-    column.setFilterValue([...currentValue, e.target.value]);
+    // column.setFilterValue([...currentValue, e.target.value]);
   };
   const handleSubmit = () => {
     // console.log("currentValue", currentValue);

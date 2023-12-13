@@ -203,12 +203,12 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     setClaimResult(newCLaim);
   };
-  const handleFilter = async (filterUpdater: any) => {
-    const newVal = filterUpdater(columnFilters);
+  // const handleFilter = async (filterUpdater: any) => {
+  //   const newVal = filterUpdater(columnFilters);
 
-    console.log("filterUpdater newVal", newVal);
-    setColumnFilters(newVal);
-  };
+  //   console.log("filterUpdater newVal", newVal);
+  //   setColumnFilters(newVal);
+  // };
   const handleRowClick = (rowData: any) => {
     router.push(`/adjuster-line-item-detail/${rowData?.claimId}/${rowData.itemId}`);
   };
@@ -224,7 +224,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
-    onColumnFiltersChange: handleFilter,
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
