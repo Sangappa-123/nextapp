@@ -2,6 +2,7 @@ import React from "react";
 import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
+import GenericSelect from "@/components/common/GenericSelect";
 
 function OrginalItemForm() {
   return (
@@ -10,7 +11,7 @@ function OrginalItemForm() {
       <div className={orginalItemFormStyle.formContainer}>
         <div className={clsx(orginalItemFormStyle.formGroup, orginalItemFormStyle.row1)}>
           <label htmlFor="itemDesc">Original Item Description</label>
-          <textarea id="itemDesc" />
+          <textarea id="itemDesc" className={orginalItemFormStyle.textarea} />
         </div>
         <div
           className={clsx(
@@ -22,11 +23,11 @@ function OrginalItemForm() {
           <div className={orginalItemFormStyle.categorySelect}>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="category">Category</label>
-              <textarea id="category" />
+              <GenericSelect id="subCategory" />
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory">Sub-Category</label>
-              <textarea id="subCategory" />
+              <GenericSelect id="subCategory" />
             </div>
           </div>
           <div className={orginalItemFormStyle.standardReplacement}>
@@ -69,6 +70,7 @@ function OrginalItemForm() {
               label="Yes"
               value="yes"
               name="applyTax"
+              checked={true}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -122,7 +124,8 @@ function OrginalItemForm() {
               type="radio"
               label="Yes"
               value="yes"
-              name="applyTax"
+              name="scheduledItem"
+              checked={true}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -130,7 +133,7 @@ function OrginalItemForm() {
               type="radio"
               label="No"
               value="no"
-              name="applyTax"
+              name="scheduledItem"
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />

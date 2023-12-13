@@ -9,7 +9,7 @@ const NewClaimButton: React.FC = () => {
     <div className={NewClaimButtonStyle.newClaimButton}>
       <GenericButton
         label="New Claim"
-        theme="lightBlue"
+        theme="normal"
         size="small"
         type="submit"
         btnClassname={NewClaimButtonStyle.newClaimBtn}

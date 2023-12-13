@@ -27,11 +27,11 @@ function ServiceRequestsComponent(props: any) {
         <div
           className={`row ${ServiceRequestComponentStyle.serviceRequestContentContainer}`}
         >
-          <div className="col-lg-6 col-md-6 col-sm-12 col-12 d-flex">
+          <div className="col-lg-6 col-md-6 col-sm-12 col-12 d-flex ps-0">
             <div className={ServiceRequestComponentStyle.newClaimButton}>
               <GenericButton
                 label="New Service Request"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ServiceRequestComponentStyle.newServiceRequestBtn}

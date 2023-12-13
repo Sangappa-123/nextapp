@@ -20,24 +20,24 @@ function ContentListComponent(props: any) {
     <div className="row">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title={`Content List`}
+          title="Content List"
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
         />
       </div>
       <div className={ContentListComponentStyle.contentListContainer}>
         <div className={`row ${ContentListComponentStyle.contentListContentContainer}`}>
-          <div className="col-md-7 col-sm-12 col-xs-12 col-lg-7 d-flex pl-0">
+          <div className="col-md-7 col-sm-12 col-xs-12 col-lg-7 d-flex ps-0">
             <div className={ContentListComponentStyle.contentListButtonDiv}>
               <GenericButton
                 label="Add Item"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
               <GenericButton
                 label="Create Assignment"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
@@ -45,14 +45,14 @@ function ContentListComponent(props: any) {
               />
               <GenericButton
                 label="Map Receipts"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
               <GenericButton
                 label="More"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
@@ -60,14 +60,14 @@ function ContentListComponent(props: any) {
               />
               <GenericButton
                 label="Accept Min. Values"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
               <GenericButton
                 label="Accept Standerd Cost"
-                theme="lightBlue"
+                theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}

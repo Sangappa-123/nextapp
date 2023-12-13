@@ -264,3 +264,13 @@ export const fetchExcelCsvTableData = async (payload: any) => {
   const res = await http.post(url, payload);
   return res;
 };
+
+export const getCategories = async () => {
+  const url = getApiEndPoint("categoriesRequest");
+  const http = new HttpService({ isClient: true });
+  const res = await http.get(url);
+  const { data, error } = res;
+  console.log("coverage", res);
+  if (data) return { data };
+  throw error;
+};

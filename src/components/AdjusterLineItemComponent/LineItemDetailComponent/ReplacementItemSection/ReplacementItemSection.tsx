@@ -8,7 +8,7 @@ function ReplacementItemSection() {
     <div className={replacementItemSectionStyle.root}>
       <div className={replacementItemSectionStyle.heading}>
         <span>Replacement Item</span>
-        <GenericButton label="Build a custom comparable" size="small" />
+        <GenericButton label="Build a custom comparable" size="small" theme="normal" />
       </div>
       <div className={replacementItemSectionStyle.content}>
         <div className="m-auto">

@@ -25,7 +25,14 @@
     max-height: 535px;
     overflow-y: auto;
     @include customscrollbar(rgb(207, 201, 201), 6px, true);
-
+    .textarea {
+      resize: horizontal;
+      min-height: 64px;
+      outline: none;
+      border: 1px solid #c2cad8;
+      border-radius: 4px;
+      padding: 4px;
+    }
     .formGroup {
       row-gap: 4px;
       display: flex;

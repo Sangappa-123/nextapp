@@ -1,0 +1,15 @@
+@use "@/scss/colors.scss" as *;
+@use "@/scss/mixins.scss" as *;
+
+.root {
+  border: 1px solid $lightGrey;
+  height: 100%;
+  .heading {
+    padding: 10px 15px;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}

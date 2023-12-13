@@ -5,8 +5,8 @@ import GenericSelect from "@/components/common/GenericSelect";
 
 function ComparableSearchBox() {
   const [searchValue, setSearchValue] = React.useState("");
-  const handleSearch = () => {
-    setSearchValue("abc");
+  const handleSearch = (e: React.FocusEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
   };
   const searchKey = () => {};
   return (
@@ -21,7 +21,7 @@ function ComparableSearchBox() {
           onKeyDown={searchKey}
         />
       </div>
-      <GenericSelect />
+      <GenericSelect formControlClassname={comparableSearchBoxStyle.selectFormControl} />
     </div>
   );
 }

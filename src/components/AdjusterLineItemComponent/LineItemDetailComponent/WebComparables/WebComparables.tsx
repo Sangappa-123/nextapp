@@ -3,6 +3,7 @@ import webComparablesStyle from "./webComparables.module.scss";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import PriceLimitComparable from "./PriceLimitComparable";
 import ComparableSearchBox from "./ComparableSearchBox";
+import LoadingSkelton from "./LoadingSkelton";
 
 function WebComparables() {
   return (
@@ -13,6 +14,13 @@ function WebComparables() {
           <ComparableSearchBox />
           <PriceLimitComparable />
         </div>
+      </div>
+      <div className={webComparablesStyle.itemListContainer}>
+        <LoadingSkelton />
+        <LoadingSkelton />
+        <LoadingSkelton />
+        <LoadingSkelton />
+        <LoadingSkelton />
       </div>
     </div>
   );
