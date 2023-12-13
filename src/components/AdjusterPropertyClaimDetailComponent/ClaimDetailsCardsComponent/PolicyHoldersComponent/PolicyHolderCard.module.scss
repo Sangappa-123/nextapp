@@ -1,4 +1,7 @@
 .policyHolderCradContainer {
-  min-height: 350px;
+  height: 350px;
   margin-top: 10px;
+  .taskContentContainer {
+    height: 86%;
+  }
 }
