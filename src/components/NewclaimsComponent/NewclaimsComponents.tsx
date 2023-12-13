@@ -47,7 +47,9 @@ function NewclaimsComponent() {
     }),
     // claim schema
     claim: string("Claim", [minLength(1, "Please enter the claim number.")]),
-    claimDate: string("claimDate"),
+    // claimDate: string("claimDate"),
+    // claimDate: object({ date: date("MM-DD-YYYY") }),
+
     // claimDate: {
     //   type: "string",
     //   format: "date-time",
@@ -70,6 +72,9 @@ function NewclaimsComponent() {
       id: number("id"),
       typeName: string("typeName"),
     }),
+    // Category: string("Category"),
+    // indivudualItemLimit: number("indivudualItemLimit"),
+    // aggregateCoverage: number("aggregateCoverage"),
     // applyTax: string("yes"),
   });
 
@@ -206,6 +211,7 @@ function NewclaimsComponent() {
                 homeOwnerTypeOptions={homeOwnerType}
                 getValues={getValues}
                 setValue={setValue}
+                updateHomeOwnerType={updateHomeOwnerType}
               />
             </div>
             <div

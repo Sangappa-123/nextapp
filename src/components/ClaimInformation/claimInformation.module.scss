@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .label {
   position: relative;
   font-weight: 570;
@@ -160,7 +162,7 @@
 }
 .errorMessage {
   position: relative;
-  left: 280px;
+  left: 350px;
   bottom: 30px;
 }
 
@@ -171,4 +173,120 @@
 }
 .fileType:hover {
   color: #23527c;
+}
+
+.categoryName {
+  padding-left: 220px;
+  padding-top: 10px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+}
+.category {
+  // margin-left: 90px;
+  // right: 290px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  margin-left: 40px;
+}
+.aggregateStyle {
+  padding-left: 40px;
+  margin-right: 20px;
+  width: 30%;
+}
+.itemLimitSTyle {
+  padding-left: 20px;
+  margin-left: 20px;
+  width: 27%;
+}
+.value {
+  background-color: transparent;
+  width: 200px;
+  text-align: right;
+  border: none;
+  // right: 80px;
+}
+.aggregateCoverage {
+  margin-left: 40px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  // right: 790px;
+}
+.itemLimit {
+  margin-left: 90px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+}
+.cards {
+  position: relative;
+  width: 70%;
+  margin-top: 50px;
+  // : 50px;
+}
+.itemStyle {
+  position: relative;
+  width: 130%;
+}
+.coverages {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+}
+.deleteButton {
+  width: 30px;
+  background-color: transparent;
+  border: none;
+  // margin-left: 30px;
+}
+.closeCircle {
+  width: 70px;
+  color: red;
+  height: 30px;
+  // background-color: red;
+}
+.specialCategory {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  font-size: 13px;
+  color: #337ab7;
+
+  // float: right;
+  margin-left: 80%;
+  font-family: "Open Sans", sans-serif;
+  padding-top: 1%;
+  font-weight: 600;
+}
+.specialCategory:hover {
+  color: $blueJay;
+  border-bottom: 2px solid $blueJay;
+}
+.specialCategoryDiv {
+  bottom: 35px;
+  margin-left: 25%;
+  padding-top: 10px;
+}
+.specialcategoryInput {
+  margin-left: 10%;
+}
+.specialLimit {
+  font-weight: 570;
+  font-size: 13px;
+  font-family: "Open Sans", sans-serif;
+}
+.search {
+  position: relative;
+  right: 20px;
+  height: 40px;
+  // right: 30px;
+  // width: 40%;
+  // padding-right: 20px;
+}
+.outLimeSearch {
+  position: relative;
+  bottom: 30px;
+  margin-left: 180px;
+  opacity: 0.2;
 }

@@ -258,10 +258,9 @@ function ClaimpolicyInformation({
                   // placeholder={selectPlaceholder}
                   options={options}
                   name="state"
-                  // format="(###) ###-####"
                   onChange={(e: any) => {
                     fieldOnChange(e);
-                    resetField("lossType");
+                    resetField("homeOwnersPolicyType");
                     console.log("onselect", e?.state);
                     if (e) getPolicyType(e.id);
                     else updateHomeOwnerType([]);
