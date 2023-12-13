@@ -18,7 +18,9 @@ function ContentListComponent(props: any) {
 
   return (
     <div className="row">
-      <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
+      <div
+        className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4 mb-4`}
+      >
         <GenericComponentHeading
           title="Content List"
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
