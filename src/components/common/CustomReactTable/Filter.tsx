@@ -119,7 +119,7 @@ export default function Filter({
     } else {
       setCurrentValue([...currentValue, e.target.value]);
     }
-    // column.setFilterValue(e.target.value);
+    column.setFilterValue([...currentValue, e.target.value]);
   };
   const handleSubmit = () => {
     // console.log("currentValue", currentValue);
@@ -162,11 +162,27 @@ export default function Filter({
       } else {
         setCurrentValue([]);
       }
+    } else {
+      if (sortedUniqueValues.length !== currentValue.length) {
+        const custArr: any = [];
+        sortedUniqueValues.map((item: any) => {
+          custArr.push(item);
+        });
+        setCurrentValue(custArr);
+      } else {
+        setCurrentValue([]);
+      }
     }
   };
   React.useEffect(() => {
     if (customFilterValues) {
       if (customFilterValues.length !== currentValue.length) {
+        setIsSelectAllChecked(false);
+      } else {
+        setIsSelectAllChecked(true);
+      }
+    } else {
+      if (sortedUniqueValues.length !== currentValue.length) {
         setIsSelectAllChecked(false);
       } else {
         setIsSelectAllChecked(true);
@@ -196,7 +212,7 @@ export default function Filter({
           <div className={CustomReactTableStyles.filterContents}>
             {typeof firstValue === "number" ? (
               <>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -207,7 +223,7 @@ export default function Filter({
                   />
                   $0.00 - $24.99
                 </div>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -219,7 +235,7 @@ export default function Filter({
                   $25.00 - $99.99{" "}
                 </div>
 
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -230,7 +246,7 @@ export default function Filter({
                   />
                   $100.00 - $999.99
                 </div>
-                <div className="mb-2">
+                <div className={CustomReactTableStyles.filterContainer}>
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
@@ -249,7 +265,10 @@ export default function Filter({
                     {customFilterValues
                       .slice(0, 5000)
                       .map((value: any, index: number) => (
-                        <div className="mb-2" key={index}>
+                        <div
+                          className={CustomReactTableStyles.filterContainer}
+                          key={index}
+                        >
                           <input
                             type="checkbox"
                             className={CustomReactTableStyles.filterCheckBox}
@@ -268,13 +287,16 @@ export default function Filter({
                     {sortedUniqueValues
                       .slice(0, 5000)
                       .map((value: any, index: number) => (
-                        <div className="mb-2" key={index}>
+                        <div
+                          className={CustomReactTableStyles.filterContainer}
+                          key={index}
+                        >
                           <input
                             type="checkbox"
                             className={CustomReactTableStyles.filterCheckBox}
                             id="selectAll"
                             name="selectAll"
-                            value={value}
+                            value={value ?? ""}
                             onChange={handleChecked}
                             checked={isChecked(value)}
                           />

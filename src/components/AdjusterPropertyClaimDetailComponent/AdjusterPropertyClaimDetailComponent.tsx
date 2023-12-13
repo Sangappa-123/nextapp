@@ -31,7 +31,7 @@ async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: stri
   const claimContentListRes: any = await claimContentList(payload, token);
   const serviceRequestListRes: any = await serviceRequestList(payload, token);
 
-  console.log("serviceRequestListRes", serviceRequestListRes);
+  console.log("claimContentListRes", claimContentListRes);
 
   if (
     claimContentListRes?.result?.status === 200 &&
