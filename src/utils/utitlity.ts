@@ -25,4 +25,12 @@ function getClientCookie(cname: string): string | null {
   return null;
 }
 
-export { getClientCookie, getServerCookie };
+const getUSDCurrency = (value: number) => {
+  const currency = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+  return currency;
+};
+
+export { getClientCookie, getServerCookie, getUSDCurrency };

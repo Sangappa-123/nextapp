@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PaginationButtons from "@/components/AdjusterLineItemComponent/PaginationButtons";
 import lineItemComponentStyle from "./adjusterLineItemComponent.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
@@ -40,13 +40,18 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     },
   ];
 
+  const isInit = useRef(false);
+
   useEffect(() => {
-    fetchLineItemDetail({ itemId: +itemId });
+    if (!isInit.current) {
+      fetchLineItemDetail({ itemId: +itemId });
+      isInit.current = true;
+    }
 
     return () => {
       resetLineItemDetail();
     };
-  }, [itemId, fetchLineItemDetail, resetLineItemDetail]);
+  }, [isInit, fetchLineItemDetail, resetLineItemDetail, itemId]);
 
   if (isLoading) {
     return <Loading />;
@@ -63,6 +68,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
       <GenericComponentHeading
         customTitleClassname={lineItemComponentStyle.headingTitle}
         title="Item# 6 - Smith, Gracie"
+        customHeadingClassname={lineItemComponentStyle.heading}
       />
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />

@@ -4,6 +4,7 @@
 .root {
   border: 1px solid $lightGrey;
   height: fit-content;
+  font-size: 13px;
 
   .heading {
     background-color: $astral;
@@ -36,6 +37,9 @@
       border: 1px solid #c2cad8;
       border-radius: 4px;
       padding: 4px;
+      &::placeholder {
+        font-size: 13px;
+      }
     }
     .formGroup {
       row-gap: 4px;
