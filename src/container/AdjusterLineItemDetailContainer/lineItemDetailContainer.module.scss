@@ -5,14 +5,4 @@
   height: 100%;
   padding: 0 16px;
   margin-top: 8px;
-  .customNav {
-    position: sticky;
-    top: 40px;
-    min-height: 20px;
-    background-color: #fff;
-    z-index: 999;
-    .breadcrumb {
-      margin: 0;
-    }
-  }
 }

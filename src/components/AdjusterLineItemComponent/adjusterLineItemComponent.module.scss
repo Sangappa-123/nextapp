@@ -10,4 +10,14 @@
     font-weight: 500;
     line-height: 25px;
   }
+  .customNav {
+    position: sticky;
+    top: 40px;
+    min-height: 20px;
+    background-color: #fff;
+    z-index: 999;
+    .breadcrumb {
+      margin: 0;
+    }
+  }
 }
