@@ -11,7 +11,7 @@ const ClaimContentSlice = createSlice({
   reducers: {
     addClaimContentListData(state, action) {
       const { payload } = action;
-      const { claimContentData } = payload;
+      const { claimContentData, claimId } = payload;
 
       let newArr = {};
       const claimRes: any = [];
@@ -28,7 +28,7 @@ const ClaimContentSlice = createSlice({
             adjusterDescription: item.adjusterDescription,
             itemTag: item.itemTag,
             cashPayoutExposure: item.cashPayoutExposure,
-            claimId: item.id,
+            claimId: claimId,
             itemId: item.id,
           };
           claimRes.push(newArr);

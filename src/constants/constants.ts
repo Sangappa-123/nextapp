@@ -8,3 +8,4 @@ export const WEB_SEARCH_ENGINES = [
   { id: "2", name: "Amazon" },
   { id: "3", name: "Ebay" },
 ];
+export const TABLE_LIMIT_5 = 5;

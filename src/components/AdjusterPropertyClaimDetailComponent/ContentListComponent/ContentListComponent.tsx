@@ -13,14 +13,14 @@ import Modal from "@/components/common/ModalPopups";
 import AddItemModalFormComp from "@/components/AddItemModalForm";
 
 function ContentListComponent(props: any) {
-  const { claimContentListRes } = props;
+  const { claimContentListRes, addClaimContentListData, claimId } = props;
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes.result;
-    props.addClaimContentListData({ claimContentData });
+    addClaimContentListData({ claimContentData, claimId });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDropDown = () => {
@@ -121,7 +121,11 @@ function ContentListComponent(props: any) {
     </div>
   );
 }
+
+const mapStateToProps = ({ claimdata }: any) => ({
+  claimId: claimdata.claimId,
+});
 const mapDispatchToProps = {
   addClaimContentListData,
 };
-export default connect(null, mapDispatchToProps)(ContentListComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentListComponent);
