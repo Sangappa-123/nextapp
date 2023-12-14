@@ -18,6 +18,7 @@ function ClaimpolicyInformation({
   updateHomeOwnerType,
   resetField,
   getValues,
+  clearErrors,
 }: any) {
   // const options = [
   //   { value: "chocolate", label: "Chocolate" },
@@ -52,27 +53,37 @@ function ClaimpolicyInformation({
   };
 
   const handleGetData = () => {
-    console.log("policyDetails", policyDetails?.firstName);
-    setValue("firstname", policyDetails?.firstName),
-      setValue("lastname", policyDetails?.lastName);
-    setValue("mobilenumber", policyDetails?.cellPhone);
-    setValue("secondaryPhonenumber", policyDetails?.dayTimePhone);
-    setValue("address", policyDetails?.address.streetAddressOne);
-    setValue("address1", policyDetails?.address.streetAddressTwo);
-    setValue("address2", policyDetails?.address.city);
-    setValue("state", policyDetails?.address.state);
-    setValue("zipcode", policyDetails?.address.zipcode);
-    setValue("claim", policyDetails?.insuranceNumber);
-    setValue("claimDate", policyDetails?.claimDate);
-    setValue("insuranceCompany", policyDetails?.insuranceCompany);
-    setValue("adjusterName", policyDetails?.adjusterName);
-    setValue("claimDescription", policyDetails?.claimDescription);
-    setValue("claimDeductible", policyDetails?.claimDeductible);
-    setValue("minItemPrice", policyDetails?.minItemPrice);
-    setValue("taxRate", policyDetails?.taxRate);
-    setValue("contentLimits", policyDetails?.contentLimits);
-    setValue("lossType", policyDetails?.lossType);
-    setValue("homeOwnersPolicyType", policyDetails?.homeOwnersPolicyType);
+    console.log("policyDetails", policyDetails?.firstName, { shouldValidate: true });
+    setValue("firstname", policyDetails?.firstName, { shouldValidate: true }),
+      setValue("lastname", policyDetails?.lastName, { shouldValidate: true });
+    setValue("mobilenumber", policyDetails?.cellPhone, { shouldValidate: true });
+    setValue("secondaryPhonenumber", policyDetails?.dayTimePhone, {
+      shouldValidate: true,
+    });
+    setValue("address", policyDetails?.address.streetAddressOne, {
+      shouldValidate: true,
+    });
+    setValue("address1", policyDetails?.address.streetAddressTwo, {
+      shouldValidate: true,
+    });
+    setValue("address2", policyDetails?.address.city, { shouldValidate: true });
+    setValue("state", policyDetails?.address.state, { shouldValidate: true });
+    setValue("zipcode", policyDetails?.address.zipcode, { shouldValidate: true });
+    clearErrors("claim");
+    clearErrors("minItemPrice");
+    clearErrors("contentLimits");
+
+    // setValue("claim", { shouldValidate: true });
+    // setValue("claimDate", { shouldValidate: true });
+    // setValue("insuranceCompany", { shouldValidate: true });
+    // setValue("adjusterName", { shouldValidate: true });
+    // setValue("claimDescription", { shouldValidate: true });
+    // setValue("claimDeductible", { shouldValidate: true });
+    // setValue("minItemPrice", { shouldValidate: true });
+    // setValue("taxRate", { shouldValidate: true });
+    // setValue("contentLimits", { shouldValidate: true });
+    // setValue("lossType", { shouldValidate: true });
+    // setValue("homeOwnersPolicyType", { shouldValidate: true });
 
     // fetchPolicyType(stateId)
     //   .then((res: any) => {

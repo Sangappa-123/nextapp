@@ -25,6 +25,7 @@ function DashboardNotification({ data }: { data: unknownObjectType }) {
           addNotification({
             message: message ?? "Notification Deleted.",
             id,
+            status: "success",
           })
         );
       })

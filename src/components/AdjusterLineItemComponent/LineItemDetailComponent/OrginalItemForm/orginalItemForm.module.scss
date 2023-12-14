@@ -25,6 +25,10 @@
     max-height: 535px;
     overflow-y: auto;
     @include customscrollbar(rgb(207, 201, 201), 6px, true);
+    .label {
+      font-size: 13px;
+      font-weight: 600;
+    }
     .textarea {
       resize: horizontal;
       min-height: 64px;

@@ -34,3 +34,24 @@
     min-height: 28px;
   }
 }
+.dropDownDiv {
+  background-color: white;
+  width: 8%;
+  // border: 1px solid red;
+  z-index: 999;
+  position: absolute;
+  top: 667px;
+  left: 20px;
+  border-radius: 4px;
+}
+.dropDownInnerDiv {
+  font-weight: 300;
+  font-size: 14px;
+  padding: 5px;
+  // padding-top: 4px;
+  // padding-bottom: 4px;
+  cursor: pointer;
+}
+.dropDownInnerDiv:hover {
+  background-color: lightblue;
+}

@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import ReactSelect from "react-select";
+import ReactSelect, { StylesConfig } from "react-select";
 import clsx from "clsx";
 import selectStyle from "./genericSelect.module.scss";
 
@@ -14,6 +14,7 @@ interface TypedProps<T> {
   labelClassname?: string;
   isFixedError?: string;
   disabled?: boolean;
+  customStyles?: StylesConfig;
   [rest: string]: any;
 }
 
@@ -39,6 +40,20 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     disabled = false,
     ...rest
   } = props;
+
+  const colourStyles: StylesConfig = {
+    control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
+    option: () => {
+      return {
+        fontSize: "13px",
+        padding: "7px",
+      };
+    },
+    input: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    placeholder: (styles: any) => ({ ...styles, fontSize: "12px" }),
+    singleValue: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    ...customStyles,
+  };
 
   const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }: any) =>
     !isDisabled ? (
@@ -73,7 +88,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
         <ReactSelect
           // classNames={selectStyle.reactSelectContainer}
           // classNames={"abc"}
-          styles={customStyles}
+          styles={colourStyles}
           components={{ Menu: CustomMenuWithClear }}
           value={selected}
           onChange={handleSelectChange}

@@ -194,6 +194,7 @@ function NewclaimsComponent() {
                 updateHomeOwnerType={updateHomeOwnerType}
                 resetField={resetField}
                 getValues={getValues}
+                clearErrors={clearErrors}
               />
             </div>
             <div>

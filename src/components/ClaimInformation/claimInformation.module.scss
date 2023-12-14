@@ -159,6 +159,8 @@
 .textArea {
   border-radius: 5px;
   padding: 5px;
+  width: 100%;
+  resize: horizontal;
 }
 .errorMessage {
   position: relative;
@@ -289,4 +291,7 @@
   bottom: 30px;
   margin-left: 180px;
   opacity: 0.2;
+}
+.labelClassname {
+  font-size: 13px;
 }
