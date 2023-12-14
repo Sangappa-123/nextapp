@@ -1,20 +1,39 @@
 "use client";
 import React from "react";
+import { useState } from "react";
 import ContentListTable from "./ContentListTable";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import ContentListComponentStyle from "./ContentListComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+import clsx from "clsx";
+
+import Modal from "@/components/common/ModalPopups";
+import AddItemModalFormComp from "@/components/AddItemModalForm";
 
 function ContentListComponent(props: any) {
   const { claimContentListRes } = props;
-  const [tableLoader, setTableLoader] = React.useState<boolean>(false);
+  const [tableLoader, setTableLoader] = useState<boolean>(false);
+  const [showDropDown, setShowDropDown] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes.result;
     props.addClaimContentListData({ claimContentData });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDropDown = () => {
+    setShowDropDown(!showDropDown);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="row mb-4">
@@ -24,6 +43,17 @@ function ContentListComponent(props: any) {
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
         />
       </div>
+
+      {showDropDown && (
+        <div className={clsx(ContentListComponentStyle.dropDownDiv, "p-0")}>
+          <div className={ContentListComponentStyle.dropDownInnerDiv} onClick={openModal}>
+            Add Items
+          </div>
+
+          <div className={ContentListComponentStyle.dropDownInnerDiv}>Load from file</div>
+        </div>
+      )}
+
       <div className={ContentListComponentStyle.contentListContainer}>
         <div className={`row ${ContentListComponentStyle.contentListContentContainer}`}>
           <div className="col-md-7 col-sm-12 col-xs-12 col-lg-7 d-flex ps-0">
@@ -34,6 +64,7 @@ function ContentListComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
+                onClick={handleDropDown}
               />
               <GenericButton
                 label="Create Assignment"
@@ -75,6 +106,14 @@ function ContentListComponent(props: any) {
             </div>
           </div>
 
+          <div className="col-12">
+            <Modal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              childComp={<AddItemModalFormComp />}
+              headingName="Add Item"
+            ></Modal>
+          </div>
           <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12"></div>
         </div>
       </div>

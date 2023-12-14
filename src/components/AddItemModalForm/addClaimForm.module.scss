@@ -1,0 +1,84 @@
+.loginForm__form {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  .link {
+    width: fit-content;
+    margin: auto;
+    font-size: 13px;
+    text-align: center;
+  }
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.genericSelect {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 80%;
+}
+.inputBoxWidth {
+  width: 100%;
+  // height: 50px;
+}
+.inputBoxAlign {
+  text-align: right;
+}
+.centerAlign {
+  align-items: center;
+}
+.labelStyle {
+  font-size: 13px;
+  font-weight: 600;
+}
+.file_input_wrapper {
+  border: 1px solid black;
+  height: 100px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.file_input_wrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.file_input_wrapper .btn_upload {
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: rgb(200, 196, 196);
+  color: black;
+  cursor: pointer;
+}
+.textEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  cursor: pointer;
+}
+.imagePreviewDiv {
+  width: 400px;
+  height: 400px;
+}
+
+.contentCenter {
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: red;
+}
