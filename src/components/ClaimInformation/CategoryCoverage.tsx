@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GenericInput from "../common/GenericInput/index";
 import clsx from "clsx";
 import ClaimInformationStyle from "./claimInformation.module.scss";
@@ -6,19 +6,11 @@ import ClaimInformationStyle from "./claimInformation.module.scss";
 import { IoMdCloseCircle } from "react-icons/io";
 
 function CategoryCoverage(props: any) {
-  const [coverageValue, setCoverageValue] = useState(
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(props.data.coverageLimit) ?? 0.0
-  );
-  const [individualLimitValue, setindividualLimitValue] = useState(
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(props.data.individualItemLimit) ?? 0.0
-  );
-
+  const [coverageValue, setCoverageValue] = useState("");
+  const [individualLimitValue, setindividualLimitValue] = useState("");
+  {
+    console.log("coverageLimit", props.data.coverageLimit);
+  }
   const checkData = (e: any) => {
     console.log("target", e.target.value);
     setCoverageValue(
@@ -38,11 +30,30 @@ function CategoryCoverage(props: any) {
     );
   };
 
+  useEffect(() => {
+    setCoverageValue(
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(props.data.coverageLimit) ?? 0.0
+    );
+  }, [props.data.coverageLimit]);
+
+  useEffect(() => {
+    setindividualLimitValue(
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(props.data.individualItemLimit) ?? 0.0
+    );
+  }, [props.data.individualItemLimit]);
+
   return (
     <div className={clsx("row", ClaimInformationStyle.categoryName)}>
       <button className={clsx("ml-8", ClaimInformationStyle.value)}>
         {props.data.categoryName}
       </button>
+      {console.log("categoryName")}
       <div className={clsx("col-lg-2 ml-12", ClaimInformationStyle.aggregateStyle)}>
         <GenericInput
           type="text"

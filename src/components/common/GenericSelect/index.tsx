@@ -40,6 +40,20 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     ...rest
   } = props;
 
+  const colourStyles: StylesConfig<ColourOption> = {
+    control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
+    option: () => {
+      return {
+        fontSize: "13px",
+        padding: "7px",
+      };
+    },
+    input: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    placeholder: (styles: any) => ({ ...styles, fontSize: "12px" }),
+    singleValue: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    ...customStyles,
+  };
+
   const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }: any) =>
     !isDisabled ? (
       <div ref={innerRef} {...innerProps} className={selectStyle.menu}>
@@ -73,7 +87,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
         <ReactSelect
           // classNames={selectStyle.reactSelectContainer}
           // classNames={"abc"}
-          styles={customStyles}
+          styles={colourStyles}
           components={{ Menu: CustomMenuWithClear }}
           value={selected}
           onChange={handleSelectChange}
