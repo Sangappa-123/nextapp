@@ -37,7 +37,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
 
-        const bottom = scrollHeight - scrollTop === clientHeight;
+        const bottom = scrollHeight - scrollTop - 2 <= clientHeight;
         if (bottom && scrollTop !== 0 && totalFetched < totalDBRowCount) {
           setContentLoader(true);
 
@@ -57,7 +57,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       setShowScroller(true);
     }
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached, fetchNextPage]);
+  }, [fetchMoreOnBottomReached, fetchNextPage, tableContainerRef]);
 
   return (
     <>
