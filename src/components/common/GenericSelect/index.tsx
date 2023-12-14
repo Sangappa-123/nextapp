@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import ReactSelect from "react-select";
+import ReactSelect, { StylesConfig } from "react-select";
 import clsx from "clsx";
 import selectStyle from "./genericSelect.module.scss";
 
@@ -14,6 +14,7 @@ interface TypedProps<T> {
   labelClassname?: string;
   isFixedError?: string;
   disabled?: boolean;
+  customStyles?: StylesConfig;
   [rest: string]: any;
 }
 
@@ -40,7 +41,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     ...rest
   } = props;
 
-  const colourStyles: StylesConfig<ColourOption> = {
+  const colourStyles: StylesConfig = {
     control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
     option: () => {
       return {
