@@ -3,10 +3,10 @@ import { FaEllipsisH } from "react-icons/fa";
 import lineItemPaginationStyle from "./lineItemPagination.module.scss";
 import clsx from "clsx";
 
-function PaginationButtons() {
+function PaginationButtons({ pageNumber }: { pageNumber: number }) {
   const [totalPage, setTotalPage] = useState(10);
-  const [pageIndex, setPageIndex] = useState(5);
-  console.log("lllll", setTotalPage, setPageIndex);
+  const [pageIndex, setPageIndex] = useState(pageNumber);
+  console.log(">>>>>", setPageIndex, setTotalPage);
   const PageButton = ({ children, key }: { children: React.ReactNode; key?: string }) => (
     <li className={lineItemPaginationStyle.listItem} key={key}>
       {children}
@@ -30,7 +30,7 @@ function PaginationButtons() {
         <PageButton>
           <button
             className={clsx(lineItemPaginationStyle.btn, {
-              [lineItemPaginationStyle.active]: true,
+              [lineItemPaginationStyle.active]: pageIndex === 1,
             })}
           >
             1
@@ -46,7 +46,13 @@ function PaginationButtons() {
             page != 1 &&
             page != totalPage && (
               <PageButton key={"" + page}>
-                <button className={lineItemPaginationStyle.btn}>{page}</button>
+                <button
+                  className={clsx(lineItemPaginationStyle.btn, {
+                    [lineItemPaginationStyle.active]: page === pageNumber,
+                  })}
+                >
+                  {page}
+                </button>
               </PageButton>
             )
         )}
@@ -56,7 +62,13 @@ function PaginationButtons() {
           </PageButton>
         )}
         <PageButton>
-          <button className={lineItemPaginationStyle.btn}>{totalPage}</button>
+          <button
+            className={clsx(lineItemPaginationStyle.btn, {
+              [lineItemPaginationStyle.active]: pageIndex === 10,
+            })}
+          >
+            {totalPage}
+          </button>
         </PageButton>
         <PageButton>
           <button
