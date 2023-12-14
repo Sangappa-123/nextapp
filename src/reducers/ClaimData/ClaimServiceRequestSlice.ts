@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   claimServiceRequestList: [],
+  claimServiceRequestListTotalData: [],
   claimErrorMsg: "",
+  totalClaims: 0,
+  searchKeyword: null,
 };
 
 const ClaimServiceRequestSlice = createSlice({
@@ -27,15 +30,33 @@ const ClaimServiceRequestSlice = createSlice({
           };
           claimRes.push(newArr);
         });
-        state.claimServiceRequestList = claimRes;
+        state.claimServiceRequestList = claimRes.slice(0, 5);
+        state.claimServiceRequestListTotalData = claimRes;
+
         state.claimErrorMsg = "";
         state.totalClaims = claimRes.length;
       } else {
         state.claimErrorMsg = claimServiceRequestList.message;
       }
     },
+    updateServiceRequestVisibleData(state, action) {
+      const { payload } = action;
+      const { claimServiceRequestList } = payload;
+
+      state.claimServiceRequestList = claimServiceRequestList;
+    },
+    addServiceSearchKeyWord(state, action) {
+      const { payload } = action;
+      const { searchKeyword } = payload;
+
+      state.searchKeyword = searchKeyword;
+    },
   },
 });
 export default ClaimServiceRequestSlice;
 
-export const { addserviceRequestData } = ClaimServiceRequestSlice.actions;
+export const {
+  addserviceRequestData,
+  updateServiceRequestVisibleData,
+  addServiceSearchKeyWord,
+} = ClaimServiceRequestSlice.actions;

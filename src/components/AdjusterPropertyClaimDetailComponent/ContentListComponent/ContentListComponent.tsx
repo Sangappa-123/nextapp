@@ -8,12 +8,12 @@ import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 
 function ContentListComponent(props: any) {
-  const { claimContentListRes } = props;
+  const { claimContentListRes, addClaimContentListData, claimId } = props;
   const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes.result;
-    props.addClaimContentListData({ claimContentData });
+    addClaimContentListData({ claimContentData, claimId });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -82,7 +82,11 @@ function ContentListComponent(props: any) {
     </div>
   );
 }
+
+const mapStateToProps = ({ claimdata }: any) => ({
+  claimId: claimdata.claimId,
+});
 const mapDispatchToProps = {
   addClaimContentListData,
 };
-export default connect(null, mapDispatchToProps)(ContentListComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentListComponent);

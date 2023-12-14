@@ -1,0 +1,76 @@
+"use client";
+import React from "react";
+import { RiSearch2Line } from "react-icons/ri";
+import ServiceRequestSearchStyle from "./ServiceRequestSearchBox.module.scss";
+import { fetchServiceRequestList } from "@/services/ClaimServiceRequestListService";
+import {
+  addServiceSearchKeyWord,
+  updateServiceRequestVisibleData,
+} from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import { ConnectedProps, connect } from "react-redux";
+import { TABLE_LIMIT_5 } from "@/constants/constants";
+
+interface typeProps {
+  setTableLoader: React.SetStateAction<any>;
+}
+const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => {
+  const [searchValue, setSearchValue] = React.useState("");
+  const {
+    setTableLoader,
+    searchKeyword,
+    addServiceSearchKeyWord,
+  }: React.SetStateAction<any> = props;
+
+  const handleSearch = async (e: any) => {
+    setSearchValue(e.target.value);
+    if (searchKeyword !== "" && e.target.value === "") {
+      setTableLoader(true);
+      addServiceSearchKeyWord({ searchKeyword: "" });
+      const result = await fetchServiceRequestList();
+      if (result) {
+        setTableLoader(false);
+      }
+    }
+  };
+  const searchKey = async (event: any) => {
+    if (event.key === "Enter") {
+      addServiceSearchKeyWord({ searchKeyword: event.target.value });
+      const result = await fetchServiceRequestList(
+        0,
+        TABLE_LIMIT_5,
+        "",
+        "asc",
+        event.target.value
+      );
+      updateServiceRequestVisibleData({ claimServiceRequestList: result });
+      if (result) {
+        setTableLoader(false);
+      }
+    }
+  };
+
+  return (
+    <div className={ServiceRequestSearchStyle.searchBox}>
+      <RiSearch2Line className={ServiceRequestSearchStyle.searchIcon} />
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchValue}
+        onChange={handleSearch}
+        onKeyDown={searchKey}
+      />
+    </div>
+  );
+};
+
+const mapStateToProps = ({ claimdata }: any) => ({
+  searchKeyword: claimdata.searchKeyword,
+});
+const mapDispatchToProps = {
+  addServiceSearchKeyWord,
+  updateServiceRequestVisibleData,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ServiceRequestSearchBox);
