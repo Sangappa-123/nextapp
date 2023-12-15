@@ -1,22 +1,34 @@
 import GenericButton from "@/components/common/GenericButton";
-import React, { useState } from "react";
+import React from "react";
 import webComparablesStyle from "../webComparables.module.scss";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "@/store/store";
 
-const PriceLimitComparable: React.FC<connectorType> = (props) => {
-  const { priceFrom, priceTo } = props;
-  const [pFrom, setPFrom] = useState(priceFrom);
-  const [pTo, setPTo] = useState(priceTo);
+interface priceLimitPropType {
+  startPrice: number;
+  endPrice: number;
+  handleSubmit: () => void;
+  updateState: (key: string, value: string | number | object) => void;
+  isSearching: boolean;
+}
+
+const PriceLimitComparable = (props: priceLimitPropType) => {
+  const { startPrice, endPrice, handleSubmit, updateState, isSearching } = props;
+  // const [pFrom, setPFrom] = useState(startPrice);
+  // const [pTo, setPTo] = useState(endPrice);
 
   const handlePriceFromChange = (e: React.FocusEvent<HTMLInputElement>) => {
-    setPFrom(e.target.value);
+    const value = +e.target.value;
+    updateState("startPrice", value);
   };
 
   const handlePriceToChange = (e: React.FocusEvent<HTMLInputElement>) => {
-    setPTo(e.target.value);
+    const value = +e.target.value;
+    updateState("endPrice", value);
   };
 
+  const handleSubmitPress = () => {
+    handleSubmit();
+    // handleSubmit({ startPrice: +pFrom, endPrice: +pTo });
+  };
   return (
     <div className={webComparablesStyle.limitSearchSection}>
       <div className={webComparablesStyle.inputSection}>
@@ -30,8 +42,9 @@ const PriceLimitComparable: React.FC<connectorType> = (props) => {
             type="number"
             placeholder="Price From"
             id="priceFrom"
-            value={pFrom}
+            value={startPrice}
             onChange={handlePriceFromChange}
+            disabled={isSearching}
           />
         </div>
         <div>To</div>
@@ -45,21 +58,28 @@ const PriceLimitComparable: React.FC<connectorType> = (props) => {
             id="priceTo"
             type="number"
             placeholder="Price To"
-            value={pTo}
+            value={endPrice}
             onChange={handlePriceToChange}
+            disabled={isSearching}
           />
         </div>
       </div>
-      <GenericButton label="Go" size="medium" />
+      <GenericButton
+        disabled={isSearching}
+        label="Go"
+        size="medium"
+        onClickHandler={handleSubmitPress}
+      />
     </div>
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  priceFrom: state.lineItemDetail.webSearch.priceFrom,
-  priceTo: state.lineItemDetail.webSearch.priceTo,
-});
+// const mapStateToProps = (state: RootState) => ({
+//   priceFrom: state.lineItemDetail.webSearch.priceFrom,
+//   priceTo: state.lineItemDetail.webSearch.priceTo,
+// });
 
-const connector = connect(mapStateToProps, null);
-type connectorType = ConnectedProps<typeof connector>;
-export default connector(PriceLimitComparable);
+// const connector = connect(mapStateToProps, null);
+// type connectorType = ConnectedProps<typeof connector>;
+// export default connector(PriceLimitComparable);
+export default PriceLimitComparable;

@@ -57,5 +57,11 @@
     overflow-y: auto;
     padding: 15px 5px;
     @include customscrollbar(rgb(207, 201, 201), 6px, true);
+    .noDataDiv {
+      display: flex;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
   }
 }

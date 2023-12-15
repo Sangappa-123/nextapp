@@ -3,6 +3,7 @@ import { unknownObjectType } from "@/constants/customTypes";
 import {
   fetchClaimItemDetails,
   fetchComparable,
+  searchComparableReq,
 } from "@/services/AdjusterMyClaimServices/LineItemDetailService";
 import { RootState } from "@/store/store";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -16,6 +17,7 @@ const initialState: unknownObjectType = {
     insuredPrice: 0,
     priceFrom: 0,
     priceTo: 0,
+    pageNo: 1,
     searchKey: "",
     searchList: [],
     noFurtherData: false,
@@ -34,8 +36,9 @@ export const fetchLineItemDetail = createAsyncThunk(
       if (res.status === 200) {
         const insuredPrice = res.data.insuredPrice;
         const searchKey = res.data.description;
+        const pincode = res.data.policyHolderPinCode;
         if (!state.lineItemDetail?.webSearch?.isSearching)
-          dispatch(searchComparable({ insuredPrice, searchKey }));
+          dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
       }
       return res;
     } catch (err) {
@@ -44,27 +47,69 @@ export const fetchLineItemDetail = createAsyncThunk(
   }
 );
 
+const getPriceRange = (insuredPrice: number) => {
+  const range = +insuredPrice * 0.2;
+  const priceFrom = +insuredPrice - range;
+  const priceTo = +insuredPrice + range;
+  return { priceFrom, priceTo };
+};
+
 export const searchComparable = createAsyncThunk(
   "comparable/search",
-  async (payload: { insuredPrice: number; searchKey: string }, api) => {
+  async (
+    payload: {
+      insuredPrice?: number;
+      searchKey?: string;
+      pincode?: number;
+      startPrice?: number;
+      endPrice?: number;
+      isInit?: boolean;
+      selectedEngine?: typeof WEB_SEARCH_ENGINES;
+    },
+    api
+  ) => {
     const rejectWithValue = api.rejectWithValue;
+    const state = api.getState() as RootState;
     const dispatch = api.dispatch;
     try {
-      console.log("fetching comparable>>>>", payload);
-      dispatch(updateWebsearch(payload));
-      const res = await fetchComparable(
-        {
-          item: "xyz",
-          id: "1",
-          numberOfCounts: 10,
-          priceFrom: 0,
-          pincode: 11111,
-          pageNo: 1,
-          serfWowSearch: true,
-          ids: [1],
-        },
-        true
+      let { startPrice: priceFrom, endPrice: priceTo } = payload;
+      const selectedEngine =
+        payload.selectedEngine ?? state.lineItemDetail.webSearch?.selectedEngine;
+      const { isInit = false } = payload;
+      const pageNo = 1; // initially pageno is 1
+      if (isInit) {
+        console.log("========33333==", priceFrom, priceTo, payload);
+        if (!priceFrom && !priceTo) {
+          const calculatedPrice = getPriceRange(payload.insuredPrice ?? 0);
+          priceFrom = calculatedPrice.priceFrom;
+          priceTo = calculatedPrice.priceTo;
+        }
+      }
+      dispatch(
+        updateWebsearch({
+          ...payload,
+          priceFrom,
+          priceTo,
+          pageNo,
+          isSearching: true,
+          searchList: [],
+          selectedEngine,
+        })
       );
+      const api_payload: searchComparableReq = {
+        item: payload.searchKey ?? state.lineItemDetail?.webSearch?.searchKey,
+        id: selectedEngine.id,
+        numberOfCounts: 10,
+        priceFrom: priceFrom ?? 0,
+        pincode: payload.pincode ?? state.lineItemDetail?.webSearch?.pincode,
+        pageNo: pageNo ?? state.lineItemDetail?.webSearch?.pageNo,
+        serfWowSearch: true,
+        ids: [1],
+      };
+      if (priceTo) {
+        api_payload.priceTo = priceTo ?? 0;
+      }
+      const res = await fetchComparable(api_payload, true);
       return res;
     } catch (err) {
       return rejectWithValue(err);
@@ -81,23 +126,21 @@ const LineItemDetailSlice = createSlice({
     },
     updateWebsearch(state, action) {
       const payload = action.payload;
-      const { insuredPrice, searchKey, selectedEngine } = payload;
-      let priceFrom = 0;
-      let priceTo = 0;
-      if (selectedEngine) {
-        state.webSearch.selectedEngine = selectedEngine;
-      }
-      if (insuredPrice) {
-        const range = +insuredPrice * 0.2;
-        priceFrom = +insuredPrice - range;
-        priceTo = +insuredPrice + range;
-      }
+      // const {
+      //   insuredPrice,
+      //   searchKey,
+      //   selectedEngine,
+      //   priceFrom = 0,
+      //   priceTo = 0,
+      //   pageNo = 1,
+      // } = payload;
+      // if (selectedEngine) {
+      //   state.webSearch.selectedEngine = selectedEngine;
+      // }
+
       state.webSearch = {
         ...state.webSearch,
-        priceFrom,
-        priceTo,
-        insuredPrice,
-        searchKey,
+        ...payload,
       };
     },
   },

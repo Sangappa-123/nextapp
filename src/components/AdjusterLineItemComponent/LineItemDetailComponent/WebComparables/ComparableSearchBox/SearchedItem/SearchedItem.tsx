@@ -14,7 +14,7 @@ type propsType = {
 
 function SearchedItem(props: propsType) {
   const { key, data = {} } = props;
-
+  const imgUrl = data?.itemImage;
   function getStarCount(num: number) {
     let numberOfStars = Math.ceil(parseFloat(`${num}`));
     if (numberOfStars > 5) numberOfStars = 5;
@@ -54,10 +54,11 @@ function SearchedItem(props: propsType) {
       <div className={searchedItemStyle.imageDiv}>
         <Image
           unoptimized={true}
-          src={data?.imageUrl}
-          onError={(err) => console.log("===err==", err)}
+          src={imgUrl}
           alt="products"
           fill={true}
+          sizes="100%"
+          style={{ objectFit: "contain" }}
         />
       </div>
       <div className={searchedItemStyle.content}>
