@@ -43,8 +43,9 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
 
   const colourStyles: StylesConfig = {
     control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
-    option: () => {
+    option: (styles: any) => {
       return {
+        ...styles,
         fontSize: "13px",
         padding: "7px",
       };

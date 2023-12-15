@@ -23,7 +23,6 @@ function LineItemDetailComponent() {
         <WebComparables />
         <AddedComparables />
       </div>
-      <div></div>
     </form>
   );
 }

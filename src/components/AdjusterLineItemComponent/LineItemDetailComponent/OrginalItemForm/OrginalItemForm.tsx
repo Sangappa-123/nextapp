@@ -13,7 +13,11 @@ function OrginalItemForm() {
           <label htmlFor="itemDesc" className={orginalItemFormStyle.label}>
             Original Item Description
           </label>
-          <textarea id="itemDesc" className={orginalItemFormStyle.textarea} />
+          <textarea
+            id="itemDesc"
+            className={orginalItemFormStyle.textarea}
+            placeholder="Description"
+          />
         </div>
         <div
           className={clsx(
@@ -45,13 +49,21 @@ function OrginalItemForm() {
           <label htmlFor="cost_per_unit" className={orginalItemFormStyle.label}>
             Cost Per Unit
           </label>
-          <GenericInput id="cost_per_unit" labelClassname={orginalItemFormStyle.label} />
+          <GenericInput
+            id="cost_per_unit"
+            labelClassname={orginalItemFormStyle.label}
+            placeholder="Stated Value(per unit)"
+          />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           <label htmlFor="qty_lost" className={orginalItemFormStyle.label}>
             Qty Lost / Damaged
           </label>
-          <GenericInput id="qty_lost" labelClassname={orginalItemFormStyle.label} />
+          <GenericInput
+            id="qty_lost"
+            labelClassname={orginalItemFormStyle.label}
+            placeholder="Quantity"
+          />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           <label htmlFor="total_lost" className={orginalItemFormStyle.label}>
@@ -99,11 +111,16 @@ function OrginalItemForm() {
         <div className={orginalItemFormStyle.formGroup}>
           <GenericInput
             label="Brand / Manufacturer"
+            placeholder="Brand"
             labelClassname={orginalItemFormStyle.label}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Model" labelClassname={orginalItemFormStyle.label} />
+          <GenericInput
+            label="Model"
+            labelClassname={orginalItemFormStyle.label}
+            placeholder="Model"
+          />
         </div>
         <div
           className={clsx(
@@ -111,16 +128,24 @@ function OrginalItemForm() {
             orginalItemFormStyle.startFromCol1
           )}
         >
-          <GenericInput
+          {/* <GenericInput
             label="Purchased From"
             labelClassname={orginalItemFormStyle.label}
-          />
+          /> */}
+          <label htmlFor="purchasedFrom" className={orginalItemFormStyle.label}>
+            Purchased From
+          </label>
+          <GenericSelect id="purchasedFrom" />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput
+          {/* <GenericInput
             label="Purchase Method"
             labelClassname={orginalItemFormStyle.label}
-          />
+          /> */}
+          <label htmlFor="purchasedMethod" className={orginalItemFormStyle.label}>
+            Purchased Method
+          </label>
+          <GenericSelect id="purchasedMethod" />
         </div>
         <div
           className={clsx(
@@ -128,10 +153,18 @@ function OrginalItemForm() {
             orginalItemFormStyle.startFromCol1
           )}
         >
-          <GenericInput label="Condition" labelClassname={orginalItemFormStyle.label} />
+          {/* <GenericInput label="Condition" labelClassname={orginalItemFormStyle.label} /> */}
+          <label htmlFor="condition" className={orginalItemFormStyle.label}>
+            Condition
+          </label>
+          <GenericSelect id="condition" />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} />
+          {/* <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} /> */}
+          <label htmlFor="room" className={orginalItemFormStyle.label}>
+            Room
+          </label>
+          <GenericSelect id="room" />
         </div>
         <div
           className={clsx(
