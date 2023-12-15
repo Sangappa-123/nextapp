@@ -15,6 +15,7 @@ interface TypedProps<T> {
   isFixedError?: string;
   disabled?: boolean;
   customStyles?: StylesConfig;
+  isSearchable?: boolean;
   [rest: string]: any;
 }
 
@@ -38,11 +39,22 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     handleSelectChange,
     handleClear,
     disabled = false,
+    isSearchable = true,
     ...rest
   } = props;
 
-  const colourStyles: StylesConfig = {
-    control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
+  const customDefaultStyles: StylesConfig = {
+    control: (styles: any) => ({
+      ...styles,
+      backgroundColor: "white",
+      border: "1px solid #c2cad8",
+      boxShadow: "none",
+      "&:focus, &:active": {
+        border: "1px solid #4169e1",
+      },
+      height: "30px",
+      minHeight: "30px",
+    }),
     option: (styles: any) => {
       return {
         ...styles,
@@ -51,8 +63,20 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       };
     },
     input: (styles: any) => ({ ...styles, fontSize: "13px" }),
-    placeholder: (styles: any) => ({ ...styles, fontSize: "12px" }),
+    placeholder: (styles: any) => ({ ...styles, fontSize: "13px" }),
     singleValue: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    dropdownIndicator: (styles: any) => ({
+      ...styles,
+      padding: "2px",
+      height: "25px",
+      width: "22px",
+    }),
+    clearIndicator: (styles: any) => ({
+      ...styles,
+      padding: "2px",
+      height: "25px",
+      width: "22px",
+    }),
     ...customStyles,
   };
 
@@ -89,14 +113,14 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
         <ReactSelect
           // classNames={selectStyle.reactSelectContainer}
           // classNames={"abc"}
-          styles={colourStyles}
+          styles={customDefaultStyles}
           components={{ Menu: CustomMenuWithClear }}
           value={selected}
           onChange={handleSelectChange}
           options={options}
           placeholder={placeholder}
           isClearable={true}
-          isSearchable={true}
+          isSearchable={isSearchable}
           hideSelectedOptions={hideSelectedOptions}
           isMulti={isMulti}
           classNames={{
