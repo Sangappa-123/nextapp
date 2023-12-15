@@ -29,6 +29,10 @@
         border-radius: 4px;
         cursor: pointer;
         border: none;
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.65;
+        }
       }
       .active {
         background-color: #337ab7;

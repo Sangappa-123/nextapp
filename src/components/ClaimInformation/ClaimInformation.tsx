@@ -63,16 +63,18 @@ function ClaimInformation({
       claimNumber: claim,
     })
       .then((res) => {
+        // const isValidInput: RegExp = /^[a-zA-Z0-9\-/]*$/;
+
         console.log("claim res", res, res.data);
         if (res.data)
           setError("claim", {
             type: "manual",
             message: "The claim number already exists",
           });
-        // else if (res.data === null) {
+        // else if (res.data != isValidInput)
         //   setError("claim", {
         //     type: "manual",
-        //     message: "p;ease enter the claims",
+        //     message: "enter the claim correctly",
         //   });
         else {
           clearErrors("claim");
@@ -405,6 +407,7 @@ function ClaimInformation({
             inputFieldClassname={ClaimInformationStyle.inputField}
             value="yes"
             label="Yes"
+            labelClassname={ClaimInformationStyle.labelClassname}
             // id="yes"
             // name="applyTax"
             checked={topping === "yes"}
@@ -418,6 +421,7 @@ function ClaimInformation({
             inputFieldClassname={ClaimInformationStyle.inputField1}
             value="no"
             label="No"
+            labelClassname={ClaimInformationStyle.labelClassname}
             // id="no"
             checked={topping === "no"}
             // name="applyTax"

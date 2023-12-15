@@ -16,7 +16,7 @@ import {
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
 } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
 import CustomReactTable from "@/components/common/CustomReactTable/index";
@@ -26,6 +26,7 @@ interface typeProps {
 }
 const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   const { claimContentListData, totalClaims, tableLoader, claimErrorMsg } = props;
+  const { claimId } = useParams();
   const router = useRouter();
 
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
@@ -210,7 +211,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   //   setColumnFilters(newVal);
   // };
   const handleRowClick = (rowData: any) => {
-    router.push(`/adjuster-line-item-detail/${rowData?.claimId}/${rowData.itemId}`);
+    router.push(`/adjuster-line-item-detail/${claimId}/${rowData.itemId}`);
   };
   const table = useReactTable({
     data: claimResult,

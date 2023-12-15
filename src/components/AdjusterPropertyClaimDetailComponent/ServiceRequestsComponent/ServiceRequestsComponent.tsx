@@ -6,14 +6,16 @@ import ServiceRequestComponentStyle from "./ServiceRequestsComponent.module.scss
 import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import ServiceRequestSearchBox from "./ServiceRequestSearchBox/ServiceRequestSearchBox";
 
 function ServiceRequestsComponent(props: any) {
-  const { serviceRequestListRes } = props;
-  console.log("serviceRequestListRes", serviceRequestListRes);
+  const { serviceRequestListRes, addserviceRequestData } = props;
   React.useEffect(() => {
-    const claimServiceRequestData = serviceRequestListRes.result;
-    props.addserviceRequestData({ claimServiceRequestData });
+    const claimServiceRequestList = serviceRequestListRes.result;
+    addserviceRequestData({ claimServiceRequestList });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
   return (
     <div className="row">
@@ -27,7 +29,7 @@ function ServiceRequestsComponent(props: any) {
         <div
           className={`row ${ServiceRequestComponentStyle.serviceRequestContentContainer}`}
         >
-          <div className="col-lg-6 col-md-6 col-sm-12 col-12 d-flex ps-0">
+          <div className="col-lg-6 col-md-6 col-sm-12 col-12 d-flex ps-0 align-items-center">
             <div className={ServiceRequestComponentStyle.newClaimButton}>
               <GenericButton
                 label="New Service Request"
@@ -39,10 +41,12 @@ function ServiceRequestsComponent(props: any) {
             </div>
           </div>
 
-          <div className="col-lg-6 col-md-6 col-sm-12 col-12"></div>
+          <div className="col-lg-6 col-md-6 col-sm-12 col-12 align-items-center">
+            <ServiceRequestSearchBox setTableLoader={setTableLoader} />
+          </div>
         </div>
       </div>
-      <ServiceRequestTable />
+      <ServiceRequestTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
     </div>
   );
 }

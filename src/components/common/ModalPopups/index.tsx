@@ -7,7 +7,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   // onSubmit: () => void;
-  children: ReactNode;
+  childComp: ReactNode;
   footerContent?: ReactNode | null;
   headingName: string;
   overlayClassName?: string;
@@ -22,7 +22,7 @@ const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   // onSubmit,
-  children,
+  childComp,
   // btnName1,
   // btnName2,
   // showSubmitBtn,
@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({
   footerContent = null,
   headingName,
   overlayClassName = "",
-  modalClassName = "",
+  modalClassName,
 }) => {
   if (!isOpen) return null;
 
@@ -40,16 +40,12 @@ const Modal: React.FC<ModalProps> = ({
         [overlayClassName]: overlayClassName,
       })}
     >
-      <div
-        className={clsx(styles.modal, {
-          [modalClassName]: modalClassName,
-        })}
-      >
+      <div className={clsx(modalClassName ? styles.imageModal : styles.modal)}>
         <div className={styles.modal_header}>
-          <div className={styles.modal_title}>{headingName}</div>
+          {headingName && <div className={styles.modal_title}>{headingName}</div>}
           <IoClose className={styles.cross_icon} onClick={onClose} />
         </div>
-        <div className={styles.modal_body}>{children}</div>
+        <div className={styles.modal_body}>{childComp}</div>
         {footerContent && (
           <div className={styles.modalFooter}>
             {footerContent}

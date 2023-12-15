@@ -4,6 +4,8 @@
 .root {
   border: 1px solid $lightGrey;
   height: fit-content;
+  font-size: 13px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
 
   .heading {
     background-color: $astral;
@@ -25,6 +27,10 @@
     max-height: 535px;
     overflow-y: auto;
     @include customscrollbar(rgb(207, 201, 201), 6px, true);
+    .label {
+      font-size: 13px;
+      font-weight: 600;
+    }
     .textarea {
       resize: horizontal;
       min-height: 64px;
@@ -32,6 +38,9 @@
       border: 1px solid #c2cad8;
       border-radius: 4px;
       padding: 4px;
+      &::placeholder {
+        font-size: 13px;
+      }
     }
     .formGroup {
       row-gap: 4px;

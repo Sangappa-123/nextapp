@@ -1,8 +1,9 @@
 import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
-import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
-import { getClientCookie } from "@/utils/utitlity";
+import { updateServiceRequestVisibleData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import { sortBy } from "lodash";
+import { TABLE_LIMIT_5 } from "@/constants/constants";
 
 interface objectType {
   [key: string | number]: any;
@@ -26,24 +27,39 @@ export const serviceRequestList = async (
   });
 };
 
-export const fetchClaimContentList = async () => {
+export const fetchServiceRequestList = async (
+  pageNumber = 0,
+  pageLimit = TABLE_LIMIT_5,
+  sortByvalue = "",
+  orderBy = "asc",
+  searchKeyword = ""
+) => {
+  console.log("searchKeyword", searchKeyword);
   const state = store.getState();
-  const claimId = state.claimdata.claimId;
+  const claimServiceRequestListTotalData =
+    state.claimServiceRequestdata.claimServiceRequestListTotalData;
 
-  const token = await getClientCookie("accessToken");
+  const searchWord = searchKeyword ?? state.claimServiceRequestdata.searchKeyword;
 
-  const payload = {
-    claimId,
-  };
+  const newclaimResult = claimServiceRequestListTotalData.filter((obj) =>
+    JSON.stringify(obj).toLowerCase().includes(searchWord.toLowerCase())
+  );
+  console.log("After searchKeyword", newclaimResult);
 
-  const serviceRequestRes: any = await serviceRequestList(payload, token);
-
-  if (serviceRequestRes.result.status === 200) {
-    const claimserviceRequestData = serviceRequestRes.result;
-    store.dispatch(
-      addserviceRequestData({ claimserviceRequestData: claimserviceRequestData })
-    );
-    return claimserviceRequestData;
+  let sortedData;
+  if (orderBy === "asc") {
+    sortedData = sortBy(newclaimResult, sortByvalue);
+  } else {
+    sortedData = sortBy(newclaimResult, sortByvalue).reverse();
   }
-  return null;
+  const start = pageNumber * pageLimit;
+  const end = start + pageLimit;
+
+  const claimServiceRequestList = sortedData.slice(start, end);
+
+  console.log("After searchKeyword claimServiceRequestList", claimServiceRequestList);
+
+  store.dispatch(updateServiceRequestVisibleData({ claimServiceRequestList }));
+
+  return claimServiceRequestList;
 };

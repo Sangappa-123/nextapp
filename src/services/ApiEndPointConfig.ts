@@ -29,6 +29,7 @@ enum apiEndPoints {
   excelcsvuploaddata = "web/read/postloss/items",
   itemsDetails = "web/claim/itemdetails",
   categoriesRequest = "web/categories",
+  replacementApi = "web/claim/search/replacement",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
