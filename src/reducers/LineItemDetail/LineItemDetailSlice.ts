@@ -81,8 +81,8 @@ export const searchComparable = createAsyncThunk(
         console.log("========33333==", priceFrom, priceTo, payload);
         if (!priceFrom && !priceTo) {
           const calculatedPrice = getPriceRange(payload.insuredPrice ?? 0);
-          priceFrom = calculatedPrice.priceFrom;
-          priceTo = calculatedPrice.priceTo;
+          priceFrom = +calculatedPrice.priceFrom.toFixed(2);
+          priceTo = +calculatedPrice.priceTo.toFixed(2);
         }
       }
       dispatch(
