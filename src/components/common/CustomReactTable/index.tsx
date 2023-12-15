@@ -19,6 +19,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     loader = null,
     tableDataErrorMsg = null,
     handleRowClick = null,
+    handleEditRowClick = null,
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
@@ -152,6 +153,10 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                 {table.getRowModel().rows.map((row: any) => (
                   <tr
                     key={row.id}
+                    className={clsx({
+                      [CustomReactTableStyles.invalidRow]:
+                        row.original.isValidItem === false,
+                    })}
                     {...(handleRowClick
                       ? {
                           onClick: () => {
@@ -159,7 +164,16 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                           },
                         }
                       : {})}
+                    {...(handleEditRowClick
+                      ? {
+                          onClick: () => {
+                            handleEditRowClick(row.original.id);
+                          },
+                        }
+                      : {})}
                   >
+                    {console.log("origalllllll:", row.original)}
+                    {console.log("isValidItem:", row.original.isValidItem)}
                     {row.getVisibleCells().map((cell: any, index: number) => (
                       <td
                         key={cell.id}

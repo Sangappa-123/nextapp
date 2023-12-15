@@ -29,6 +29,7 @@
         background-color: #f3f4f6;
       }
     }
+
     td {
       border: 1px solid #e7ecf1;
       padding: 4px;
@@ -41,6 +42,20 @@
       color: #333333;
     }
   }
+
+  tbody tr.invalidRow td {
+    border-top: 2px solid #ea6060;
+    border-bottom: 2px solid #ea6060;
+  }
+
+  tbody tr.invalidRow td:first-child {
+    border-left: 2px solid #ea6060;
+  }
+
+  tbody tr.invalidRow td:last-child {
+    border-right: 2px solid #ea6060;
+  }
+
   .paginationContainer {
     display: flex;
     justify-content: space-between;
