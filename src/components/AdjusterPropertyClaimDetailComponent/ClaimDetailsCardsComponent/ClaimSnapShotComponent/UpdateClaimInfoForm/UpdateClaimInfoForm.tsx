@@ -143,6 +143,7 @@ const UpdateClaimInfoForm: React.FC = () => {
               <GenericSelect
                 // labelText={selectLabel}
                 // placeholder={selectPlaceholder}
+                isSearchable={false}
                 options={selectOptions}
                 // showError={errors[selectName]}
                 // errorMsg={errors[selectName]?.message}

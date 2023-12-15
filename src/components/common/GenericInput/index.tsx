@@ -7,6 +7,11 @@ export enum inputTheme {
   normal = "normal-input",
   default = "",
 }
+enum inputSize {
+  small = "small-input",
+  medium = "medium-input",
+  large = "large-input",
+}
 
 type propsType = {
   placeholder?: string;
@@ -18,6 +23,7 @@ type propsType = {
   label?: string;
   labelClassname?: string;
   theme?: keyof typeof inputTheme;
+  size?: keyof typeof inputSize;
   [rest: string]: any;
 };
 
@@ -34,6 +40,7 @@ function GenericInput(props: propsType, ref: any) {
     theme = "default",
     isFixedError = false,
     inputFieldWrapperClassName = "",
+    size = "small",
     ...rest
   } = props;
   return (
@@ -66,6 +73,7 @@ function GenericInput(props: propsType, ref: any) {
             [inputFieldClassname]: inputFieldClassname,
             // [inputStyle["error-field"]]: showError,
             [inputStyle[inputTheme[theme]]]: true,
+            [inputStyle[inputSize[size]]]: true,
           })}
           {...rest}
         />
