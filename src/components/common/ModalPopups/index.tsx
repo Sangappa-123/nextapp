@@ -7,7 +7,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   // onSubmit: () => void;
-  childComp: ReactNode;
+  childComp?: ReactNode;
   footerContent?: ReactNode | null;
   headingName: string;
   overlayClassName?: string;
@@ -19,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   // onSubmit,
-  childComp,
+  childComp = null,
   // btnName1,
   // btnName2,
   // showSubmitBtn,
