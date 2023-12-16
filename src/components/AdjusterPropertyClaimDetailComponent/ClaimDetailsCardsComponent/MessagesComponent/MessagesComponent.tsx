@@ -19,7 +19,7 @@ const MessagesComponent: React.FC = () => {
       <Modal
         isOpen={isOpen}
         onClose={handleOpenModal}
-        headingName="Add new message"
+        headingName="Add New Message"
         childComp={<AddNewMsgModalComponent />}
         overlayClassName={MessageCardStyle.modalContainer}
         modalWidthClassName={MessageCardStyle.modalContent}
@@ -29,7 +29,7 @@ const MessagesComponent: React.FC = () => {
         <GenericComponentHeading title="Messages">
           <div className="text-right">
             <Link href="#" onClick={handleOpenModal}>
-              Add new messages
+              Add New Messages
             </Link>
           </div>
         </GenericComponentHeading>
