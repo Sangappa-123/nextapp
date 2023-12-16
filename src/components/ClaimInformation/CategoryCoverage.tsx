@@ -53,7 +53,6 @@ function CategoryCoverage(props: any) {
       <button className={clsx("ml-8", ClaimInformationStyle.value)}>
         {props.data.categoryName}
       </button>
-      {console.log("categoryName")}
       <div className={clsx("col-lg-2 ml-12", ClaimInformationStyle.aggregateStyle)}>
         <GenericInput
           type="text"
