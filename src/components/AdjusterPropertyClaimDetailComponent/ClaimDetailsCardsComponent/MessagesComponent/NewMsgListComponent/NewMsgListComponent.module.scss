@@ -4,6 +4,10 @@
   cursor: pointer;
   position: relative;
 }
+.imageContainer {
+  display: flex;
+  gap: 12px;
+}
 .container::-webkit-scrollbar {
   width: 0.5em;
 }
