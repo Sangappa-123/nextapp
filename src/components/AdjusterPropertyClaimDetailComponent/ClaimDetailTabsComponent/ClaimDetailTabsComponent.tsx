@@ -4,6 +4,7 @@ import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButto
 type propTypes = {
   serviceRequestListRes: any;
   claimContentListRes: any;
+  claimId: string;
 };
 
 const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
@@ -14,6 +15,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
         <ClaimDetailContentTopButtonsComponent
           serviceRequestListRes={props.serviceRequestListRes}
           claimContentListRes={props.claimContentListRes}
+          claimId={props.claimId}
         />
       ),
       // content: <DashboardNotification data={data} />,

@@ -7,7 +7,13 @@ import GenericSelect from "@/components/common/GenericSelect";
 import GenericButton from "@/components/common/GenericButton";
 import { IoClose } from "react-icons/io5";
 
-const AddNewMsgModalComponent = () => {
+interface AddNewMsgModalComponentProps {
+  handleOpenModal: () => void;
+}
+
+const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = ({
+  handleOpenModal,
+}) => {
   const [docs, setDocs] = useState<string[]>([]);
 
   const options = [
@@ -104,7 +110,7 @@ const AddNewMsgModalComponent = () => {
         <div className={clsx(modalStyle.alignRight, "row col-12 m-2")}>
           <div className={"row col-7"}>
             <div className={clsx("row col-6", modalStyle.centerAlign)}>
-              <GenericButton label="Cancel" size="medium" />
+              <GenericButton label="Cancel" size="medium" onClick={handleOpenModal} />
             </div>
             <div className="row col-6">
               <GenericButton label="Add Messages" size="medium" />
