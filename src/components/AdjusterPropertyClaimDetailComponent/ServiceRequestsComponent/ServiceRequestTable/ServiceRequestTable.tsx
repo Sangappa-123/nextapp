@@ -92,7 +92,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
       },
       enableSorting: true,
     }),
-    columnHelper.accessor((row) => row.status.statusName, {
+    columnHelper.accessor((row) => row?.status?.statusName, {
       id: "Status",
       header: () => <span>Status</span>,
       enableSorting: true,
