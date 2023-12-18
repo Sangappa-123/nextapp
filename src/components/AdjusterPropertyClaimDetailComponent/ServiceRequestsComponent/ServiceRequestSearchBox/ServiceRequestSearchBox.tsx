@@ -3,10 +3,7 @@ import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import ServiceRequestSearchStyle from "./ServiceRequestSearchBox.module.scss";
 import { fetchServiceRequestList } from "@/services/ClaimServiceRequestListService";
-import {
-  addServiceSearchKeyWord,
-  updateServiceRequestVisibleData,
-} from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import { addServiceSearchKeyWord } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import { ConnectedProps, connect } from "react-redux";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
 
@@ -34,6 +31,7 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
   };
   const searchKey = async (event: any) => {
     if (event.key === "Enter") {
+      setTableLoader(true);
       addServiceSearchKeyWord({ searchKeyword: event.target.value });
       const result = await fetchServiceRequestList(
         0,
@@ -42,7 +40,6 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
         "asc",
         event.target.value
       );
-      updateServiceRequestVisibleData({ claimServiceRequestList: result });
       if (result) {
         setTableLoader(false);
       }
@@ -68,7 +65,6 @@ const mapStateToProps = ({ claimdata }: any) => ({
 });
 const mapDispatchToProps = {
   addServiceSearchKeyWord,
-  updateServiceRequestVisibleData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -198,9 +198,9 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       }
     }
   };
-  const handleRowClick = (rowData: any) => {
-    addSelectedClaimId({
-      claimId: rowData,
+  const handleRowClick = async (rowData: any) => {
+    await addSelectedClaimId({
+      claimId: rowData?.claimId,
     });
     router.push(`/adjuster-property-claim-details/${rowData?.claimId}`);
   };
@@ -223,7 +223,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
       value: 2,
     },
   ];
-  const filterApiCall = async (values: any) => {
+  const filterFn = async (values: any) => {
     setTableLoader(true);
 
     let selectedValues: any = [];
@@ -276,7 +276,7 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
         loader={tableLoader}
         tableDataErrorMsg={claimErrorMsg}
         handleRowClick={handleRowClick}
-        filterApiCall={filterApiCall}
+        filterFn={filterFn}
         customFilterValues={customFilterValues}
       />
     </div>

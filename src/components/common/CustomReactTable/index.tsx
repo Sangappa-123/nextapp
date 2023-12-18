@@ -22,7 +22,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
-    filterApiCall = null,
+    filterFn = null,
     customFilterValues = null,
   } = props;
 
@@ -127,7 +127,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 table={table}
                                 showFilterBLock={showFilterBLock}
                                 setShowFilterBLock={setShowFilterBLock}
-                                filterApiCall={filterApiCall}
+                                filterFn={filterFn}
                                 defaultAllChecked={true}
                                 customFilterValues={customFilterValues}
                               />

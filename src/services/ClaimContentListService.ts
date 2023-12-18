@@ -2,6 +2,7 @@ import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+
 import { getClientCookie } from "@/utils/utitlity";
 
 interface objectType {
@@ -9,6 +10,7 @@ interface objectType {
 }
 export const claimContentList = async (payload: any, token: any): Promise<objectType> => {
   const headersData: object = getHeaderWithoutToken();
+
   return new Promise((resolve, rejects) => {
     fetch(getApiEndPoint("claimContentList"), {
       method: "POST",

@@ -7,6 +7,7 @@ import ContentListComponent from "../ContentListComponent";
 type propTypes = {
   serviceRequestListRes: any;
   claimContentListRes: any;
+  claimId: string;
 };
 
 const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propTypes) => {
@@ -57,7 +58,10 @@ const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propT
       </div>
       <div className="row">
         <div className="col-lg-12 col-md-12 col-12">
-          <ContentListComponent claimContentListRes={props.claimContentListRes} />
+          <ContentListComponent
+            claimContentListRes={props.claimContentListRes}
+            claimId={props.claimId}
+          />
         </div>
       </div>
     </div>

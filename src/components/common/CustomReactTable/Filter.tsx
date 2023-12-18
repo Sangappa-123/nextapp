@@ -10,7 +10,7 @@ export default function Filter({
   showFilterBLock,
   setShowFilterBLock,
   defaultAllChecked = true,
-  filterApiCall,
+  filterFn,
   customFilterValues,
 }: {
   column: React.SetStateAction<any>;
@@ -18,19 +18,20 @@ export default function Filter({
   showFilterBLock: React.SetStateAction<string | null>;
   setShowFilterBLock: React.SetStateAction<any>;
   defaultAllChecked: React.SetStateAction<boolean | undefined>;
-  filterApiCall: React.SetStateAction<any | null>;
+  filterFn: React.SetStateAction<any | null>;
   customFilterValues: React.SetStateAction<any | null>;
 }) {
   const [currentValue, setCurrentValue] = React.useState<React.SetStateAction<any>>([]);
+  const [sortedUniqueValuesFirst, setSortedUniqueValuesFirst] = React.useState<
+    React.SetStateAction<any>
+  >([]);
+
   const [isSelectAllChecked, setIsSelectAllChecked] =
     React.useState<React.SetStateAction<any>>(false);
-  const [preCheckedValue, setPreCheckedValue] =
-    React.useState<React.SetStateAction<boolean>>(false);
+  // const [preCheckedValue, setPreCheckedValue] =
+  // React.useState<React.SetStateAction<boolean>>(false);
 
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id);
-
-  const columnFilterValue = column.getFilterValue();
-  console.log("columnFilterValue", columnFilterValue);
 
   const sortedUniqueValues = React.useMemo(
     () =>
@@ -41,8 +42,12 @@ export default function Filter({
   );
 
   React.useEffect(() => {
-    if (defaultAllChecked && sortedUniqueValues) {
-      setCurrentValue(sortedUniqueValues);
+    if (defaultAllChecked && sortedUniqueValues && sortedUniqueValuesFirst.length === 0) {
+      const uniqueValues = sortedUniqueValues.map((row) => {
+        return row === null || row === undefined ? "BLANK" : row;
+      });
+      setCurrentValue(uniqueValues);
+      setSortedUniqueValuesFirst(uniqueValues);
     }
   }, [sortedUniqueValues]);
 
@@ -122,28 +127,12 @@ export default function Filter({
     // column.setFilterValue([...currentValue, e.target.value]);
   };
   const handleSubmit = () => {
-    // console.log("currentValue", currentValue);
-    if (filterApiCall) {
-      filterApiCall(currentValue);
+    if (filterFn) {
+      filterFn(currentValue, column.id);
     }
-    // if(currentValue.length > 0){
-    //   currentValue.map((item: string)=> {
-    //     column.setFilterValue(item);
-    //   });
-    // }else{
-    //   column.setFilterValue(null);
-    // }
-    setPreCheckedValue(true);
     setShowFilterBLock(null);
   };
   const isChecked = (checkedValue: string) => {
-    // console.log("pre",preCheckedValue);
-    // let checked
-    if (preCheckedValue) {
-      // console.log("pre columnFilterValue",columnFilterValue);
-      //  checked =  columnFilterValue.filter((item : string) => item === checkedValue);
-    }
-
     const checked = currentValue.filter((item: string) => item === checkedValue);
 
     if (checked.length != 0) {
@@ -163,9 +152,9 @@ export default function Filter({
         setCurrentValue([]);
       }
     } else {
-      if (sortedUniqueValues.length !== currentValue.length) {
+      if (sortedUniqueValuesFirst.length !== currentValue.length) {
         const custArr: any = [];
-        sortedUniqueValues.map((item: any) => {
+        sortedUniqueValuesFirst.map((item: any) => {
           custArr.push(item);
         });
         setCurrentValue(custArr);
@@ -182,7 +171,7 @@ export default function Filter({
         setIsSelectAllChecked(true);
       }
     } else {
-      if (sortedUniqueValues.length !== currentValue.length) {
+      if (sortedUniqueValuesFirst.length !== currentValue.length) {
         setIsSelectAllChecked(false);
       } else {
         setIsSelectAllChecked(true);
@@ -260,7 +249,7 @@ export default function Filter({
               </>
             ) : (
               <>
-                {filterApiCall && customFilterValues ? (
+                {filterFn && customFilterValues ? (
                   <>
                     {customFilterValues
                       .slice(0, 5000)
@@ -284,7 +273,7 @@ export default function Filter({
                   </>
                 ) : (
                   <>
-                    {sortedUniqueValues
+                    {sortedUniqueValuesFirst
                       .slice(0, 5000)
                       .map((value: any, index: number) => (
                         <div
@@ -296,9 +285,9 @@ export default function Filter({
                             className={CustomReactTableStyles.filterCheckBox}
                             id="selectAll"
                             name="selectAll"
-                            value={value ?? ""}
+                            value={value ?? "BLANK"}
                             onChange={handleChecked}
-                            checked={isChecked(value)}
+                            checked={isChecked(value ?? "BLANK")}
                           />
                           {value ?? "BLANK"}
                         </div>
