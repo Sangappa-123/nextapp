@@ -6,7 +6,7 @@ import { StoreProvider } from "@/store/store";
 import { Locale } from "@/i18n.config";
 import NotifyMessage from "@/components/common/NotifyMessage";
 
-const inter = Open_Sans({ subsets: ["latin"] });
+const openSans = Open_Sans({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Artigem Streamline",
@@ -20,8 +20,8 @@ export default function RootLayout({
   params: { lang: Locale };
 }) {
   return (
-    <html lang={params.lang}>
-      <body className={inter.className}>
+    <html lang={params.lang} className={openSans.className}>
+      <body>
         <StoreProvider lang={params.lang}>
           <NotifyMessage />
           {children}

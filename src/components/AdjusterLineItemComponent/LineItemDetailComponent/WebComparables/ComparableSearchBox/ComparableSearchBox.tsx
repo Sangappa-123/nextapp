@@ -2,18 +2,39 @@ import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import comparableSearchBoxStyle from "./comparableSearchBox.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
-import { ConnectedProps, connect } from "react-redux";
-import { RootState } from "@/store/store";
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
 
-const ComparableSearchBox: React.FC<connectorType> = (props) => {
-  const { searchKey, selectedEngine } = props;
-  const [searchValue, setSearchValue] = React.useState(searchKey);
+interface comparableSearchBoxType {
+  selectedEngine: typeof WEB_SEARCH_ENGINES;
+  searchKey: string;
+  // setSearchInput: React.Dispatch<React.SetStateAction<searchInputType>>;
+  updateState: (key: string, value: string | number | object) => void;
+  handleSubmit: () => void;
+  isSearching: boolean;
+  searchByEngine: (engine: typeof WEB_SEARCH_ENGINES) => void;
+}
+
+const ComparableSearchBox = (props: comparableSearchBoxType) => {
+  const {
+    searchKey,
+    selectedEngine,
+    updateState,
+    handleSubmit,
+    isSearching,
+    searchByEngine,
+  } = props;
+  // const [searchValue, setSearchValue] = React.useState(searchKey);
 
   const handleSearch = (e: React.FocusEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    const value = e.target.value;
+    updateState("searchKey", value);
   };
-  const handleKeyDown = () => {};
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
 
   // if (isSearching) return null;
   return (
@@ -23,9 +44,10 @@ const ComparableSearchBox: React.FC<connectorType> = (props) => {
         <input
           type="text"
           placeholder="Search..."
-          value={searchValue}
+          value={searchKey}
           onChange={handleSearch}
           onKeyDown={handleKeyDown}
+          disabled={isSearching}
         />
       </div>
       <GenericSelect
@@ -36,17 +58,22 @@ const ComparableSearchBox: React.FC<connectorType> = (props) => {
         name="engine"
         selected={selectedEngine}
         isClearable={false}
+        disabled={isSearching}
+        onChange={(e: typeof WEB_SEARCH_ENGINES) => {
+          const value = { ...e };
+          searchByEngine(value);
+        }}
       />
     </div>
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  isSearching: state.lineItemDetail.webSearch.isSearching,
-  searchKey: state.lineItemDetail.webSearch.searchKey,
-  selectedEngine: state.lineItemDetail.webSearch.selectedEngine,
-});
+// const mapStateToProps = (state: RootState) => ({
+//   isSearching: state.lineItemDetail.webSearch.isSearching,
+//   searchKey: state.lineItemDetail.webSearch.searchKey,
+//   selectedEngine: state.lineItemDetail.webSearch.selectedEngine,
+// });
 
-const connector = connect(mapStateToProps, null);
-type connectorType = ConnectedProps<typeof connector>;
-export default connector(ComparableSearchBox);
+// const connector = connect(mapStateToProps, null);
+// type connectorType = ConnectedProps<typeof connector>;
+export default ComparableSearchBox;

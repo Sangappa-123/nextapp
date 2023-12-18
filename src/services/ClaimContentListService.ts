@@ -4,6 +4,7 @@ import store from "@/store/store";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 
 import { getClientCookie } from "@/utils/utitlity";
+import HttpService from "@/HttpService";
 
 interface objectType {
   [key: string | number]: any;
@@ -23,6 +24,18 @@ export const claimContentList = async (payload: any, token: any): Promise<object
       })
       .catch((error) => rejects({ error }));
   });
+};
+
+export const claimContentListV2 = async (payload: { claimId: string }) => {
+  try {
+    const url = getApiEndPoint("claimContentList");
+    const http = new HttpService({ isClient: true });
+    const res = await http.post(url, payload);
+    return res;
+  } catch (error) {
+    console.warn("claimContentListV2__err", error);
+    throw error;
+  }
 };
 
 export const fetchClaimContentList = async () => {

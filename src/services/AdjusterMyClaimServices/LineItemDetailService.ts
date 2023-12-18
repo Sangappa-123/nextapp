@@ -1,6 +1,5 @@
 import HttpService from "@/HttpService";
 import { getApiEndPoint } from "../ApiEndPointConfig";
-import { unknownObjectType } from "@/constants/customTypes";
 
 export const fetchClaimItemDetails = async (
   payload: { itemId: number },
@@ -18,8 +17,19 @@ export const fetchClaimItemDetails = async (
   }
 };
 
+export type searchComparableReq = {
+  item: string;
+  id: string;
+  numberOfCounts: number;
+  priceFrom: number;
+  pincode: number | null;
+  pageNo: number;
+  serfWowSearch: boolean;
+  ids: [1];
+  priceTo?: number;
+};
 export const fetchComparable = async (
-  payload: unknownObjectType,
+  payload: searchComparableReq,
   isClient: boolean = false
 ) => {
   try {

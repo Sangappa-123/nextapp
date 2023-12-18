@@ -24,33 +24,34 @@ function ConfirmModal({
   modalHeading = "",
 }: props) {
   return (
-    <Modal
-      isOpen={showConfirmation}
-      headingName={modalHeading}
-      onClose={() => closeHandler && closeHandler()}
-      footerContent={
-        <div className={confirmModalStyle.modalFooter}>
-          <GenericButton
-            label={closeBtnText}
-            size="medium"
-            onClickHandler={() => closeHandler && closeHandler()}
-          />
-          <GenericButton
-            label={submitBtnText}
-            theme="deleteBtn"
-            size="medium"
-            onClickHandler={() => submitHandler && submitHandler()}
-          />
-        </div>
-      }
-      overlayClassName={confirmModalStyle.overlay}
-      modalClassName={confirmModalStyle.modal}
-    >
+    <>
+      <Modal
+        isOpen={showConfirmation}
+        headingName={modalHeading}
+        onClose={() => closeHandler && closeHandler()}
+        footerContent={
+          <div className={confirmModalStyle.modalFooter}>
+            <GenericButton
+              label={closeBtnText}
+              size="medium"
+              onClickHandler={() => closeHandler && closeHandler()}
+            />
+            <GenericButton
+              label={submitBtnText}
+              theme="deleteBtn"
+              size="medium"
+              onClickHandler={() => submitHandler && submitHandler()}
+            />
+          </div>
+        }
+        overlayClassName={confirmModalStyle.overlay}
+        modalClassName={confirmModalStyle.modal}
+      />
       <div className={confirmModalStyle.modalBody}>
         {headingText && <h3 className={confirmModalStyle.heading}>{headingText}</h3>}
         {descText && <p className={confirmModalStyle.desc}>{descText}</p>}
       </div>
-    </Modal>
+    </>
   );
 }
 

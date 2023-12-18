@@ -7,8 +7,7 @@ import ContentListComponentStyle from "./ContentListComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
-import clsx from "clsx";
-
+import { Tooltip } from "react-tooltip";
 import Modal from "@/components/common/ModalPopups";
 import AddItemModalFormComp from "@/components/AddItemModalForm";
 
@@ -44,26 +43,43 @@ function ContentListComponent(props: any) {
         />
       </div>
 
-      {showDropDown && (
-        <div className={clsx(ContentListComponentStyle.dropDownDiv, "p-0")}>
-          <div className={ContentListComponentStyle.dropDownInnerDiv} onClick={openModal}>
-            Add Items
-          </div>
-
-          <div className={ContentListComponentStyle.dropDownInnerDiv}>Load from file</div>
-        </div>
-      )}
-
       <div className={ContentListComponentStyle.contentListContainer}>
         <div className={`row ${ContentListComponentStyle.contentListContentContainer}`}>
           <div className="col-md-7 col-sm-12 col-xs-12 col-lg-7 d-flex ps-0">
             <div className={ContentListComponentStyle.contentListButtonDiv}>
+              <Tooltip
+                anchorSelect="#my-anchor-element"
+                place="bottom"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  padding: "0px",
+                  zIndex: "999",
+                  boxShadow: "2px 2px 2px 2px #888888",
+                }}
+                openOnClick={true}
+                clickable={true}
+              >
+                <div className="p-0">
+                  <div
+                    className={ContentListComponentStyle.dropDownInnerDiv}
+                    onClick={openModal}
+                  >
+                    Add Items
+                  </div>
+
+                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                    Load from file
+                  </div>
+                </div>
+              </Tooltip>
               <GenericButton
                 label="Add Item"
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
+                id="my-anchor-element"
                 onClick={handleDropDown}
               />
               <GenericButton
@@ -112,6 +128,7 @@ function ContentListComponent(props: any) {
               onClose={closeModal}
               childComp={<AddItemModalFormComp />}
               headingName="Add Item"
+              modalWidthClassName={ContentListComponentStyle.modalWidth}
             ></Modal>
           </div>
           <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12"></div>

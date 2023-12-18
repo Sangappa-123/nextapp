@@ -19,7 +19,7 @@ import ProgressBar from "../common/ProgressBar/ProgressBar";
 //   postLossItemDetails: any[];
 // }
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
-  const { rowsProcessed } = props;
+  const { rowsProcessed, postLossItemDetails } = props;
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isFileChosen, setIsFileChosen] = useState(false);
@@ -28,6 +28,8 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [excelData, setExcelData] = useState<any[] | null>(null);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const [validItemsCount, setValidItemsCount] = useState<number>(0);
+  const [failedItemsCount, setFailedItemsCount] = useState<number>(0);
 
   const handleCancelClick = () => {
     setSelectedFile(null);
@@ -75,11 +77,26 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
         const response = await fetchExcelCsvTableData(formData);
 
         if (response.status === 200) {
+          // dispatch(setExcelCsvUploadData(response.data));
+          // const failedItems = response.data.failedItems || [];
+          // if (failedItems.length > 0) {
+          //   console.log("Failed Items:", failedItems);
+          // }
+
+          // console.log("rrrrrrrrrrr", response);
+          // console.log("ssssssss", response.data);
+          // console.log("lllllllll", response.data.postLossItemDetails);
+          // setExcelData(response.data.postLossItemDetails);
+          // setIsFileUploaded(true);
+          const { postLossItemDetails } = response.data;
           dispatch(setExcelCsvUploadData(response.data));
 
-          console.log("rrrrrrrrrrr", response);
-          console.log("ssssssss", response.data);
-          console.log("lllllllll", response.data.postLossItemDetails);
+          const failedItems = postLossItemDetails.filter(
+            (item: any) => !item.isValidItem
+          );
+          setFailedItemsCount(failedItems.length);
+          setValidItemsCount(postLossItemDetails.length - failedItems.length);
+
           setExcelData(response.data.postLossItemDetails);
           setIsFileUploaded(true);
         } else {
@@ -117,16 +134,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
     setUploadProgress(0);
     setExcelData(null);
   }, [selectedFile]);
-
-  // const handleCancelClick = () => {
-  //   setIsCancelButtonClicked(true);
-  //   setSelectedFile(null);
-  //   setIsFileChosen(false);
-  //   setIsFileUploaded(false);
-  //   setIsLoading(false);
-  //   setUploadProgress(0);
-  //   setExcelData(null);
-  // };
 
   return (
     <>
@@ -285,15 +292,34 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                 </div>
                 <div>
                   <p className={`mt-2 ${UploadItemsStyle.pTitleTextRows}`}>
-                    Valid Item(s): <span className={UploadItemsStyle.spanTitle}></span>
+                    Valid Item(s):{" "}
+                    <span className={UploadItemsStyle.spanTitle}>
+                      {validItemsCount}/{rowsProcessed}
+                    </span>
                   </p>
                 </div>
                 <div>
                   <p className={`mt-2 mb-3 ${UploadItemsStyle.pTitleTextRowsFailed}`}>
-                    Failed Item(s): <span className={UploadItemsStyle.spanTitle}></span>
+                    Failed Item(s):{" "}
+                    <span className={UploadItemsStyle.spanTitle}>
+                      {failedItemsCount}/{rowsProcessed}
+                    </span>
                   </p>
                 </div>
               </div>
+              {failedItemsCount > 0 && (
+                <div>
+                  <p>Failed Items:</p>
+                  {postLossItemDetails
+                    .filter((item) => item.isValidItem === false)
+                    .map((failedItem) => (
+                      <div key={failedItem.id}>
+                        Item Number: {failedItem.id}, Failed Reasons:{" "}
+                        {failedItem.failedReasons?.join(", ")}
+                      </div>
+                    ))}
+                </div>
+              )}
               <ExcelSheetTable />
             </div>
           </Cards>

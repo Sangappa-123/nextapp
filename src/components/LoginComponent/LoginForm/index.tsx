@@ -111,6 +111,7 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
           showError={errors["username"]}
           errorMsg={errors?.username?.message}
           placeholder={translate?.inputFields?.usernamePlaceholder}
+          size="large"
           id="username"
           {...register("username")}
         />
@@ -118,6 +119,7 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
           showError={!errors["username"] && errors["password"]}
           errorMsg={errors?.password?.message}
           placeholder={translate?.inputFields?.passwordPlaceholder}
+          size="large"
           type="password"
           id="password"
           {...register("password")}

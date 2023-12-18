@@ -1,10 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { claimContentListV2 } from "@/services/ClaimContentListService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   claimContentListDataFull: [],
   claimContentListData: [],
   claimErrorMsg: "",
 };
+export const fetchClaimContentAction = createAsyncThunk(
+  "claimContent/fetchData",
+  async (payload: { claimId: string }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await claimContentListV2(payload);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const ClaimContentSlice = createSlice({
   initialState,
@@ -49,6 +62,17 @@ const ClaimContentSlice = createSlice({
     clearFilter(state) {
       state.claimContentListData = state.claimContentListDataFull;
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchClaimContentAction.pending, (state) => {
+      state.claimContentListData = [];
+    });
+    builder.addCase(fetchClaimContentAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      if (payload?.status === 200) {
+        state.claimContentListData = payload?.data;
+      }
+    });
   },
 });
 export default ClaimContentSlice;

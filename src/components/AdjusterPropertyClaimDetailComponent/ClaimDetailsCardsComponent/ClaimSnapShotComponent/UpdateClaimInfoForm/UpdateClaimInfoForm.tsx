@@ -52,6 +52,34 @@ const UpdateClaimInfoForm: React.FC = () => {
     },
   ];
 
+  const selectBoxStyles = {
+    control: (styles: any) => ({
+      ...styles,
+      backgroundColor: "white",
+      border: "1px solid #c2cad8",
+      boxShadow: "none",
+      "&:focus, &:active": {
+        border: "1px solid #4169e1",
+      },
+      height: "22px",
+      minHeight: "22px",
+    }),
+    valueContainer: (styles: any) => ({ ...styles, bottom: "1.3px" }),
+    dropdownIndicator: (styles: any) => ({
+      ...styles,
+      padding: "1px",
+      height: "22px",
+      width: "15px",
+    }),
+    clearIndicator: (styles: any) => ({
+      ...styles,
+      padding: "1px",
+      height: "22px",
+      width: "15px",
+    }),
+    // ...customStyles,
+  };
+
   //   type inputTypes = {
   //     claimId: string,
   //     updatedClaimNumber: string,
@@ -99,7 +127,7 @@ const UpdateClaimInfoForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
+    <form id="claim-snapshot-form" onSubmit={handleSubmit(submitHandler)}>
       <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
         <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
           Claim #
@@ -143,6 +171,8 @@ const UpdateClaimInfoForm: React.FC = () => {
               <GenericSelect
                 // labelText={selectLabel}
                 // placeholder={selectPlaceholder}
+                customStyles={selectBoxStyles}
+                isSearchable={false}
                 options={selectOptions}
                 // showError={errors[selectName]}
                 // errorMsg={errors[selectName]?.message}

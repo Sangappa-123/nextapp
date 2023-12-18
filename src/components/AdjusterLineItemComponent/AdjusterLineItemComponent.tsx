@@ -14,10 +14,20 @@ import {
   fetchLineItemDetail,
   resetLineItemDetail,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
+import clsx from "clsx";
+import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
-  const { fetchLineItemDetail, isLoading, lineItem, resetLineItemDetail } = props;
-  const { itemId } = useParams();
+  const {
+    isLoading,
+    lineItem,
+    resetLineItemDetail,
+    claimData = [],
+    fetchLineItemDetail,
+    fetchClaimContentAction,
+  } = props;
+  const { itemId, claimId } = useParams();
+  console.log("=============", claimId, claimData);
   const tabData = [
     {
       name: "Item Details",
@@ -45,15 +55,16 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   useEffect(() => {
     if (!isInit.current) {
       fetchLineItemDetail({ itemId: +itemId });
+      fetchClaimContentAction({ claimId: claimId.toString() });
       isInit.current = true;
     }
 
     return () => {
       resetLineItemDetail();
     };
-  }, [isInit, fetchLineItemDetail, resetLineItemDetail, itemId]);
+  }, [isInit, fetchLineItemDetail, resetLineItemDetail, itemId, claimId]);
 
-  if (isLoading) {
+  if (isLoading && claimData.length > 0) {
     return <Loading />;
   }
 
@@ -64,11 +75,18 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
         customClassname={lineItemComponentStyle.breadcrumb}
         customNavClassname={lineItemComponentStyle.customNav}
       />
-      <PaginationButtons pageNumber={+lineItem?.itemNumber} />
+      {claimData.length > 0 && (
+        <PaginationButtons
+          pageNumber={+lineItem?.itemNumber}
+          totalPages={claimData.length > 0 ? claimData.length : 1}
+        />
+      )}
       <GenericComponentHeading
         customTitleClassname={lineItemComponentStyle.headingTitle}
         title="Item# 6 - Smith, Gracie"
-        customHeadingClassname={lineItemComponentStyle.heading}
+        customHeadingClassname={clsx(lineItemComponentStyle.heading, {
+          [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
+        })}
       />
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />
@@ -80,11 +98,13 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 const mapStateToProps = (state: RootState) => ({
   isLoading: state.lineItemDetail.isLoading,
   lineItem: state.lineItemDetail.lineItem,
+  claimData: state.claimContentdata?.claimContentListData,
 });
 
 const mapDispatchToProps = {
   fetchLineItemDetail,
   resetLineItemDetail,
+  fetchClaimContentAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
