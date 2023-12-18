@@ -68,6 +68,7 @@ const PriceLimitComparable = (props: priceLimitPropType) => {
         disabled={isSearching}
         label="Go"
         size="medium"
+        theme="existingDarkBlueBtn"
         onClickHandler={handleSubmitPress}
       />
     </div>

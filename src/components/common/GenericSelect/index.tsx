@@ -31,7 +31,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     formControlClassname = "",
     labelClassname = "",
     isMulti = false,
-    customStyles = "",
+    customStyles = {},
     customMenuWithClear = false,
     selected = null,
     isManditaory = true,
@@ -54,30 +54,42 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       },
       height: "30px",
       minHeight: "30px",
+      ...customStyles.control,
     }),
     option: (styles: any) => {
       return {
         ...styles,
         fontSize: "13px",
         padding: "7px",
+        ...customStyles.option,
       };
     },
-    input: (styles: any) => ({ ...styles, fontSize: "13px" }),
-    placeholder: (styles: any) => ({ ...styles, fontSize: "13px" }),
-    singleValue: (styles: any) => ({ ...styles, fontSize: "13px" }),
+    input: (styles: any) => ({ ...styles, fontSize: "13px", ...customStyles.input }),
+    placeholder: (styles: any) => ({
+      ...styles,
+      fontSize: "13px",
+      ...customStyles.placeholder,
+    }),
+    singleValue: (styles: any) => ({
+      ...styles,
+      fontSize: "13px",
+      ...customStyles.singleValue,
+    }),
     dropdownIndicator: (styles: any) => ({
       ...styles,
       padding: "2px",
       height: "25px",
       width: "22px",
+      ...customStyles.dropdownIndicator,
     }),
     clearIndicator: (styles: any) => ({
       ...styles,
       padding: "2px",
       height: "25px",
       width: "22px",
+      ...customStyles.clearIndicator,
     }),
-    ...customStyles,
+    // ...customStyles,
   };
 
   const CustomMenuWithClear = ({ innerRef, innerProps, isDisabled, children }: any) =>
