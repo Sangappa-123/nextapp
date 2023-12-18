@@ -17,13 +17,15 @@ import {
   getFacetedMinMaxValues,
 } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
-import { RiDeleteBin5Fill } from "react-icons/ri";
+import { RiDeleteBin5Fill, RiFileEditFill, RiFileInfoLine } from "react-icons/ri";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import {
   updateClaimContentListData,
   clearFilter,
 } from "@/reducers/ClaimData/ClaimContentSlice";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+import { deleteClaimItem } from "@/services/ClaimContentListService";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 interface typeProps {
   [key: string | number]: any;
@@ -36,6 +38,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     claimErrorMsg,
     updateClaimContentListData,
     clearFilter,
+    addNotification,
   } = props;
   const { claimId } = useParams();
   const router = useRouter();
@@ -47,7 +50,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   // const [filterSelected, setFilterSelected] = React.useState();
-  const [showDelete, setShowDelete] = React.useState(false);
+  const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
   const pageLimit = 20;
   const fetchSize = 20;
 
@@ -87,7 +90,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
             </div>
           ),
         }),
-        columnHelper.accessor((row, i) => i + 1, {
+        columnHelper.accessor("itemNumber", {
           header: () => "Item #",
           id: "item",
           enableColumnFilter: false,
@@ -174,27 +177,64 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         columnHelper.accessor("Action", {
           header: () => "Action",
           id: "Action",
-          cell: () => (
-            <div onClick={deleteAction}>
-              <RiDeleteBin5Fill color="grey" size="17px" />
-            </div>
-          ),
+          cell: ({ row }) => {
+            return (
+              <div className={ContentListTableStyle.actionButtons}>
+                <div>
+                  <RiFileInfoLine color="grey" size="20px" />
+                </div>
+                <div>
+                  <RiFileEditFill color="grey" size="20px" />
+                </div>
+
+                {row.original.status === "CREATED" && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteAction(row.original);
+                    }}
+                  >
+                    <RiDeleteBin5Fill color="grey" size="20px" />
+                  </div>
+                )}
+              </div>
+            );
+          },
           enableColumnFilter: false,
         }),
       ],
     }),
   ];
 
-  const deleteAction = (e: any) => {
-    e.stopPropagation();
-    setShowDelete(true);
+  const deleteAction = (rowData: any) => {
+    const payload = {
+      id: rowData.itemId,
+      itemUID: rowData.itemUID,
+    };
+    setDelete(payload);
   };
   const handleDeleteClose = () => {
-    setShowDelete(false);
+    setDelete(null);
   };
 
-  const handleDelete = () => {
-    setShowDelete(false);
+  const handleDelete = async () => {
+    const id = deletePayload?.id;
+    const res = await deleteClaimItem(deletePayload);
+    setDelete(null);
+
+    if (res) {
+      addNotification({
+        message: res ?? "Successfully deleted item.",
+        id,
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: "Something went wrong.",
+        id,
+        status: "error",
+      });
+    }
   };
   const fetchNextPage = () => {
     const nextPageData = claimContentListData.slice(
@@ -242,16 +282,23 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     manualFiltering: true,
   });
 
+  const ModalMsg = () => {
+    return (
+      <div>
+        Are you sure you want to delete this item?<b> Please Confirm!</b>
+      </div>
+    );
+  };
   return (
     <>
-      {showDelete && (
+      {deletePayload && (
         <div>
           <ConfirmModal
             showConfirmation={true}
             closeHandler={handleDeleteClose}
             submitBtnText="Yes"
             closeBtnText="No"
-            descText="Are you sure you want to delete this item? Please Confirm!"
+            childComp={<ModalMsg />}
             modalHeading="Delete Lost/Damaged Item"
             submitHandler={handleDelete}
           />
@@ -282,6 +329,7 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 const mapDispatchToProps = {
   updateClaimContentListData,
   clearFilter,
+  addNotification,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

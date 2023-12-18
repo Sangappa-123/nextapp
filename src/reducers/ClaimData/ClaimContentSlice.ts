@@ -30,6 +30,7 @@ const ClaimContentSlice = createSlice({
       let newArr = {};
       const claimRes: any = [];
       if (claimContentData.data) {
+        console.log("claimContentData", claimContentData);
         claimContentData.data.map((item: any) => {
           newArr = {
             description: item.description,
@@ -44,6 +45,8 @@ const ClaimContentSlice = createSlice({
             cashPayoutExposure: item.cashPayoutExposure,
             claimId: claimId,
             itemId: item.id,
+            itemUID: item.itemUID,
+            itemNumber: item.itemNumber,
           };
           claimRes.push(newArr);
         });
@@ -62,6 +65,23 @@ const ClaimContentSlice = createSlice({
     clearFilter(state) {
       state.claimContentListData = state.claimContentListDataFull;
     },
+    deleteClaimContentListItem(state, action) {
+      const { payload } = action;
+      const { itemId } = payload;
+
+      const claimContentListDataFull = state.claimContentListDataFull;
+      const claimContentListData = state.claimContentListData;
+
+      const newClaimContentListFull = claimContentListDataFull.filter((item: any) => {
+        return item.itemId !== itemId;
+      });
+      const newClaimContentList = claimContentListData.filter((item: any) => {
+        return item.itemId !== itemId;
+      });
+
+      state.claimContentListDataFull = newClaimContentListFull;
+      state.claimContentListData = newClaimContentList;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchClaimContentAction.pending, (state) => {
@@ -77,5 +97,9 @@ const ClaimContentSlice = createSlice({
 });
 export default ClaimContentSlice;
 
-export const { addClaimContentListData, updateClaimContentListData, clearFilter } =
-  ClaimContentSlice.actions;
+export const {
+  addClaimContentListData,
+  updateClaimContentListData,
+  clearFilter,
+  deleteClaimContentListItem,
+} = ClaimContentSlice.actions;

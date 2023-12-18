@@ -172,8 +172,6 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                         }
                       : {})}
                   >
-                    {console.log("origalllllll:", row.original)}
-                    {console.log("isValidItem:", row.original.isValidItem)}
                     {row.getVisibleCells().map((cell: any, index: number) => (
                       <td
                         key={cell.id}

@@ -30,6 +30,7 @@ enum apiEndPoints {
   itemsDetails = "web/claim/itemdetails",
   categoriesRequest = "web/categories",
   replacementApi = "web/claim/search/replacement",
+  deleteClaimContentListItem = "web/remove/postlossitem",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

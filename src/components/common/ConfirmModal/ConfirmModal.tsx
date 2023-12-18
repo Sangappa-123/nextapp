@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Modal from "@/components/common/ModalPopups";
 import GenericButton from "@/components/common/GenericButton";
 import confirmModalStyle from "./confirmModal.module.scss";
@@ -9,9 +9,10 @@ type props = {
   submitHandler?: () => void;
   closeBtnText?: string;
   submitBtnText: string;
-  descText: string;
+  descText?: string;
   headingText?: string;
   modalHeading: string;
+  childComp?: ReactNode;
 };
 function ConfirmModal({
   showConfirmation = false,
@@ -22,12 +23,14 @@ function ConfirmModal({
   descText = "",
   headingText = "",
   modalHeading = "",
+  childComp = null,
 }: props) {
   return (
     <>
       <Modal
         isOpen={showConfirmation}
         headingName={modalHeading}
+        childComp={childComp}
         onClose={() => closeHandler && closeHandler()}
         footerContent={
           <div className={confirmModalStyle.modalFooter}>

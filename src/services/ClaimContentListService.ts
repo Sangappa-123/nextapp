@@ -1,9 +1,8 @@
 import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
-import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+import { deleteClaimContentListItem } from "@/reducers/ClaimData/ClaimContentSlice";
 
-import { getClientCookie } from "@/utils/utitlity";
 import HttpService from "@/HttpService";
 
 interface objectType {
@@ -38,24 +37,15 @@ export const claimContentListV2 = async (payload: { claimId: string }) => {
   }
 };
 
-export const fetchClaimContentList = async () => {
-  const state = store.getState();
-  const claimId = state.claimdata.claimId;
+export const deleteClaimItem = async (payload: any) => {
+  const url = getApiEndPoint("deleteClaimContentListItem");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, payload);
 
-  const token = await getClientCookie("accessToken");
-
-  const payload = {
-    claimId,
-  };
-
-  const claimcontentListRes: any = await claimContentList(payload, token);
-
-  if (claimcontentListRes.result.status === 200) {
-    const claimContentData = claimcontentListRes.result;
-    store.dispatch(
-      addClaimContentListData({ claimContentData: claimContentData, claimId })
-    );
-    return claimContentData;
+  if (res.status === 200) {
+    const message = res.message;
+    store.dispatch(deleteClaimContentListItem({ itemId: payload.id }));
+    return message;
   }
   return null;
 };
