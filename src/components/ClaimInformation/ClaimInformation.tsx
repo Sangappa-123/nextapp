@@ -57,30 +57,33 @@ function ClaimInformation({
     // }
   };
 
-  const claimHandler = (claim: string) => {
+  const claimHandler = (claim: any) => {
+    console.log("claim", claim);
     if (!claim) return;
     validateClaim({
       claimNumber: claim,
     })
       .then((res) => {
-        // const isValidInput: RegExp = /^[a-zA-Z0-9\-/]*$/;
+        const isValidInput: RegExp = /^[a-zA-Z0-9/-]+$/;
 
+        console.log("isValidInput", claim.match(isValidInput) === null);
         console.log("claim res", res, res.data);
         if (res.data)
           setError("claim", {
             type: "manual",
             message: "The claim number already exists",
           });
-        // else if (res.data != isValidInput)
-        //   setError("claim", {
-        //     type: "manual",
-        //     message: "enter the claim correctly",
-        //   });
+        else if (claim.match(isValidInput) === null)
+          setError("claim", {
+            type: "manual",
+            message: "enter the claim correctly",
+          });
         else {
           clearErrors("claim");
         }
       })
       .catch((error: any) => console.log("claim error", error));
+
     // console.log("e", e.target.value);
   };
 
@@ -122,7 +125,7 @@ function ClaimInformation({
   }, []);
 
   const handleInputChange = (e: any) => {
-    setData((prev) => {
+    setData((prev): any => {
       // prev.push(e);
       console.log("prev", prev);
       return [...prev, e];
@@ -130,7 +133,7 @@ function ClaimInformation({
     console.log("ee", e);
   };
 
-  const { onBlur: blurHandler, ...rest } = register("claim");
+  const { onBlur: blurHandler, onChange: claimChange, ...rest } = register("claim");
   console.log("rest", { ...rest });
 
   const fileOpen = (e: any) => {
@@ -166,6 +169,7 @@ function ClaimInformation({
   const handleShow = () => {
     setShow(true);
   };
+  // const verifyClaim = (claimValue: any) => {};
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
@@ -186,8 +190,18 @@ function ClaimInformation({
             {...rest}
             onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
               blurHandler(e);
-              console.log("e", e.target.value);
-              claimHandler(e.target.value);
+              // console.log("e", e.target.value);
+              const claimValue = e.target.value;
+
+              claimHandler(claimValue);
+            }}
+            onChange={(e: any) => {
+              claimChange(e);
+              // if (emailValue.match(regex) != null) {
+              //   console.log(emailValue);
+              // verifyClaim(claimValue);
+              // }
+              // /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             }}
           />
         </div>
@@ -501,24 +515,23 @@ function ClaimInformation({
             </div>
             <div>
               <Cards className={clsx("mt-8", ClaimInformationStyle.cards)}>
-                <div className="row">
+                <div className="row justify-content-between">
                   <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
                     Category Coverages
                   </div>
-                  <div className={clsx("col-lg-1", ClaimInformationStyle.category)}>
+                  <div className={clsx(" col-lg-2 pl-4", ClaimInformationStyle.category)}>
                     Category
                   </div>
                   <div
-                    className={clsx("col-sm-2", ClaimInformationStyle.aggregateCoverage)}
+                    className={clsx("col-lg-3", ClaimInformationStyle.aggregateCoverage)}
                   >
                     Aggregate Coverage
                   </div>
-                  <div className={clsx("col-sm-2", ClaimInformationStyle.itemLimit)}>
+                  <div className={clsx("col-lg-3 pl-4", ClaimInformationStyle.itemLimit)}>
                     Individual Item Limit
                   </div>
                 </div>
                 <div className="row">
-                  <div className=""></div>
                   <>
                     <ul>
                       {Data.map((value: any, i) => (
@@ -587,7 +600,7 @@ function ClaimInformation({
                 )}
                 <button
                   type="button"
-                  className={clsx(ClaimInformationStyle.specialCategory)}
+                  className={clsx("col-lg-3", ClaimInformationStyle.specialCategory)}
                   onClick={() => handleShow()}
                 >
                   Add another special category

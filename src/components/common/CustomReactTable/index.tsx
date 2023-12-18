@@ -23,7 +23,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
-    filterApiCall = null,
+    filterFn = null,
     customFilterValues = null,
   } = props;
 
@@ -38,7 +38,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
 
-        const bottom = scrollHeight - scrollTop === clientHeight;
+        const bottom = scrollHeight - scrollTop - 2 <= clientHeight;
         if (bottom && scrollTop !== 0 && totalFetched < totalDBRowCount) {
           setContentLoader(true);
 
@@ -58,7 +58,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       setShowScroller(true);
     }
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached, fetchNextPage]);
+  }, [fetchMoreOnBottomReached, fetchNextPage, tableContainerRef]);
 
   const isAnyRowInvalid = table
     .getRowModel()
@@ -135,7 +135,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 table={table}
                                 showFilterBLock={showFilterBLock}
                                 setShowFilterBLock={setShowFilterBLock}
-                                filterApiCall={filterApiCall}
+                                filterFn={filterFn}
                                 defaultAllChecked={true}
                                 customFilterValues={customFilterValues}
                               />

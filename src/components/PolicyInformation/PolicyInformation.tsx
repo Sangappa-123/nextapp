@@ -68,6 +68,7 @@ function ClaimpolicyInformation({
     });
     setValue("address2", policyDetails?.address.city, { shouldValidate: true });
     setValue("state", policyDetails?.address.state, { shouldValidate: true });
+    getPolicyType(policyDetails?.address.state.id);
     setValue("zipcode", policyDetails?.address.zipcode, { shouldValidate: true });
     clearErrors("claim");
     clearErrors("minItemPrice");

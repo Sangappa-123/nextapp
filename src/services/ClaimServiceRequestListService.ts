@@ -34,17 +34,15 @@ export const fetchServiceRequestList = async (
   orderBy = "asc",
   searchKeyword = ""
 ) => {
-  console.log("searchKeyword", searchKeyword);
   const state = store.getState();
   const claimServiceRequestListTotalData =
     state.claimServiceRequestdata.claimServiceRequestListTotalData;
 
   const searchWord = searchKeyword ?? state.claimServiceRequestdata.searchKeyword;
 
-  const newclaimResult = claimServiceRequestListTotalData.filter((obj) =>
+  const newclaimResult = await claimServiceRequestListTotalData.filter((obj) =>
     JSON.stringify(obj).toLowerCase().includes(searchWord.toLowerCase())
   );
-  console.log("After searchKeyword", newclaimResult);
 
   let sortedData;
   if (orderBy === "asc") {
@@ -56,8 +54,6 @@ export const fetchServiceRequestList = async (
   const end = start + pageLimit;
 
   const claimServiceRequestList = sortedData.slice(start, end);
-
-  console.log("After searchKeyword claimServiceRequestList", claimServiceRequestList);
 
   store.dispatch(updateServiceRequestVisibleData({ claimServiceRequestList }));
 

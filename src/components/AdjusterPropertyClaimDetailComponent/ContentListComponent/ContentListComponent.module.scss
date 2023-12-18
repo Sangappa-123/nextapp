@@ -45,13 +45,17 @@
   border-radius: 4px;
 }
 .dropDownInnerDiv {
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
-  padding: 5px;
+  padding: 8px;
   // padding-top: 4px;
   // padding-bottom: 4px;
   cursor: pointer;
+  // background-color: teal;
 }
 .dropDownInnerDiv:hover {
   background-color: lightblue;
+}
+.modalWidth {
+  width: 100%;
 }

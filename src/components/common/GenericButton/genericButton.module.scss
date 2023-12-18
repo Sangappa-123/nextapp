@@ -26,6 +26,13 @@
 .small-btn {
   height: 24px;
 }
+.existing-blue-btn {
+  background-color: #347ab6;
+  color: #fff;
+  &:hover {
+    background-color: #6bbccf;
+  }
+}
 
 .light-blue {
   color: $white;
@@ -47,9 +54,9 @@
   background-color: $lightBtn;
   padding: 2px 12px;
   line-height: 18px;
-  margin-left: auto;
-  width: fit-content;
-  height: fit-content;
+  // margin-left: auto;
+  // min-width: fit-content;
+  // min-height: fit-content;
   font-weight: 600;
   font-size: 13px;
   color: $mineShaft;
