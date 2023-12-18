@@ -184,3 +184,12 @@
     padding: 10px 20px;
   }
 }
+
+.fixedHeader th {
+  position: sticky;
+  top: 40px;
+  background-color: #dcdcdc;
+  z-index: 1;
+  // position: fixed;
+  // width: 30%;
+}

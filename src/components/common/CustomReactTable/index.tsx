@@ -60,12 +60,19 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached, fetchNextPage, tableContainerRef]);
 
+  const isAnyRowInvalid = table
+    .getRowModel()
+    .rows.some((row: any) => row.original.isValidItem === false);
+  console.log("RowMoeeeeeeeeeeeeeeeee:", table.getRowModel());
+
   return (
     <>
+      {console.log("Hedaerrrrrrrrrrrr", isAnyRowInvalid)}
       <div
         className={clsx({
           [CustomReactTableStyles.reactTable]: true,
           [CustomReactTableStyles.reactTableScroll]: showScroller,
+          [CustomReactTableStyles.fixedHeader]: isAnyRowInvalid,
         })}
         {...(fetchNextPage
           ? {

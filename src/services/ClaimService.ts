@@ -274,3 +274,13 @@ export const getCategories = async () => {
   if (data) return { data };
   throw error;
 };
+
+export const postClaim = async (param: object) => {
+  const url = getApiEndPoint("updatePolicy");
+  const http = new HttpService({ isClient: true, isFormData: true });
+  const res = await http.post(url, param);
+  const { data, error } = res;
+  console.log("coverage", res);
+  if (data) return { data };
+  throw error;
+};

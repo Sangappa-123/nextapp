@@ -11,7 +11,7 @@ import ServiceRequestSearchBox from "./ServiceRequestSearchBox/ServiceRequestSea
 function ServiceRequestsComponent(props: any) {
   const { serviceRequestListRes, addserviceRequestData } = props;
   React.useEffect(() => {
-    const claimServiceRequestList = serviceRequestListRes.result;
+    const claimServiceRequestList = serviceRequestListRes;
     addserviceRequestData({ claimServiceRequestList });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

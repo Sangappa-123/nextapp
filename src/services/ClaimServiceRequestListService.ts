@@ -1,30 +1,20 @@
-import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
 import { updateServiceRequestVisibleData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import { sortBy } from "lodash";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
+import HttpService from "@/HttpService";
 
-interface objectType {
-  [key: string | number]: any;
-}
-export const serviceRequestList = async (
-  payload: any,
-  token: any
-): Promise<objectType> => {
-  const headersData: object = getHeaderWithoutToken();
-  return new Promise((resolve, rejects) => {
-    fetch(getApiEndPoint("serviceRequest"), {
-      method: "POST",
-      headers: { ...headersData, "X-Auth-Token": token },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        return resolve({ result });
-      })
-      .catch((error) => rejects({ error }));
-  });
+export const serviceRequestList = async (payload: { claimId: string }) => {
+  try {
+    const url = getApiEndPoint("serviceRequest");
+    const http = new HttpService();
+    const res = await http.post(url, payload);
+    return res;
+  } catch (error) {
+    console.warn("serviceRequest__err", error);
+    throw error;
+  }
 };
 
 export const fetchServiceRequestList = async (

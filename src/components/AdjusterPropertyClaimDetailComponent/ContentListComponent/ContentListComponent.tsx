@@ -18,7 +18,7 @@ function ContentListComponent(props: any) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   React.useEffect(() => {
-    const claimContentData = claimContentListRes.result;
+    const claimContentData = claimContentListRes;
     addClaimContentListData({ claimContentData, claimId });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

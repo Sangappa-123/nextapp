@@ -307,20 +307,36 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                   </p>
                 </div>
               </div>
-              {failedItemsCount > 0 && (
-                <div>
-                  <p>Failed Items:</p>
-                  {postLossItemDetails
-                    .filter((item) => item.isValidItem === false)
-                    .map((failedItem) => (
-                      <div key={failedItem.id}>
-                        Item Number: {failedItem.id}, Failed Reasons:{" "}
-                        {failedItem.failedReasons?.join(", ")}
-                      </div>
-                    ))}
+              <div className="row mb-4">
+                <div className="col-2" />
+                <div className="col-7">
+                  {failedItemsCount > 0 && (
+                    <div>
+                      <table className={UploadItemsStyle.customTable}>
+                        <thead>
+                          <tr>
+                            <th>Item #</th>
+                            <th>Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {postLossItemDetails
+                            .filter((item) => item.isValidItem === false)
+                            .map((failedItem) => (
+                              <tr key={failedItem.id}>
+                                <td>{failedItem.id}</td>
+                                <td>{failedItem.failedReasons?.join(", ")}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+
               <ExcelSheetTable />
+              {/* </div> */}
             </div>
           </Cards>
         </>

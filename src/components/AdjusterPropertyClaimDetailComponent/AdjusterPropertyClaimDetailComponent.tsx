@@ -1,13 +1,20 @@
-import { cookies } from "next/headers";
-import { claimContentList } from "@/services/ClaimContentListService";
-import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
 import CustomLoader from "../common/CustomLoader/index";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
 
-async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: string }) {
+type propsTypes = {
+  claimId: string;
+  claimContentListRes: any;
+  serviceRequestListRes: any;
+};
+
+const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
+  claimId,
+  claimContentListRes,
+  serviceRequestListRes,
+}) => {
   const pathList = [
     {
       name: "Home",
@@ -20,21 +27,8 @@ async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: stri
       active: true,
     },
   ];
-  const cookieStore = cookies();
-  let token = "";
-  if (cookieStore.has("accessToken")) {
-    token = cookieStore.get("accessToken")?.value ?? "";
-  }
-  const payload = {
-    claimId: claimId,
-  };
-  const claimContentListRes: any = await claimContentList(payload, token);
-  const serviceRequestListRes: any = await serviceRequestList(payload, token);
 
-  if (
-    claimContentListRes?.result?.status === 200 &&
-    serviceRequestListRes?.result?.status === 200
-  ) {
+  if (claimContentListRes?.status === 200 && serviceRequestListRes?.status === 200) {
     return (
       <div className="row">
         <GenericBreadcrumb dataList={pathList} />
@@ -56,5 +50,5 @@ async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: stri
     );
   }
   return <CustomLoader />;
-}
+};
 export default AdjusterPropertyClaimDetailComponent;

@@ -1,6 +1,13 @@
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
 import { unknownObjectType } from "@/constants/customTypes";
 import {
+  getLineItemCategory,
+  getLineItemCondition,
+  getLineItemRetailers,
+  getLineItemRoom,
+  getLineItemSubCategory,
+} from "@/services/AdjusterMyClaimServices/LineItemDetailService";
+import {
   fetchClaimItemDetails,
   fetchComparable,
   searchComparableReq,
@@ -12,6 +19,12 @@ const initialState: unknownObjectType = {
   isLoading: true,
   isFetching: false,
   lineItem: {},
+  subCategory: [],
+  category: [],
+  condition: [],
+  room: [],
+  retailer: [],
+  paymentTypes: [],
   webSearch: {
     isSearching: false,
     insuredPrice: 0,
@@ -24,6 +37,65 @@ const initialState: unknownObjectType = {
     selectedEngine: WEB_SEARCH_ENGINES.filter((engine) => engine.default)[0],
   },
 };
+
+export const fetchRetailersDetails = createAsyncThunk(
+  "lineItem/retailer",
+  async (_, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getLineItemRetailers();
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchRoom = createAsyncThunk("lineItem/room", async (claim: string, api) => {
+  const rejectWithValue = api.rejectWithValue;
+  try {
+    const res = await getLineItemRoom(claim);
+    return res;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
+
+export const fetchCondition = createAsyncThunk("lineItem/condition", async (_, api) => {
+  const rejectWithValue = api.rejectWithValue;
+  try {
+    const res = await getLineItemCondition();
+    return res;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
+
+export const fetchLineItemCatergory = createAsyncThunk(
+  "lineItem/category",
+  async (_, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getLineItemCategory();
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchSubCategory = createAsyncThunk(
+  "lineItem/subCategory",
+  async (categoryId: number, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getLineItemSubCategory({ categoryId });
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 export const fetchLineItemDetail = createAsyncThunk(
   "lineItem/fetchLineItem",
@@ -39,6 +111,12 @@ export const fetchLineItemDetail = createAsyncThunk(
         const pincode = res.data.policyHolderPinCode;
         if (!state.lineItemDetail?.webSearch?.isSearching)
           dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
+        if (res?.data?.category?.id) {
+          dispatch(fetchSubCategory(res?.data?.category?.id));
+        }
+        if (res?.data?.claimNumber) {
+          dispatch(fetchRoom(res?.data?.claimNumber));
+        }
       }
       return res;
     } catch (err) {
@@ -78,7 +156,6 @@ export const searchComparable = createAsyncThunk(
       const { isInit = false } = payload;
       const pageNo = 1; // initially pageno is 1
       if (isInit) {
-        console.log("========33333==", priceFrom, priceTo, payload);
         if (!priceFrom && !priceTo) {
           const calculatedPrice = getPriceRange(payload.insuredPrice ?? 0);
           priceFrom = +calculatedPrice.priceFrom.toFixed(2);
@@ -168,7 +245,6 @@ const LineItemDetailSlice = createSlice({
     builder.addCase(searchComparable.fulfilled, (state, action) => {
       state.webSearch.isSearching = false;
       const payload = action.payload;
-      console.log("=========", payload);
       if (payload.status === 200) {
         state.webSearch.searchList = payload.data?.searchResults ?? [];
         if (!payload?.data) {
@@ -178,6 +254,58 @@ const LineItemDetailSlice = createSlice({
     });
     builder.addCase(searchComparable.rejected, (state) => {
       state.webSearch.isSearching = false;
+    });
+    builder.addCase(fetchSubCategory.pending, (state) => {
+      state.subCategory = [];
+    });
+    builder.addCase(fetchSubCategory.fulfilled, (state, action) => {
+      state.subCategory = action.payload;
+    });
+    builder.addCase(fetchSubCategory.rejected, (state) => {
+      state.subCategory = [];
+    });
+    builder.addCase(fetchLineItemCatergory.pending, (state) => {
+      state.category = [];
+    });
+    builder.addCase(fetchLineItemCatergory.fulfilled, (state, action) => {
+      state.category = action.payload;
+    });
+    builder.addCase(fetchLineItemCatergory.rejected, (state) => {
+      state.category = [];
+    });
+    builder.addCase(fetchCondition.pending, (state) => {
+      state.condition = [];
+    });
+    builder.addCase(fetchCondition.fulfilled, (state, action) => {
+      state.condition = action.payload;
+    });
+    builder.addCase(fetchCondition.rejected, (state) => {
+      state.condition = [];
+    });
+    builder.addCase(fetchRoom.pending, (state) => {
+      state.room = [];
+    });
+    builder.addCase(fetchRoom.fulfilled, (state, action) => {
+      state.room = action.payload;
+    });
+    builder.addCase(fetchRoom.rejected, (state) => {
+      state.room = [];
+    });
+
+    builder.addCase(fetchRetailersDetails.pending, (state) => {
+      state.retailer = [];
+      state.paymentTypes = [];
+    });
+    builder.addCase(fetchRetailersDetails.fulfilled, (state, action) => {
+      const { paymentTypes = [], retailers = [] } = action.payload;
+      state.retailer = retailers;
+      state.paymentTypes = paymentTypes
+        ? paymentTypes.map((_type: string) => ({ label: _type, value: _type }))
+        : paymentTypes;
+    });
+    builder.addCase(fetchRetailersDetails.rejected, (state) => {
+      state.retailer = [];
+      state.paymentTypes = [];
     });
   },
 });

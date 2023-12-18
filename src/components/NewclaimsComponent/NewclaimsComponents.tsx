@@ -16,6 +16,7 @@ import clsx from "clsx";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
+import { postClaim } from "@/services/ClaimService";
 
 function NewclaimsComponent() {
   const [activeSection, setActiveSection] = useState(0);
@@ -139,6 +140,41 @@ function NewclaimsComponent() {
     handleClose();
   };
 
+  const handlePost = (e: any) => {
+    const payload = {
+      companyId: "1",
+      homeOwnerPolicyTypeId: e.homeOwnersPolicyType?.id,
+      insuranceAccountDetails: {},
+      policyHolder: {
+        address: {
+          city: e.address2,
+          state: { id: 4, state: e.state },
+          streetAddressOne: e.address,
+          streetAddressTwo: e.address1,
+          zipcode: e.zipcode,
+        },
+        cellPhone: e.mobilenumber,
+        dayTimePhone: e.secondaryPhonenumber,
+        email: e.email,
+        eveningTimePhone: null,
+        firstName: e.firstname,
+        lastName: e.lastname,
+        policyHolderId: 52,
+      },
+      policyName: null,
+      policyNumber: null,
+      policyType: null,
+    };
+    console.log("post", e);
+    const formData = new FormData();
+    formData.append("updatePoicy", JSON.stringify(payload));
+    postClaim(formData)
+      .then((res) => {
+        console.log("postClaim", res);
+      })
+      .catch((error: any) => console.log("claim error", error));
+  };
+
   return (
     <div>
       <div className="mb-3">
@@ -251,6 +287,7 @@ function NewclaimsComponent() {
                   // theme="normal"
                   type="submit"
                   btnClassname={NewClaimsStyle.resetBtn}
+                  onClick={(e: any) => handlePost(e)}
                 />
               </div>
             </div>
