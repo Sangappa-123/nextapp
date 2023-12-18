@@ -49,6 +49,7 @@ async function AdjusterPropertyClaimDetailComponent({ claimId }: { claimId: stri
           <ClaimDetailTabsComponent
             serviceRequestListRes={serviceRequestListRes}
             claimContentListRes={claimContentListRes}
+            claimId={claimId}
           />
         </div>
       </div>

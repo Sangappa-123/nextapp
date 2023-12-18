@@ -18,37 +18,56 @@ import {
 } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-
 import CustomReactTable from "@/components/common/CustomReactTable/index";
+import {
+  updateClaimContentListData,
+  clearFilter,
+} from "@/reducers/ClaimData/ClaimContentSlice";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 interface typeProps {
   [key: string | number]: any;
 }
 const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
-  const { claimContentListData, totalClaims, tableLoader, claimErrorMsg } = props;
+  const {
+    claimContentListData,
+    totalClaims,
+    tableLoader,
+    claimErrorMsg,
+    updateClaimContentListData,
+    clearFilter,
+  } = props;
   const { claimId } = useParams();
   const router = useRouter();
-
-  const [claimResult, setClaimResult] = React.useState(claimContentListData);
-
-  const pageLimit = 20;
-  const fetchSize = 20;
 
   interface ContentListData {
     [key: string | number]: any;
   }
+
+  const [claimResult, setClaimResult] = React.useState(claimContentListData);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  // const [filterSelected, setFilterSelected] = React.useState();
+  const [showDelete, setShowDelete] = React.useState(false);
+  const pageLimit = 20;
+  const fetchSize = 20;
+
   React.useEffect(() => {
     const defaultData: ContentListData[] = [...claimContentListData];
     setClaimResult([...defaultData.slice(0, fetchSize)]);
   }, [claimContentListData]);
 
+  const handleClearAllFilter = () => {
+    clearFilter();
+  };
   const columnHelper = createColumnHelper<ContentListData>();
 
   const columns = [
     columnHelper.group({
       header: () => (
         <span>
-          <a href="">Clear All Filter</a>
+          <a href="" onClick={handleClearAllFilter}>
+            Clear All Filter
+          </a>
         </span>
       ),
       id: "clear",
@@ -73,32 +92,13 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           id: "item",
           enableColumnFilter: false,
         }),
-        columnHelper.accessor((row) => (row.status ? row.status.status : null), {
-          header: () => "Status",
+        columnHelper.accessor("status", {
+          header: () => "Status", // filter option true should have same id as value
           id: "status",
-          // filterFn: (rows: any, columnIds: string[], filterValues: string[]) => {
-          //   console.log("filterUpdater",filterValues);
-          //   if (!filterValues || filterValues.length === 0) {
-          //     return rows;
-          //   }
-          //   return rows.filter(row => filterValues.includes(row.values[columnIds[0]]));
-          // },
-          // cell: (info) =>{
-          //   if (info.renderValue()) {
-          //     return info.renderValue().status;
-          //   }
-          //   return null;
-          // }
         }),
-        columnHelper.accessor((row) => (row.category ? row.category.name : null), {
-          header: () => "Catogory",
-          id: "catogory",
-          // cell: (info) =>{
-          //   if (info.renderValue()) {
-          //     return info.renderValue().name;
-          //   }
-          //   return null;
-          // }
+        columnHelper.accessor("category", {
+          header: () => "Catogory", // filter option true should have same id as value
+          id: "category",
         }),
       ],
     }),
@@ -121,11 +121,11 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         }),
         columnHelper.accessor("totalStatedAmount", {
           header: () => "Total Price",
-          id: "total-price",
+          id: "totalStatedAmount", // filter option true should have same id as value
         }),
         columnHelper.accessor("itemTag", {
           header: () => "Item Tag",
-          id: "item-tag",
+          id: "itemTag", // filter option true should have same id as value
         }),
       ],
     }),
@@ -174,15 +174,28 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         columnHelper.accessor("Action", {
           header: () => "Action",
           id: "Action",
-          cell: () => <RiDeleteBin5Fill color="grey" size="17px" />,
+          cell: () => (
+            <div onClick={deleteAction}>
+              <RiDeleteBin5Fill color="grey" size="17px" />
+            </div>
+          ),
           enableColumnFilter: false,
         }),
       ],
     }),
   ];
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const deleteAction = (e: any) => {
+    e.stopPropagation();
+    setShowDelete(true);
+  };
+  const handleDeleteClose = () => {
+    setShowDelete(false);
+  };
 
+  const handleDelete = () => {
+    setShowDelete(false);
+  };
   const fetchNextPage = () => {
     const nextPageData = claimContentListData.slice(
       claimResult.length,
@@ -192,24 +205,19 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
-  const filterApiCall = (currentValue: any) => {
-    // console.log("columnFilters",columnFilters);
-
-    // console.log("columnFilters currentValue",currentValue);
-
-    const newCLaim = claimResult.filter((item: any) => {
-      if (currentValue.some((row: any) => item.status.status.includes(row))) return item;
+  const filterFn = async (currentValue: any, columnId: string) => {
+    const newCLaim = claimContentListData.filter((item: any) => {
+      if (item[columnId] === null && currentValue.includes("BLANK")) {
+        return item;
+      } else if (item[columnId] === null && !currentValue.includes("BLANK")) {
+        return;
+      } else if (currentValue.some((row: any) => item[columnId].includes(row)))
+        return item;
     });
-    console.log("columnFilters newCLaim", newCLaim);
 
-    setClaimResult(newCLaim);
+    await updateClaimContentListData({ claimContentList: newCLaim });
+    setClaimResult([...newCLaim.slice(0, fetchSize)]);
   };
-  // const handleFilter = async (filterUpdater: any) => {
-  //   const newVal = filterUpdater(columnFilters);
-
-  //   console.log("filterUpdater newVal", newVal);
-  //   setColumnFilters(newVal);
-  // };
   const handleRowClick = (rowData: any) => {
     router.push(`/adjuster-line-item-detail/${claimId}/${rowData.itemId}`);
   };
@@ -235,20 +243,35 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   });
 
   return (
-    <div className={ContentListTableStyle.claimTableContainer}>
-      <CustomReactTable
-        table={table}
-        totalDataCount={totalClaims}
-        pageLimit={totalClaims > 20 ? pageLimit : null}
-        loader={tableLoader}
-        tableDataErrorMsg={claimErrorMsg}
-        fetchNextPage={fetchNextPage}
-        totalFetched={claimResult.length}
-        totalDBRowCount={claimContentListData.length}
-        filterApiCall={filterApiCall}
-        handleRowClick={handleRowClick}
-      />
-    </div>
+    <>
+      {showDelete && (
+        <div>
+          <ConfirmModal
+            showConfirmation={true}
+            closeHandler={handleDeleteClose}
+            submitBtnText="Yes"
+            closeBtnText="No"
+            descText="Are you sure you want to delete this item? Please Confirm!"
+            modalHeading="Delete Lost/Damaged Item"
+            submitHandler={handleDelete}
+          />
+        </div>
+      )}
+      <div className={ContentListTableStyle.claimTableContainer}>
+        <CustomReactTable
+          table={table}
+          totalDataCount={totalClaims}
+          pageLimit={totalClaims > 20 ? pageLimit : null}
+          loader={tableLoader}
+          tableDataErrorMsg={claimErrorMsg}
+          fetchNextPage={fetchNextPage}
+          totalFetched={claimResult.length}
+          totalDBRowCount={claimContentListData.length}
+          filterFn={filterFn}
+          handleRowClick={handleRowClick}
+        />
+      </div>
+    </>
   );
 };
 
@@ -256,6 +279,10 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
   claimErrorMsg: claimContentdata.claimErrorMsg,
 });
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = {
+  updateClaimContentListData,
+  clearFilter,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(ContentListTable);

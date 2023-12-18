@@ -10,7 +10,7 @@
   align-items: center;
   z-index: 99999;
   .modal {
-    width: 100%;
+    // width: 100%;
     min-width: 300px;
     max-width: 900px;
     // width: fit-content;
@@ -31,7 +31,7 @@
       text-align: center;
       position: relative;
       .modal_title {
-        font-size: 1.2em;
+        font-size: 14px;
         font-weight: 600;
       }
       .cross_icon {

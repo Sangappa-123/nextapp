@@ -161,6 +161,11 @@
   padding: 5px;
   width: 100%;
   resize: horizontal;
+  &:active,
+  &:focus {
+    outline: none;
+    border-color: $royalBlue;
+  }
 }
 .errorMessage {
   position: relative;
@@ -178,8 +183,8 @@
 }
 
 .categoryName {
-  padding-left: 220px;
-  padding-top: 10px;
+  // padding-left: 220px;
+  // padding-top: 10px;
   font-family: "Open Sans", sans-serif;
   font-size: 13px;
 }
@@ -189,55 +194,52 @@
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
-  margin-left: 40px;
+  // margin-left: 40px;
 }
 .aggregateStyle {
-  padding-left: 40px;
-  margin-right: 20px;
-  width: 30%;
+  // padding-left: 40px;
+  // margin-left: 20px;
+  // width: 30%;
 }
 .itemLimitSTyle {
-  padding-left: 20px;
+  // padding-left: 30px;
   margin-left: 20px;
-  width: 27%;
+  // width: 27%;
 }
 .value {
   background-color: transparent;
-  width: 200px;
-  text-align: right;
+  // width: 200px;
+  // text-align: right;
   border: none;
   // right: 80px;
 }
 .aggregateCoverage {
-  margin-left: 40px;
+  // margin-left: 10px;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
   // right: 790px;
 }
 .itemLimit {
-  margin-left: 90px;
+  // margin-left: 90px;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
 }
 .cards {
   position: relative;
-  width: 70%;
+  width: 75%;
   margin-top: 50px;
   // : 50px;
-}
-.itemStyle {
-  position: relative;
-  width: 130%;
 }
 .coverages {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
+  // margin-left: 50px;
 }
 .deleteButton {
-  width: 30px;
+  // width: 30px;
   background-color: transparent;
   border: none;
   // margin-left: 30px;
@@ -256,7 +258,7 @@
   color: #337ab7;
 
   // float: right;
-  margin-left: 80%;
+  // margin-left: 80%;
   font-family: "Open Sans", sans-serif;
   padding-top: 1%;
   font-weight: 600;
@@ -294,4 +296,8 @@
 }
 .labelClassname {
   font-size: 13px;
+}
+.ms-5 {
+  // padding-left: 10px;
+  padding-left: 10px;
 }

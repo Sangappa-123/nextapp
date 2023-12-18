@@ -17,6 +17,7 @@ import { TABLE_LIMIT_5 } from "@/constants/constants";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
+  tableLoader: boolean;
 }
 const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   const {

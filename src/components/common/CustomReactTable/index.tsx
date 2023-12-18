@@ -19,10 +19,11 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     loader = null,
     tableDataErrorMsg = null,
     handleRowClick = null,
+    handleEditRowClick = null,
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
-    filterApiCall = null,
+    filterFn = null,
     customFilterValues = null,
   } = props;
 
@@ -37,7 +38,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
 
-        const bottom = scrollHeight - scrollTop === clientHeight;
+        const bottom = scrollHeight - scrollTop - 2 <= clientHeight;
         if (bottom && scrollTop !== 0 && totalFetched < totalDBRowCount) {
           setContentLoader(true);
 
@@ -57,7 +58,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
       setShowScroller(true);
     }
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached, fetchNextPage]);
+  }, [fetchMoreOnBottomReached, fetchNextPage, tableContainerRef]);
 
   return (
     <>
@@ -127,7 +128,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 table={table}
                                 showFilterBLock={showFilterBLock}
                                 setShowFilterBLock={setShowFilterBLock}
-                                filterApiCall={filterApiCall}
+                                filterFn={filterFn}
                                 defaultAllChecked={true}
                                 customFilterValues={customFilterValues}
                               />
@@ -152,6 +153,10 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                 {table.getRowModel().rows.map((row: any) => (
                   <tr
                     key={row.id}
+                    className={clsx({
+                      [CustomReactTableStyles.invalidRow]:
+                        row.original.isValidItem === false,
+                    })}
                     {...(handleRowClick
                       ? {
                           onClick: () => {
@@ -159,7 +164,16 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                           },
                         }
                       : {})}
+                    {...(handleEditRowClick
+                      ? {
+                          onClick: () => {
+                            handleEditRowClick(row.original.id);
+                          },
+                        }
+                      : {})}
                   >
+                    {console.log("origalllllll:", row.original)}
+                    {console.log("isValidItem:", row.original.isValidItem)}
                     {row.getVisibleCells().map((cell: any, index: number) => (
                       <td
                         key={cell.id}
