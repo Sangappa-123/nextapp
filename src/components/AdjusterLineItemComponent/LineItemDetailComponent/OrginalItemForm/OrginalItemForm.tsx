@@ -5,11 +5,26 @@ import GenericInput from "@/components/common/GenericInput";
 import GenericSelect from "@/components/common/GenericSelect";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
+import { Controller } from "react-hook-form";
 
-const OrginalItemForm: React.FC<connectorType> = (props) => {
-  const { lineItem, category, subCategory, condition, room, retailer, paymentTypes } =
-    props;
-  console.log("========klkl====", paymentTypes);
+interface originalItemTyped {
+  register: any;
+  control: any;
+}
+
+const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => {
+  const {
+    lineItem,
+    category,
+    subCategory,
+    condition,
+    room,
+    retailer,
+    paymentTypes,
+    register,
+    control,
+  } = props;
+
   return (
     <div className={orginalItemFormStyle.root}>
       <div className={orginalItemFormStyle.heading}>Original Item</div>
@@ -22,7 +37,8 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
             id="itemDesc"
             className={orginalItemFormStyle.textarea}
             placeholder="Description"
-            value={lineItem?.description}
+            // value={lineItem?.description}
+            {...register("description")}
           />
         </div>
         <div
@@ -37,7 +53,22 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
               <label htmlFor="category" className={orginalItemFormStyle.label}>
                 Category
               </label>
-              <GenericSelect
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }: any) => (
+                  <GenericSelect
+                    id="category"
+                    options={category}
+                    getOptionLabel={(option: { categoryName: any }) =>
+                      option.categoryName
+                    }
+                    getOptionValue={(option: { categoryId: any }) => option.categoryId}
+                    {...field}
+                  />
+                )}
+              />
+              {/* <GenericSelect
                 id="subCategory"
                 options={category}
                 getOptionLabel={(option: { categoryName: any }) => option.categoryName}
@@ -46,13 +77,26 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
                   categoryId: lineItem?.category?.id,
                   categoryName: lineItem?.category?.name,
                 }}
-              />
+              /> */}
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
                 Sub-Category
               </label>
-              <GenericSelect
+              <Controller
+                name="subCategory"
+                control={control}
+                render={({ field }: any) => (
+                  <GenericSelect
+                    id="subCategory"
+                    options={subCategory}
+                    getOptionLabel={(option: { name: string }) => option.name}
+                    getOptionValue={(option: { id: number }) => option.id}
+                    {...field}
+                  />
+                )}
+              />
+              {/* <GenericSelect
                 id="subCategory"
                 options={subCategory}
                 getOptionLabel={(option: { name: string }) => option.name}
@@ -61,7 +105,7 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
                   id: lineItem?.subCategory?.id,
                   name: lineItem?.subCategory?.name,
                 }}
-              />
+              /> */}
             </div>
           </div>
           <div className={orginalItemFormStyle.standardReplacement}>
@@ -77,7 +121,8 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
             id="cost_per_unit"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Stated Value(per unit)"
-            value={lineItem?.insuredPrice}
+            // value={lineItem?.insuredPrice}
+            {...register("insuredPrice")}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -88,7 +133,7 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
             id="qty_lost"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Quantity"
-            value={lineItem?.quantity}
+            {...register("quantity")}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -98,8 +143,10 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
           <GenericInput
             id="total_lost"
             labelClassname={orginalItemFormStyle.label}
-            value={lineItem?.totalStatedAmount}
+            // value={lineItem?.totalStatedAmount}
+
             disabled={true}
+            {...register("totalStatedAmount")}
           />
         </div>
         <div className={clsx(orginalItemFormStyle.itemAge)}>
@@ -109,13 +156,15 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
               label="(Years)"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
-              value={lineItem?.ageYears}
+              // value={lineItem?.ageYears}
+              {...register("ageYears")}
             />
             <GenericInput
               label="(Months)"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
-              value={lineItem?.ageMonths}
+              // value={lineItem?.ageMonths}
+              {...register("ageMonths")}
             />
           </div>
         </div>
@@ -149,7 +198,8 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
             label="Brand / Manufacturer"
             placeholder="Brand"
             labelClassname={orginalItemFormStyle.label}
-            value={lineItem?.brand}
+            // value={lineItem?.brand}
+            {...register("brand")}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -157,7 +207,8 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
             label="Model"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Model"
-            value={lineItem?.model}
+            // value={lineItem?.model}
+            {...register("model")}
           />
         </div>
         <div
@@ -173,12 +224,25 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
           <label htmlFor="purchasedFrom" className={orginalItemFormStyle.label}>
             Purchased From
           </label>
-          <GenericSelect
+          <Controller
+            name="originallyPurchasedFrom"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="originallyPurchasedFrom"
+                options={retailer}
+                getOptionLabel={(option: { name: string }) => option.name}
+                getOptionValue={(option: { id: number }) => option.id}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
             id="purchasedFrom"
             options={retailer}
             getOptionLabel={(option: { name: any }) => option.name}
             getOptionValue={(option: { id: any }) => option.id}
-          />
+          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           {/* <GenericInput
@@ -188,7 +252,14 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
           <label htmlFor="purchasedMethod" className={orginalItemFormStyle.label}>
             Purchased Method
           </label>
-          <GenericSelect id="purchasedMethod" options={paymentTypes} />
+          <Controller
+            name="purchaseMethod"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect id="purchaseMethod" options={paymentTypes} {...field} />
+            )}
+          />
+          {/* <GenericSelect id="purchasedMethod" options={paymentTypes} /> */}
         </div>
         <div
           className={clsx(
@@ -200,7 +271,20 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
           <label htmlFor="condition" className={orginalItemFormStyle.label}>
             Condition
           </label>
-          <GenericSelect
+          <Controller
+            name="condition"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="condition"
+                options={condition}
+                getOptionLabel={(option: { conditionName: any }) => option.conditionName}
+                getOptionValue={(option: { conditionId: any }) => option.conditionId}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
             id="condition"
             options={condition}
             getOptionLabel={(option: { conditionName: any }) => option.conditionName}
@@ -209,14 +293,27 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
               conditionId: lineItem?.condition?.conditionId,
               conditionName: lineItem?.condition?.conditionName,
             }}
-          />
+          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           {/* <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} /> */}
           <label htmlFor="room" className={orginalItemFormStyle.label}>
             Room
           </label>
-          <GenericSelect
+          <Controller
+            name="room"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="room"
+                options={room}
+                getOptionLabel={(option: { roomName: any }) => option.roomName}
+                getOptionValue={(option: { id: any }) => option.id}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
             id="room"
             placeholder="Select"
             options={room}
@@ -230,7 +327,7 @@ const OrginalItemForm: React.FC<connectorType> = (props) => {
                   }
                 : null
             }
-          />
+          /> */}
         </div>
         <div
           className={clsx(

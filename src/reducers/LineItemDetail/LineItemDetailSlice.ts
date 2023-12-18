@@ -18,7 +18,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState: unknownObjectType = {
   isLoading: true,
   isFetching: false,
-  lineItem: {},
+  lineItem: null,
   subCategory: [],
   category: [],
   condition: [],
