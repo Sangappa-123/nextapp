@@ -7,6 +7,7 @@ enum btnThemes {
   darkBlue = "dark-blue",
   normal = "normal-button",
   deleteBtn = "delete-button",
+  existingDarkBlueBtn = "existing-blue-btn",
 }
 
 enum btnSize {

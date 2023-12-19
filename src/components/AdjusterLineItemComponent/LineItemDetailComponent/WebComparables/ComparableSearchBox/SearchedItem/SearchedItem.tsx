@@ -84,8 +84,16 @@ function SearchedItem(props: propsType) {
           <div className={searchedItemStyle.price}>
             {getUSDCurrency(+data?.itemPrice ?? 0)}
           </div>
-          <GenericButton label="Mark as Replacement" theme="darkBlue" size="medium" />
-          <GenericButton label="Add to Comparable" theme="darkBlue" size="medium" />
+          <GenericButton
+            label="Mark as Replacement"
+            theme="existingDarkBlueBtn"
+            size="medium"
+          />
+          <GenericButton
+            label="Add to Comparable"
+            theme="existingDarkBlueBtn"
+            size="medium"
+          />
         </div>
       </div>
     </div>

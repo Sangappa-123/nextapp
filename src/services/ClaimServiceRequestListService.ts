@@ -1,30 +1,23 @@
-import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
-import { updateServiceRequestVisibleData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import {
+  updateServiceRequestVisibleData,
+  deleteServiceRequestClaimItem,
+} from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import { sortBy } from "lodash";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
+import HttpService from "@/HttpService";
 
-interface objectType {
-  [key: string | number]: any;
-}
-export const serviceRequestList = async (
-  payload: any,
-  token: any
-): Promise<objectType> => {
-  const headersData: object = getHeaderWithoutToken();
-  return new Promise((resolve, rejects) => {
-    fetch(getApiEndPoint("serviceRequest"), {
-      method: "POST",
-      headers: { ...headersData, "X-Auth-Token": token },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        return resolve({ result });
-      })
-      .catch((error) => rejects({ error }));
-  });
+export const serviceRequestList = async (payload: { claimId: string }) => {
+  try {
+    const url = getApiEndPoint("serviceRequest");
+    const http = new HttpService();
+    const res = await http.post(url, payload);
+    return res;
+  } catch (error) {
+    console.warn("serviceRequest__err", error);
+    throw error;
+  }
 };
 
 export const fetchServiceRequestList = async (
@@ -58,4 +51,39 @@ export const fetchServiceRequestList = async (
   store.dispatch(updateServiceRequestVisibleData({ claimServiceRequestList }));
 
   return claimServiceRequestList;
+};
+
+export const deleteServiceRequestItem = async (payload: any) => {
+  const url = getApiEndPoint("deleteServiceRequestItem");
+  const http = new HttpService({ isClient: true });
+  const res = await http.delete(url, payload);
+  const state = store.getState();
+
+  if (res.status === 200) {
+    const message = res.message;
+
+    const claimServiceRequestListTotalData =
+      state.claimServiceRequestdata.claimServiceRequestListTotalData;
+    const claimServiceRequestList = state.claimServiceRequestdata.claimServiceRequestList;
+
+    const newClaimServiceRequestListFull = await claimServiceRequestListTotalData.filter(
+      (item: any) => {
+        return item.serviceRequestId !== payload.serviceId;
+      }
+    );
+    const newClaimServiceRequestList = await claimServiceRequestList.filter(
+      (item: any) => {
+        return item.serviceRequestId !== payload.serviceId;
+      }
+    );
+
+    store.dispatch(
+      deleteServiceRequestClaimItem({
+        newClaimServiceRequestListFull,
+        newClaimServiceRequestList,
+      })
+    );
+    return message;
+  }
+  return null;
 };

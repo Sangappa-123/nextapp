@@ -1,29 +1,22 @@
-import { getHeaderWithoutToken } from "@/utils/HeaderService";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
-import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+import {
+  deleteClaimContentListItem,
+  updateClaimContentListData,
+} from "@/reducers/ClaimData/ClaimContentSlice";
 
-import { getClientCookie } from "@/utils/utitlity";
 import HttpService from "@/HttpService";
 
-interface objectType {
-  [key: string | number]: any;
-}
-export const claimContentList = async (payload: any, token: any): Promise<objectType> => {
-  const headersData: object = getHeaderWithoutToken();
-
-  return new Promise((resolve, rejects) => {
-    fetch(getApiEndPoint("claimContentList"), {
-      method: "POST",
-      headers: { ...headersData, "X-Auth-Token": token },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        return resolve({ result });
-      })
-      .catch((error) => rejects({ error }));
-  });
+export const claimContentList = async (payload: { claimId: string | any }) => {
+  try {
+    const url = getApiEndPoint("claimContentList");
+    const http = new HttpService();
+    const res = await http.post(url, payload);
+    return res;
+  } catch (error) {
+    console.warn("claimContentList__err", error);
+    throw error;
+  }
 };
 
 export const claimContentListV2 = async (payload: { claimId: string }) => {
@@ -33,29 +26,34 @@ export const claimContentListV2 = async (payload: { claimId: string }) => {
     const res = await http.post(url, payload);
     return res;
   } catch (error) {
-    console.warn("claimContentListV2__err", error);
+    console.error("claimContentListV2__err", error);
     throw error;
   }
 };
 
-export const fetchClaimContentList = async () => {
-  const state = store.getState();
-  const claimId = state.claimdata.claimId;
+export const deleteClaimItem = async (payload: any) => {
+  const url = getApiEndPoint("deleteClaimContentListItem");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, payload);
 
-  const token = await getClientCookie("accessToken");
-
-  const payload = {
-    claimId,
-  };
-
-  const claimcontentListRes: any = await claimContentList(payload, token);
-
-  if (claimcontentListRes.result.status === 200) {
-    const claimContentData = claimcontentListRes.result;
-    store.dispatch(
-      addClaimContentListData({ claimContentData: claimContentData, claimId })
-    );
-    return claimContentData;
+  if (res.status === 200) {
+    const message = res.message;
+    store.dispatch(deleteClaimContentListItem({ itemId: payload.id }));
+    return message;
   }
   return null;
+};
+export const fetchContentList = async (searchKeyword = "") => {
+  const state = store.getState();
+  const searchWord = searchKeyword ?? state.claimContentdata.searchKeyword;
+
+  const claimContentListDataFull = state.claimContentdata.claimContentListDataFull;
+
+  const claimContentList = await claimContentListDataFull.filter((obj) =>
+    JSON.stringify(obj).toLowerCase().includes(searchWord.toLowerCase())
+  );
+
+  store.dispatch(updateClaimContentListData({ claimContentList }));
+
+  return claimContentList;
 };

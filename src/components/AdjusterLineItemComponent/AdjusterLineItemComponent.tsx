@@ -11,8 +11,11 @@ import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import {
+  fetchCondition,
+  fetchLineItemCatergory,
   fetchLineItemDetail,
-  resetLineItemDetail,
+  fetchRetailersDetails,
+  // resetLineItemDetail,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
@@ -21,13 +24,15 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
     isLoading,
     lineItem,
-    resetLineItemDetail,
+    // resetLineItemDetail,
     claimData = [],
     fetchLineItemDetail,
     fetchClaimContentAction,
+    fetchLineItemCatergory,
+    fetchCondition,
+    fetchRetailersDetails,
   } = props;
   const { itemId, claimId } = useParams();
-  console.log("=============", claimId, claimData);
   const tabData = [
     {
       name: "Item Details",
@@ -56,15 +61,27 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     if (!isInit.current) {
       fetchLineItemDetail({ itemId: +itemId });
       fetchClaimContentAction({ claimId: claimId.toString() });
+      fetchLineItemCatergory();
+      fetchCondition();
+      fetchRetailersDetails();
       isInit.current = true;
     }
 
-    return () => {
-      resetLineItemDetail();
-    };
-  }, [isInit, fetchLineItemDetail, resetLineItemDetail, itemId, claimId]);
+    // return () => {
+    //   resetLineItemDetail();
+    // };
+  }, [
+    isInit,
+    fetchLineItemDetail,
+    fetchClaimContentAction,
+    itemId,
+    claimId,
+    fetchLineItemCatergory,
+    fetchCondition,
+    fetchRetailersDetails,
+  ]);
 
-  if (isLoading && claimData.length > 0) {
+  if (isLoading && !(claimData.length > 0)) {
     return <Loading />;
   }
 
@@ -103,8 +120,11 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   fetchLineItemDetail,
-  resetLineItemDetail,
+  // resetLineItemDetail,
   fetchClaimContentAction,
+  fetchLineItemCatergory,
+  fetchCondition,
+  fetchRetailersDetails,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

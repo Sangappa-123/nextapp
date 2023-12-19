@@ -1,8 +1,11 @@
-.inputBoxAlign {
-  text-align: right;
+.upperContainer {
+  border-bottom: 1px solid #dddddd;
 }
 .alignRight {
   justify-content: right;
+}
+.inputBoxAlign {
+  text-align: right;
 }
 .labelStyle {
   font-size: 13px;
@@ -12,4 +15,14 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.textArea {
+  height: 50px;
+  padding: 5px;
+}
+.iconColor {
+  color: #f20707;
+}
+.fileInputStyle {
+  display: none;
 }

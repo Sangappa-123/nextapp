@@ -51,11 +51,15 @@ const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propT
       <div className="row">
         <ClaimDetailsCardsComponent />
       </div>
-      <div className="row">
-        <div className="col-lg-12 col-md-12 col-12">
-          <ServiceRequestsComponent serviceRequestListRes={props.serviceRequestListRes} />
+      {process.env.NEXT_PUBLIC_SERVICE_REQUESTS === "true" && (
+        <div className="row">
+          <div className="col-lg-12 col-md-12 col-12">
+            <ServiceRequestsComponent
+              serviceRequestListRes={props.serviceRequestListRes}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <div className="row">
         <div className="col-lg-12 col-md-12 col-12">
           <ContentListComponent

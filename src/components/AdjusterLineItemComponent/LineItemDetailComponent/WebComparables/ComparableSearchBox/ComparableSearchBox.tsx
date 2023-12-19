@@ -52,6 +52,16 @@ const ComparableSearchBox = (props: comparableSearchBoxType) => {
       </div>
       <GenericSelect
         formControlClassname={comparableSearchBoxStyle.selectFormControl}
+        customStyles={{
+          control: {
+            background: "#347ab6",
+            color: "#fff",
+          },
+          singleValue: {
+            color: "#fff",
+          },
+          input: { color: "#fff" },
+        }}
         options={WEB_SEARCH_ENGINES}
         getOptionLabel={(option: { name: any }) => option.name}
         getOptionValue={(option: { id: any }) => option.id}

@@ -60,8 +60,8 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
   );
 };
 
-const mapStateToProps = ({ claimdata }: any) => ({
-  searchKeyword: claimdata.searchKeyword,
+const mapStateToProps = ({ claimServiceRequestdata }: any) => ({
+  searchKeyword: claimServiceRequestdata.searchKeyword,
 });
 const mapDispatchToProps = {
   addServiceSearchKeyWord,

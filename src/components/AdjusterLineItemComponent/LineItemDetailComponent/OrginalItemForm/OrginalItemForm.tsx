@@ -3,8 +3,41 @@ import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
 import GenericSelect from "@/components/common/GenericSelect";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
+import { Controller } from "react-hook-form";
 
-function OrginalItemForm() {
+interface originalItemTyped {
+  register: any;
+  control: any;
+  getValues: any;
+  setValue: any;
+}
+
+const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => {
+  const {
+    lineItem,
+    category,
+    subCategory,
+    condition,
+    room,
+    retailer,
+    paymentTypes,
+    register,
+    control,
+    getValues,
+    setValue,
+  } = props;
+
+  const { onChange: quantityOnChange, ...quantityRegister } = register("quantity");
+  const { onChange: insuredPriceOnChange, ...insuredPriceRegister } =
+    register("insuredPrice");
+
+  const updateTotalStatedAmount = () => {
+    const [insuredPrice, quantity] = getValues(["insuredPrice", "quantity"]);
+    setValue("totalStatedAmount", (insuredPrice ?? 0) * (quantity ?? 0));
+  };
+
   return (
     <div className={orginalItemFormStyle.root}>
       <div className={orginalItemFormStyle.heading}>Original Item</div>
@@ -17,6 +50,8 @@ function OrginalItemForm() {
             id="itemDesc"
             className={orginalItemFormStyle.textarea}
             placeholder="Description"
+            // value={lineItem?.description}
+            {...register("description")}
           />
         </div>
         <div
@@ -31,13 +66,59 @@ function OrginalItemForm() {
               <label htmlFor="category" className={orginalItemFormStyle.label}>
                 Category
               </label>
-              <GenericSelect id="subCategory" />
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }: any) => (
+                  <GenericSelect
+                    id="category"
+                    options={category}
+                    getOptionLabel={(option: { categoryName: any }) =>
+                      option.categoryName
+                    }
+                    getOptionValue={(option: { categoryId: any }) => option.categoryId}
+                    {...field}
+                  />
+                )}
+              />
+              {/* <GenericSelect
+                id="subCategory"
+                options={category}
+                getOptionLabel={(option: { categoryName: any }) => option.categoryName}
+                getOptionValue={(option: { categoryId: any }) => option.categoryId}
+                selected={{
+                  categoryId: lineItem?.category?.id,
+                  categoryName: lineItem?.category?.name,
+                }}
+              /> */}
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
                 Sub-Category
               </label>
-              <GenericSelect id="subCategory" />
+              <Controller
+                name="subCategory"
+                control={control}
+                render={({ field }: any) => (
+                  <GenericSelect
+                    id="subCategory"
+                    options={subCategory}
+                    getOptionLabel={(option: { name: string }) => option.name}
+                    getOptionValue={(option: { id: number }) => option.id}
+                    {...field}
+                  />
+                )}
+              />
+              {/* <GenericSelect
+                id="subCategory"
+                options={subCategory}
+                getOptionLabel={(option: { name: string }) => option.name}
+                getOptionValue={(option: { id: number }) => option.id}
+                selected={{
+                  id: lineItem?.subCategory?.id,
+                  name: lineItem?.subCategory?.name,
+                }}
+              /> */}
             </div>
           </div>
           <div className={orginalItemFormStyle.standardReplacement}>
@@ -53,6 +134,13 @@ function OrginalItemForm() {
             id="cost_per_unit"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Stated Value(per unit)"
+            // value={lineItem?.insuredPrice}
+            // {...register("insuredPrice")}
+            onChange={(e: any) => {
+              insuredPriceOnChange(e);
+              updateTotalStatedAmount();
+            }}
+            {...insuredPriceRegister}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -63,13 +151,26 @@ function OrginalItemForm() {
             id="qty_lost"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Quantity"
+            // {...register("quantity")}
+            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+              quantityOnChange(e);
+              updateTotalStatedAmount();
+            }}
+            {...quantityRegister}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           <label htmlFor="total_lost" className={orginalItemFormStyle.label}>
             Total Cost
           </label>
-          <GenericInput id="total_lost" labelClassname={orginalItemFormStyle.label} />
+          <GenericInput
+            id="total_lost"
+            labelClassname={orginalItemFormStyle.label}
+            // value={lineItem?.totalStatedAmount}
+
+            disabled={true}
+            {...register("totalStatedAmount")}
+          />
         </div>
         <div className={clsx(orginalItemFormStyle.itemAge)}>
           <label className={orginalItemFormStyle.label}>Age of Item</label>
@@ -78,23 +179,29 @@ function OrginalItemForm() {
               label="(Years)"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
+              // value={lineItem?.ageYears}
+              {...register("ageYears")}
             />
             <GenericInput
               label="(Months)"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
+              // value={lineItem?.ageMonths}
+              {...register("ageMonths")}
             />
           </div>
         </div>
         <div className={orginalItemFormStyle.tax}>
-          <label className={orginalItemFormStyle.label}>Apply Taxes(10%)</label>
+          <label className={orginalItemFormStyle.label}>
+            Apply Taxes({lineItem?.taxRate}%)
+          </label>
           <div className={orginalItemFormStyle.taxFormGroup}>
             <GenericInput
               type="radio"
               label="Yes"
               value="yes"
               name="applyTax"
-              checked={true}
+              checked={lineItem?.applyTax}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -103,6 +210,7 @@ function OrginalItemForm() {
               label="No"
               value="no"
               name="applyTax"
+              checked={!lineItem?.applyTax}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -113,6 +221,8 @@ function OrginalItemForm() {
             label="Brand / Manufacturer"
             placeholder="Brand"
             labelClassname={orginalItemFormStyle.label}
+            // value={lineItem?.brand}
+            {...register("brand")}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -120,6 +230,8 @@ function OrginalItemForm() {
             label="Model"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Model"
+            // value={lineItem?.model}
+            {...register("model")}
           />
         </div>
         <div
@@ -135,7 +247,25 @@ function OrginalItemForm() {
           <label htmlFor="purchasedFrom" className={orginalItemFormStyle.label}>
             Purchased From
           </label>
-          <GenericSelect id="purchasedFrom" />
+          <Controller
+            name="originallyPurchasedFrom"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="originallyPurchasedFrom"
+                options={retailer}
+                getOptionLabel={(option: { name: string }) => option.name}
+                getOptionValue={(option: { id: number }) => option.id}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
+            id="purchasedFrom"
+            options={retailer}
+            getOptionLabel={(option: { name: any }) => option.name}
+            getOptionValue={(option: { id: any }) => option.id}
+          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           {/* <GenericInput
@@ -145,7 +275,14 @@ function OrginalItemForm() {
           <label htmlFor="purchasedMethod" className={orginalItemFormStyle.label}>
             Purchased Method
           </label>
-          <GenericSelect id="purchasedMethod" />
+          <Controller
+            name="purchaseMethod"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect id="purchaseMethod" options={paymentTypes} {...field} />
+            )}
+          />
+          {/* <GenericSelect id="purchasedMethod" options={paymentTypes} /> */}
         </div>
         <div
           className={clsx(
@@ -157,14 +294,63 @@ function OrginalItemForm() {
           <label htmlFor="condition" className={orginalItemFormStyle.label}>
             Condition
           </label>
-          <GenericSelect id="condition" />
+          <Controller
+            name="condition"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="condition"
+                options={condition}
+                getOptionLabel={(option: { conditionName: any }) => option.conditionName}
+                getOptionValue={(option: { conditionId: any }) => option.conditionId}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
+            id="condition"
+            options={condition}
+            getOptionLabel={(option: { conditionName: any }) => option.conditionName}
+            getOptionValue={(option: { conditionId: any }) => option.conditionId}
+            selected={{
+              conditionId: lineItem?.condition?.conditionId,
+              conditionName: lineItem?.condition?.conditionName,
+            }}
+          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           {/* <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} /> */}
           <label htmlFor="room" className={orginalItemFormStyle.label}>
             Room
           </label>
-          <GenericSelect id="room" />
+          <Controller
+            name="room"
+            control={control}
+            render={({ field }: any) => (
+              <GenericSelect
+                id="room"
+                options={room}
+                getOptionLabel={(option: { roomName: any }) => option.roomName}
+                getOptionValue={(option: { id: any }) => option.id}
+                {...field}
+              />
+            )}
+          />
+          {/* <GenericSelect
+            id="room"
+            placeholder="Select"
+            options={room}
+            getOptionLabel={(option: { roomName: any }) => option.roomName}
+            getOptionValue={(option: { id: any }) => option.id}
+            selected={
+              lineItem?.room
+                ? {
+                    id: lineItem?.room?.id,
+                    roomName: lineItem?.room?.roomName,
+                  }
+                : null
+            }
+          /> */}
         </div>
         <div
           className={clsx(
@@ -179,7 +365,7 @@ function OrginalItemForm() {
               label="Yes"
               value="yes"
               name="scheduledItem"
-              checked={true}
+              checked={lineItem?.isScheduledItem}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -188,6 +374,7 @@ function OrginalItemForm() {
               label="No"
               value="no"
               name="scheduledItem"
+              checked={!lineItem?.isScheduledItem}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
             />
@@ -205,6 +392,18 @@ function OrginalItemForm() {
       </div>
     </div>
   );
-}
+};
 
-export default OrginalItemForm;
+const mapStateToProps = (state: RootState) => ({
+  lineItem: state.lineItemDetail?.lineItem,
+  category: state.lineItemDetail.category,
+  condition: state.lineItemDetail.condition,
+  subCategory: state.lineItemDetail.subCategory,
+  room: state.lineItemDetail.room,
+  retailer: state.lineItemDetail.retailer,
+  paymentTypes: state.lineItemDetail.paymentTypes,
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(OrginalItemForm);

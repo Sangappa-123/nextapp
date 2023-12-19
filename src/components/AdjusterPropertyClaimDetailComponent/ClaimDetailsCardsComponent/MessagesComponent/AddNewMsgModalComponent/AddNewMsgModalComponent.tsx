@@ -45,69 +45,68 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = ({
   return (
     <div>
       <form>
-        <div className="row col-12 m-2">
-          <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-            <label className={modalStyle.labelStyle}>To</label>
-          </div>
-          <div className={clsx("col-10")}>
-            <GenericSelect
-              placeholder={"Select Participants"}
-              options={options}
-              name={"select participants"}
-              showLabel={false}
-            />
-          </div>
-        </div>
-
-        <div className="row col-12 m-2">
-          <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-            <label className={modalStyle.labelStyle}>Message</label>
-          </div>
-          <div className={clsx("col-10")}>
-            <textarea
-              id="message"
-              className="col-12"
-              style={{ height: "50px", padding: "5px" }}
-              placeholder="Message"
-            />
-          </div>
-        </div>
-
-        <div className="row col-12 m-2">
-          <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-            <label className={modalStyle.labelStyle}>Attachments</label>
-          </div>
-          <div className={clsx("col-10")}>
-            <span>
-              <a onClick={handleAnchorTagClick}>click to add attachment</a>
-            </span>
-            <input
-              type="file"
-              id="inp"
-              style={{ display: "none" }}
-              multiple
-              accept=".png,.jpg,.jpeg,.pdf"
-              onChange={handleUpload}
-            ></input>
-          </div>
-        </div>
-        <div className="col-12 row my-2">
-          {docs.map((elem: any, index: number) => (
-            <div className="row col-6" key={index}>
-              <div className={clsx(modalStyle.clipped, "col")}>{elem}</div>
-              <div className="col p-0">
-                <IoClose
-                  style={{ color: "#f20707" }}
-                  onClick={() => handleDeleteImage(index)}
-                />
-              </div>
+        <div className={clsx(modalStyle.upperContainer, "p-2")}>
+          <div className="row col-12 m-2">
+            <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
+              <label className={modalStyle.labelStyle}>To</label>
             </div>
-          ))}
+            <div className={clsx("col-10")}>
+              <GenericSelect
+                placeholder={"Select Participants"}
+                options={options}
+                name={"select participants"}
+                showLabel={false}
+              />
+            </div>
+          </div>
+
+          <div className="row col-12 m-2">
+            <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
+              <label className={modalStyle.labelStyle}>Message</label>
+            </div>
+            <div className={clsx("col-10")}>
+              <textarea
+                id="message"
+                className={clsx(modalStyle.textArea, "col-12")}
+                placeholder="Message"
+              />
+            </div>
+          </div>
+
+          <div className="row col-12 m-2">
+            <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
+              <label className={modalStyle.labelStyle}>Attachments</label>
+            </div>
+            <div className={clsx("col-10")}>
+              <span>
+                <a onClick={handleAnchorTagClick}>click to add attachment</a>
+              </span>
+              <input
+                type="file"
+                id="inp"
+                className={clsx(modalStyle.fileInputStyle)}
+                multiple
+                accept=".png,.jpg,.jpeg,.pdf"
+                onChange={handleUpload}
+              ></input>
+            </div>
+          </div>
+          <div className="col-12 row my-2">
+            {docs.map((elem: any, index: number) => (
+              <div className="row col-6" key={index}>
+                <div className={clsx(modalStyle.clipped, "col")}>{elem}</div>
+                <div className="col p-0">
+                  <IoClose
+                    className={clsx(modalStyle.iconColor)}
+                    onClick={() => handleDeleteImage(index)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="col-12 my-3">
-          <hr style={{ border: "1px solid #dddddd" }}></hr>
-        </div>
-        <div className={clsx(modalStyle.alignRight, "row col-12 m-2")}>
+
+        <div className={clsx(modalStyle.alignRight, "row col-12 mt-2")}>
           <div className={"row col-7"}>
             <div className={clsx("row col-6", modalStyle.centerAlign)}>
               <GenericButton label="Cancel" size="medium" onClick={handleOpenModal} />

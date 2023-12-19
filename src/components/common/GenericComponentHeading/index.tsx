@@ -16,7 +16,6 @@ function GenericComponentHeading(props: TypedHeading) {
     customHeadingClassname = "",
     customTitleClassname = "",
   } = props;
-  console.log("===========", props);
   return (
     <div
       className={clsx(headingStyle.heading, {

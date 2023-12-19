@@ -1,6 +1,6 @@
-import AdjusterPropertyClaimDetailContainer from "@/container/AdjusterPropertyClaimDetailContainer";
 import { Suspense } from "react";
-import Loading from "../../../loading";
+import Loading from "@/app/[lang]/loading";
+import AdjusterPropertyClaimDetailContainer from "@/container/AdjusterPropertyClaimDetailContainer";
 
 export default function Page({ params }: { params: { claimId: string } }) {
   return (
