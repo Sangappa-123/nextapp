@@ -25,6 +25,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     totalDBRowCount = null,
     filterFn = null,
     customFilterValues = null,
+    showPaginationButtons = true,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -63,11 +64,9 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
   const isAnyRowInvalid = table
     .getRowModel()
     .rows.some((row: any) => row.original.isValidItem === false);
-  console.log("RowMoeeeeeeeeeeeeeeeee:", table.getRowModel());
 
   return (
     <>
-      {console.log("Hedaerrrrrrrrrrrr", isAnyRowInvalid)}
       <div
         className={clsx({
           [CustomReactTableStyles.reactTable]: true,
@@ -179,8 +178,6 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                         }
                       : {})}
                   >
-                    {console.log("origalllllll:", row.original)}
-                    {console.log("isValidItem:", row.original.isValidItem)}
                     {row.getVisibleCells().map((cell: any, index: number) => (
                       <td
                         key={cell.id}
@@ -219,67 +216,71 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                 : totalDataCount}{" "}
               of {totalDataCount} Claims
             </span>
-            <div className="flex items-center gap-2">
-              <button
-                className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                {"<<"}
-              </button>
-              <button
-                className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                {"<"}
-              </button>
+            {showPaginationButtons && (
+              <div className="flex items-center gap-2">
+                <button
+                  className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
+                  onClick={() => table.setPageIndex(0)}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  {"<<"}
+                </button>
+                <button
+                  className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  {"<"}
+                </button>
 
-              {Array(table.getPageCount())
-                .fill(table.getPageCount())
-                .map((value, index) => {
-                  if (index < 10) {
-                    return (
-                      <button
-                        key={value + "-" + index}
-                        className={clsx({
-                          [CustomReactTableStyles.paginationButton]: true,
-                          [CustomReactTableStyles.active]:
-                            index == table.getState().pagination.pageIndex,
-                        })}
-                        onClick={() => table.setPageIndex(index)}
-                      >
-                        {index + 1}
-                      </button>
-                    );
-                  }
-                })}
-              {table.getPageCount() > 10 && (
-                <>
-                  <button className={CustomReactTableStyles.paginationButton}>...</button>
-                  <button
-                    className={CustomReactTableStyles.paginationButton}
-                    onClick={() => table.setPageIndex(table.getPageCount())}
-                  >
-                    {table.getPageCount()}
-                  </button>
-                </>
-              )}
-              <button
-                className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                {">"}
-              </button>
-              <button
-                className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
-                onClick={() => table.setPageIndex(table.getPageCount())}
-                disabled={!table.getCanNextPage()}
-              >
-                {">>"}
-              </button>
-            </div>
+                {Array(table.getPageCount())
+                  .fill(table.getPageCount())
+                  .map((value, index) => {
+                    if (index < 10) {
+                      return (
+                        <button
+                          key={value + "-" + index}
+                          className={clsx({
+                            [CustomReactTableStyles.paginationButton]: true,
+                            [CustomReactTableStyles.active]:
+                              index == table.getState().pagination.pageIndex,
+                          })}
+                          onClick={() => table.setPageIndex(index)}
+                        >
+                          {index + 1}
+                        </button>
+                      );
+                    }
+                  })}
+                {table.getPageCount() > 10 && (
+                  <>
+                    <button className={CustomReactTableStyles.paginationButton}>
+                      ...
+                    </button>
+                    <button
+                      className={CustomReactTableStyles.paginationButton}
+                      onClick={() => table.setPageIndex(table.getPageCount())}
+                    >
+                      {table.getPageCount()}
+                    </button>
+                  </>
+                )}
+                <button
+                  className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {">"}
+                </button>
+                <button
+                  className={`${CustomReactTableStyles.paginationButton} ${CustomReactTableStyles.paginationIcon}`}
+                  onClick={() => table.setPageIndex(table.getPageCount())}
+                  disabled={!table.getCanNextPage()}
+                >
+                  {">>"}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

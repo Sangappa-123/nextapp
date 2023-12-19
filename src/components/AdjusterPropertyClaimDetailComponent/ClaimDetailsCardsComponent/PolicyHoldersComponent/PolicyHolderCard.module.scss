@@ -3,5 +3,40 @@
   margin-top: 10px;
   .taskContentContainer {
     height: 86%;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
+}
+.taskContentContainer::-webkit-scrollbar {
+  width: 7px;
+}
+
+.taskContentContainer::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+.taskContentContainer::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #c3c3c3;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+.formNameContainer {
+  display: flex;
+  border-bottom: 1px solid #e4e8eb;
+}
+.labelStyle {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+}
+
+.modalContainer {
+  align-items: start;
+}
+.modalContent {
+  width: 600px;
+  position: relative;
+  top: 30px;
 }

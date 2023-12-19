@@ -9,6 +9,7 @@ import ClaimContentSlice from "./ClaimData/ClaimContentSlice";
 import ClaimServiceRequestSlice from "./ClaimData/ClaimServiceRequestSlice";
 import ExcelCsvUploadSlice from "@/services/excelCsvUploadSlice";
 import LineItemDetailSlice from "./LineItemDetail/LineItemDetailSlice";
+import ClaimDetailSlice from "./ClaimDetail/ClaimDetailSlice";
 
 const rootReducer = combineReducers({
   [SessionSlice.name]: SessionSlice.reducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   [ClaimServiceRequestSlice.name]: ClaimServiceRequestSlice.reducer,
   [ExcelCsvUploadSlice.name]: ExcelCsvUploadSlice.reducer,
   [LineItemDetailSlice.name]: LineItemDetailSlice.reducer,
+  [ClaimDetailSlice.name]: ClaimDetailSlice.reducer,
 });
 
 export default rootReducer;

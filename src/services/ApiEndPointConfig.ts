@@ -29,12 +29,16 @@ enum apiEndPoints {
   excelcsvuploaddata = "web/read/postloss/items",
   itemsDetails = "web/claim/itemdetails",
   categoriesRequest = "web/categories",
+  // subcategoriesReqUrl = "web/item/subcategories",
   replacementApi = "web/claim/search/replacement",
+  deleteClaimContentListItem = "web/remove/postlossitem",
   lineItemCategory = "web/claim/get/category",
   lineItemSubCategory = "web/item/subcategories",
   lineItemCondition = "web/claim/get/condition",
   lineItemRoom = `customer/claim/{{CLAIM}}/rooms`,
   lineItemRetailer = "web/all/retailers",
+  pendingTaskList = "web/claim/pendingtasklist",
+  claimDetailMessageList = "web/messages",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
