@@ -59,7 +59,8 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     setClaimResult([...defaultData.slice(0, fetchSize)]);
   }, [claimContentListData]);
 
-  const handleClearAllFilter = () => {
+  const handleClearAllFilter = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
     clearFilter();
   };
   const columnHelper = createColumnHelper<ContentListData>();
@@ -307,8 +308,8 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       <div className={ContentListTableStyle.claimTableContainer}>
         <CustomReactTable
           table={table}
-          totalDataCount={totalClaims}
-          pageLimit={totalClaims > 20 ? pageLimit : null}
+          totalDataCount={claimContentListData.length}
+          pageLimit={claimContentListData.length}
           loader={tableLoader}
           tableDataErrorMsg={claimErrorMsg}
           fetchNextPage={fetchNextPage}
@@ -316,6 +317,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDBRowCount={claimContentListData.length}
           filterFn={filterFn}
           handleRowClick={handleRowClick}
+          showPaginationButtons={false}
         />
       </div>
     </>

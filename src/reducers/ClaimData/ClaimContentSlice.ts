@@ -5,6 +5,7 @@ const initialState = {
   claimContentListDataFull: [],
   claimContentListData: [],
   claimErrorMsg: "",
+  searchKeyword: "",
 };
 export const fetchClaimContentAction = createAsyncThunk(
   "claimContent/fetchData",
@@ -82,6 +83,12 @@ const ClaimContentSlice = createSlice({
       state.claimContentListDataFull = newClaimContentListFull;
       state.claimContentListData = newClaimContentList;
     },
+    addClaimListKeyWord(state, action) {
+      const { payload } = action;
+      const { searchKeyword } = payload;
+
+      state.searchKeyword = searchKeyword;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchClaimContentAction.pending, (state) => {
@@ -102,4 +109,5 @@ export const {
   updateClaimContentListData,
   clearFilter,
   deleteClaimContentListItem,
+  addClaimListKeyWord,
 } = ClaimContentSlice.actions;

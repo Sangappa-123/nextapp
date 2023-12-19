@@ -10,6 +10,7 @@ import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice"
 import { Tooltip } from "react-tooltip";
 import Modal from "@/components/common/ModalPopups";
 import AddItemModalFormComp from "@/components/AddItemModalForm";
+import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 
 function ContentListComponent(props: any) {
   const { claimContentListRes, addClaimContentListData, claimId } = props;
@@ -44,9 +45,13 @@ function ContentListComponent(props: any) {
       </div>
 
       <div className={ContentListComponentStyle.contentListContainer}>
-        <div className={`row ${ContentListComponentStyle.contentListContentContainer}`}>
-          <div className="col-md-7 col-sm-12 col-xs-12 col-lg-7 d-flex ps-0">
-            <div className={ContentListComponentStyle.contentListButtonDiv}>
+        <div
+          className={`row col-12 ${ContentListComponentStyle.contentListContentContainer}`}
+        >
+          <div className="col-md-9 col-sm-12 col-xs-12 col-lg-9 d-flex ps-0">
+            <div
+              className={`row col-12 ${ContentListComponentStyle.contentListButtonDiv}`}
+            >
               <Tooltip
                 anchorSelect="#my-anchor-element"
                 place="bottom"
@@ -121,17 +126,18 @@ function ContentListComponent(props: any) {
               />
             </div>
           </div>
-
-          <div className="col-12">
-            <Modal
-              isOpen={isModalOpen}
-              onClose={closeModal}
-              childComp={<AddItemModalFormComp />}
-              headingName="Add Item"
-              modalWidthClassName={ContentListComponentStyle.modalWidth}
-            ></Modal>
+          <div className="col-lg-3 col-md-3 col-sm-12 col-xs-12 pr-0">
+            <ContentListSearchBox setTableLoader={setTableLoader} />
           </div>
-          <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12"></div>
+        </div>
+        <div className="col-12">
+          <Modal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            childComp={<AddItemModalFormComp />}
+            headingName="Add Item"
+            modalWidthClassName={ContentListComponentStyle.modalWidth}
+          ></Modal>
         </div>
       </div>
       <ContentListTable setTableLoader={setTableLoader} tableLoader={tableLoader} />

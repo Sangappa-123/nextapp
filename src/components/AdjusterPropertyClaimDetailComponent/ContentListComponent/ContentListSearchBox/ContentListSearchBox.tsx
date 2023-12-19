@@ -1,29 +1,28 @@
 "use client";
 import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
-import ServiceRequestSearchStyle from "./ServiceRequestSearchBox.module.scss";
-import { fetchServiceRequestList } from "@/services/ClaimServiceRequestListService";
-import { addServiceSearchKeyWord } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import ContentListSearchBoxStyle from "./ContentListSearchBox.module.scss";
+import { fetchContentList } from "@/services/ClaimContentListService";
+import { addClaimListKeyWord } from "@/reducers/ClaimData/ClaimContentSlice";
 import { ConnectedProps, connect } from "react-redux";
-import { TABLE_LIMIT_5 } from "@/constants/constants";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
 }
-const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => {
+const ContentListSearchBox: React.FC<connectorType & typeProps> = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
   const {
     setTableLoader,
     searchKeyword,
-    addServiceSearchKeyWord,
+    addClaimListKeyWord,
   }: React.SetStateAction<any> = props;
 
   const handleSearch = async (e: any) => {
     setSearchValue(e.target.value);
     if (searchKeyword !== "" && e.target.value === "") {
       setTableLoader(true);
-      addServiceSearchKeyWord({ searchKeyword: "" });
-      const result = await fetchServiceRequestList();
+      addClaimListKeyWord({ searchKeyword: "" });
+      const result = await fetchContentList();
       if (result) {
         setTableLoader(false);
       }
@@ -32,14 +31,8 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
   const searchKey = async (event: any) => {
     if (event.key === "Enter") {
       setTableLoader(true);
-      addServiceSearchKeyWord({ searchKeyword: event.target.value });
-      const result = await fetchServiceRequestList(
-        0,
-        TABLE_LIMIT_5,
-        "",
-        "asc",
-        event.target.value
-      );
+      addClaimListKeyWord({ searchKeyword: event.target.value });
+      const result = await fetchContentList(event.target.value);
       if (result) {
         setTableLoader(false);
       }
@@ -47,8 +40,8 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
   };
 
   return (
-    <div className={ServiceRequestSearchStyle.searchBox}>
-      <RiSearch2Line className={ServiceRequestSearchStyle.searchIcon} />
+    <div className={ContentListSearchBoxStyle.searchBox}>
+      <RiSearch2Line className={ContentListSearchBoxStyle.searchIcon} />
       <input
         type="text"
         placeholder="Search..."
@@ -60,13 +53,13 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
   );
 };
 
-const mapStateToProps = ({ claimServiceRequestdata }: any) => ({
-  searchKeyword: claimServiceRequestdata.searchKeyword,
+const mapStateToProps = ({ claimContentdata }: any) => ({
+  searchKeyword: claimContentdata.searchKeyword,
 });
 const mapDispatchToProps = {
-  addServiceSearchKeyWord,
+  addClaimListKeyWord,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
-export default connector(ServiceRequestSearchBox);
+export default connector(ContentListSearchBox);
