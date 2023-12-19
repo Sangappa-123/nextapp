@@ -7,7 +7,6 @@ import Tooltip from "../common/ToolTip/index";
 import GenericSelect from "../common/GenericSelect/index";
 import DateTimePicker from "../common/DateTimePicker/index";
 import Cards from "../common/Cards/index";
-// import SearchBoxAssignItems from "./SearchBoxAssignItems";
 import {
   fetchHomeOwnersType,
   fetchLossType,
@@ -25,11 +24,6 @@ function ClaimInformation({
   homeOwnerTypeOptions,
   getValues,
 }: any) {
-  // const options = [
-  //   { value: "chocolate", label: "Chocolate" },
-  //   { value: "strawberry", label: "Strawberry" },
-  //   { value: "vanilla", label: "Vanilla" },
-  // ];
   const [topping, setTopping] = useState("yes");
   const [lossType, setLossType] = useState([]);
   const [Data, setData] = useState([]);
@@ -52,9 +46,6 @@ function ClaimInformation({
   const onOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setTopping(e.target.value);
     console.log("topping", e.target.value);
-    // if (e.target.value === "no") {
-    //   setDisabled(!disabled);
-    // }
   };
 
   const claimHandler = (claim: any) => {
@@ -100,14 +91,6 @@ function ClaimInformation({
     fetchLossType().then((res) => {
       console.log("loss", res);
       setLossType(res.data);
-      // console.log(
-      //   "stateObject",
-      //   res.data.map((item: { state: string }) => {
-      //     item;
-      //   })
-      // );
-
-      // setStateId(res.data.address.state.id);
     });
     getCategories()
       .then((res: any) => {
@@ -115,18 +98,10 @@ function ClaimInformation({
         setCategoriesData(res.data);
       })
       .catch((error) => console.log(" Losserrr", error));
-
-    // setFilteredData(
-    //   categoriesData.filter((el) =>
-    //     el.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
-    //   )
-    // );
-    // console.log("setFilteredData", filteredData);
   }, []);
 
   const handleInputChange = (e: any) => {
     setData((prev): any => {
-      // prev.push(e);
       console.log("prev", prev);
       return [...prev, e];
     });
@@ -176,7 +151,7 @@ function ClaimInformation({
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             {" "}
             <span style={{ color: "red" }}>*</span>Claim#
@@ -207,7 +182,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Claim Date</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -235,7 +210,7 @@ function ClaimInformation({
                   labelClassname="labeext"
                   formControlClassname="forontrol"
                   value={selectedDate}
-                  {...register("claimDate")}
+                  // {...register("claimDate")}
                   onChange={(e) => {
                     fieldOnChange(e);
                     console.log("date", e?.toDateString());
@@ -255,7 +230,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span> Insurance Company
           </label>
@@ -269,7 +244,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Adjusters Name
           </label>
@@ -283,7 +258,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Loss/Damage Type </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
@@ -328,7 +303,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>Claim Description</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -339,7 +314,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Claim Deductible
           </label>
@@ -356,12 +331,12 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <div className="row d-flex">
-            <div className="col-lg-10 mt-1">
+            <div className="col-lg-10 mt-1 text-right">
               <label className={ClaimInformationStyle.label}>
                 <span style={{ color: "red" }}>*</span>Min. $ Item to Price
-                <div className="col-lg-2 col-md-2 col-sm-12"></div>
+                {/* <div className="col-lg-2 col-md-2 col-sm-12"></div> */}
               </label>{" "}
             </div>
             <div className="col-lg-2 mt-2">
@@ -391,7 +366,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Tax Rate %
           </label>
@@ -444,7 +419,7 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Content Limits
           </label>
@@ -464,12 +439,12 @@ function ClaimInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2  text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Home Owners Policy Type
           </label>
         </div>
-        <div className="col-2">
+        <div className={clsx("col-2")}>
           <Controller
             control={control}
             name="homeOwnersPolicyType"
@@ -515,15 +490,15 @@ function ClaimInformation({
             </div>
             <div>
               <Cards className={clsx("mt-8", ClaimInformationStyle.cards)}>
-                <div className="row justify-content-between">
-                  <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
+                <div className="row d-flex   justify-content-end">
+                  <div className={clsx("col-lg-5", ClaimInformationStyle.coverages)}>
                     Category Coverages
                   </div>
                   <div className={clsx(" col-lg-2 pl-4", ClaimInformationStyle.category)}>
                     Category
                   </div>
                   <div
-                    className={clsx("col-lg-3", ClaimInformationStyle.aggregateCoverage)}
+                    className={clsx("col-lg-2", ClaimInformationStyle.aggregateCoverage)}
                   >
                     Aggregate Coverage
                   </div>
@@ -553,7 +528,8 @@ function ClaimInformation({
                       ClaimInformationStyle.specialCategoryDiv
                     )}
                   >
-                    <div className={clsx("col-lg-4 ", ClaimInformationStyle.search)}>
+                    {/* <div className={clsx("col-lg-2")} /> */}
+                    <div className={clsx("col-lg-6  ", ClaimInformationStyle.search)}>
                       {/* <SearchBoxAssignItems /> */}
 
                       <GenericSelect
@@ -600,7 +576,7 @@ function ClaimInformation({
                 )}
                 <button
                   type="button"
-                  className={clsx("col-lg-3", ClaimInformationStyle.specialCategory)}
+                  className={clsx("col-lg-12", ClaimInformationStyle.specialCategory)}
                   onClick={() => handleShow()}
                 >
                   Add another special category
@@ -613,7 +589,7 @@ function ClaimInformation({
         )}
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Attachments
           </label>

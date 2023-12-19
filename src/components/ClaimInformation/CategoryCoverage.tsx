@@ -49,7 +49,12 @@ function CategoryCoverage(props: any) {
   }, [props.data.individualItemLimit]);
 
   return (
-    <div className={clsx("row ", ClaimInformationStyle.categoryName)}>
+    <div
+      className={clsx(
+        "row d-flex   justify-content-end ",
+        ClaimInformationStyle.categoryName
+      )}
+    >
       <div className="col-lg-3" />
       <div className={clsx("col-lg-3  ", ClaimInformationStyle.value)}>
         {props.data.categoryName}
@@ -68,8 +73,6 @@ function CategoryCoverage(props: any) {
             setCoverageValue(e.target.value)
           }
           onBlur={(e: any) => checkData(e)}
-
-          //   {...register("aggregateCoverage")}
         />
       </div>
       <div className={clsx("col-lg-2 ", ClaimInformationStyle.itemLimitSTyle)}>

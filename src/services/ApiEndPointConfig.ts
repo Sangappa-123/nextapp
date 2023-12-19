@@ -31,6 +31,9 @@ enum apiEndPoints {
   categoriesRequest = "web/categories",
   // subcategoriesReqUrl = "web/item/subcategories",
   replacementApi = "web/claim/search/replacement",
+  savePolicy = "web/adjuster/create/policy",
+  policyInfo = "web/policy/info",
+  saveClaim = "web/adjuster/create/claim",
   deleteClaimContentListItem = "web/remove/postlossitem",
   lineItemCategory = "web/claim/get/category",
   lineItemSubCategory = "web/item/subcategories",
@@ -39,6 +42,7 @@ enum apiEndPoints {
   lineItemRetailer = "web/all/retailers",
   pendingTaskList = "web/claim/pendingtasklist",
   claimDetailMessageList = "web/messages",
+  deleteServiceRequestItem = "web/delete/servicerequest",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

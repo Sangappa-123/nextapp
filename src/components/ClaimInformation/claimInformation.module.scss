@@ -187,10 +187,13 @@
   // padding-top: 10px;
   font-family: "Open Sans", sans-serif;
   font-size: 13px;
+  text-align: right;
 }
 .category {
   // margin-left: 90px;
   // right: 290px;
+  position: relative;
+  // left: 100px;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
@@ -209,12 +212,13 @@
 .value {
   background-color: transparent;
   // width: 200px;
-  // text-align: right;
+  text-align: right;
   border: none;
   // right: 80px;
 }
 .aggregateCoverage {
-  // margin-left: 10px;
+  position: relative;
+  // left: 40px;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
@@ -256,12 +260,13 @@
   border: none;
   font-size: 13px;
   color: #337ab7;
-
+  width: 30%;
   // float: right;
-  // margin-left: 80%;
+  margin-left: 70%;
   font-family: "Open Sans", sans-serif;
   padding-top: 1%;
   font-weight: 600;
+  // text-align: right;
 }
 .specialCategory:hover {
   color: $blueJay;
@@ -300,4 +305,8 @@
 .ms-5 {
   // padding-left: 10px;
   padding-left: 10px;
+}
+.homeSelect {
+  position: relative;
+  right: 8%;
 }

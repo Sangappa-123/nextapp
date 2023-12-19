@@ -32,6 +32,8 @@ function ClaimpolicyInformation({
 
   const { onChange: emailChange, ...rest } = register("email");
 
+  const pattern = "/^([0-9-,()s+]{15})$/";
+
   const verifyEmail = (email: string) => {
     validateEmail({
       email: email,
@@ -135,7 +137,7 @@ function ClaimpolicyInformation({
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 ml-8 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 ml-8 text-right")}>
           <label className={ClaimPolicyInformation.label}>Email</label>
         </div>
         <div className={clsx("col-lg-3 col-md-4 col-sm-12 mt-2")}>
@@ -171,7 +173,7 @@ function ClaimpolicyInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
             <span style={{ color: "red" }}>*</span> First Name
           </label>
@@ -188,7 +190,7 @@ function ClaimpolicyInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
             {" "}
             <span style={{ color: "red" }}>*</span> Last Name
@@ -205,7 +207,7 @@ function ClaimpolicyInformation({
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>Mobile Number</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -213,25 +215,27 @@ function ClaimpolicyInformation({
             placeholder="XXX-XXX-XXXX"
             textContentType="telephoneNumber"
             keyboardType="phone-pad"
-            // className={ClaimPolicyInformation.mobile}
+            name="phone-number"
+            pattern={pattern}
             {...register("mobilenumber")}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>Secondary Phone Number</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
-            // className={ClaimPolicyInformation.secondaryPhoneNumber}
+            name="phone-number"
+            pattern={pattern}
             {...register("secondaryPhonenumber")}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-start">
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>Address</label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -254,7 +258,7 @@ function ClaimpolicyInformation({
       </div>
       <div className="row align-items-center">
         {/* <div className="row"> */}
-        <div className={clsx("col-lg-2 col-md-2 col-sm-12 text-right")}>
+        <div className={clsx("col-lg-3 col-md-2 col-sm-12 text-right")}>
           <label className={clsx(ClaimPolicyInformation.label)}>
             <span style={{ color: "red" }}>*</span> State
           </label>
@@ -298,6 +302,7 @@ function ClaimpolicyInformation({
             {...register("zipcode")}
             showError={error["zipcode"]}
             errorMsg={error?.zipcode?.message}
+            maxlength="5"
           />{" "}
         </div>
         {/* </div> */}

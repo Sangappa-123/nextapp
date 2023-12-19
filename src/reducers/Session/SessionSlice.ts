@@ -34,3 +34,6 @@ export const { updateLoadingState, addSessionData, resetSessionState } =
   SessionSlice.actions;
 
 export const nameSelector = (state: RootState) => state?.session?.name;
+
+export const insuranceSelector = (state: RootState) =>
+  state?.session?.insuranceCompanyName;

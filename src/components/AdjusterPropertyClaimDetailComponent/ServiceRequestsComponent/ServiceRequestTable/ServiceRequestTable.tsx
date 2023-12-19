@@ -2,7 +2,10 @@
 import React from "react";
 import ServiceRequestTableStyle from "./ServiceRequestTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
-import { fetchServiceRequestList } from "@/services/ClaimServiceRequestListService";
+import {
+  fetchServiceRequestList,
+  deleteServiceRequestItem,
+} from "@/services/ClaimServiceRequestListService";
 import { convertToCurrentTimezone } from "@/utils/helper";
 import {
   createColumnHelper,
@@ -14,12 +17,17 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
+import { useParams, useRouter } from "next/navigation";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
   tableLoader: boolean;
 }
 const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
+  const { claimId }: { claimId: string } = useParams();
+
   const {
     currentPageNumber = 1,
     setTableLoader,
@@ -29,10 +37,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     claimServiceRequestList,
   }: React.SetStateAction<any> = props;
 
-  // const claimServiceRequestListData = React.useMemo(() => {
-  //   return claimServiceRequestList;
-  // }, []);
-  // const [claimResult, setClaimResult] = React.useState(claimServiceRequestList);
+  const router = useRouter();
 
   const pageLimit = TABLE_LIMIT_5;
 
@@ -40,11 +45,21 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     [key: string | number]: any;
   }
 
-  // React.useEffect(() => {
-  //   const defaultData: ServiceRequestData[] = [...claimServiceRequestList];
-  //   setClaimResult([...defaultData]);
-  // }, [claimServiceRequestList]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
 
+  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
+    pageIndex: currentPageNumber - 1,
+    pageSize: pageLimit,
+  });
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
   const columnHelper = createColumnHelper<ServiceRequestData>();
 
   const columns = [
@@ -101,26 +116,78 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("", {
       id: "Action",
       header: "Action",
-
+      cell: ({ row }) => (
+        <>
+          <a
+            href="#"
+            className={ServiceRequestTableStyle.AssignText}
+            onClick={(e) => assignService(e, row.original)}
+          >
+            Assign
+          </a>
+          <span>|</span>
+          <a
+            href="#"
+            className={ServiceRequestTableStyle.DeleteText}
+            onClick={(e) => deleteAction(e, row.original)}
+          >
+            Delete
+          </a>
+        </>
+      ),
       enableSorting: false,
     }),
   ];
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const assignService = (e: React.MouseEvent<HTMLElement>, rowData: any) => {
+    e.preventDefault();
 
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: currentPageNumber - 1,
-    pageSize: pageLimit,
-  });
+    sessionStorage.setItem("claimNumber", rowData.claimNumber);
+    sessionStorage.setItem("serviceRequestId", rowData.serviceRequestId);
+    sessionStorage.setItem("claimId", claimId);
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
+    router.push(`/adjuster-assign-service-request/${rowData?.serviceRequestId}`);
+  };
+  const deleteAction = (e: React.MouseEvent<HTMLElement>, rowData: any) => {
+    e.preventDefault();
 
+    const payload = {
+      serviceId: rowData.serviceRequestId,
+    };
+    setDelete(payload);
+  };
+
+  const ModalMsg = () => {
+    return (
+      <div>
+        Are you sure you want to delete the service request?<b> Please Confirm!</b>
+      </div>
+    );
+  };
+  const handleDeleteClose = () => {
+    setDelete(null);
+  };
+
+  const handleDelete = async () => {
+    const id = deletePayload?.id;
+    const res = await deleteServiceRequestItem(deletePayload);
+    setDelete(null);
+    console.log("deleteServiceRequestClaimItem res", res);
+
+    if (res) {
+      await addNotification({
+        message: res ?? "Successfully deleted item.",
+        id,
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: "Something went wrong.",
+        id,
+        status: "error",
+      });
+    }
+  };
   const handleSorting = async (sortingUpdater: any) => {
     setTableLoader(true);
 
@@ -192,15 +259,30 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   });
 
   return (
-    <div className={ServiceRequestTableStyle.claimTableContainer}>
-      <CustomReactTable
-        table={table}
-        totalDataCount={totalClaims}
-        pageLimit={totalClaims > 5 ? pageLimit : null}
-        loader={tableLoader}
-        tableDataErrorMsg={claimErrorMsg}
-      />
-    </div>
+    <>
+      {deletePayload && (
+        <div>
+          <ConfirmModal
+            showConfirmation={true}
+            closeHandler={handleDeleteClose}
+            submitBtnText="Yes"
+            closeBtnText="No"
+            childComp={<ModalMsg />}
+            modalHeading="Service request"
+            submitHandler={handleDelete}
+          />
+        </div>
+      )}
+      <div className={ServiceRequestTableStyle.claimTableContainer}>
+        <CustomReactTable
+          table={table}
+          totalDataCount={totalClaims}
+          pageLimit={totalClaims > 5 ? pageLimit : null}
+          loader={tableLoader}
+          tableDataErrorMsg={claimErrorMsg}
+        />
+      </div>
+    </>
   );
 };
 

@@ -10,6 +10,8 @@ import { Controller } from "react-hook-form";
 interface originalItemTyped {
   register: any;
   control: any;
+  getValues: any;
+  setValue: any;
 }
 
 const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => {
@@ -23,7 +25,18 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
     paymentTypes,
     register,
     control,
+    getValues,
+    setValue,
   } = props;
+
+  const { onChange: quantityOnChange, ...quantityRegister } = register("quantity");
+  const { onChange: insuredPriceOnChange, ...insuredPriceRegister } =
+    register("insuredPrice");
+
+  const updateTotalStatedAmount = () => {
+    const [insuredPrice, quantity] = getValues(["insuredPrice", "quantity"]);
+    setValue("totalStatedAmount", (insuredPrice ?? 0) * (quantity ?? 0));
+  };
 
   return (
     <div className={orginalItemFormStyle.root}>
@@ -122,7 +135,12 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             labelClassname={orginalItemFormStyle.label}
             placeholder="Stated Value(per unit)"
             // value={lineItem?.insuredPrice}
-            {...register("insuredPrice")}
+            // {...register("insuredPrice")}
+            onChange={(e: any) => {
+              insuredPriceOnChange(e);
+              updateTotalStatedAmount();
+            }}
+            {...insuredPriceRegister}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -133,7 +151,12 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             id="qty_lost"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Quantity"
-            {...register("quantity")}
+            // {...register("quantity")}
+            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+              quantityOnChange(e);
+              updateTotalStatedAmount();
+            }}
+            {...quantityRegister}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
