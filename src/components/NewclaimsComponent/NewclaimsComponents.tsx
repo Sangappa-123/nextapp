@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Cards from "../common/Cards/index";
-import { object, email, string, minLength, number, boolean } from "valibot";
-import { useRouter } from "next/navigation";
+import { object, email, string, minLength, number, boolean, any } from "valibot";
+// import { useRouter } from "next/navigation";
 import useCustomForm from "@/hooks/useCustomForm";
 import NewClaimsStyle from "./newClaimStyle.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
@@ -16,11 +16,19 @@ import clsx from "clsx";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
-import { postClaim } from "@/services/ClaimService";
+import { creatClaim, postClaim } from "@/services/ClaimService";
+import { insuranceSelector } from "@/reducers/Session/SessionSlice";
+import { useAppSelector } from "@/hooks/reduxCustomHook";
+import dayjs from "dayjs";
+import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
+import { unknownObjectType } from "@/constants/customTypes";
 
 function NewclaimsComponent() {
   const [activeSection, setActiveSection] = useState(0);
-  const router = useRouter();
+  // const router = useRouter();
+  const insuranceCompany = useAppSelector(insuranceSelector);
+
+  console.log("insurancecompany", insuranceCompany);
   const schema = object({
     // policy schema
     firstname: string("firstname", [
@@ -33,7 +41,14 @@ function NewclaimsComponent() {
     //   email(translate?.errorMsg?.email?.invalid),
     // ]),
     email: string("email", [email("Please enter valid email.")]),
-    mobilenumber: string("mobile number"),
+    mobilenumber: string(
+      "mobile number"
+      // {
+      //   pattern: {
+      //     value: /^([0-9-,()\s+]{15})$/,
+      // },
+      // }
+    ),
     secondaryPhonenumber: string("secondary phone number"),
     address: string("Address"),
     address1: string("Address one"),
@@ -51,10 +66,7 @@ function NewclaimsComponent() {
     // claimDate: string("claimDate"),
     // claimDate: object({ date: date("MM-DD-YYYY") }),
 
-    // claimDate: {
-    //   type: "string",
-    //   format: "date-time",
-    // },
+    claimDate: any(),
     insuranceCompany: string("insurance company"),
     adjusterName: string("adjuster name"),
     claimDescription: string("claim description"),
@@ -95,7 +107,7 @@ function NewclaimsComponent() {
   console.log("logss", errors);
 
   const [show, setShow] = useState(false);
-  const [homeOwnerType, setHomeOwnerType] = useState([]);
+  const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -106,16 +118,160 @@ function NewclaimsComponent() {
   const formSubmit = async (data: any) => {
     try {
       console.log("data", data);
-      setActiveSection((prev) => prev + 1);
+      let PolicyInitials = "";
+      let InsuranceCompanyIntials = "";
+      let PolicyNumber = " ";
+      let CustAccNumber = " ";
+      const CurrentDate = dayjs().format("MMDDYYYYHHmm");
+      // var CurrentTime = dayjs(new Date()).format("HHmm");
+      if (data.firstname !== null && data.lastname !== null) {
+        PolicyInitials = data.firstname.charAt(0) + "" + data.lastname.charAt(0);
+      }
+      const abc = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
+      console.log("abc", abc);
+
+      if (insuranceCompany !== null) {
+        if (abc == -1) {
+          InsuranceCompanyIntials =
+            insuranceCompany.charAt(0) + "" + insuranceCompany.charAt();
+          console.log("InsuranceCompanyIntials", InsuranceCompanyIntials);
+
+          if (PolicyInitials.length > 0 && InsuranceCompanyIntials.length > 0) {
+            PolicyNumber =
+              "PL" +
+              "" +
+              InsuranceCompanyIntials.toUpperCase() +
+              "" +
+              PolicyInitials.toUpperCase() +
+              "" +
+              CurrentDate; // CurrentTime.toString();
+            CustAccNumber =
+              "CA" +
+              "" +
+              InsuranceCompanyIntials.toUpperCase() +
+              "" +
+              PolicyInitials.toUpperCase() +
+              "" +
+              CurrentDate;
+          }
+        }
+      }
+      console.log("namesss", PolicyNumber);
+      console.log("CustAccNumber", CustAccNumber);
+      // getPolicyInfo(e)
+      // .then((res) => {
+      //   console.log('policy', res)
+      // })
+      const payload = {
+        claimNumber: data.claim,
+        additionalNote: "This is additional note for claim",
+        companyId: "1",
+        description: "Test",
+        homeOwnerPolicyTypeId: data.homeOwnersPolicyType?.id,
+        insuranceAccountDetails: {
+          insuranceAccountNumber: CustAccNumber,
+        },
+        policyHolder: {
+          firstName: data.firstname,
+          lastName: data.lastname,
+          email: data.email,
+          eveningTimePhone: data.secondaryPhonenumber,
+          cellPhone: data.mobilenumber,
+          dayTimePhone: data.secondaryPhonenumber,
+          address: {
+            streetAddressOne: data.address,
+            streetAddressTwo: data.address1,
+            city: data.address2,
+            state: { id: 4 },
+            zipcode: data.zipcode,
+          },
+        },
+        policyName: null,
+        policyNumber: PolicyNumber,
+        policyType: "HOME",
+        propertyCoverage: null,
+        totalPolicyCoverage: null,
+        totalSpecialLimit: 0,
+        policyLimits: data.contentLimits,
+      };
+      console.log("payload", payload);
+      const payload1 = {
+        filesDetails: null,
+        file: null,
+        claimDetails: {
+          claimNumber: data.claim,
+          policyNumber: PolicyNumber,
+          claimType: "HOME",
+          applyTax: true,
+          taxRate: data.taxRate,
+          damageTypeId: data.lossType.id,
+          deductible: data.claimDeductible,
+          additionalNote: null,
+          incidentDate: dayjs(data.claimDate).format("YYYY-MM-DDTHH:mm:ssZ[Z]"),
+          description: null,
+          isACV: true,
+          isRCV: false,
+          branchId: "null",
+          policyCategoryCoverages: [
+            {
+              categoryId: homeOwnerType.categoryId,
+              coverageLimit: homeOwnerType.coverageLimit,
+              individualItemLimit: homeOwnerType.individualItemLimit,
+            },
+            {
+              categoryId: homeOwnerType.categoryId,
+              coverageLimit: homeOwnerType.coverageLimit,
+              individualItemLimit: homeOwnerType.individualItemLimit,
+            },
+            {
+              categoryId: homeOwnerType.categoryId,
+              coverageLimit: homeOwnerType.coverageLimit,
+              individualItemLimit: homeOwnerType.individualItemLimit,
+            },
+            {
+              categoryId: homeOwnerType.categoryId,
+              coverageLimit: homeOwnerType.coverageLimit,
+              individualItemLimit: homeOwnerType.individualItemLimit,
+            },
+          ],
+          individualLimit: null,
+          shippingDate: null,
+          shippingMethod: null,
+          noOfItems: 0,
+          minimumThreshold: data.minItemPrice,
+          thirdPartyInsCompName: data.insuranceCompany,
+          thirdPartyInsAdjName: data.adjusterName,
+          aggigateLimit: data.contentLimits,
+        },
+      };
+      const formData = new FormData();
+      formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
+      // const bodyData = this.isFormData ? payload : JSON.stringify(payload);
+
+      console.log("formData", formData);
+      postClaim(payload)
+        .then((res) => {
+          console.log("postClaim", res);
+          if (res) {
+            <NotifyMessage />;
+            creatClaim(formData).then((res) => {
+              console.log("postClaim", res);
+              if (res) {
+                setActiveSection((prev) => prev + 1);
+              }
+            });
+          }
+        })
+        .catch((error: any) => console.log("claim error", error));
     } catch (error) {
       console.error("Error submitting", error);
     }
   };
 
-  const handleClick = () => {
-    console.log("hwlllo");
-    router.replace("/adjuster-dashboard");
-  };
+  // const handleClick = () => {
+  //   console.log("hwlllo");
+  //   router.replace("/adjuster-dashboard");
+  // };
 
   const showConfirmation = () => {
     setShow(true);
@@ -140,40 +296,12 @@ function NewclaimsComponent() {
     handleClose();
   };
 
-  const handlePost = (e: any) => {
-    const payload = {
-      companyId: "1",
-      homeOwnerPolicyTypeId: e.homeOwnersPolicyType?.id,
-      insuranceAccountDetails: {},
-      policyHolder: {
-        address: {
-          city: e.address2,
-          state: { id: 4, state: e.state },
-          streetAddressOne: e.address,
-          streetAddressTwo: e.address1,
-          zipcode: e.zipcode,
-        },
-        cellPhone: e.mobilenumber,
-        dayTimePhone: e.secondaryPhonenumber,
-        email: e.email,
-        eveningTimePhone: null,
-        firstName: e.firstname,
-        lastName: e.lastname,
-        policyHolderId: 52,
-      },
-      policyName: null,
-      policyNumber: null,
-      policyType: null,
-    };
-    console.log("post", e);
-    const formData = new FormData();
-    formData.append("updatePoicy", JSON.stringify(payload));
-    postClaim(formData)
-      .then((res) => {
-        console.log("postClaim", res);
-      })
-      .catch((error: any) => console.log("claim error", error));
-  };
+  // var PolicyInitials = "";
+  // if (getValues("firstname") !== null && getValues("lastname") !== null) {
+  //   PolicyInitials = getValues("firstName");
+  // }
+
+  // const handlePost = (e: any) => {};
 
   return (
     <div>
@@ -185,7 +313,7 @@ function NewclaimsComponent() {
       </div>
       {activeSection === 0 && (
         <Cards className={NewClaimsStyle.cards}>
-          <form onSubmit={handleSubmit(formSubmit)}>
+          <form onSubmit={handleSubmit(formSubmit)} encType="multipart/form-data">
             <div className={NewClaimsStyle.informationTab}>
               <p className={NewClaimsStyle.claimText}>
                 {" "}
@@ -195,13 +323,19 @@ function NewclaimsComponent() {
             <div
               className={clsx("row justify-content-end mt-4", NewClaimsStyle.upButtons)}
             >
-              <div className="col-auto mt-2">
-                <button className={NewClaimsStyle.cancelButton}>Cancel</button>
+              <div className="col-auto">
+                <GenericButton
+                  label="Cancel"
+                  theme="normal"
+                  // type="submit"
+                  btnClassname={NewClaimsStyle.cancelButton}
+                  onClick={showConfirmation}
+                />
               </div>
               <div className="col-auto ml-2">
                 <GenericButton
                   label="Reset"
-                  // theme="normal"
+                  theme="normal"
                   // type="submit"
                   btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
@@ -210,8 +344,9 @@ function NewclaimsComponent() {
               <div className="col-auto">
                 <GenericButton
                   label="Save & Next"
-                  // theme="normal"
+                  theme="normal"
                   type="submit"
+                  size="large"
                   btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
@@ -255,16 +390,23 @@ function NewclaimsComponent() {
               className={clsx("row justify-content-end mt-4", NewClaimsStyle.downButtons)}
             >
               <div className="col-auto mt-2">
-                <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
+                {/* <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
                   Cancel
-                </button>
+                </button> */}
+                <GenericButton
+                  label="Cancel"
+                  theme="normal"
+                  // type="submit"
+                  // btnClassname={NewClaimsStyle.cancelButton}
+                  onClick={showConfirmation}
+                />
               </div>
-              <div className="col-auto ml-2">
+              <div className="col-auto mt-2">
                 <GenericButton
                   label="Reset"
-                  // theme="normal"
+                  theme="normal"
                   // type="submit"
-                  btnClassname={NewClaimsStyle.resetBtn}
+                  // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
                 />
                 {show && (
@@ -281,12 +423,12 @@ function NewclaimsComponent() {
                   </div>
                 )}
               </div>
-              <div className="col-auto">
+              <div className="col-auto mt-2">
                 <GenericButton
                   label="Save & Next"
-                  // theme="normal"
+                  theme="normal"
                   type="submit"
-                  btnClassname={NewClaimsStyle.resetBtn}
+                  // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={(e: any) => handlePost(e)}
                 />
               </div>
