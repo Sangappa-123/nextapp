@@ -27,6 +27,8 @@ const ClaimServiceRequestSlice = createSlice({
             assignedDate: item.assignedDate,
             targetDate: item.targetDate,
             status: item.status,
+            serviceRequestId: item.serviceRequestId,
+            claimNumber: item.claimNumber,
           };
           claimRes.push(newArr);
         });

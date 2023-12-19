@@ -14,12 +14,15 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
+import { useParams, useRouter } from "next/navigation";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
   tableLoader: boolean;
 }
 const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
+  const { claimId }: { claimId: string } = useParams();
+
   const {
     currentPageNumber = 1,
     setTableLoader,
@@ -29,10 +32,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     claimServiceRequestList,
   }: React.SetStateAction<any> = props;
 
-  // const claimServiceRequestListData = React.useMemo(() => {
-  //   return claimServiceRequestList;
-  // }, []);
-  // const [claimResult, setClaimResult] = React.useState(claimServiceRequestList);
+  const router = useRouter();
 
   const pageLimit = TABLE_LIMIT_5;
 
@@ -40,11 +40,20 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     [key: string | number]: any;
   }
 
-  // React.useEffect(() => {
-  //   const defaultData: ServiceRequestData[] = [...claimServiceRequestList];
-  //   setClaimResult([...defaultData]);
-  // }, [claimServiceRequestList]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
+    pageIndex: currentPageNumber - 1,
+    pageSize: pageLimit,
+  });
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
   const columnHelper = createColumnHelper<ServiceRequestData>();
 
   const columns = [
@@ -101,25 +110,36 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("", {
       id: "Action",
       header: "Action",
-
+      cell: ({ row }) => (
+        <>
+          <a
+            href="#"
+            className={ServiceRequestTableStyle.AssignText}
+            onClick={(e) => assignService(e, row.original)}
+          >
+            Assign
+          </a>
+          <span>|</span>
+          <a href="#" className={ServiceRequestTableStyle.DeleteText}>
+            Delete
+          </a>
+        </>
+      ),
       enableSorting: false,
     }),
   ];
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const assignService = (e: React.MouseEvent<HTMLElement>, rowData: any) => {
+    e.preventDefault();
 
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-    pageIndex: currentPageNumber - 1,
-    pageSize: pageLimit,
-  });
+    sessionStorage.setItem("claimNumber", rowData.claimNumber);
+    sessionStorage.setItem("serviceRequestId", rowData.serviceRequestId);
+    sessionStorage.setItem("claimId", claimId);
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
+    console.log("rowData", rowData);
+
+    router.push(`/adjuster-assign-service-request/${rowData?.serviceRequestId}`);
+  };
 
   const handleSorting = async (sortingUpdater: any) => {
     setTableLoader(true);

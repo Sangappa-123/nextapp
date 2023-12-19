@@ -236,6 +236,9 @@
           {
             URL: "/uploadItemsFromCSV",
           },
+          {
+            URL: "/adjuster-assign-service-request/{ID}",
+          },
         ],
       },
       {
