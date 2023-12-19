@@ -6,7 +6,7 @@ import ReplacementItemSection from "./ReplacementItemSection";
 import WebComparables from "./WebComparables";
 import AddedComparables from "./AddedComparables";
 import useCustomForm from "@/hooks/useCustomForm";
-import { Output, any, number, object, string } from "valibot";
+import { Output, any, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 
 function LineItemDetailComponentForm() {
@@ -19,22 +19,22 @@ function LineItemDetailComponentForm() {
   const schema = object({
     description: string("Item description"),
     category: object({
-      categoryId: number(),
+      categoryId: any(),
       categoryName: string(),
     }),
     subCategory: object({
-      id: number(),
+      id: any(),
       name: string(),
     }),
-    insuredPrice: number(),
-    quantity: number(),
-    totalStatedAmount: number(),
-    ageYears: number(),
-    ageMonths: number(),
+    insuredPrice: any(),
+    quantity: any(),
+    totalStatedAmount: any(),
+    ageYears: any(),
+    ageMonths: any(),
     brand: string(),
     model: string(),
     originallyPurchasedFrom: object({
-      id: number(),
+      id: any(),
       name: string(),
     }),
     purchaseMethod: object({
@@ -86,10 +86,8 @@ function LineItemDetailComponentForm() {
       : null,
   };
 
-  const { register, handleSubmit, control, formState } = useCustomForm(
-    schema,
-    defaultValue
-  );
+  const { register, handleSubmit, control, formState, getValues, setValue } =
+    useCustomForm(schema, defaultValue);
   console.log("Error>>", formState.errors);
   const handleFormSubmit = (data: Output<typeof schema>) => {
     console.log("handleFormSubmit>>>>", data);
@@ -159,7 +157,12 @@ function LineItemDetailComponentForm() {
     >
       <GroupedActionButtons />
       <div className={lineItemDetailComponentStyle.topItemSection}>
-        <OrginalItemForm register={register} control={control} />
+        <OrginalItemForm
+          register={register}
+          control={control}
+          getValues={getValues}
+          setValue={setValue}
+        />
         <ReplacementItemSection />
       </div>
       <div className={lineItemDetailComponentStyle.bottomItemSection}>

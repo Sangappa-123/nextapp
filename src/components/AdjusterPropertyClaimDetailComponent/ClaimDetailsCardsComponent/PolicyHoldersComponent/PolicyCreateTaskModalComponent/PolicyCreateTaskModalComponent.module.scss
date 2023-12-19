@@ -11,7 +11,14 @@
   font-size: 13px;
   font-weight: 600;
 }
+.upperContainer {
+  border-bottom: 1px solid #dddddd;
+}
 .container {
   display: flex;
   gap: 40px;
+}
+.textAreaStyle {
+  height: 60px;
+  padding: 5px;
 }
