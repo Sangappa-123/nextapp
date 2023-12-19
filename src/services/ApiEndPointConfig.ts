@@ -39,6 +39,7 @@ enum apiEndPoints {
   lineItemRetailer = "web/all/retailers",
   pendingTaskList = "web/claim/pendingtasklist",
   claimDetailMessageList = "web/messages",
+  deleteServiceRequestItem = "web/delete/servicerequest",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

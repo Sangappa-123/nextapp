@@ -53,6 +53,13 @@ const ClaimServiceRequestSlice = createSlice({
 
       state.searchKeyword = searchKeyword;
     },
+    deleteServiceRequestClaimItem(state, action) {
+      const { payload } = action;
+      const { newClaimServiceRequestListFull, newClaimServiceRequestList } = payload;
+
+      state.claimServiceRequestListTotalData = newClaimServiceRequestListFull;
+      state.claimServiceRequestList = newClaimServiceRequestList;
+    },
   },
 });
 export default ClaimServiceRequestSlice;
@@ -61,4 +68,5 @@ export const {
   addserviceRequestData,
   updateServiceRequestVisibleData,
   addServiceSearchKeyWord,
+  deleteServiceRequestClaimItem,
 } = ClaimServiceRequestSlice.actions;
