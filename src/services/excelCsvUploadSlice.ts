@@ -56,8 +56,13 @@ const ExcelCsvUploadSlice = createSlice({
       state.rowsProcessed = action.payload.rowsProcessed;
       state.status = action.payload.status;
     },
+    removeRowById(state, action: PayloadAction<number>) {
+      state.postLossItemDetails = state.postLossItemDetails.filter(
+        (row) => row.id !== action.payload
+      );
+    },
   },
 });
 
-export const { setExcelCsvUploadData } = ExcelCsvUploadSlice.actions;
+export const { setExcelCsvUploadData, removeRowById } = ExcelCsvUploadSlice.actions;
 export default ExcelCsvUploadSlice;

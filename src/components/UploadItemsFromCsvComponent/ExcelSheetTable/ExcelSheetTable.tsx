@@ -14,18 +14,19 @@ import { ConnectedProps, connect } from "react-redux";
 // import { useSelector } from "react-redux";
 import ExcelSheetTableStyle from "./ExcelSheetTable.module.scss";
 import { RootState } from "@/store/store";
-import { setExcelCsvUploadData } from "@/services/excelCsvUploadSlice";
+import { setExcelCsvUploadData, removeRowById } from "@/services/excelCsvUploadSlice";
 import CustomReactTable from "@/components/common/CustomReactTable";
 
 interface ExcelSheetTableProps {
   postLossItemDetails: any[];
+  removeRowById: (id: number) => void;
   // failedItems: any[];
   // failedItems: FailedItem[];
 }
 
 const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) => {
   // const dispatch = useDispatch();
-  const { postLossItemDetails, setExcelCsvUploadData } = props;
+  const { postLossItemDetails, setExcelCsvUploadData, removeRowById } = props;
   console.log("postLossItemDetails", postLossItemDetails);
   // const [editedIdRowData, setEditedIdRowData] = useState<any>({});
   const [editedBrandRowData, setEditedBrandRowData] = useState<any>({});
@@ -56,7 +57,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     purchasedFrom: string | null;
     purchasedMethod: string | null;
     quantity: string | null;
-    statedValue: number;
+    replacementCost: number;
     roomType: string | null;
     roomName: string | null;
     totalCost: number;
@@ -73,7 +74,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   //   setEditableRowId(rowId);
   // };
 
-  const handleSaveRow = () => {
+  const handleSaveRow = async () => {
     // const rowId = editableRowId  ;
     console.log("Beforeeeeeee", {
       editedBrandRowData,
@@ -85,35 +86,102 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
       editableRowId === row.id
         ? {
             // ...row,
-            id: row.id,
+            id: editableRowId,
             // editableRowId,
-            brand: editedBrandRowData.brand || row.brand,
-            ageInYear: editedAgeYearRowData.ageInYear || row.ageInYear,
-            ageInMonth: editedRowData.ageInMonth || row.ageInMonth,
-            model: editedModelRowData.model || row.model,
-            description: editedDescRowData.description || row.description,
-            condition: editedConditionRowData.condition || row.condition,
-            purchasedFrom: editedPurchaseFromRowData.purchasedFrom || row.purchasedFrom,
+            // brand: editedBrandRowData.brand || row.brand,
+            brand:
+              editedBrandRowData.brand !== undefined
+                ? editedBrandRowData.brand
+                : row.brand,
+            ageInMonth:
+              editedRowData.ageInMonth !== undefined
+                ? editedRowData.ageInMonth
+                : row.ageInMonth,
+            ageInYear:
+              editedAgeYearRowData.ageInYear !== undefined
+                ? editedAgeYearRowData.ageInYear
+                : row.ageInYear,
+            model:
+              editedModelRowData.model !== undefined
+                ? editedModelRowData.model
+                : row.model,
+            description:
+              editedDescRowData.description !== undefined
+                ? editedDescRowData.description
+                : row.description,
+            condition:
+              editedConditionRowData.condition !== undefined
+                ? editedConditionRowData.condition
+                : row.condition,
+            purchasedFrom:
+              editedPurchaseFromRowData.purchasedFrom !== undefined
+                ? editedPurchaseFromRowData.purchasedFrom
+                : row.purchasedFrom,
             purchasedMethod:
-              editedPurchaseMethRowData.purchasedMethod || row.purchasedMethod,
-            quantity: editedQuantityRowData.quantity || row.quantity,
-            statedValue: editedStatedValRowData.statedValue || row.statedValue,
-            roomType: editedRoomTypeRowData.roomType || row.roomType,
-            roomName: editedRoomNameRowData.roomName || row.roomName,
-            totalCost: editedTotalCostRowData.totalCost || row.totalCost,
-            category: editedCategoryRowData.category || row.category,
-            subCategory: editedSubCatRowData.subCategory || row.subCategory,
+              editedPurchaseMethRowData.purchasedMethod !== undefined
+                ? editedPurchaseMethRowData.purchasedMethod
+                : row.purchasedMethod,
+            quantity:
+              editedQuantityRowData.quantity !== undefined
+                ? editedQuantityRowData.quantity
+                : row.quantity,
+            replacementCost:
+              editedStatedValRowData.replacementCost !== undefined
+                ? editedStatedValRowData.replacementCost
+                : row.replacementCost,
+            roomType:
+              editedRoomTypeRowData.roomType !== undefined
+                ? editedRoomTypeRowData.roomType
+                : row.roomType,
+            roomName:
+              editedRoomNameRowData.roomName !== undefined
+                ? editedRoomNameRowData.roomName
+                : row.roomName,
+            totalCost:
+              editedTotalCostRowData.totalCost !== undefined
+                ? editedTotalCostRowData.totalCost
+                : row.totalCost,
+            category:
+              editedCategoryRowData.category !== undefined
+                ? editedCategoryRowData.category
+                : row.category,
+            subCategory:
+              editedSubCatRowData.subCategory !== undefined
+                ? editedSubCatRowData.subCategory
+                : row.subCategory,
           }
         : row
     );
     console.log("Afterrrrrrrrrrrr", updatedPostLossItemDetails);
-    setExcelCsvUploadData({
+    await setExcelCsvUploadData({
       postLossItemDetails: updatedPostLossItemDetails,
       rowsProcessed: 0,
       message: "",
       status: 0,
     });
     setEditableRowId(null);
+    setEditedBrandRowData({});
+    setEditedAgeYearRowData({});
+    setEditedCategoryRowData({});
+    setEditedConditionRowData({});
+    setEditedDescRowData({});
+    setEditedModelRowData({});
+    setEditedRowData({});
+    setEditedPurchaseFromRowData({});
+    setEditedPurchaseMethRowData({});
+    setEditedQuantityIdRowData({});
+    setEditedRoomNameRowData({});
+    setEditedRoomTypeRowData({});
+    setEditedStatedValRowData({});
+    setEditedSubCatRowData({});
+    setEditedTotalCostRowData({});
+  };
+
+  const handleEditRowClick = (rowId: number) => {
+    setEditableRowId(rowId);
+  };
+
+  const handleCancelEdit = async () => {
     setEditedBrandRowData({});
     setEditedAgeYearRowData({});
     setEditedCategoryRowData({});
@@ -128,10 +196,20 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     setEditedStatedValRowData({});
     setEditedSubCatRowData({});
     setEditedTotalCostRowData({});
-  };
+    if (editableRowId !== null) {
+      const updatedPostLossItemDetails = postLossItemDetails.map((row) =>
+        row.id === editableRowId ? { ...row } : row
+      );
 
-  const handleEditRowClick = (rowId: number) => {
-    setEditableRowId(rowId);
+      await setExcelCsvUploadData({
+        postLossItemDetails: updatedPostLossItemDetails,
+        rowsProcessed: 0,
+        message: "",
+        status: 0,
+      });
+    }
+    setEditableRowId(null);
+    console.log("Cancelllllllllllllllllll");
   };
 
   const columnHelper = createColumnHelper<ExcelTableData>();
@@ -409,7 +487,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
       },
       enableSorting: true,
     }),
-    columnHelper.accessor("statedValue", {
+    columnHelper.accessor("replacementCost", {
       header: "Stated Value",
       cell: (info) => {
         console.log("editableRowId:", editableRowId);
@@ -419,41 +497,14 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
             type="text"
             style={{ width: "60px", height: "25px" }}
             value={
-              editedStatedValRowData.statedValue !== undefined
-                ? editedStatedValRowData.statedValue
-                : info.row.original.statedValue || ""
+              editedStatedValRowData.replacementCost !== undefined
+                ? editedStatedValRowData.replacementCost
+                : info.row.original.replacementCost || ""
             }
             onChange={(e) =>
               setEditedStatedValRowData({
                 ...editedStatedValRowData,
-                statedValue: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
-      },
-      enableSorting: true,
-    }),
-    columnHelper.accessor("roomType", {
-      header: "Room Type",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedRoomTypeRowData.roomType !== undefined
-                ? editedRoomTypeRowData.roomType
-                : info.row.original.roomType || ""
-            }
-            onChange={(e) =>
-              setEditedRoomTypeRowData({
-                ...editedRoomTypeRowData,
-                roomType: e.target.value,
+                replacementCost: e.target.value,
               })
             }
           />
@@ -482,6 +533,33 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
               setEditedRoomNameRowData({
                 ...editedRoomNameRowData,
                 roomName: e.target.value,
+              })
+            }
+          />
+        ) : (
+          info.getValue()
+        );
+      },
+      enableSorting: true,
+    }),
+    columnHelper.accessor("roomType", {
+      header: "Room Type",
+      cell: (info) => {
+        console.log("editableRowId:", editableRowId);
+        console.log("info.row.original.id:", info.row.original.id);
+        return editableRowId === info.row.original.id ? (
+          <input
+            type="text"
+            style={{ width: "60px", height: "25px" }}
+            value={
+              editedRoomTypeRowData.roomType !== undefined
+                ? editedRoomTypeRowData.roomType
+                : info.row.original.roomType || ""
+            }
+            onChange={(e) =>
+              setEditedRoomTypeRowData({
+                ...editedRoomTypeRowData,
+                roomType: e.target.value,
               })
             }
           />
@@ -590,7 +668,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
             </button>
             <button
               className={ExcelSheetTableStyle.cancelButton}
-              // onClick={() => handleCancelEdit()}
+              onClick={() => handleCancelEdit()}
             >
               Cancel
             </button>
@@ -599,7 +677,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
           <>
             <button
               className={ExcelSheetTableStyle.removeButton}
-              // onClick={() => handleRemoveRow(info.row.original.id)}
+              onClick={() => handleRemoveRow(info.row.original.id)}
             >
               Remove
             </button>
@@ -610,6 +688,10 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     }),
   ];
 
+  const handleRemoveRow = (id: number) => {
+    console.log("yyyyyyyyxddddddddd", id);
+    removeRowById(id);
+  };
   const data = React.useMemo(() => postLossItemDetails, [postLossItemDetails]);
   console.log("dddd", data);
 
@@ -622,7 +704,11 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
 
   return (
     <>
-      <CustomReactTable table={table} handleEditRowClick={handleEditRowClick} />
+      <CustomReactTable
+        table={table}
+        handleEditRowClick={handleEditRowClick}
+        handleRemoveRow={handleRemoveRow}
+      />
     </>
   );
 };
@@ -633,6 +719,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   setExcelCsvUploadData,
+  removeRowById,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

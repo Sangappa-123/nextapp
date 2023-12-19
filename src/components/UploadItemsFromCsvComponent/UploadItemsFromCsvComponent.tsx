@@ -39,6 +39,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
     setUploadProgress(0);
     setExcelData(null);
   };
+
   const serverAddress = process.env.NEXT_PUBLIC_SERVER_ADDRESS;
   const itemTemplate = process.env.NEXT_PUBLIC_ITEM_TEMPLATE;
 
@@ -325,7 +326,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                             .map((failedItem) => (
                               <tr key={failedItem.id}>
                                 <td>{failedItem.id}</td>
-                                <td>{failedItem.failedReasons?.join(", ")}</td>
+                                <td>{failedItem.failedReasons}</td>
                               </tr>
                             ))}
                         </tbody>
