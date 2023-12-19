@@ -1,6 +1,10 @@
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import store from "@/store/store";
-import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
+import {
+  deleteClaimContentListItem,
+  updateClaimContentListData,
+} from "@/reducers/ClaimData/ClaimContentSlice";
+
 import HttpService from "@/HttpService";
 
 export const claimContentList = async (payload: { claimId: string | any }) => {
@@ -27,19 +31,29 @@ export const claimContentListV2 = async (payload: { claimId: string }) => {
   }
 };
 
-export const fetchClaimContentList = async () => {
-  const state = store.getState();
-  const claimId = state.claimdata.claimId;
-  const payload = {
-    claimId,
-  };
-  const claimcontentListRes: any = await claimContentList(payload);
-  if (claimcontentListRes.result.status === 200) {
-    const claimContentData = claimcontentListRes.result;
-    store.dispatch(
-      addClaimContentListData({ claimContentData: claimContentData, claimId })
-    );
-    return claimContentData;
+export const deleteClaimItem = async (payload: any) => {
+  const url = getApiEndPoint("deleteClaimContentListItem");
+  const http = new HttpService({ isClient: true });
+  const res = await http.post(url, payload);
+
+  if (res.status === 200) {
+    const message = res.message;
+    store.dispatch(deleteClaimContentListItem({ itemId: payload.id }));
+    return message;
   }
   return null;
+};
+export const fetchContentList = async (searchKeyword = "") => {
+  const state = store.getState();
+  const searchWord = searchKeyword ?? state.claimContentdata.searchKeyword;
+
+  const claimContentListDataFull = state.claimContentdata.claimContentListDataFull;
+
+  const claimContentList = await claimContentListDataFull.filter((obj) =>
+    JSON.stringify(obj).toLowerCase().includes(searchWord.toLowerCase())
+  );
+
+  store.dispatch(updateClaimContentListData({ claimContentList }));
+
+  return claimContentList;
 };

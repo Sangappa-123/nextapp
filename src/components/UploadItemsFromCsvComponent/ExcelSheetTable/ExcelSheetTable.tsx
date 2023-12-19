@@ -25,9 +25,9 @@ interface ExcelSheetTableProps {
 
 const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) => {
   // const dispatch = useDispatch();
-  const { postLossItemDetails } = props;
+  const { postLossItemDetails, setExcelCsvUploadData } = props;
   console.log("postLossItemDetails", postLossItemDetails);
-  const [editedIdRowData, setEditedIdRowData] = useState<any>({});
+  // const [editedIdRowData, setEditedIdRowData] = useState<any>({});
   const [editedBrandRowData, setEditedBrandRowData] = useState<any>({});
   const [editedModelRowData, setEditedModelRowData] = useState<any>({});
   const [editedDescRowData, setEditedDescRowData] = useState<any>({});
@@ -68,47 +68,54 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   // useEffect(() => {
   //   console.log('Updated:', postLossItemDetails);
   // }, [postLossItemDetails]);
-  const handleEditRowClick = (rowId: number) => {
-    setEditableRowId(rowId);
-  };
+  // const handleEditRowClick = (rowId: number) => {
+  //   // const rowToEdit = postLossItemDetails.find((row) => row.id === rowId);
+  //   setEditableRowId(rowId);
+  // };
 
-  const handleSaveRow = (rowId: number) => {
+  const handleSaveRow = () => {
+    // const rowId = editableRowId  ;
+    console.log("Beforeeeeeee", {
+      editedBrandRowData,
+      editedAgeYearRowData,
+      editedRowData,
+    });
+    console.log("editabeeeeeeeeee", editableRowId);
     const updatedPostLossItemDetails = postLossItemDetails.map((row) =>
-      row.id === rowId
+      editableRowId === row.id
         ? {
-            ...row,
-            id: editedIdRowData.id,
-            brand: editedBrandRowData.brand,
-            ageInYear: editedAgeYearRowData.ageInYear,
-            ageInMonth: editedRowData.ageInMonth,
-            model: editedModelRowData.model,
-            description: editedDescRowData.description,
-            condition: editedConditionRowData.condition,
-            purchasedFrom: editedPurchaseFromRowData.purchasedFrom,
-            purchasedMethod: editedPurchaseMethRowData.purchasedMethod,
-            quantity: editedQuantityRowData.quantity,
-            statedValue: editedStatedValRowData.statedValue,
-            roomType: editedRoomTypeRowData.roomType,
-            roomName: editedRoomNameRowData.roomName,
-            totalCost: editedTotalCostRowData.totalCost,
-            category: editedCategoryRowData.category,
-            subCategory: editedSubCatRowData.subCategory,
+            // ...row,
+            id: row.id,
+            // editableRowId,
+            brand: editedBrandRowData.brand || row.brand,
+            ageInYear: editedAgeYearRowData.ageInYear || row.ageInYear,
+            ageInMonth: editedRowData.ageInMonth || row.ageInMonth,
+            model: editedModelRowData.model || row.model,
+            description: editedDescRowData.description || row.description,
+            condition: editedConditionRowData.condition || row.condition,
+            purchasedFrom: editedPurchaseFromRowData.purchasedFrom || row.purchasedFrom,
+            purchasedMethod:
+              editedPurchaseMethRowData.purchasedMethod || row.purchasedMethod,
+            quantity: editedQuantityRowData.quantity || row.quantity,
+            statedValue: editedStatedValRowData.statedValue || row.statedValue,
+            roomType: editedRoomTypeRowData.roomType || row.roomType,
+            roomName: editedRoomNameRowData.roomName || row.roomName,
+            totalCost: editedTotalCostRowData.totalCost || row.totalCost,
+            category: editedCategoryRowData.category || row.category,
+            subCategory: editedSubCatRowData.subCategory || row.subCategory,
           }
         : row
     );
-
-    props.setExcelCsvUploadData({
+    console.log("Afterrrrrrrrrrrr", updatedPostLossItemDetails);
+    setExcelCsvUploadData({
       postLossItemDetails: updatedPostLossItemDetails,
       rowsProcessed: 0,
       message: "",
       status: 0,
-      // editedRowId: null,
     });
     setEditableRowId(null);
-    setEditedIdRowData({});
     setEditedBrandRowData({});
     setEditedAgeYearRowData({});
-    setEditedRowData({});
     setEditedCategoryRowData({});
     setEditedConditionRowData({});
     setEditedDescRowData({});
@@ -123,30 +130,41 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     setEditedTotalCostRowData({});
   };
 
+  const handleEditRowClick = (rowId: number) => {
+    setEditableRowId(rowId);
+  };
+
   const columnHelper = createColumnHelper<ExcelTableData>();
 
   const columns = [
+    // columnHelper.accessor("id", {
+    //   header: "Sl No #",
+    //   cell: (info) => {
+    //     return editableRowId === info.row.original.id ? (
+    //       <input
+    //         type="text"
+    //         style={{ width: "60px", height: "25px" }}
+    //         // disabled
+    //         readOnly
+    //         value={
+    //             info.row.original.id
+    //         }
+    //         // onChange={(e) =>
+    //         //   setEditedIdRowData({ ...editedIdRowData, id: e.target.value })
+    //         // }
+    //       />
+    //     ) : (
+    //       info.getValue()
+    //     );
+    //   },
+    //   enableSorting: true,
+    // }),
     columnHelper.accessor("id", {
+      // id: "Claim_Number",
       header: "Sl No #",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-        console.log("editrowwwwww", editedRowData);
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            disabled
-            value={info.row.original.id || ""}
-            onChange={(e) =>
-              setEditedIdRowData({ ...editedIdRowData, id: e.target.value })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
-      },
+      cell: (info) => info.getValue(),
       enableSorting: true,
+      enableColumnFilter: false,
     }),
     columnHelper.accessor("brand", {
       header: "Brand",
@@ -566,7 +584,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
           <>
             <button
               className={ExcelSheetTableStyle.saveButton}
-              onClick={() => handleSaveRow(info.row.original.id)}
+              onClick={() => handleSaveRow()}
             >
               Save
             </button>

@@ -1,20 +1,44 @@
+"use client";
 import CustomLoader from "../common/CustomLoader/index";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import {
+  addCategories,
+  addMessageList,
+  addPendingTasks,
+  addSubcategories,
+} from "@/reducers/ClaimDetail/ClaimDetailSlice";
 
 type propsTypes = {
   claimId: string;
   claimContentListRes: any;
   serviceRequestListRes: any;
+  categoryListRes: any;
+  subcategoryListRes: any;
+  pendingTaskListRes: any;
+  claimDetailMessageListRes: any;
 };
 
 const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimId,
   claimContentListRes,
   serviceRequestListRes,
+  categoryListRes,
+  subcategoryListRes,
+  pendingTaskListRes,
+  claimDetailMessageListRes,
 }) => {
+  console.log("claimDetailMessageListRes", claimDetailMessageListRes);
+
+  const dispatch = useAppDispatch();
+  dispatch(addCategories(categoryListRes?.data));
+  dispatch(addSubcategories(subcategoryListRes?.data));
+  dispatch(addPendingTasks(pendingTaskListRes?.data));
+  dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+
   const pathList = [
     {
       name: "Home",

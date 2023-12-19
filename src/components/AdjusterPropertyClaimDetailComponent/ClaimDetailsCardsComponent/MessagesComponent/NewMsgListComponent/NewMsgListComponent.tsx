@@ -26,15 +26,18 @@ const NewMsgListComponent = ({ elem }: newMsgProps) => {
   return (
     <>
       <div className={clsx(NewMsgStyle.container, "col-12 row")}>
-        <div className={clsx("col-12 row m-1 p-0")} style={{ height: "35px" }}>
-          <div className={clsx(NewMsgStyle.alignItems, "col-1 p-0")}>
+        <div
+          className={clsx(NewMsgStyle.imageContainer, "col-12 m-1 p-0")}
+          style={{ height: "32px" }}
+        >
+          <div className={clsx(NewMsgStyle.alignItems, "p-0")}>
             <Image
               src={profileImage}
               alt="image"
               style={{ height: "32px", width: "32px" }}
             />
           </div>
-          <div className={clsx(NewMsgStyle.title, "col-11 px-0 pt-1")}>{elem.name}</div>
+          <div className={clsx(NewMsgStyle.title, "px-0 pt-1")}>{elem.name}</div>
         </div>
         <div className="col-12 p-0">
           <div
