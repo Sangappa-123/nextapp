@@ -32,7 +32,7 @@ function ClaimpolicyInformation({
 
   const { onChange: emailChange, ...rest } = register("email");
 
-  const pattern = "/^([0-9-,()s+]{15})$/";
+  // const pattern = "/^([0-9-,()s+]{15})$/";
 
   const verifyEmail = (email: string) => {
     validateEmail({
@@ -215,8 +215,8 @@ function ClaimpolicyInformation({
             placeholder="XXX-XXX-XXXX"
             textContentType="telephoneNumber"
             keyboardType="phone-pad"
-            name="phone-number"
-            pattern={pattern}
+            // name="phone-number"
+            // pattern={pattern}
             {...register("mobilenumber")}
           />
         </div>
@@ -228,8 +228,8 @@ function ClaimpolicyInformation({
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
-            name="phone-number"
-            pattern={pattern}
+            // name="phone-number"
+            // pattern={pattern}
             {...register("secondaryPhonenumber")}
           />
         </div>

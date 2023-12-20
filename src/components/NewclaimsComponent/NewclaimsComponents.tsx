@@ -20,10 +20,13 @@ import { creatClaim, postClaim } from "@/services/ClaimService";
 import { insuranceSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import dayjs from "dayjs";
-import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
+// import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
 import { unknownObjectType } from "@/constants/customTypes";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useDispatch } from "react-redux";
 
 function NewclaimsComponent() {
+  const dispatch = useDispatch();
   const [activeSection, setActiveSection] = useState(0);
   // const router = useRouter();
   const insuranceCompany = useAppSelector(insuranceSelector);
@@ -249,20 +252,43 @@ function NewclaimsComponent() {
       // const bodyData = this.isFormData ? payload : JSON.stringify(payload);
 
       console.log("formData", formData);
-      postClaim(payload)
-        .then((res) => {
-          console.log("postClaim", res);
-          if (res) {
-            <NotifyMessage />;
-            creatClaim(formData).then((res) => {
-              console.log("postClaim", res);
-              if (res) {
-                setActiveSection((prev) => prev + 1);
-              }
-            });
-          }
-        })
-        .catch((error: any) => console.log("claim error", error));
+      const postlCaimRes = await postClaim(payload);
+      if (postlCaimRes?.status === 200) {
+        dispatch(
+          addNotification({
+            message: "Successfully added item.",
+            id: "new_claim_success",
+            status: "success",
+          })
+        );
+        const creatClaimRes = await creatClaim(formData);
+        if (creatClaimRes?.status === 200) {
+          setActiveSection((prev) => prev + 1);
+          dispatch(
+            addNotification({
+              message: creatClaimRes.message,
+              id: "create_claim_success",
+              status: "success",
+            })
+          );
+        } else {
+          dispatch(
+            addNotification({
+              message: creatClaimRes.message ?? "Something went wrong.",
+              id: "create_claim_failure",
+              status: "error",
+            })
+          );
+        }
+      } else {
+        dispatch(
+          addNotification({
+            message: postlCaimRes.message ?? "Something went wrong.",
+            id: "new_claim_failure",
+            status: "error",
+          })
+        );
+      }
     } catch (error) {
       console.error("Error submitting", error);
     }
@@ -300,8 +326,6 @@ function NewclaimsComponent() {
   // if (getValues("firstname") !== null && getValues("lastname") !== null) {
   //   PolicyInitials = getValues("firstName");
   // }
-
-  // const handlePost = (e: any) => {};
 
   return (
     <div>
@@ -429,7 +453,6 @@ function NewclaimsComponent() {
                   theme="normal"
                   type="submit"
                   // btnClassname={NewClaimsStyle.resetBtn}
-                  onClick={(e: any) => handlePost(e)}
                 />
               </div>
             </div>
