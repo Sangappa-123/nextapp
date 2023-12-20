@@ -679,7 +679,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Attachments
           </label>
         </div>
-        <div className={clsx("col-2 mt-2")}>
+        <div className={clsx("col-lg-2 mt-2")}>
           {" "}
           <label
             onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
@@ -700,41 +700,45 @@ function ClaimInformation({
           ></input>
         </div>
         <div className="row">
+          <div className="col-lg-3" />
+
           {docs?.length === 0 && (
             <div className={clsx(ClaimInformationStyle.contentCenter, "row p-3")}></div>
           )}
           {docs?.map((elem: any, index: number) =>
             elem.imgType == "pdf" ? (
-              <div className="col-2 m-2" key={index}>
-                <div
-                  style={{ position: "relative", left: "100px" }}
-                  onClick={() => handleDeleteImage(index)}
-                >
-                  {" "}
-                  <IoClose style={{ color: "#f20707" }} />
-                </div>
-                <div>
-                  <iframe
-                    key={index} // Add a unique key for each element
-                    src={elem.url}
-                    style={{
-                      display: "inline-block",
-                      objectFit: "cover",
-                      height: "100px",
-                      aspectRatio: 400 / 400,
-                    }}
-                  />
-                </div>
-                <div>
-                  <a
-                    className={ClaimInformationStyle.textEllipsis}
-                    onClick={() => openModal(elem.url, elem.imgType)}
-                    key={index}
+              <>
+                <div className="col-2 m-2" key={index}>
+                  <div
+                    style={{ position: "relative", left: "100px" }}
+                    onClick={() => handleDeleteImage(index)}
                   >
-                    {elem.url}
-                  </a>
+                    {" "}
+                    <IoClose style={{ color: "#f20707" }} />
+                  </div>
+                  <div>
+                    <iframe
+                      key={index} // Add a unique key for each element
+                      src={elem.url}
+                      style={{
+                        display: "inline-block",
+                        objectFit: "cover",
+                        height: "100px",
+                        aspectRatio: 400 / 400,
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <a
+                      className={ClaimInformationStyle.textEllipsis}
+                      onClick={() => openModal(elem.url, elem.imgType)}
+                      key={index}
+                    >
+                      {elem.url}
+                    </a>
+                  </div>
                 </div>
-              </div>
+              </>
             ) : (
               <div className="col-2 m-2" key={index}>
                 <div
