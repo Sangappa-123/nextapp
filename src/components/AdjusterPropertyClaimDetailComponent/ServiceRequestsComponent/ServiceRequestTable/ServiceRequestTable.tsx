@@ -35,6 +35,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     tableLoader,
     claimErrorMsg,
     claimServiceRequestList,
+    addNotification,
   }: React.SetStateAction<any> = props;
 
   const router = useRouter();
@@ -169,18 +170,24 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   };
 
   const handleDelete = async () => {
+    setTableLoader(true);
+
     const id = deletePayload?.id;
     const res = await deleteServiceRequestItem(deletePayload);
     setDelete(null);
     console.log("deleteServiceRequestClaimItem res", res);
 
     if (res) {
-      await addNotification({
+      setTableLoader(false);
+
+      addNotification({
         message: res ?? "Successfully deleted item.",
         id,
         status: "success",
       });
     } else {
+      setTableLoader(false);
+
       addNotification({
         message: "Something went wrong.",
         id,
@@ -293,7 +300,9 @@ const mapStateToProps = ({ claimServiceRequestdata }: any) => ({
   totalClaims: claimServiceRequestdata.totalClaims,
   claimErrorMsg: claimServiceRequestdata.claimErrorMsg,
 });
-
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = {
+  addNotification,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(ServiceRequestTable);
