@@ -574,15 +574,15 @@ function ClaimInformation({
             </div>
             <div>
               <Cards className={clsx("mt-8", ClaimInformationStyle.cards)}>
-                <div className="row d-flex   justify-content-end">
-                  <div className={clsx("col-lg-5", ClaimInformationStyle.coverages)}>
+                <div className="row ">
+                  <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
                     Category Coverages
                   </div>
                   <div className={clsx(" col-lg-2 pl-4", ClaimInformationStyle.category)}>
                     Category
                   </div>
                   <div
-                    className={clsx("col-lg-2", ClaimInformationStyle.aggregateCoverage)}
+                    className={clsx("col-lg-3", ClaimInformationStyle.aggregateCoverage)}
                   >
                     Aggregate Coverage
                   </div>

@@ -193,17 +193,15 @@
 }
 
 .categoryName {
-  // padding-left: 220px;
   // padding-top: 10px;
   font-family: "Open Sans", sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   text-align: right;
 }
 .category {
   // margin-left: 90px;
   // right: 290px;
-  position: relative;
-  // left: 100px;
+  padding-left: 12%;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 13px;
@@ -227,11 +225,11 @@
   // right: 80px;
 }
 .aggregateCoverage {
-  position: relative;
+  padding-left: 6%;
   // left: 40px;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   // right: 790px;
 }
 .itemLimit {
@@ -249,7 +247,7 @@
 .coverages {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   // margin-left: 50px;
 }
 .deleteButton {
@@ -288,6 +286,7 @@
   padding-top: 10px;
 }
 .specialcategoryInput {
+  margin-right: 1%;
   // display: flex;
   // margin-left: 10%;
 }
@@ -297,6 +296,7 @@
   font-family: "Open Sans", sans-serif;
 }
 .categoryInput {
+  margin-right: 3%;
   // display: flex;
   // gap: 23px;
 }

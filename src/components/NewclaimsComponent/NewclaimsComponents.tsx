@@ -351,8 +351,8 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Cancel"
                   theme="normal"
-                  // type="submit"
-                  btnClassname={NewClaimsStyle.cancelButton}
+                  size="medium"
+                  // btnClassname={NewClaimsStyle.cancelButton}
                   onClick={showConfirmation}
                 />
               </div>
@@ -360,8 +360,8 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Reset"
                   theme="normal"
-                  // type="submit"
-                  btnClassname={NewClaimsStyle.resetBtn}
+                  size="medium"
+                  // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
                 />
               </div>
@@ -370,8 +370,8 @@ function NewclaimsComponent() {
                   label="Save & Next"
                   theme="normal"
                   type="submit"
-                  size="large"
-                  btnClassname={NewClaimsStyle.resetBtn}
+                  size="medium"
+                  // btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
             </div>{" "}
@@ -420,7 +420,7 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Cancel"
                   theme="normal"
-                  // type="submit"
+                  size="medium"
                   // btnClassname={NewClaimsStyle.cancelButton}
                   onClick={showConfirmation}
                 />
@@ -429,6 +429,7 @@ function NewclaimsComponent() {
                 <GenericButton
                   label="Reset"
                   theme="normal"
+                  size="medium"
                   // type="submit"
                   // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
@@ -452,6 +453,7 @@ function NewclaimsComponent() {
                   label="Save & Next"
                   theme="normal"
                   type="submit"
+                  size="medium"
                   // btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
@@ -461,11 +463,7 @@ function NewclaimsComponent() {
       )}
       {activeSection === 1 && (
         <Cards>
-          <AddItemsComponent
-            onAssignItemsClick={handleAssignItemsClick}
-            setActiveSection={setActiveSection((prev) => prev + 1)}
-            activeSection={activeSection}
-          />
+          <AddItemsComponent onAssignItemsClick={handleAssignItemsClick} />
         </Cards>
       )}
       {activeSection === 2 && (
