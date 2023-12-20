@@ -461,7 +461,11 @@ function NewclaimsComponent() {
       )}
       {activeSection === 1 && (
         <Cards>
-          <AddItemsComponent onAssignItemsClick={handleAssignItemsClick} />
+          <AddItemsComponent
+            onAssignItemsClick={handleAssignItemsClick}
+            setActiveSection={setActiveSection((prev) => prev + 1)}
+            activeSection={activeSection}
+          />
         </Cards>
       )}
       {activeSection === 2 && (

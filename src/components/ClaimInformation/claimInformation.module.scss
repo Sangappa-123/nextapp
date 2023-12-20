@@ -5,8 +5,14 @@
   font-weight: 570;
   font-size: 13px;
   font-family: "Open Sans", sans-serif;
-  // margin-left: 155px;
-  //   top: 3px;
+}
+.labelContainer {
+  position: relative;
+  font-weight: 570;
+  font-size: 13px;
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  gap: 5px;
 }
 .claim {
   position: relative;
@@ -128,7 +134,7 @@
   flex-direction: row;
   align-items: center;
   width: 10%;
-  gap: 2px;
+  gap: 3px;
   margin-left: 20px;
   .wrapper {
     flex: 1;
@@ -136,6 +142,8 @@
     display: flex;
     .inputField {
       height: 20px;
+      display: flex;
+      gap: 2px;
     }
   }
 }
@@ -144,13 +152,15 @@
   flex-direction: row;
   align-items: center;
   width: 10%;
-  gap: 2px;
+  gap: 3px;
   margin-left: 20px;
   .wrapper1 {
     flex: 1;
     margin: auto;
     display: flex;
     .inputField1 {
+      display: flex;
+      gap: 3px;
       height: 20px;
     }
   }
@@ -274,20 +284,25 @@
 }
 .specialCategoryDiv {
   bottom: 35px;
-  margin-left: 25%;
+  // margin-left: 25%;
   padding-top: 10px;
 }
 .specialcategoryInput {
-  margin-left: 10%;
+  // display: flex;
+  // margin-left: 10%;
 }
 .specialLimit {
   font-weight: 570;
   font-size: 13px;
   font-family: "Open Sans", sans-serif;
 }
+.categoryInput {
+  // display: flex;
+  // gap: 23px;
+}
 .search {
   position: relative;
-  right: 20px;
+  // right: 20px;
   height: 40px;
   // right: 30px;
   // width: 40%;
@@ -309,4 +324,38 @@
 .homeSelect {
   position: relative;
   right: 8%;
+}
+.labelContent {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+}
+
+.file_input_wrapper .btn_upload {
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: rgb(200, 196, 196);
+  color: black;
+  cursor: pointer;
+}
+.textEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  cursor: pointer;
+}
+.imagePreviewDiv {
+  width: 400px;
+  height: 400px;
+}
+
+.contentCenter {
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: red;
 }

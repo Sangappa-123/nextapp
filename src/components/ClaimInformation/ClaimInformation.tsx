@@ -13,7 +13,15 @@ import {
   validateClaim,
   getCategories,
 } from "@/services/ClaimService";
+import { IoClose } from "react-icons/io5";
 import CategoryCoverage from "./CategoryCoverage";
+import ImagePreviewModal from "../AddItemModalForm/ImagePreviewModal/index";
+import AttachementPreview from "../AddItemModalForm/AttachementPreview/index";
+
+interface MyObject {
+  imgType: string;
+  url: string;
+}
 
 function ClaimInformation({
   register,
@@ -28,7 +36,9 @@ function ClaimInformation({
   const [lossType, setLossType] = useState([]);
   const [Data, setData] = useState([]);
   const [hide, setHide] = useState(false);
-  // const [lists, setList] = useState(Data);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [imagePreviewType, setImagePreviewType] = useState("");
   const [show, setShow] = useState(false);
   // const [filteredData] = useState([]);
   const [searchQuery] = useState("");
@@ -111,20 +121,20 @@ function ClaimInformation({
   const { onBlur: blurHandler, onChange: claimChange, ...rest } = register("claim");
   console.log("rest", { ...rest });
 
-  const fileOpen = (e: any) => {
-    console.log("file", e.target.files);
-    // var files = e.target.files;
-    // for (var i = 0; i < files.length; i++) {
-    //   var file = files[i];
-    //   var reader = new FileReader();
-    //   reader.file = file;
-    //   reader.fileName = files[i].name;
-    //   reader.fileType = files[i].type;
-    //   reader.fileExtension = files[i].name.substr(files[i].name.lastIndexOf("."));
-    //   reader.onload = scope.ItemContentsImageLoaded;
-    //   reader.readAsDataURL(file);
-    // }
-  };
+  // const fileOpen = (e: any) => {
+  //   console.log("file", e.target.files);
+  //   // var files = e.target.files;
+  //   // for (var i = 0; i < files.length; i++) {
+  //   //   var file = files[i];
+  //   //   var reader = new FileReader();
+  //   //   reader.file = file;
+  //   //   reader.fileName = files[i].name;
+  //   //   reader.fileType = files[i].type;
+  //   //   reader.fileExtension = files[i].name.substr(files[i].name.lastIndexOf("."));
+  //   //   reader.onload = scope.ItemContentsImageLoaded;
+  //   //   reader.readAsDataURL(file);
+  //   // }
+  // };
 
   const coverageApiCall = (stateId: number, policyTypeId: number) => {
     const [state, homeOwnerPlocyType] = getValues(["state", "homeOwnersPolicyType"]);
@@ -140,11 +150,84 @@ function ClaimInformation({
       .catch((error) => console.log(" Losserrr", error));
     setHide(true);
   };
+  const handleUpload = (event: any) => {
+    console.log(event, "handleUpload");
+    // setPreviewImage(true);
+
+    // let imageArr: any[] = [];
+    const imageUrl = URL.createObjectURL(event.target.files[0]);
+    let selectedImageArr: any[];
+    console.log(event.target.files);
+    if (event.target.files[0].type == "application/pdf") {
+      const newObj: MyObject = {
+        imgType: "pdf",
+        url: imageUrl,
+      };
+      selectedImageArr = [newObj];
+    } else {
+      const newObj: MyObject = {
+        imgType: "jpg",
+        url: imageUrl,
+      };
+      selectedImageArr = [newObj];
+    }
+    console.log(selectedImageArr, "selectedImageArr");
+    setDocs((prev: any) => [...prev, ...selectedImageArr]);
+    console.log(docs, "checking docs");
+  };
 
   const handleShow = () => {
     setShow(true);
   };
-  // const verifyClaim = (claimValue: any) => {};
+  const [docs, setDocs] = useState<string[]>([]);
+
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const handleDeleteImage = (index: number) => {
+    console.log(index, "handleDeleteImage");
+
+    const docArray = docs.filter((elem, ind) => {
+      if (ind !== index) {
+        return elem;
+      }
+    });
+    console.log(docArray, "docArray");
+
+    // docs.splice(index, 1);
+    // if(docs.length === 0){
+    //   setDocs([]);
+    // } else {
+    //   setDocs([...docs]);
+    // }
+    // console.log(docs, "Docs updated i delete func");
+
+    setDocs([...docArray]);
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel(zoomLevel + 0.1);
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(zoomLevel - 0.1);
+  };
+
+  const handleZoomMid = () => {
+    setZoomLevel(1);
+  };
+  useEffect(() => {
+    console.log(docs, "checking docs in useeffect");
+  }, [docs]);
+
+  const openModal = (url: string, imageType: string) => {
+    setImagePreviewType(imageType);
+    setImagePreviewUrl(url);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
@@ -332,23 +415,24 @@ function ClaimInformation({
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <div className="row d-flex">
-            <div className="col-lg-10 mt-1 text-right">
-              <label className={ClaimInformationStyle.label}>
+          <div className="d-flex">
+            <div className={clsx("col-lg-10 mt-1", ClaimInformationStyle.labelContent)}>
+              <label className={clsx(ClaimInformationStyle.labelContainer)}>
                 <span style={{ color: "red" }}>*</span>Min. $ Item to Price
+                <span>
+                  <Tooltip
+                    text={
+                      <span>
+                        The minimum dollar value of the item <br /> needs to be priced by
+                        the carrier.Anything
+                        <br /> less than this can be accepted at the <br /> items face
+                        value
+                      </span>
+                    }
+                  />
+                </span>
                 {/* <div className="col-lg-2 col-md-2 col-sm-12"></div> */}
               </label>{" "}
-            </div>
-            <div className="col-lg-2 mt-2">
-              <Tooltip
-                text={
-                  <span>
-                    The minimum dollar value of the item <br /> needs to be priced by the
-                    carrier.Anything
-                    <br /> less than this can be accepted at the <br /> items face value
-                  </span>
-                }
-              />
             </div>
           </div>
         </div>
@@ -444,7 +528,7 @@ function ClaimInformation({
             <span style={{ color: "red" }}>*</span>Home Owners Policy Type
           </label>
         </div>
-        <div className={clsx("col-2")}>
+        <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           <Controller
             control={control}
             name="homeOwnersPolicyType"
@@ -476,7 +560,7 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         {hide ? (
           <>
-            <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right")}>
+            <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
               <label className={ClaimInformationStyle.label}>
                 <span style={{ color: "red" }}>*</span>Special Limit
               </label>
@@ -524,7 +608,7 @@ function ClaimInformation({
                 {show && (
                   <div
                     className={clsx(
-                      "row ml-12",
+                      "row d-flex   justify-content-end ml-12",
                       ClaimInformationStyle.specialCategoryDiv
                     )}
                   >
@@ -548,7 +632,7 @@ function ClaimInformation({
                     </div>
                     <div
                       className={clsx(
-                        "col-lg-3 col-md-3 col-sm-3",
+                        "col-lg-2 col-md-3 col-sm-3",
                         ClaimInformationStyle.categoryInput
                       )}
                     >
@@ -561,7 +645,7 @@ function ClaimInformation({
                     </div>
                     <div
                       className={clsx(
-                        "col-lg-3",
+                        "col-lg-2",
                         ClaimInformationStyle.specialcategoryInput
                       )}
                     >
@@ -572,6 +656,7 @@ function ClaimInformation({
                         onChange={(e: any) => e.target.value}
                       />
                     </div>
+                    <div className={clsx("col-lg-1")} />
                   </div>
                 )}
                 <button
@@ -606,12 +691,100 @@ function ClaimInformation({
           {/* <input type="file" />  */}
           <input
             type="file"
-            className={ClaimInformationStyle.file}
-            onChange={(e) => fileOpen(e)}
-            hidden
+            id="inp"
+            multiple
             ref={fileInputRef}
+            style={{ display: "none" }}
             accept=".png,.jpg,.jpeg,.pdf"
-          />
+            onChange={handleUpload}
+          ></input>
+        </div>
+        <div className="row">
+          {docs?.length === 0 && (
+            <div className={clsx(ClaimInformationStyle.contentCenter, "row p-3")}></div>
+          )}
+          {docs?.map((elem: any, index: number) =>
+            elem.imgType == "pdf" ? (
+              <div className="col-2 m-2" key={index}>
+                <div
+                  style={{ position: "relative", left: "100px" }}
+                  onClick={() => handleDeleteImage(index)}
+                >
+                  {" "}
+                  <IoClose style={{ color: "#f20707" }} />
+                </div>
+                <div>
+                  <iframe
+                    key={index} // Add a unique key for each element
+                    src={elem.url}
+                    style={{
+                      display: "inline-block",
+                      objectFit: "cover",
+                      height: "100px",
+                      aspectRatio: 400 / 400,
+                    }}
+                  />
+                </div>
+                <div>
+                  <a
+                    className={ClaimInformationStyle.textEllipsis}
+                    onClick={() => openModal(elem.url, elem.imgType)}
+                    key={index}
+                  >
+                    {elem.url}
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="col-2 m-2" key={index}>
+                <div
+                  style={{ position: "relative", left: "100px" }}
+                  onClick={() => handleDeleteImage(index)}
+                >
+                  {" "}
+                  <IoClose style={{ color: "#f20707" }} />
+                </div>
+                <div>
+                  <img
+                    key={index} // Add a unique key for each element
+                    src={elem.url}
+                    alt={`Image ${index}`} // Add alt text for accessibility
+                    style={{
+                      display: "inline-block",
+                      objectFit: "cover",
+                      height: "100px",
+                      aspectRatio: 400 / 400,
+                    }}
+                  />
+                </div>
+                <a
+                  className={ClaimInformationStyle.textEllipsis}
+                  onClick={() => openModal(elem.url, elem.imgType)}
+                  key={index}
+                >
+                  {elem.url}
+                </a>
+              </div>
+            )
+          )}
+        </div>
+        <div className="col-8">
+          <ImagePreviewModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            handleZoomIn={handleZoomIn}
+            handleZoomOut={handleZoomOut}
+            handleZoomMid={handleZoomMid}
+            childComp={
+              <AttachementPreview
+                url={imagePreviewUrl}
+                imgType={imagePreviewType}
+                zoomLevel={zoomLevel}
+              />
+            }
+            modalClassName={true}
+            headingName={"Image preview model"}
+          ></ImagePreviewModal>
         </div>
       </div>
     </div>
