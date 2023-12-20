@@ -277,13 +277,19 @@ export const getCategories = async () => {
 
 export const postClaim = async (param: object) => {
   console.log("param", param);
-  const url = getApiEndPoint("savePolicy");
-  const http = new HttpService({ isClient: true });
-  const res = await http.post(url, param);
-  const { data, error } = res;
-  console.log("coverage", res);
-  if (data) return { data };
-  throw error;
+  try {
+    const url = getApiEndPoint("savePolicy");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
 };
 
 export const getPolicyInfo = async (param: object) => {
@@ -297,11 +303,17 @@ export const getPolicyInfo = async (param: object) => {
 };
 
 export const creatClaim = async (param: object) => {
-  const url = getApiEndPoint("saveClaim");
-  const http = new HttpService({ isClient: true, isFormData: true });
-  const res = await http.post(url, param);
-  const { data, error } = res;
-  console.log("coverage", res);
-  if (data) return { data };
-  throw error;
+  try {
+    const url = getApiEndPoint("saveClaim");
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
 };
