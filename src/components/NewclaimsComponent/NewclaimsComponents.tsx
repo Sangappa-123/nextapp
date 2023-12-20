@@ -20,8 +20,9 @@ import { creatClaim, postClaim } from "@/services/ClaimService";
 import { insuranceSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import dayjs from "dayjs";
-import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
+// import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
 import { unknownObjectType } from "@/constants/customTypes";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 function NewclaimsComponent() {
   const [activeSection, setActiveSection] = useState(0);
@@ -253,7 +254,11 @@ function NewclaimsComponent() {
         .then((res) => {
           console.log("postClaim", res);
           if (res) {
-            <NotifyMessage />;
+            addNotification({
+              message: "Successfully added item.",
+              id: "new_claim",
+              status: "success",
+            });
             creatClaim(formData).then((res) => {
               console.log("postClaim", res);
               if (res) {
@@ -300,8 +305,6 @@ function NewclaimsComponent() {
   // if (getValues("firstname") !== null && getValues("lastname") !== null) {
   //   PolicyInitials = getValues("firstName");
   // }
-
-  // const handlePost = (e: any) => {};
 
   return (
     <div>
@@ -429,7 +432,6 @@ function NewclaimsComponent() {
                   theme="normal"
                   type="submit"
                   // btnClassname={NewClaimsStyle.resetBtn}
-                  onClick={(e: any) => handlePost(e)}
                 />
               </div>
             </div>
