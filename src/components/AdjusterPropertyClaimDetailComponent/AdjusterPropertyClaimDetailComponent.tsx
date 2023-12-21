@@ -11,7 +11,7 @@ import {
   addPendingTasks,
   addSubcategories,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
-import PageTitleSectionComponent from "./PageTitleSectionComponent";
+// import PageTitleSectionComponent from "./PageTitleSectionComponent";
 // import useScroll from "@/hooks/useScrollHook";
 
 type propsTypes = {
@@ -59,7 +59,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
     return (
       <div className="row">
         <div className={claimDetailStyle.stickyContainer}>
-          <PageTitleSectionComponent />
+          {/* <PageTitleSectionComponent /> */}
           <GenericBreadcrumb dataList={pathList} />
           {/* <div className={claimDetailStyle.headingContainer}> */}
           <GenericComponentHeading
