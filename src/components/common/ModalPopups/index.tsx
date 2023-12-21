@@ -6,8 +6,8 @@ import clsx from "clsx";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // onSubmit: () => void;
   childComp?: ReactNode;
+  iconComp?: ReactNode;
   footerContent?: ReactNode | null;
   headingName: string;
   overlayClassName?: string;
@@ -20,10 +20,8 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   // onSubmit,
   childComp = null,
-  // btnName1,
-  // btnName2,
-  // showSubmitBtn,
-  // showCancelBtn,
+  iconComp = null,
+
   footerContent = null,
   headingName,
   overlayClassName = "",
@@ -42,18 +40,17 @@ const Modal: React.FC<ModalProps> = ({
           [modalWidthClassName]: modalWidthClassName,
         })}
       >
-        <div className={styles.modalHeader}>
-          {headingName && <div className={styles.modalIitle}>{headingName}</div>}
-          <IoClose className={styles.crossIcon} onClick={onClose} />
+        <div className={clsx(styles.modal_header)}>
+          {headingName && (
+            <div className={styles.modal_title}>
+              <span className={styles.spanStyle}>{iconComp}</span>
+              {headingName}
+            </div>
+          )}
+          <IoClose className={styles.cross_icon} onClick={onClose} />
         </div>
-        <div className={styles.modalBody}>{childComp}</div>
-        {footerContent && (
-          <div className={styles.modalFooter}>
-            {footerContent}
-            {/* {showSubmitBtn && <button onClick={onSubmit}>{btnName1}</button>}
-          {showCancelBtn && <button onClick={onClose}>{btnName2}</button>} */}
-          </div>
-        )}
+        <div className={styles.modal_body}>{childComp}</div>
+        {footerContent && <div className={styles.modalFooter}>{footerContent}</div>}
       </div>
     </div>
   );

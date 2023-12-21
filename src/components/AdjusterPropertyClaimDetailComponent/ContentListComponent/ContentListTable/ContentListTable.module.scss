@@ -36,4 +36,13 @@
   display: flex;
   gap: 10px;
   padding: 5px;
+  z-index: 999;
+}
+.modalContainer {
+  align-items: start;
+}
+.modalContent {
+  width: 600px;
+  position: relative;
+  top: 30px;
 }
