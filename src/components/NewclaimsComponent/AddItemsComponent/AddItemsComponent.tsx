@@ -21,7 +21,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
           <div className="col-auto">
             <GenericButton
               label="Cancel"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
@@ -30,7 +29,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
           <div className="col-auto">
             <GenericButton
               label="Previous"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
@@ -39,7 +37,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
           <div className="col-auto">
             <GenericButton
               label="Assign Items"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
@@ -65,7 +62,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
         <div className="col-auto">
           <GenericButton
             label="Cancel"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
@@ -74,7 +70,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
         <div className="col-auto">
           <GenericButton
             label="Previous"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
@@ -83,7 +78,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
         <div className="col-auto">
           <GenericButton
             label="Assign Items"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
