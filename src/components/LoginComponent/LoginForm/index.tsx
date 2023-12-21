@@ -124,7 +124,11 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
           id="password"
           {...register("password")}
         />
-        <GenericButton label={translate?.inputFields?.submitBtn} type="submit" />
+        <GenericButton
+          label={translate?.inputFields?.submitBtn}
+          type="submit"
+          theme="lightBlue"
+        />
         <Link className={loginFormStyle.link} href="/forgot-password">
           {translate?.forgotPasswordLink}
         </Link>

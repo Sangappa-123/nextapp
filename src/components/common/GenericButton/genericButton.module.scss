@@ -9,7 +9,7 @@
   padding: 2px 12px;
   border-radius: 4px;
   outline: none;
-  border: none;
+  border: 1px solid $darkGrey;
   background-color: transparent;
   cursor: pointer;
   &:disabled {
