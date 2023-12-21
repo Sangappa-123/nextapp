@@ -1,4 +1,4 @@
-.modal_overlay {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -20,7 +20,7 @@
     overflow: hidden;
     // border: 2px solid red;
 
-    .modal_header {
+    .modalHeader {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -30,17 +30,17 @@
       padding: 8px 12px;
       text-align: center;
       position: relative;
-      .modal_title {
+      .modalTitle {
         font-size: 14px;
         font-weight: 600;
       }
-      .cross_icon {
+      .crossIcon {
         height: 24px;
         width: 24px;
         cursor: pointer;
       }
     }
-    .modal_body {
+    .modalBody {
       padding: 12px;
     }
     .modalFooter {

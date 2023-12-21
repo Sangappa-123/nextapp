@@ -164,7 +164,8 @@ function ClaimpolicyInformation({
                 closeHandler={handleClose}
                 submitBtnText="Yes"
                 closeBtnText="No"
-                descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
+                childComp="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
+                // descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
                 modalHeading="Policyhlder Info"
                 submitHandler={() => handleGetData()}
               />

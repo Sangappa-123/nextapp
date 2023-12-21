@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={clsx(styles.modal_overlay, {
+      className={clsx(styles.modalOverlay, {
         [overlayClassName]: overlayClassName,
       })}
     >
@@ -42,11 +42,11 @@ const Modal: React.FC<ModalProps> = ({
           [modalWidthClassName]: modalWidthClassName,
         })}
       >
-        <div className={styles.modal_header}>
-          {headingName && <div className={styles.modal_title}>{headingName}</div>}
-          <IoClose className={styles.cross_icon} onClick={onClose} />
+        <div className={styles.modalHeader}>
+          {headingName && <div className={styles.modalIitle}>{headingName}</div>}
+          <IoClose className={styles.crossIcon} onClick={onClose} />
         </div>
-        <div className={styles.modal_body}>{childComp}</div>
+        <div className={styles.modalBody}>{childComp}</div>
         {footerContent && (
           <div className={styles.modalFooter}>
             {footerContent}
