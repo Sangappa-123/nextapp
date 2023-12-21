@@ -11,6 +11,8 @@ import {
   addPendingTasks,
   addSubcategories,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import PageTitleSectionComponent from "./PageTitleSectionComponent";
+// import useScroll from "@/hooks/useScrollHook";
 
 type propsTypes = {
   claimId: string;
@@ -31,9 +33,10 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   pendingTaskListRes,
   claimDetailMessageListRes,
 }) => {
-  console.log("claimDetailMessageListRes", claimDetailMessageListRes);
-
   const dispatch = useAppDispatch();
+  // const scroll = useScroll();
+  // console.log("scroll", scroll);
+
   dispatch(addCategories(categoryListRes?.data));
   dispatch(addSubcategories(subcategoryListRes?.data));
   dispatch(addPendingTasks(pendingTaskListRes?.data));
@@ -55,13 +58,16 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   if (claimContentListRes?.status === 200 && serviceRequestListRes?.status === 200) {
     return (
       <div className="row">
-        <GenericBreadcrumb dataList={pathList} />
-        <div className={claimDetailStyle.headingContainer}>
+        <div className={claimDetailStyle.stickyContainer}>
+          <PageTitleSectionComponent />
+          <GenericBreadcrumb dataList={pathList} />
+          {/* <div className={claimDetailStyle.headingContainer}> */}
           <GenericComponentHeading
             customHeadingClassname={claimDetailStyle.headingContainer}
             customTitleClassname={claimDetailStyle.headingTxt}
             title="Claim# 055CLM5122023Avi - Kumar, Avinash"
           />
+          {/* </div> */}
         </div>
         <div>
           <ClaimDetailTabsComponent

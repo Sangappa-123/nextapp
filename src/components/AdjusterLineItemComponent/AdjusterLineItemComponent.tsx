@@ -87,24 +87,28 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
   return (
     <div className={lineItemComponentStyle.root}>
-      <GenericBreadcrumb
-        dataList={pathList}
-        customClassname={lineItemComponentStyle.breadcrumb}
-        customNavClassname={lineItemComponentStyle.customNav}
-      />
-      {claimData.length > 0 && (
-        <PaginationButtons
-          pageNumber={+lineItem?.itemNumber}
-          totalPages={claimData.length > 0 ? claimData.length : 1}
+      <div className={lineItemComponentStyle.stickyContainer}>
+        <GenericBreadcrumb
+          dataList={pathList}
+          customClassname={lineItemComponentStyle.breadcrumb}
+          customNavClassname={lineItemComponentStyle.customNav}
         />
-      )}
-      <GenericComponentHeading
-        customTitleClassname={lineItemComponentStyle.headingTitle}
-        title="Item# 6 - Smith, Gracie"
-        customHeadingClassname={clsx(lineItemComponentStyle.heading, {
-          [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
-        })}
-      />
+        {claimData.length > 0 && (
+          <div className={lineItemComponentStyle.paginationButtonsContainer}>
+            <PaginationButtons
+              pageNumber={+lineItem?.itemNumber}
+              totalPages={claimData.length > 0 ? claimData.length : 1}
+            />
+          </div>
+        )}
+        <GenericComponentHeading
+          customTitleClassname={lineItemComponentStyle.headingTitle}
+          title="Item# 6 - Smith, Gracie"
+          customHeadingClassname={clsx(lineItemComponentStyle.heading, {
+            [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
+          })}
+        />
+      </div>
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />
       </div>
