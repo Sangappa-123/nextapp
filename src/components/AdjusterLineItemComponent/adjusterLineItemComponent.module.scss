@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .root {
   height: fit-content;
   display: flex;
@@ -8,6 +10,7 @@
     top: 94px;
     z-index: 999;
     background: #fff;
+    padding-left: 0;
   }
   .noPageHeading {
     top: 60px;
@@ -17,16 +20,27 @@
     padding: 1px;
     font-size: 18px;
     font-weight: 500;
-    line-height: 25px;
+    margin-top: 10px;
   }
   .customNav {
     position: sticky;
     top: 40px;
     min-height: 20px;
-    background-color: #fff;
+    background-color: $white;
     z-index: 999;
     .breadcrumb {
-      margin: 0;
+      margin-top: 10px;
     }
+  }
+}
+
+.stickyContainer {
+  position: sticky;
+  top: 35px;
+  z-index: 9;
+  background-color: $white;
+
+  .paginationButtonsContainer {
+    margin-top: 10px;
   }
 }
