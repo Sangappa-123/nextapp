@@ -7,9 +7,7 @@ type propsTypes = {
   serviceRequestId: string;
 };
 
-const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
-  serviceRequestId,
-}) => {
+const AdjusterServiceRequestEdit: React.FC<propsTypes> = ({ serviceRequestId }) => {
   const claimId = sessionStorage.getItem("claimId") || "";
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
 
@@ -27,11 +25,6 @@ const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
     {
       name: serviceRequestId,
       path: "/adjuster-service-request-edit",
-    },
-
-    {
-      name: "Assign service request",
-      path: `/adjuster-assign-service-request/${serviceRequestId}`,
       active: true,
     },
   ];
@@ -42,11 +35,11 @@ const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
       <div className="p-3">
         <GenericComponentHeading
           customTitleClassname="mt-2"
-          title="Service Requested :   New Construction - Residential Inspection"
+          title="New Construction - Residential Inspection"
         />
       </div>
     </div>
   );
   // return <CustomLoader />;
 };
-export default AdjusterAssignServiceRequestComponent;
+export default AdjusterServiceRequestEdit;

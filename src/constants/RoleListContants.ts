@@ -239,6 +239,10 @@
           {
             URL: "/adjuster-assign-service-request/{ID}",
           },
+
+          {
+            URL: "/adjuster-service-request-edit/{ID}",
+          },
         ],
       },
       {

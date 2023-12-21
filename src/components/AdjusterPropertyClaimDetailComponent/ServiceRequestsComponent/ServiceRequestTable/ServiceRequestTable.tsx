@@ -120,7 +120,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
       cell: ({ row }) => (
         <>
           <a
-            href="#"
+            href=""
             className={ServiceRequestTableStyle.AssignText}
             onClick={(e) => assignService(e, row.original)}
           >
@@ -128,7 +128,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
           </a>
           <span>|</span>
           <a
-            href="#"
+            href=""
             className={ServiceRequestTableStyle.DeleteText}
             onClick={(e) => deleteAction(e, row.original)}
           >
@@ -142,6 +142,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
 
   const assignService = (e: React.MouseEvent<HTMLElement>, rowData: any) => {
     e.preventDefault();
+    e.stopPropagation();
 
     sessionStorage.setItem("claimNumber", rowData.claimNumber);
     sessionStorage.setItem("serviceRequestId", rowData.serviceRequestId);
@@ -151,6 +152,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   };
   const deleteAction = (e: React.MouseEvent<HTMLElement>, rowData: any) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const payload = {
       serviceId: rowData.serviceRequestId,
@@ -246,7 +248,12 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
       }
     }
   };
-
+  const handleRowClick = (rowData: any) => {
+    sessionStorage.setItem("claimNumber", rowData.claimNumber);
+    sessionStorage.setItem("serviceRequestId", rowData.serviceRequestId);
+    sessionStorage.setItem("claimId", claimId);
+    router.push(`/adjuster-service-request-edit/${rowData?.serviceRequestId}`);
+  };
   const table = useReactTable({
     data: claimServiceRequestList,
     columns,
@@ -287,6 +294,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
           pageLimit={totalClaims > 5 ? pageLimit : null}
           loader={tableLoader}
           tableDataErrorMsg={claimErrorMsg}
+          handleRowClick={handleRowClick}
         />
       </div>
     </>
