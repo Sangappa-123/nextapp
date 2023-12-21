@@ -39,6 +39,8 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     updateClaimContentListData,
     clearFilter,
     addNotification,
+    setIsModalOpen,
+    setEditItem,
   } = props;
   const { claimId } = useParams();
   const router = useRouter();
@@ -184,7 +186,12 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
                 <div>
                   <RiFileInfoLine color="grey" size="20px" />
                 </div>
-                <div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    editAction(row.original);
+                  }}
+                >
                   <RiFileEditFill color="grey" size="20px" />
                 </div>
 
@@ -207,6 +214,10 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     }),
   ];
 
+  const editAction = (rowData: any) => {
+    setIsModalOpen(true);
+    setEditItem(rowData);
+  };
   const deleteAction = (rowData: any) => {
     const payload = {
       id: rowData.itemId,

@@ -10,13 +10,9 @@ import HttpService from "@/HttpService";
 
 export const serviceRequestList = async (payload: { claimId: string }) => {
   try {
-    console.log("serviceRequest APi payload", payload);
-
     const url = getApiEndPoint("serviceRequest");
     const http = new HttpService();
     const res = await http.post(url, payload);
-
-    console.log("serviceRequest APi", res);
     return res;
   } catch (error) {
     console.warn("serviceRequest__err", error);

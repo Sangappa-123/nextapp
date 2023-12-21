@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { Tooltip } from "react-tooltip";
 import Modal from "@/components/common/ModalPopups";
-import AddItemModalFormComp from "@/components/AddItemModalForm";
+import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 
 function ContentListComponent(props: any) {
@@ -17,6 +17,7 @@ function ContentListComponent(props: any) {
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes;
@@ -32,6 +33,7 @@ function ContentListComponent(props: any) {
   };
 
   const closeModal = () => {
+    setEditItem(null);
     setIsModalOpen(false);
   };
 
@@ -134,13 +136,18 @@ function ContentListComponent(props: any) {
           <Modal
             isOpen={isModalOpen}
             onClose={closeModal}
-            childComp={<AddItemModalFormComp />}
+            childComp={<AddItemModalForm editItem={editItem} />}
             headingName="Add Item"
             modalWidthClassName={ContentListComponentStyle.modalWidth}
           ></Modal>
         </div>
       </div>
-      <ContentListTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
+      <ContentListTable
+        setTableLoader={setTableLoader}
+        tableLoader={tableLoader}
+        setIsModalOpen={setIsModalOpen}
+        setEditItem={setEditItem}
+      />
     </div>
   );
 }

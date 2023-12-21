@@ -20,17 +20,19 @@ const ClaimServiceRequestSlice = createSlice({
       const claimRes: any = [];
       if (claimServiceRequestList?.data) {
         claimServiceRequestList.data.map((item: any) => {
-          newArr = {
-            description: item.description,
-            serviceNumber: item.serviceNumber,
-            vendorDetails: item.vendorDetails,
-            assignedDate: item.assignedDate,
-            targetDate: item.targetDate,
-            status: item.status,
-            serviceRequestId: item.serviceRequestId,
-            claimNumber: item.claimNumber,
-          };
-          claimRes.push(newArr);
+          if (!item.isDelete) {
+            newArr = {
+              description: item.description,
+              serviceNumber: item.serviceNumber,
+              vendorDetails: item.vendorDetails,
+              assignedDate: item.assignedDate,
+              targetDate: item.targetDate,
+              status: item.status,
+              serviceRequestId: item.serviceRequestId,
+              claimNumber: item.claimNumber,
+            };
+            claimRes.push(newArr);
+          }
         });
         state.claimServiceRequestList = claimRes.slice(0, 5);
         state.claimServiceRequestListTotalData = claimRes;
