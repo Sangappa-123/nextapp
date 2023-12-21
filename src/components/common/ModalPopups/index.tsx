@@ -40,16 +40,16 @@ const Modal: React.FC<ModalProps> = ({
           [modalWidthClassName]: modalWidthClassName,
         })}
       >
-        <div className={clsx(styles.modal_header)}>
+        <div className={clsx(styles.modalHeader)}>
           {headingName && (
-            <div className={styles.modal_title}>
+            <div className={styles.modalTitle}>
               <span className={styles.spanStyle}>{iconComp}</span>
               {headingName}
             </div>
           )}
-          <IoClose className={styles.cross_icon} onClick={onClose} />
+          <IoClose className={styles.crossIcon} onClick={onClose} />
         </div>
-        <div className={styles.modal_body}>{childComp}</div>
+        <div className={styles.modalBody}>{childComp}</div>
         {footerContent && <div className={styles.modalFooter}>{footerContent}</div>}
       </div>
     </div>
