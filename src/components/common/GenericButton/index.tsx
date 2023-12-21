@@ -29,7 +29,7 @@ type genericButtonType = {
 function GenericButton({
   label,
   btnClassname = "",
-  theme = "lightBlue",
+  theme = "normal",
   size = "large",
   disabled,
   onClickHandler,

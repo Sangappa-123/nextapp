@@ -38,7 +38,7 @@ const AttachementPreview: React.FC<AttachementPreviewProps> = ({
       style={{
         width: "100%",
         height: "400px",
-        overflow: "hidden",
+        // overflow: "auto",
       }}
     >
       <img

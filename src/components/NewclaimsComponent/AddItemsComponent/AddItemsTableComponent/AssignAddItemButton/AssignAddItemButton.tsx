@@ -9,7 +9,6 @@ function AssignAddItemButton({ onAssignItemsClick }: AddItemsComponentProps) {
     <>
       <GenericButton
         label="Assign Items"
-        theme="lightBlue"
         size="small"
         type="submit"
         onClick={onAssignItemsClick}

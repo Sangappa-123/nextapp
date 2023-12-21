@@ -1,13 +1,6 @@
 @use "@/scss/colors.scss" as *;
-@use "@/scss/_mixins.scss" as *;
 
 .root {
-  width: 100%;
-  height: fit-content;
-  max-height: 100vh;
-  min-height: 100vh;
-  overflow-y: auto;
-  @include customscrollbar;
   .container {
     width: 100%;
     height: fit-content;

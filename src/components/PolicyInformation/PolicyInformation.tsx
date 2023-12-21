@@ -213,7 +213,7 @@ function ClaimpolicyInformation({
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
-            textContentType="telephoneNumber"
+            // textContentType="telephoneNumber"
             keyboardType="phone-pad"
             // name="phone-number"
             // pattern={pattern}

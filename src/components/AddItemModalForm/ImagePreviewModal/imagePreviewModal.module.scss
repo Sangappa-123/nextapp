@@ -7,7 +7,7 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   z-index: 999;
 
   .modal {
@@ -45,6 +45,7 @@
     }
     .modal_body {
       padding: 12px;
+      overflow: auto;
     }
     .modalFooter {
       display: flex;

@@ -17,7 +17,6 @@ function AssignItemsComponent() {
           <div className="col-auto">
             <GenericButton
               label="Cancel"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AssignItemsStyle.newClaimBtn}
@@ -26,7 +25,6 @@ function AssignItemsComponent() {
           <div className="col-auto">
             <GenericButton
               label="Previous"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AssignItemsStyle.newClaimBtn}
@@ -35,7 +33,6 @@ function AssignItemsComponent() {
           <div className="col-auto">
             <GenericButton
               label="Submit"
-              theme="lightBlue"
               size="small"
               type="submit"
               btnClassname={AssignItemsStyle.newClaimBtn}
@@ -61,7 +58,6 @@ function AssignItemsComponent() {
         <div className="col-auto">
           <GenericButton
             label="Cancel"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AssignItemsStyle.newClaimBtn}
@@ -70,7 +66,6 @@ function AssignItemsComponent() {
         <div className="col-auto">
           <GenericButton
             label="Previous"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AssignItemsStyle.newClaimBtn}
@@ -79,7 +74,6 @@ function AssignItemsComponent() {
         <div className="col-auto">
           <GenericButton
             label="Submit"
-            theme="lightBlue"
             size="small"
             type="submit"
             btnClassname={AssignItemsStyle.newClaimBtn}

@@ -7,7 +7,6 @@ const AddItemsButton: React.FC = () => {
     <>
       <GenericButton
         label="Add Item"
-        theme="lightBlue"
         size="small"
         type="submit"
         btnClassname={adssstyle.addBUTONStyle}
