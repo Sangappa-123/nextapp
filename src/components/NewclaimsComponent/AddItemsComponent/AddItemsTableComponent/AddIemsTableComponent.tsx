@@ -13,13 +13,17 @@ import AddItemModalForm from "@/components/AddItemModalForm";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
-  onNewClaimsClick: () => void;
+  onSetAssignItemsDisabled: (value: boolean) => void;
+  isAssignItemsDisabled: boolean;
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
   onAssignItemsClick,
+  onSetAssignItemsDisabled,
+  isAssignItemsDisabled,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -57,7 +61,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
           <div
             className={`col-lg-2 col-md-2 col-sm-12 col-12 mt-2 mb-2 ${AddTableSTyle.assignButtonStyle}`}
           >
-            <AssignAddItemButton onAssignItemsClick={onAssignItemsClick} />
+            <AssignAddItemButton
+              onAssignItemsClick={() => {
+                onAssignItemsClick();
+                onSetAssignItemsDisabled(true);
+              }}
+              isButtonDisabled={isAssignItemsDisabled}
+            />
           </div>
           <div
             className={`col-lg-3 col-md-3 col-sm-12 col-12 mt-2 mb-2 ${AddTableSTyle.selectItemsStyle}`}
