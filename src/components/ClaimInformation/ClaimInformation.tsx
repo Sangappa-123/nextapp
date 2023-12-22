@@ -303,7 +303,8 @@ function ClaimInformation({
                   // showTimeSelect={true}
                   enableTime={true}
                   time_24hr={true}
-                  minDate={new Date()}
+                  // minDate={new Date()}
+                  minDate={null}
                   maxDate={null}
                   {...rest}
                 />
