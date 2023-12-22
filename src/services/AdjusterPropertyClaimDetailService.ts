@@ -62,3 +62,50 @@ export const getClaimDetailMessageList = async (param: {
     return null;
   }
 };
+
+export const getClaimItemCondition = async () => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("lineItemCondition");
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    }
+    return error;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const getClaimItemRoom = async (claim: string) => {
+  try {
+    const http = new HttpService();
+    let url = getApiEndPoint("lineItemRoom");
+    url = url.replace("{{CLAIM}}", claim);
+    console.log("-099999999", url);
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    }
+    return error;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const getClaimItemRetailers = async () => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("lineItemRetailer");
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    }
+    return error;
+  } catch (err: any) {
+    return err;
+  }
+};

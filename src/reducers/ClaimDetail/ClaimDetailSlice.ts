@@ -9,6 +9,9 @@ const initialState: unknownObjectType = {
   category: [],
   pendingTaskList: [],
   messageLsit: [],
+  condition: [],
+  retailer: [],
+  room: [],
   // room: [],
   // retailer: [],
   // paymentTypes: [],
@@ -49,9 +52,25 @@ const ClaimDetailSlice = createSlice({
       state.messageLsit = { ...state.messageLsit, ...payload };
       return state;
     },
+    addCondition(state, action) {
+      const { payload } = action;
+      state.condition = { ...state.condition, ...payload };
+      return state;
+    },
+    addRetailer(state, action) {
+      const { payload } = action;
+      state.retailer = { ...state.retailer, ...payload };
+      return state;
+    },
   },
 });
 export default ClaimDetailSlice;
 
-export const { addCategories, addSubcategories, addPendingTasks, addMessageList } =
-  ClaimDetailSlice.actions;
+export const {
+  addCategories,
+  addSubcategories,
+  addPendingTasks,
+  addMessageList,
+  addCondition,
+  addRetailer,
+} = ClaimDetailSlice.actions;

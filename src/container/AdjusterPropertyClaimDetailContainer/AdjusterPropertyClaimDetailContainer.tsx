@@ -5,6 +5,8 @@ import {
   getClaimDetailMessageList,
   getPendingTaskList,
   getSubCategories,
+  getClaimItemCondition,
+  getClaimItemRetailers,
 } from "@/services/AdjusterPropertyClaimDetailService";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
@@ -27,6 +29,8 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
     recordPerPage: PAGINATION_LIMIT_10,
     claimId,
   });
+  const claimContitionRes: any = await getClaimItemCondition();
+  const claimRetailerRes: any = await getClaimItemRetailers();
 
   console.log("claimDetailMessageListRes", claimDetailMessageListRes);
 
@@ -40,6 +44,8 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
         subcategoryListRes={subcategoryListRes}
         pendingTaskListRes={pendingTaskListRes}
         claimDetailMessageListRes={claimDetailMessageListRes}
+        claimContitionRes={claimContitionRes}
+        claimRetailerRes={claimRetailerRes}
       />
     </>
   );
