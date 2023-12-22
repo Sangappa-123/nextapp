@@ -10,9 +10,10 @@ import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import Cards from "../common/Cards";
 // import { unknownObjectType } from "@/constants/customTypes";
-import { setExcelCsvUploadData } from "@/services/excelCsvUploadSlice";
+import { setExcelCsvUploadData } from "@/reducers/UploadCSV/excelCsvUploadSlice";
 import { fetchExcelCsvTableData } from "@/services/ClaimService";
 import ProgressBar from "../common/ProgressBar/ProgressBar";
+// import { useRouter } from "next/navigation";
 // import { getServerCookie } from "@/utils/utitlity";
 
 // interface ExcelSheetTableProps {
@@ -126,6 +127,26 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
     }
   };
 
+  // useEffect(() => {
+  //   setFailedItemsCount((prevCount) => {
+  //     const updatedFailedItems = postLossItemDetails.filter((item) => !item.isValidItem);
+  //     return updatedFailedItems.length;
+  //   });
+
+  //   setValidItemsCount((prevCount) => {
+  //     const updatedValidItems = postLossItemDetails.filter((item) => item.isValidItem);
+  //     return updatedValidItems.length;
+  //   });
+  // }, [postLossItemDetails, setFailedItemsCount, setValidItemsCount]);
+
+  useEffect(() => {
+    const updatedFailedItems = postLossItemDetails.filter((item) => !item.isValidItem);
+    const updatedFailedItems2 = postLossItemDetails.filter((item) => item.isValidItem);
+
+    setFailedItemsCount(updatedFailedItems.length);
+    setValidItemsCount(updatedFailedItems2.length);
+  }, [postLossItemDetails]);
+
   useEffect(() => {
     if (selectedFile) {
       hiddenFileInput.current?.setAttribute("value", selectedFile.name);
@@ -218,16 +239,15 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
             <div className="col-auto">
               <GenericButton
                 label="Cancel"
-                theme="lightBlue"
                 size="small"
                 type="submit"
+                // onClick={handleRouteChange}
                 btnClassname={UploadItemsStyle.newClaimBtn}
               />
             </div>
             <div className="col-auto">
               <GenericButton
                 label="Start Upload"
-                theme="lightBlue"
                 size="small"
                 type="submit"
                 btnClassname={UploadItemsStyle.newClaimBtn}
@@ -266,7 +286,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                       <div className="col-auto">
                         <GenericButton
                           label="Cancel"
-                          theme="lightBlue"
+                          // theme="lightBlue"
                           size="small"
                           type="submit"
                           onClick={() => {
@@ -277,7 +297,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                       <div className="col-auto">
                         <GenericButton
                           label="Finish Upload"
-                          theme="lightBlue"
+                          // theme="lightBlue"
                           size="small"
                           type="submit"
                         />

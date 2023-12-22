@@ -7,10 +7,18 @@ import AddItemsTableComponent from "./AddItemsTableComponent";
 
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
+  onNewClaimsClick: () => void;
 }
 
-const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClick }) => {
+const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
+  onAssignItemsClick,
+  onNewClaimsClick,
+}) => {
   const [isAssignItemsDisabled, setAssignItemsDisabled] = useState(true);
+
+  const handlePreviousClick = () => {
+    onNewClaimsClick();
+  };
   return (
     <div>
       <div>
@@ -31,6 +39,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
               label="Previous"
               size="small"
               type="submit"
+              onClick={handlePreviousClick}
               btnClassname={AddStyle.newClaimBtn}
             />
           </div>
@@ -56,7 +65,10 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
         />
       </div>
       <div>
-        <AddItemsTableComponent onAssignItemsClick={onAssignItemsClick} />
+        <AddItemsTableComponent
+          onAssignItemsClick={onAssignItemsClick}
+          onNewClaimsClick={onNewClaimsClick}
+        />
       </div>
       <div className="row justify-content-end">
         <div className="col-auto">
@@ -73,6 +85,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({ onAssignItemsClic
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
+            onClick={handlePreviousClick}
           />
         </div>
         <div className="col-auto">

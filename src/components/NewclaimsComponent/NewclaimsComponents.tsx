@@ -313,6 +313,10 @@ function NewclaimsComponent() {
     setActiveSection(2);
   };
 
+  const handlePreviousClick = () => {
+    setActiveSection((prev) => prev - 1);
+  };
+
   const handleClose = () => {
     setShow(false);
   };
@@ -410,9 +414,7 @@ function NewclaimsComponent() {
                 updateHomeOwnerType={updateHomeOwnerType}
               />
             </div>
-            <div
-              className={clsx("row justify-content-end mt-4", NewClaimsStyle.downButtons)}
-            >
+            <div className={clsx("row justify-content-end", NewClaimsStyle.downButtons)}>
               <div className="col-auto mt-2">
                 {/* <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
                   Cancel
@@ -463,12 +465,15 @@ function NewclaimsComponent() {
       )}
       {activeSection === 1 && (
         <Cards>
-          <AddItemsComponent onAssignItemsClick={handleAssignItemsClick} />
+          <AddItemsComponent
+            onAssignItemsClick={handleAssignItemsClick}
+            onNewClaimsClick={handlePreviousClick}
+          />
         </Cards>
       )}
       {activeSection === 2 && (
         <Cards>
-          <AssignItemsComponent />
+          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
         </Cards>
       )}
     </div>

@@ -9,11 +9,14 @@ import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { Tooltip } from "react-tooltip";
 import Modal from "@/components/common/ModalPopups";
+import { useRouter } from "next/navigation";
 import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 
 function ContentListComponent(props: any) {
   const { claimContentListRes, addClaimContentListData, claimId, editItemDetail } = props;
+  console.log("calimID", props.claimId);
+  const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -75,7 +78,12 @@ function ContentListComponent(props: any) {
                     Add Items
                   </div>
 
-                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                  <div
+                    className={ContentListComponentStyle.dropDownInnerDiv}
+                    onClick={() =>
+                      router.push(`/uploadItemsFromCSV?claimDetail=${claimId}`)
+                    }
+                  >
                     Load from file
                   </div>
                 </div>

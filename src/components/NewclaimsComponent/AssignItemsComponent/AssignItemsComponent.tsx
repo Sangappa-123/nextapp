@@ -5,8 +5,18 @@ import GenericComponentHeading from "@/components/common/GenericComponentHeading
 import AssignItemsTableComponent from "./AssignItemsTableComponent/AssignItemsTableComponent";
 import AssignItemsStyle from "./assignItemsComponent.module.scss";
 
-function AssignItemsComponent() {
+interface AssignItemsComponentProps {
+  onNewClaimsClick: () => void;
+}
+
+const AssignItemsComponent: React.FC<AssignItemsComponentProps> = ({
+  onNewClaimsClick,
+}) => {
   const [isSbmitItemsDisabled, setSubmitItemsDisabled] = useState(true);
+
+  const handlePreviousClick = () => {
+    onNewClaimsClick();
+  };
   return (
     <div>
       <div>
@@ -27,6 +37,7 @@ function AssignItemsComponent() {
               label="Previous"
               size="small"
               type="submit"
+              onClick={handlePreviousClick}
               btnClassname={AssignItemsStyle.newClaimBtn}
             />
           </div>
@@ -68,6 +79,7 @@ function AssignItemsComponent() {
             label="Previous"
             size="small"
             type="submit"
+            onClick={handlePreviousClick}
             btnClassname={AssignItemsStyle.newClaimBtn}
           />
         </div>
@@ -86,5 +98,5 @@ function AssignItemsComponent() {
       </div>
     </div>
   );
-}
+};
 export default AssignItemsComponent;

@@ -557,10 +557,10 @@ function ClaimInformation({
           />
         </div>
       </div>
-      <div className="row mt-3 align-items-center">
+      <div className="row mt-2 align-items-center">
         {hide ? (
           <>
-            <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
+            <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-1 text-right")}>
               <label className={ClaimInformationStyle.label}>
                 <span style={{ color: "red" }}>*</span>Special Limit
               </label>
@@ -573,8 +573,8 @@ function ClaimInformation({
               }).format(getValues("homeOwnersPolicyType")?.specialLimit)}
             </div>
             <div>
-              <Cards className={clsx("mt-8", ClaimInformationStyle.cards)}>
-                <div className="row ">
+              <Cards className={clsx("mt-3", ClaimInformationStyle.cards)}>
+                <div className="row mb-2">
                   <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
                     Category Coverages
                   </div>
@@ -673,7 +673,7 @@ function ClaimInformation({
           ""
         )}
       </div>
-      <div className="row mt-3 align-items-center">
+      <div className="row align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             <span style={{ color: "red" }}>*</span>Attachments
