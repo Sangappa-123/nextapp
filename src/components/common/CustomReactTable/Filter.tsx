@@ -138,7 +138,8 @@ export default function Filter({
           color: "black",
           padding: "0px",
           zIndex: "999",
-          boxShadow: "2px 2px 2px 2px #888888",
+          boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
+          borderRadius: "5px",
         }}
         noArrow={true}
         hidden={!isOpen}
@@ -270,9 +271,13 @@ export default function Filter({
         </div>
       </Tooltip>
 
-      <span id={`${column.id}list`} onClick={() => handleFilterIconClick(column.id)}>
+      <div
+        id={`${column.id}list`}
+        onClick={() => handleFilterIconClick(column.id)}
+        className={CustomReactTableStyles.filterIcon}
+      >
         <RiFilter2Fill color="#337ab7" size="20px" />
-      </span>
+      </div>
     </div>
   );
 }

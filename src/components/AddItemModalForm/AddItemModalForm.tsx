@@ -731,10 +731,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
             </div>
             <div className="row m-2 flex-row-reverse">
-              <div className="row col-2">
-                <GenericButton label="Cancel" />
-              </div>
-
               <div className="row col-12 m-2 flex-row-reverse">
                 <div className="row col-2">
                   <GenericButton label="Cancel" size="medium" />
