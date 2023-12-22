@@ -243,6 +243,10 @@
           {
             URL: "/adjuster-service-request-edit/{ID}",
           },
+
+          {
+            URL: "/adjuster-service-request/{ID}",
+          },
         ],
       },
       {

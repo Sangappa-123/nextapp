@@ -7,6 +7,7 @@ import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import ServiceRequestSearchBox from "./ServiceRequestSearchBox/ServiceRequestSearchBox";
+import { useParams, useRouter } from "next/navigation";
 
 function ServiceRequestsComponent(props: any) {
   const { serviceRequestListRes, addserviceRequestData } = props;
@@ -14,9 +15,14 @@ function ServiceRequestsComponent(props: any) {
     const claimServiceRequestList = serviceRequestListRes;
     addserviceRequestData({ claimServiceRequestList });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const router = useRouter();
+  const { claimId }: { claimId: string } = useParams();
 
   const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
+  const handleNewServiceRequest = () => {
+    router.push(`/adjuster-service-request/${claimId}`);
+  };
   return (
     <div className="row">
       <div className={`${ServiceRequestComponentStyle.serviceHeaderContainer} mt-4`}>
@@ -37,6 +43,7 @@ function ServiceRequestsComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ServiceRequestComponentStyle.newServiceRequestBtn}
+                onClickHandler={handleNewServiceRequest}
               />
             </div>
           </div>
