@@ -39,8 +39,6 @@ interface typeProps {
 const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const { editItem, editItemDetail, previousItem, nextItem } = props;
 
-  console.log("editItem", editItem);
-
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [newRetailerInputField, setNewRetailerInputField] = useState(false);
   const [newRoomInputField, setNewRoomInputField] = useState(true);
