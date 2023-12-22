@@ -1,10 +1,15 @@
 import React from "react";
 import GenericButton from "@/components/common/GenericButton";
 
-interface AddItemsComponentProps {
+interface AssignAddItemButtonProps {
   onAssignItemsClick: () => void;
+  isButtonDisabled: boolean;
 }
-function AssignAddItemButton({ onAssignItemsClick }: AddItemsComponentProps) {
+
+function AssignAddItemButton({
+  onAssignItemsClick,
+  isButtonDisabled,
+}: AssignAddItemButtonProps) {
   return (
     <>
       <GenericButton
@@ -12,6 +17,7 @@ function AssignAddItemButton({ onAssignItemsClick }: AddItemsComponentProps) {
         size="small"
         type="submit"
         onClick={onAssignItemsClick}
+        disabled={isButtonDisabled}
       />
     </>
   );
