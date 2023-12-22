@@ -9,6 +9,11 @@ import { ConnectedProps, connect } from "react-redux";
 // import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Cards from "../common/Cards";
+
+import { useRouter } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
+// import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 // import { unknownObjectType } from "@/constants/customTypes";
 import { setExcelCsvUploadData } from "@/reducers/UploadCSV/excelCsvUploadSlice";
 import { fetchExcelCsvTableData } from "@/services/ClaimService";
@@ -21,6 +26,9 @@ import ProgressBar from "../common/ProgressBar/ProgressBar";
 // }
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const { rowsProcessed, postLossItemDetails } = props;
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isFileChosen, setIsFileChosen] = useState(false);
@@ -157,6 +165,19 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
     setExcelData(null);
   }, [selectedFile]);
 
+  const claimId = searchParams.get("claimDetail");
+  console.log("claimIdsssssssssssss", claimId);
+
+  const handleRouteChange = () => {
+    if (claimId) {
+      console.log("Navigating to /adjuster-property-claim-details/", claimId);
+      router.push(`/adjuster-property-claim-details/${claimId}`);
+    } else {
+      console.log("Navigating to /new-claim");
+      router.push("/new-claim");
+    }
+  };
+
   return (
     <>
       {!isFileUploaded && (
@@ -241,7 +262,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                 label="Cancel"
                 size="small"
                 type="submit"
-                // onClick={handleRouteChange}
+                onClick={handleRouteChange}
                 btnClassname={UploadItemsStyle.newClaimBtn}
               />
             </div>

@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { RiFilter2Fill } from "react-icons/ri";
 import GenericButton from "../GenericButton/index";
 import CustomReactTableStyles from "./CustomReactTable.module.scss";
+import { Tooltip } from "react-tooltip";
 
 export default function Filter({
   column,
@@ -25,7 +26,7 @@ export default function Filter({
   const [sortedUniqueValuesFirst, setSortedUniqueValuesFirst] = React.useState<
     React.SetStateAction<any>
   >([]);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [isSelectAllChecked, setIsSelectAllChecked] =
     React.useState<React.SetStateAction<any>>(false);
   // const [preCheckedValue, setPreCheckedValue] =
@@ -51,61 +52,9 @@ export default function Filter({
     }
   }, [sortedUniqueValues]);
 
-  // return typeof firstValue === 'number' ? (
-  //   <div>
-  //     <div className="flex space-x-2">
-  //       <DebouncedInput
-  //         type="number"
-  //         min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-  //         max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-  //         value={(columnFilterValue as [number, number])?.[0] ?? ''}
-  //         onChange={value =>
-  //           column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-  //         }
-  //         placeholder={`Min ${
-  //           column.getFacetedMinMaxValues()?.[0]
-  //             ? `(${column.getFacetedMinMaxValues()?.[0]})`
-  //             : ''
-  //         }`}
-  //         className="w-24 border shadow rounded"
-  //       />
-  //       <DebouncedInput
-  //         type="number"
-  //         min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-  //         max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-  //         value={(columnFilterValue as [number, number])?.[1] ?? ''}
-  //         onChange={value =>
-  //           column.setFilterValue((old: [number, number]) => [old?.[0], value])
-  //         }
-  //         placeholder={`Max ${
-  //           column.getFacetedMinMaxValues()?.[1]
-  //             ? `(${column.getFacetedMinMaxValues()?.[1]})`
-  //             : ''
-  //         }`}
-  //         className="w-24 border shadow rounded"
-  //       />
-  //     </div>
-  //     <div className="h-1" />
-  //   </div>
-  // ) : (
-  //   <>
-  //     <datalist id={column.id + 'list'}>
-  //       {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-  //         <option value={value} key={value} />
-  //       ))}
-  //     </datalist>
-  //     <DebouncedInput
-  //       type="text"
-  //       value={(columnFilterValue ?? '') as string}
-  //       onChange={value => column.setFilterValue(value)}
-  //       placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-  //       className="w-36 border shadow rounded"
-  //       list={column.id + 'list'}
-  //     />
-  //     <div className="h-1" />
-  //   </>
-  // )
   const handleFilterIconClick = (columnId: any) => {
+    setIsOpen(!isOpen);
+
     if (showFilterBLock === columnId) {
       setShowFilterBLock(null);
     } else {
@@ -181,11 +130,22 @@ export default function Filter({
 
   return (
     <div className="position-relative">
-      <span onClick={() => handleFilterIconClick(column.id)}>
-        <RiFilter2Fill color="#337ab7" size="20px" />
-      </span>
-      {showFilterBLock === column.id && (
-        <div className={CustomReactTableStyles.filterPopUp} id={column.id + "list"}>
+      <Tooltip
+        anchorSelect={`#${column.id}list`}
+        place="bottom"
+        style={{
+          backgroundColor: "white",
+          color: "black",
+          padding: "0px",
+          zIndex: "999",
+          boxShadow: "2px 2px 2px 2px #888888",
+        }}
+        noArrow={true}
+        hidden={!isOpen}
+        openOnClick={true}
+        clickable={true}
+      >
+        <div className={CustomReactTableStyles.filterPopUp} id={column.id + "listelemnt"}>
           <div className={CustomReactTableStyles.filterHeader}>
             <input
               type="checkbox"
@@ -308,37 +268,11 @@ export default function Filter({
             />
           </div>
         </div>
-      )}
+      </Tooltip>
+
+      <span id={`${column.id}list`} onClick={() => handleFilterIconClick(column.id)}>
+        <RiFilter2Fill color="#337ab7" size="20px" />
+      </span>
     </div>
   );
 }
-
-// A debounced input react component
-//   function DebouncedInput({
-//     value: initialValue,
-//     onChange,
-//     debounce = 500,
-//     ...props
-//   }: {
-//     value: string | number
-//     onChange: (value: string | number) => void
-//     debounce?: number
-//   } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-//     const [value, setValue] = React.useState(initialValue)
-
-//     React.useEffect(() => {
-//       setValue(initialValue)
-//     }, [initialValue])
-
-//     React.useEffect(() => {
-//       const timeout = setTimeout(() => {
-//         onChange(value)
-//       }, debounce)
-
-//       return () => clearTimeout(timeout)
-//     }, [value])
-
-//     return (
-//       <input {...props} value={value} onChange={e => setValue(e.target.value)} />
-//     )
-//   }
