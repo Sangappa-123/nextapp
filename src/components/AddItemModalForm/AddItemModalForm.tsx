@@ -187,7 +187,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     <div className={addClaimFormStyle.addItemContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={addClaimFormStyle.containerScroll}>
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <span style={{ color: "red" }}>*</span>
               <label className={addClaimFormStyle.labelStyle}> Item Description:</label>
@@ -204,7 +204,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               />
             </div>
           </div>
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Quantity</label>
             </div>
@@ -242,7 +242,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
             </div>
           </div>
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Category</label>
             </div>
@@ -296,7 +296,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </div>
 
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Age</label>
             </div>
@@ -334,7 +334,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
             </div>
           </div>
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Room</label>
             </div>
@@ -364,7 +364,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               )}
               {!newRoomInputField && (
                 <div className="col-4">
-                  <div className={clsx(addClaimFormStyle.margin, "row col-12")}>
+                  <div className={clsx(addClaimFormStyle.margin, "row")}>
                     <div className="col-10">
                       <GenericInput
                         formControlClassname={addClaimFormStyle.inputBox}
@@ -378,7 +378,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                       <a onClick={addRoom}>Cancel</a>
                     </div>
                   </div>
-                  <div className={clsx(addClaimFormStyle.margin, "row col-12")}>
+                  <div className={clsx(addClaimFormStyle.margin, "row")}>
                     <div className="col-10">
                       <Controller
                         control={control}
@@ -405,7 +405,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               )}
             </div>
           </div>
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Apply Taxes(%)</label>
             </div>
@@ -461,7 +461,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </div>
 
-          <div className="row col-12 m-2">
+          <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>
                 Originally Purchased From
@@ -517,7 +517,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </div>
 
-          <div className="row col-12 mt-2">
+          <div className="row mt-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>Scheduled Item</label>
             </div>
@@ -696,9 +696,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             ></ImagePreviewModal>
           </div>
         </div>
-
         {editItem ? (
-          <>
+          <div>
             <div className={addClaimFormStyle.arrowContainer}>
               <div
                 className={clsx({
@@ -731,18 +730,23 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <RiArrowRightCircleFill size="50px" fill={nextItem ? "black" : "grey"} />
               </div>
             </div>
-
-            <div className="row col-12 m-2 flex-row-reverse">
+            <div className="row m-2 flex-row-reverse">
               <div className="row col-2">
-                <GenericButton label="Cancel" size="medium" />
+                <GenericButton label="Cancel" />
               </div>
-              <div className="row col-2">
-                <GenericButton label="Update Item" type="submit" size="medium" />
+
+              <div className="row col-12 m-2 flex-row-reverse">
+                <div className="row col-2">
+                  <GenericButton label="Cancel" size="medium" />
+                </div>
+                <div className="row col-2">
+                  <GenericButton label="Update Item" type="submit" size="medium" />
+                </div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          <div className={clsx(addClaimFormStyle.centerAlign, "row col-12 m-2")}>
+          <div className={clsx(addClaimFormStyle.centerAlign, "row m-2")}>
             <div className="col-8" style={{ textAlign: "right" }}>
               <a>Save and Add Another Item</a>
             </div>
