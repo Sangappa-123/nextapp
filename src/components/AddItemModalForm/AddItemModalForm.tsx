@@ -734,10 +734,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
             <div className="row col-12 m-2 flex-row-reverse">
               <div className="row col-2">
-                <GenericButton label="Cancel" />
+                <GenericButton label="Cancel" size="medium" />
               </div>
               <div className="row col-2">
-                <GenericButton label="Update Item" type="submit" />
+                <GenericButton label="Update Item" type="submit" size="medium" />
               </div>
             </div>
           </>
@@ -748,10 +748,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
 
             <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
-              <GenericButton label="Add Item" type="submit" />
+              <GenericButton label="Add Item" type="submit" size="medium" />
             </div>
             <div className="row col-2">
-              <GenericButton label="Reset" />
+              <GenericButton label="Reset" size="medium" />
             </div>
           </div>
         )}
