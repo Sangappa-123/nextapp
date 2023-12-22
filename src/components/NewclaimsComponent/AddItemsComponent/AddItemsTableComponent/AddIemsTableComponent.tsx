@@ -10,6 +10,7 @@ import ListAddItemsTable from "./ListAddItemsTable";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
+  onNewClaimsClick: () => void;
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({

@@ -14,19 +14,25 @@ import { ConnectedProps, connect } from "react-redux";
 // import { useSelector } from "react-redux";
 import ExcelSheetTableStyle from "./ExcelSheetTable.module.scss";
 import { RootState } from "@/store/store";
-import { setExcelCsvUploadData, removeRowById } from "@/services/excelCsvUploadSlice";
+// import { setExcelCsvUploadData, removeRowById } from "@/";
+// import { setExcelCsvUploadData, removeRowById } from "@/services/excelCsvUploadSlice";
 import CustomReactTable from "@/components/common/CustomReactTable";
+import {
+  setExcelCsvUploadData,
+  removeRowById,
+} from "@/reducers/UploadCSV/excelCsvUploadSlice";
 
 interface ExcelSheetTableProps {
   postLossItemDetails: any[];
-  removeRowById: (id: number) => void;
+  // removeRowById: (id: number) => void;
   // failedItems: any[];
   // failedItems: FailedItem[];
 }
 
 const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) => {
   // const dispatch = useDispatch();
-  const { postLossItemDetails, setExcelCsvUploadData, removeRowById } = props;
+  const { postLossItemDetails, setExcelCsvUploadData, removeRowById, rowsProcessed } =
+    props;
   console.log("postLossItemDetails", postLossItemDetails);
   // const [editedIdRowData, setEditedIdRowData] = useState<any>({});
   const [editedBrandRowData, setEditedBrandRowData] = useState<any>({});
@@ -87,6 +93,8 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
         ? {
             // ...row,
             id: editableRowId,
+            isValidItem: row.isValidItem,
+            failedReasons: row.failedReasons,
             // editableRowId,
             // brand: editedBrandRowData.brand || row.brand,
             brand:
@@ -153,9 +161,9 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
         : row
     );
     console.log("Afterrrrrrrrrrrr", updatedPostLossItemDetails);
-    await setExcelCsvUploadData({
+    await props.setExcelCsvUploadData({
       postLossItemDetails: updatedPostLossItemDetails,
-      rowsProcessed: 0,
+      rowsProcessed: rowsProcessed,
       message: "",
       status: 0,
     });
@@ -203,7 +211,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
 
       await setExcelCsvUploadData({
         postLossItemDetails: updatedPostLossItemDetails,
-        rowsProcessed: 0,
+        rowsProcessed: rowsProcessed,
         message: "",
         status: 0,
       });
@@ -715,6 +723,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
 
 const mapStateToProps = (state: RootState) => ({
   postLossItemDetails: state.excelCsvUpload.postLossItemDetails,
+  rowsProcessed: state.excelCsvUpload.rowsProcessed,
 });
 
 const mapDispatchToProps = {

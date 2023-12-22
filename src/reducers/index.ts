@@ -7,7 +7,7 @@ import DashboardAlertSlice from "./DashboardAlert/DashboardAlertSlice";
 import PendingInvoiceSlice from "./PendingInvoice/PendingInvoiceSlice";
 import ClaimContentSlice from "./ClaimData/ClaimContentSlice";
 import ClaimServiceRequestSlice from "./ClaimData/ClaimServiceRequestSlice";
-import ExcelCsvUploadSlice from "@/services/excelCsvUploadSlice";
+import ExcelCsvUploadSlice from "./UploadCSV/excelCsvUploadSlice";
 import LineItemDetailSlice from "./LineItemDetail/LineItemDetailSlice";
 import ClaimDetailSlice from "./ClaimDetail/ClaimDetailSlice";
 
