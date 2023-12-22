@@ -181,7 +181,7 @@ function ClaimInformation({
   };
   const [docs, setDocs] = useState<string[]>([]);
 
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   const handleDeleteImage = (index: number) => {
     console.log(index, "handleDeleteImage");
@@ -205,15 +205,15 @@ function ClaimInformation({
   };
 
   const handleZoomIn = () => {
-    setZoomLevel(zoomLevel + 0.1);
+    setZoomLevel(zoomLevel + 5);
   };
 
   const handleZoomOut = () => {
-    setZoomLevel(zoomLevel - 0.1);
+    setZoomLevel(zoomLevel - 5);
   };
 
   const handleZoomMid = () => {
-    setZoomLevel(1);
+    setZoomLevel(100);
   };
   useEffect(() => {
     console.log(docs, "checking docs in useeffect");
