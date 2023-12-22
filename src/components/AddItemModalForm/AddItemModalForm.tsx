@@ -19,6 +19,10 @@ import { useRef } from "react";
 import { Controller } from "react-hook-form";
 import AttachementPreview from "./AttachementPreview";
 import ImagePreviewModal from "./ImagePreviewModal";
+import { RiArrowLeftCircleFill } from "react-icons/ri";
+import { RiArrowRightCircleFill } from "react-icons/ri";
+import { ConnectedProps, connect } from "react-redux";
+import { getPreviousItem, getNextItem } from "src/services/AddItemContentService";
 
 // interface TypedProp<T> {
 //   selectOptions: OptionTypedList<T>;
@@ -32,8 +36,10 @@ interface MyObject {
 interface typeProps {
   [key: string | number]: any;
 }
-const AddItemModalForm: React.FC<typeProps> = (props: any) => {
-  const { editItem } = props;
+const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
+  const { editItem, editItemDetail, previousItem, nextItem } = props;
+
+  console.log("editItem", editItem);
 
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [newRetailerInputField, setNewRetailerInputField] = useState(false);
@@ -216,8 +222,9 @@ const AddItemModalForm: React.FC<typeProps> = (props: any) => {
   // }
 
   return (
-    <div>
+    <div className={addClaimFormStyle.addItemContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        {`Item# ${editItemDetail.itemNumber}`}
         <div className="row col-12 m-2">
           <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
             <span style={{ color: "red" }}>*</span>
@@ -679,14 +686,49 @@ const AddItemModalForm: React.FC<typeProps> = (props: any) => {
         </div>
 
         {editItem ? (
-          <div className="row col-12 m-2 flex-row-reverse">
-            <div className="row col-2">
-              <GenericButton label="Cancel" />
+          <>
+            <div className={addClaimFormStyle.arrowContainer}>
+              <div
+                className={clsx({
+                  [addClaimFormStyle.arrowLeft]: true,
+                  [addClaimFormStyle.leftDisable]: !previousItem,
+                })}
+                onClick={() => {
+                  if (previousItem) {
+                    getPreviousItem(editItemDetail.itemId);
+                  }
+                }}
+              >
+                <RiArrowLeftCircleFill
+                  size="50px"
+                  fill={previousItem ? "black" : "grey"}
+                />
+              </div>
+              <div
+                className={clsx({
+                  [addClaimFormStyle.arrowRight]: true,
+                  [addClaimFormStyle.rightDisable]: !nextItem,
+                })}
+                onClick={() => {
+                  if (nextItem) {
+                    getNextItem(editItemDetail.itemId);
+                  }
+                }}
+              >
+                {" "}
+                <RiArrowRightCircleFill size="50px" fill={nextItem ? "black" : "grey"} />
+              </div>
             </div>
-            <div className="row col-2">
-              <GenericButton label="Update Item" type="submit" />
+
+            <div className="row col-12 m-2 flex-row-reverse">
+              <div className="row col-2">
+                <GenericButton label="Cancel" />
+              </div>
+              <div className="row col-2">
+                <GenericButton label="Update Item" type="submit" />
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className="row col-12 m-2">
             <div className="col-8" style={{ textAlign: "right" }}>
@@ -709,4 +751,12 @@ const AddItemModalForm: React.FC<typeProps> = (props: any) => {
   );
 };
 
-export default AddItemModalForm;
+const mapStateToProps = ({ claimContentdata }: any) => ({
+  editItemDetail: claimContentdata.editItemDetail,
+  previousItem: claimContentdata.previousItem,
+  nextItem: claimContentdata.nextItem,
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AddItemModalForm);

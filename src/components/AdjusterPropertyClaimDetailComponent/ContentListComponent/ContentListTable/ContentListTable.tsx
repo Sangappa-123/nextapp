@@ -26,6 +26,7 @@ import {
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { fetchClaimContentItemDetails } from "src/services/AddItemContentService";
 
 interface typeProps {
   [key: string | number]: any;
@@ -80,7 +81,13 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       columns: [
         columnHelper.accessor("", {
           header: () => (
-            <input type="checkbox" className={ContentListTableStyle.checkbox} />
+            <input
+              type="checkbox"
+              className={ContentListTableStyle.checkbox}
+              onChange={(e) => {
+                e.stopPropagation();
+              }}
+            />
           ),
           meta: {
             headerClass: ContentListTableStyle.checkHeader,
@@ -214,9 +221,14 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     }),
   ];
 
-  const editAction = (rowData: any) => {
-    setIsModalOpen(true);
+  const editAction = async (rowData: any) => {
+    const payload = {
+      forEdit: true,
+      itemId: rowData.itemId,
+    };
+    await fetchClaimContentItemDetails(payload);
     setEditItem(rowData);
+    setIsModalOpen(true);
   };
   const deleteAction = (rowData: any) => {
     const payload = {

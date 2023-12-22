@@ -1,3 +1,9 @@
+.addItemContainer {
+  position: relative;
+  form {
+    padding: 15px;
+  }
+}
 .loginForm__form {
   display: flex;
   flex-direction: row;
@@ -81,4 +87,29 @@
   font-size: 13px;
   font-weight: 600;
   color: red;
+}
+.arrowContainer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  .arrowLeft {
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    transform: translate(0, -50%);
+    left: 10px;
+  }
+  .arrowRight {
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    transform: translate(0, -50%);
+    right: 10px;
+  }
+  .leftDisable {
+    cursor: not-allowed;
+  }
+  .rightDisable {
+    cursor: not-allowed;
+  }
 }

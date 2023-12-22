@@ -6,6 +6,9 @@ const initialState = {
   claimContentListData: [],
   claimErrorMsg: "",
   searchKeyword: "",
+  editItemDetail: {},
+  previousItem: false,
+  nextItem: false,
 };
 export const fetchClaimContentAction = createAsyncThunk(
   "claimContent/fetchData",
@@ -89,6 +92,30 @@ const ClaimContentSlice = createSlice({
 
       state.searchKeyword = searchKeyword;
     },
+    addEditItemDetail(state, action) {
+      const { payload } = action;
+      const { itemDetailData, previousItem, nextItem } = payload;
+
+      const itemData = {
+        // description: itemDetailData.description,
+        // status: itemDetailData.status?.status ?? null,
+        // category: itemDetailData.category?.name ?? null,
+        // quantity: itemDetailData.quantity,
+        // rcvTotal: itemDetailData.rcvTotal,
+        // totalStatedAmount: itemDetailData.totalStatedAmount,
+        // vendorName: itemDetailData.vendorName,
+        // adjusterDescription: itemDetailData.adjusterDescription,
+        // itemTag: itemDetailData.itemTag ?? null,
+        // cashPayoutExposure: itemDetailData.cashPayoutExposure,
+        claimId: itemDetailData.claimId,
+        itemId: itemDetailData.id,
+        itemUID: itemDetailData.itemUID,
+        itemNumber: itemDetailData.itemNumber,
+      };
+      state.editItemDetail = itemData;
+      state.previousItem = previousItem;
+      state.nextItem = nextItem;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchClaimContentAction.pending, (state) => {
@@ -110,4 +137,5 @@ export const {
   clearFilter,
   deleteClaimContentListItem,
   addClaimListKeyWord,
+  addEditItemDetail,
 } = ClaimContentSlice.actions;

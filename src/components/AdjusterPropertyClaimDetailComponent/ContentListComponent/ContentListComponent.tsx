@@ -137,7 +137,7 @@ function ContentListComponent(props: any) {
             isOpen={isModalOpen}
             onClose={closeModal}
             childComp={<AddItemModalForm editItem={editItem} />}
-            headingName="Add Item"
+            headingName={editItem ? "Item# " + editItem.itemNumber : "Add Item"}
             modalWidthClassName={ContentListComponentStyle.modalWidth}
           ></Modal>
         </div>
