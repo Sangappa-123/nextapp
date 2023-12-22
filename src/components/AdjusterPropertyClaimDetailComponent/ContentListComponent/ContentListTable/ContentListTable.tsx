@@ -85,13 +85,19 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       columns: [
         columnHelper.accessor("", {
           header: () => (
-            <input
-              type="checkbox"
-              className={ContentListTableStyle.checkbox}
-              onChange={(e) => {
+            <div
+              onClick={(e) => {
                 e.stopPropagation();
               }}
-            />
+            >
+              <input
+                type="checkbox"
+                className={ContentListTableStyle.checkbox}
+                onChange={(e) => {
+                  e.stopPropagation();
+                }}
+              />
+            </div>
           ),
           meta: {
             headerClass: ContentListTableStyle.checkHeader,
@@ -99,8 +105,19 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           id: "check",
           enableColumnFilter: false,
           cell: () => (
-            <div className="d-flex justify-content-center">
-              <input type="checkbox" className={ContentListTableStyle.checkbox} />
+            <div
+              className="d-flex justify-content-center"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <input
+                type="checkbox"
+                className={ContentListTableStyle.checkbox}
+                onChange={(e) => {
+                  e.stopPropagation();
+                }}
+              />
             </div>
           ),
         }),
