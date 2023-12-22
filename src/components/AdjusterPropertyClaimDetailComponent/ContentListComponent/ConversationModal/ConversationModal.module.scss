@@ -9,6 +9,7 @@
   margin-top: 5px;
   display: flex;
 }
+//comment
 .inputBox {
   width: 90%;
   margin: 5px;
@@ -27,14 +28,14 @@
   display: flex;
   align-items: center;
   margin: 5px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 .sendIcon {
   width: 5%;
   display: flex;
   align-items: center;
   margin: 5px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 .fileInputStyle {
   display: none;
@@ -50,7 +51,4 @@
 }
 .inputBoxAlign {
   text-align: right;
-}
-.borderBottom {
-  border-bottom: 1px solid #dddddd;
 }

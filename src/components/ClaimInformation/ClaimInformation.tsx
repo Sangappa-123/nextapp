@@ -303,7 +303,8 @@ function ClaimInformation({
                   // showTimeSelect={true}
                   enableTime={true}
                   time_24hr={true}
-                  minDate={new Date()}
+                  // minDate={new Date()}
+                  minDate={null}
                   maxDate={null}
                   {...rest}
                 />
@@ -608,12 +609,17 @@ function ClaimInformation({
                 {show && (
                   <div
                     className={clsx(
-                      "row d-flex   justify-content-end ml-12",
+                      "row d-flex justify-content-end",
                       ClaimInformationStyle.specialCategoryDiv
                     )}
                   >
                     {/* <div className={clsx("col-lg-2")} /> */}
-                    <div className={clsx("col-lg-6  ", ClaimInformationStyle.search)}>
+                    <div
+                      className={clsx(
+                        "col-lg-6 col-md-6 col-sm-12",
+                        ClaimInformationStyle.search
+                      )}
+                    >
                       {/* <SearchBoxAssignItems /> */}
 
                       <GenericSelect

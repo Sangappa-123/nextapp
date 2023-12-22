@@ -127,13 +127,14 @@
     cursor: not-allowed;
   }
 }
+//commented
 
 .margin {
   margin: 5px;
 }
 .containerScroll {
-  height: 550px;
-  overflow-y: scroll;
+  height: 500px;
+  overflow: auto;
   overflow-x: hidden;
   @include customscrollbar($lightGrey2, 6px, true);
 }
