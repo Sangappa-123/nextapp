@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import clsx from "clsx";
 import { object, string, number, minLength, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
-// import {useForm} from "react-hook-form";
 import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";
 import addClaimFormStyle from "./addClaimForm.module.scss";
