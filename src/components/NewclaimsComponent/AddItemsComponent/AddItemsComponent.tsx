@@ -67,7 +67,8 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
       <div>
         <AddItemsTableComponent
           onAssignItemsClick={onAssignItemsClick}
-          onNewClaimsClick={onNewClaimsClick}
+          onSetAssignItemsDisabled={setAssignItemsDisabled}
+          isAssignItemsDisabled={isAssignItemsDisabled}
         />
       </div>
       <div className="row justify-content-end">
