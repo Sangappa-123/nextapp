@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
 import clsx from "clsx";
-import { object, string, minLength, Output } from "valibot";
+import { object, string, number, minLength, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 // import {useForm} from "react-hook-form";
 import GenericInput from "@/components/common/GenericInput";
@@ -10,8 +9,6 @@ import addClaimFormStyle from "./addClaimForm.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
 import Tooltip from "@/components/common/ToolTip";
 import { IoClose } from "react-icons/io5";
-
-import RadioButtons from "@/components/common/RadioButtons";
 import { useState } from "react";
 import { ImCross } from "react-icons/im";
 import { useRef } from "react";
@@ -22,11 +19,7 @@ import ImagePreviewModal from "./ImagePreviewModal";
 import { RiArrowLeftCircleFill } from "react-icons/ri";
 import { RiArrowRightCircleFill } from "react-icons/ri";
 import { ConnectedProps, connect } from "react-redux";
-import { getPreviousItem, getNextItem } from "src/services/AddItemContentService";
-
-// interface TypedProp<T> {
-//   selectOptions: OptionTypedList<T>;
-// }
+import { getPreviousItem, getNextItem } from "@/services/AddItemContentService";
 
 interface MyObject {
   imgType: string;
@@ -39,29 +32,38 @@ interface typeProps {
 const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const { editItem, editItemDetail, previousItem, nextItem } = props;
 
-  // const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [newRetailerInputField, setNewRetailerInputField] = useState(false);
   const [newRoomInputField, setNewRoomInputField] = useState(true);
-  // const [previewImage, setPreviewImage] = useState(true);
-  // const [previewAttachment, setPreviewAttachment] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imagePreviewType, setImagePreviewType] = useState("");
+  const [topping, setTopping] = useState("yes");
+  const [sechduledItemRadio, setSechduledItemRadio] = useState("no");
 
   const [docs, setDocs] = useState<string[]>([]);
 
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomLevel, setZoomLevel] = useState(100);
+
+  const onOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
+    setTopping(e.target.value);
+  };
+
+  const onRadioButtonChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setSechduledItemRadio(e.target.value);
+  };
 
   const handleZoomIn = () => {
-    setZoomLevel(zoomLevel + 0.1);
+    setZoomLevel(zoomLevel + 5);
   };
 
   const handleZoomOut = () => {
-    setZoomLevel(zoomLevel - 0.1);
+    setZoomLevel(zoomLevel - 5);
   };
 
   const handleZoomMid = () => {
-    setZoomLevel(1);
+    setZoomLevel(100);
   };
 
   const options = [
@@ -70,42 +72,17 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     { value: "option3", label: "Option 3" },
   ];
   const style = { height: "20px" };
-  const radioBtnOptions = [
-    { value: "Yes", label: "Yes" },
-    { value: "No", label: "No" },
-  ];
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // const openAttachment = () => {
-  //   setPreviewAttachment(true);
-  // };
-  // const closePreviewImage = () => {
-  //   setPreviewImage(!previewImage);
-  // };
-
   const handleDeleteImage = (index: number) => {
-    console.log(index, "handleDeleteImage");
-
     const docArray = docs.filter((elem, ind) => {
       if (ind !== index) {
         return elem;
       }
     });
-    console.log(docArray, "docArray");
-
-    // docs.splice(index, 1);
-    // if(docs.length === 0){
-    //   setDocs([]);
-    // } else {
-    //   setDocs([...docs]);
-    // }
-    // console.log(docs, "Docs updated i delete func");
-
     setDocs([...docArray]);
   };
-  useEffect(() => {
-    console.log(docs, "checking docs in useeffect");
-  }, [docs]);
 
   const openModal = (url: string, imageType: string) => {
     setImagePreviewType(imageType);
@@ -117,14 +94,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     setIsModalOpen(false);
   };
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   // Handle the file change event here
-  //   const selectedFile = event.target.files && event.target.files[0];
-  //   if (selectedFile) {
-  //     console.log("Selected file:", selectedFile);
-  //   }
-  // };
-
   const openRetailerInputBox = () => {
     setNewRetailerInputField(!newRetailerInputField);
   };
@@ -132,12 +101,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     setNewRoomInputField(!newRoomInputField);
   };
 
-  //handle file upload click
   const handleUpload = (event: any) => {
     console.log(event, "handleUpload");
-    // setPreviewImage(true);
-
-    // let imageArr: any[] = [];
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     let selectedImageArr: any[];
     console.log(event.target.files);
@@ -167,9 +132,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     description: string("Your description must be a string.", [
       minLength(1, "description field is required."),
     ]),
-    quantity: string("Your quantity must be a string.", [
-      minLength(1, "quantity field is required."),
-    ]),
+    quantity: number("Your quantity must be a string."),
+
     price: string("Your price must be a number."),
 
     category: object({
@@ -222,406 +186,486 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   return (
     <div className={addClaimFormStyle.addItemContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {`Item# ${editItemDetail.itemNumber}`}
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <span style={{ color: "red" }}>*</span>
-            <label className={addClaimFormStyle.labelStyle}> Item Description:</label>
-          </div>
-          <div className="col-8">
-            <textarea
-              id="description"
-              className="col-12"
-              // showError={errors["description"]}
-              // errorMsg={errors?.description?.message}
-              style={{ height: "50px", padding: "5px" }}
-              placeholder="Description"
-              {...register("description")}
-            />
-          </div>
-        </div>
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Quantity</label>
-          </div>
-          <div className="row col-8 p-0">
-            <div className="row col-4 p-0">
-              <GenericInput
-                formControlClassname={addClaimFormStyle.inputBox}
-                showError={errors["quantity"]}
-                errorMsg={errors?.quantity?.message}
-                placeholder="Quantity"
-                id="quantity"
-                autoComplete="off"
-                // label="Quantity"
-                theme="normal"
-                {...register("quantity")}
-                type={"number"}
-              />
+        <div className={addClaimFormStyle.containerScroll}>
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <span style={{ color: "red" }}>*</span>
+              <label className={addClaimFormStyle.labelStyle}> Item Description:</label>
             </div>
-            <div className={clsx("row col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Price</label>
-            </div>
-            <div className="row col-4 p-0">
-              <GenericInput
-                formControlClassname={addClaimFormStyle.inputBox}
-                showError={errors["price"]}
-                errorMsg={errors?.price?.message}
-                autoComplete="off"
-                placeholder="$0.00"
-                id="price"
-                // label="Price"
-                theme="normal"
-                {...register("price")}
-                type={"number"}
+            <div className="col-8">
+              <textarea
+                className="col-12"
+                // showError={errors["description"]}
+                // errorMsg={errors?.description?.message}
+                style={{ height: "50px", padding: "5px" }}
+                id="description"
+                placeholder="Description"
+                {...register("description")}
               />
             </div>
           </div>
-        </div>
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Category</label>
-          </div>
-          <div className={clsx("row col-8 p-0", addClaimFormStyle.centerAlign)}>
-            <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
-              <div className="col-10">
-                <Controller
-                  control={control}
-                  name={"category"}
-                  rules={{ required: true }}
-                  render={({ field: { ...rest } }: any) => (
-                    <GenericSelect
-                      placeholder={""}
-                      options={options}
-                      name={"category"}
-                      showLabel={false}
-                      style={style}
-                      {...rest}
-                    />
-                  )}
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Quantity</label>
+            </div>
+            <div className="row col-8 p-0">
+              <div className="row col-4 p-0">
+                <GenericInput
+                  formControlClassname={addClaimFormStyle.inputBox}
+                  showError={errors["quantity"]}
+                  errorMsg={errors?.quantity?.message}
+                  placeholder="Quantity"
+                  id="quantity"
+                  autoComplete="off"
+                  // label="Quantity"
+                  {...register("quantity")}
+                  type={"number"}
+                  inputFieldClassname="hideInputArrow"
                 />
               </div>
-              <div className="col-2 p-0">
-                <Tooltip text="This is a tooltip!" />
+              <div className={clsx("row col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
+                <label className={addClaimFormStyle.labelStyle}>Price</label>
+              </div>
+              <div className="row col-4 p-0">
+                <GenericInput
+                  formControlClassname={addClaimFormStyle.inputBox}
+                  showError={errors["price"]}
+                  errorMsg={errors?.price?.message}
+                  autoComplete="off"
+                  placeholder="$0.00"
+                  id="price"
+                  // label="Price"
+                  {...register("price")}
+                  type={"number"}
+                  inputFieldClassname="hideInputArrow"
+                />
               </div>
             </div>
-            <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>SubCategory</label>
+          </div>
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Category</label>
             </div>
-            <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
-              <div className="col-10">
-                <Controller
-                  control={control}
-                  name={"subcategory"}
-                  rules={{ required: true }}
-                  render={({ field: { ...rest } }: any) => (
-                    <GenericSelect
-                      placeholder={""}
-                      options={options}
-                      name={"subcategory"}
-                      showLabel={false}
-                      {...rest}
-                    />
-                  )}
+            <div className={clsx("row col-8 p-0", addClaimFormStyle.centerAlign)}>
+              <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
+                <div className="col-10">
+                  <Controller
+                    control={control}
+                    name={"category"}
+                    rules={{ required: true }}
+                    render={({ field: { ...rest } }: any) => (
+                      <GenericSelect
+                        placeholder={""}
+                        options={options}
+                        name={"category"}
+                        showLabel={false}
+                        style={style}
+                        {...rest}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="col-2 p-0">
+                  <Tooltip text="This is a tooltip!" />
+                </div>
+              </div>
+              <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
+                <label className={addClaimFormStyle.labelStyle}>SubCategory</label>
+              </div>
+              <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
+                <div className="col-10">
+                  <Controller
+                    control={control}
+                    name={"subcategory"}
+                    rules={{ required: true }}
+                    render={({ field: { ...rest } }: any) => (
+                      <GenericSelect
+                        placeholder={""}
+                        options={options}
+                        name={"subcategory"}
+                        showLabel={false}
+                        {...rest}
+                      />
+                    )}
+                  />
+                </div>
+                <div className="col-2">
+                  <Tooltip text="tooltip!" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Age</label>
+            </div>
+            <div className="row col-6">
+              <div className="col-3 p-0">
+                <GenericInput
+                  formControlClassname={addClaimFormStyle.inputBox}
+                  // showError={errors["years"]}
+                  // errorMsg={errors?.username?.message}
+                  placeholder="Years"
+                  id="years"
+                  type="number"
+                  inputFieldClassname="hideInputArrow"
+                  {...register("years")}
                 />
               </div>
               <div className="col-2">
-                <Tooltip text="This is a tooltip!" />
+                <span className={addClaimFormStyle.labelStyle}>(Years)</span>
+              </div>
+              <div className="col-3 p-0">
+                <GenericInput
+                  formControlClassname={addClaimFormStyle.inputBox}
+                  // showError={errors["months"]}
+                  // errorMsg={errors?.username?.message}
+                  placeholder="Months"
+                  id="months"
+                  type="number"
+                  inputFieldClassname="hideInputArrow"
+                  inputmode="numeric"
+                  {...register("months")}
+                />
+              </div>
+              <div className="col-2">
+                <span className={addClaimFormStyle.labelStyle}>(Months)</span>
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Age</label>
-          </div>
-          <div className="row col-6">
-            <div className="col-3 p-0">
-              <GenericInput
-                formControlClassname={addClaimFormStyle.inputBox}
-                // showError={errors["years"]}
-                // errorMsg={errors?.username?.message}
-                placeholder="Years"
-                id="years"
-                theme="normal"
-                type="number"
-                {...register("years")}
-              />
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Room</label>
             </div>
-            <div className="col-2">
-              <span className={addClaimFormStyle.labelStyle}>(Years)</span>
-            </div>
-            <div className="col-3 p-0">
-              <GenericInput
-                formControlClassname={addClaimFormStyle.inputBox}
-                // showError={errors["months"]}
-                // errorMsg={errors?.username?.message}
-                placeholder="Months"
-                id="months"
-                theme="normal"
-                type="number"
-                {...register("months")}
-              />
-            </div>
-            <div className="col-2">
-              <span className={addClaimFormStyle.labelStyle}>(Months)</span>
-            </div>
-          </div>
-        </div>
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Room</label>
-          </div>
-          <div className="row col-8 p-0">
-            <div className="col-4">
-              <Controller
-                control={control}
-                name={"room"}
-                rules={{ required: true }}
-                render={({ field: { ...rest } }: any) => (
-                  <GenericSelect
-                    placeholder={""}
-                    options={options}
-                    name={"room"}
-                    showLabel={false}
-                    // formControlClassname={addClaimFormStyle.genericSelect}
-                    // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
-                    {...rest}
-                  />
-                )}
-              />
-            </div>
-            {newRoomInputField && (
+            <div className="row col-8 p-0">
               <div className="col-4">
-                <a onClick={addRoom}>Click to add new Room</a>
-              </div>
-            )}
-            {!newRoomInputField && (
-              <div className="col-4">
-                <div className="row col-12">
-                  <div className="col-10">
-                    <GenericInput
-                      formControlClassname={addClaimFormStyle.inputBox}
-                      placeholder="Room Name"
-                      id="roomName"
-                      theme="normal"
-                      type="text"
-                      {...register("roomName")}
-                    />
-                  </div>
-                  <div className="col-2">
-                    <a onClick={addRoom}>Cancel</a>
-                  </div>
-                </div>
-                <div className="row col-12">
-                  <div className="col-10">
-                    <Controller
-                      control={control}
+                <Controller
+                  control={control}
+                  name={"room"}
+                  rules={{ required: true }}
+                  render={({ field: { ...rest } }: any) => (
+                    <GenericSelect
+                      placeholder={""}
+                      options={options}
                       name={"room"}
-                      rules={{ required: true }}
-                      render={({ field: { ...rest } }: any) => (
-                        <GenericSelect
-                          placeholder={"RoomType"}
-                          options={options}
-                          name={"room"}
-                          showLabel={false}
-                          // formControlClassname={addClaimFormStyle.genericSelect}
-                          // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
-                          {...rest}
-                        />
-                      )}
+                      showLabel={false}
+                      // formControlClassname={addClaimFormStyle.genericSelect}
+                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
+                      {...rest}
                     />
+                  )}
+                />
+              </div>
+              {newRoomInputField && (
+                <div className="col-4">
+                  <a onClick={addRoom}>Click to add new Room</a>
+                </div>
+              )}
+              {!newRoomInputField && (
+                <div className="col-4">
+                  <div className={clsx(addClaimFormStyle.margin, "row col-12")}>
+                    <div className="col-10">
+                      <GenericInput
+                        formControlClassname={addClaimFormStyle.inputBox}
+                        placeholder="Room Name"
+                        id="roomName"
+                        type="text"
+                        {...register("roomName")}
+                      />
+                    </div>
+                    <div className={clsx("col-2")}>
+                      <a onClick={addRoom}>Cancel</a>
+                    </div>
                   </div>
-                  <div className="col-2">
-                    <a>Create</a>
+                  <div className={clsx(addClaimFormStyle.margin, "row col-12")}>
+                    <div className="col-10">
+                      <Controller
+                        control={control}
+                        name={"room"}
+                        rules={{ required: true }}
+                        render={({ field: { ...rest } }: any) => (
+                          <GenericSelect
+                            placeholder={"RoomType"}
+                            options={options}
+                            name={"room"}
+                            showLabel={false}
+                            // formControlClassname={addClaimFormStyle.genericSelect}
+                            // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
+                            {...rest}
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="col-2">
+                      <a>Create</a>
+                    </div>
                   </div>
                 </div>
+              )}
+            </div>
+          </div>
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Apply Taxes(%)</label>
+            </div>
+            <div className="row col-8">
+              <div className={clsx(addClaimFormStyle.radioButtonWrapper, "col-4")}>
+                <GenericInput
+                  type="radio"
+                  formControlClassname={addClaimFormStyle.formControl}
+                  inputFieldWrapperClassName={addClaimFormStyle.wrapper}
+                  inputFieldClassname={addClaimFormStyle.inputField}
+                  value="yes"
+                  label="Yes"
+                  labelClassname={addClaimFormStyle.labelClassname}
+                  checked={topping === "yes"}
+                  onChange={onOptionChange}
+                />
+                <GenericInput
+                  type="radio"
+                  formControlClassname={addClaimFormStyle.formControl1}
+                  inputFieldWrapperClassName={addClaimFormStyle.wrapper1}
+                  inputFieldClassname={addClaimFormStyle.inputField1}
+                  value="no"
+                  label="No"
+                  labelClassname={addClaimFormStyle.labelClassname}
+                  // id="no"
+                  checked={topping === "no"}
+                  // name="applyTax"
+                  onChange={onOptionChange}
+                />
+              </div>
+
+              <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
+                <label className={addClaimFormStyle.labelStyle}>Condition</label>
+              </div>
+              <div className="col-4">
+                <Controller
+                  control={control}
+                  name={"condition"}
+                  rules={{ required: true }}
+                  render={({ field: { ...rest } }: any) => (
+                    <GenericSelect
+                      placeholder={"Average"}
+                      options={options}
+                      name={"condition"}
+                      showLabel={false}
+                      // formControlClassname={addClaimFormStyle.genericSelect}
+                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
+                      {...rest}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="row col-12 m-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>
+                Originally Purchased From
+              </label>
+            </div>
+            <div className={clsx("row col-9", addClaimFormStyle.centerAlign)}>
+              <div className="col-3 p-0">
+                <Controller
+                  control={control}
+                  name={"originalPurchase"}
+                  rules={{ required: true }}
+                  render={({ field: { ...rest } }: any) => (
+                    <GenericSelect
+                      placeholder={""}
+                      options={options}
+                      name={"originalPurchase"}
+                      showLabel={false}
+                      isSearchable={true}
+                      // formControlClassname={addClaimFormStyle.genericSelect}
+                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
+                      {...rest}
+                    />
+                  )}
+                />
+              </div>
+              <div className="row col-6">
+                {!newRetailerInputField && (
+                  <a onClick={openRetailerInputBox}>
+                    Not found? click to add new retailer
+                  </a>
+                )}
+                {newRetailerInputField && (
+                  <div className="row col-10">
+                    <div className="col-10 p-0">
+                      <GenericInput
+                        formControlClassname={addClaimFormStyle.inputBox}
+                        // showError={errors["username"]}
+                        // errorMsg={errors?.username?.message}
+                        placeholder="Add Retailer"
+                        id="addRetailer"
+                        {...register("addRetailer")}
+                      />
+                    </div>
+
+                    <div
+                      className={clsx(addClaimFormStyle.centerAlignCrossIcon, "col-2")}
+                    >
+                      <ImCross onClick={openRetailerInputBox} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="row col-12 mt-2">
+            <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
+              <label className={addClaimFormStyle.labelStyle}>Scheduled Item</label>
+            </div>
+            <div className={clsx(addClaimFormStyle.centerAlign, "row col-8")}>
+              <div className={clsx(addClaimFormStyle.radioButtonWrapper, "col-4")}>
+                <GenericInput
+                  type="radio"
+                  formControlClassname={addClaimFormStyle.formControl}
+                  inputFieldWrapperClassName={addClaimFormStyle.wrapper}
+                  inputFieldClassname={addClaimFormStyle.inputField}
+                  value="yes"
+                  label="Yes"
+                  labelClassname={addClaimFormStyle.labelClassname}
+                  checked={sechduledItemRadio === "yes"}
+                  onChange={onRadioButtonChange}
+                />
+                <GenericInput
+                  type="radio"
+                  formControlClassname={addClaimFormStyle.formControl1}
+                  inputFieldWrapperClassName={addClaimFormStyle.wrapper1}
+                  inputFieldClassname={addClaimFormStyle.inputField1}
+                  value="no"
+                  label="No"
+                  labelClassname={addClaimFormStyle.labelClassname}
+                  checked={sechduledItemRadio === "no"}
+                  onChange={onRadioButtonChange}
+                />
+              </div>
+
+              {sechduledItemRadio === "yes" && (
+                <div className={clsx("col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
+                  <span style={{ color: "red" }}>*</span>
+                  <label className={addClaimFormStyle.labelStyle}>Scheduled Amount</label>
+                </div>
+              )}
+              {sechduledItemRadio === "yes" && (
+                <div className="row col-4 p-0">
+                  <GenericInput
+                    formControlClassname={addClaimFormStyle.inputBox}
+                    showError={errors["sechduledAmount"]}
+                    errorMsg={errors?.sechduledAmount?.message}
+                    autoComplete="off"
+                    placeholder="Scheduled Amount"
+                    id="sechduledAmount"
+                    // label="Price"
+                    {...register("sechduledAmount")}
+                    type={"number"}
+                    inputFieldClassname="hideInputArrow"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="row col-3 m-2"></div>
+          <div
+            className="row col-3 m-2"
+            style={{ height: "25px", justifyContent: "right", alignItems: "center" }}
+          >
+            <label
+              htmlFor="inp"
+              className={clsx(addClaimFormStyle.labelStyle, "row col-8")}
+              style={{
+                backgroundColor: "#dddddd",
+                color: "#333",
+                justifyContent: "right",
+                borderRadius: "4px",
+                paddingTop: "4px",
+                paddingBottom: "4px",
+                marginRight: "12px",
+              }}
+            >
+              Add attachements
+            </label>
+            <input
+              type="file"
+              id="inp"
+              multiple
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              accept=".png,.jpg,.jpeg,.pdf"
+              onChange={handleUpload}
+            ></input>
+          </div>
+
+          <div className={clsx(addClaimFormStyle.attachmentBox, "row")}>
+            {docs?.length === 0 && (
+              <div className={clsx(addClaimFormStyle.contentCenter, "row p-3")}>
+                No attachments available for this item
               </div>
             )}
-          </div>
-        </div>
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Apply Taxes(%)</label>
-          </div>
-          <div className="row col-8">
-            <div className="col-4">
-              {/* <RadioButtons options={radioBtnOptions} selectedOption={selectedOption} /> */}
-              <RadioButtons options={radioBtnOptions} />
-            </div>
-
-            <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Condition</label>
-            </div>
-            <div className="col-4">
-              <Controller
-                control={control}
-                name={"condition"}
-                rules={{ required: true }}
-                render={({ field: { ...rest } }: any) => (
-                  <GenericSelect
-                    placeholder={"Average"}
-                    options={options}
-                    name={"condition"}
-                    showLabel={false}
-                    // formControlClassname={addClaimFormStyle.genericSelect}
-                    // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
-                    {...rest}
-                  />
-                )}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="row col-12 m-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>
-              Originally Purchased From
-            </label>
-          </div>
-          <div className={clsx("row col-9", addClaimFormStyle.centerAlign)}>
-            <div className="col-3 p-0">
-              <Controller
-                control={control}
-                name={"originalPurchase"}
-                rules={{ required: true }}
-                render={({ field: { ...rest } }: any) => (
-                  <GenericSelect
-                    placeholder={""}
-                    options={options}
-                    name={"originalPurchase"}
-                    showLabel={false}
-                    isSearchable={true}
-                    // formControlClassname={addClaimFormStyle.genericSelect}
-                    // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
-                    {...rest}
-                  />
-                )}
-              />
-            </div>
-            <div className="row col-6">
-              {!newRetailerInputField && (
-                <a onClick={openRetailerInputBox}>Not found? click to add new retailer</a>
-              )}
-              {newRetailerInputField && (
-                <div className="row col-10">
-                  <div className="col-10 p-0">
-                    <GenericInput
-                      formControlClassname={addClaimFormStyle.inputBox}
-                      // showError={errors["username"]}
-                      // errorMsg={errors?.username?.message}
-                      placeholder="Add Retailer"
-                      id="addRetailer"
-                      theme="normal"
-                      {...register("addRetailer")}
+            {docs?.map((elem: any, index: number) =>
+              elem.imgType == "pdf" ? (
+                <div className="col-2 m-2" key={index}>
+                  <div
+                    style={{ position: "relative", left: "100px" }}
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    {" "}
+                    <IoClose style={{ color: "#f20707" }} />
+                  </div>
+                  <div onClick={() => openModal(elem.url, elem.imgType)}>
+                    <iframe
+                      key={index}
+                      src={elem.url}
+                      style={{
+                        display: "inline-block",
+                        objectFit: "cover",
+                        height: "100px",
+                        aspectRatio: 400 / 400,
+                        cursor: "pointer",
+                      }}
                     />
                   </div>
-
-                  <div className="col-2">
-                    <ImCross onClick={openRetailerInputBox} />
+                  <div>
+                    <a
+                      className={addClaimFormStyle.textEllipsis}
+                      onClick={() => openModal(elem.url, elem.imgType)}
+                      key={index}
+                    >
+                      {elem.url}
+                    </a>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="row col-12 mt-2">
-          <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-            <label className={addClaimFormStyle.labelStyle}>Scheduled Item</label>
-          </div>
-          <div className={clsx(addClaimFormStyle.centerAlign, "row col-8")}>
-            <div className="col-4">
-              <RadioButtons options={radioBtnOptions} />
-              {/* selectedOption={selectedOption} */}
-            </div>
-
-            <div className={clsx("col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
-              <span style={{ color: "red" }}>*</span>
-              <label className={addClaimFormStyle.labelStyle}>Scheduled Amount</label>
-            </div>
-            <div className="row col-4 p-0">
-              <GenericInput
-                formControlClassname={addClaimFormStyle.inputBox}
-                showError={errors["sechduledAmount"]}
-                errorMsg={errors?.sechduledAmount?.message}
-                autoComplete="off"
-                placeholder="Scheduled Amount"
-                id="sechduledAmount"
-                // label="Price"
-                theme="normal"
-                {...register("sechduledAmount")}
-                type={"number"}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="row col-3 m-2"></div>
-        <div
-          className="row col-3 m-2"
-          style={{ height: "25px", justifyContent: "right", alignItems: "center" }}
-        >
-          <label
-            htmlFor="inp"
-            className={clsx(addClaimFormStyle.labelStyle, "row col-8")}
-            style={{
-              backgroundColor: "#32c5d2",
-              color: "white",
-              justifyContent: "right",
-              borderRadius: "4px",
-              paddingTop: "4px",
-              paddingBottom: "4px",
-              marginRight: "12px",
-            }}
-          >
-            Add attachements
-          </label>
-          <input
-            type="file"
-            id="inp"
-            multiple
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            accept=".png,.jpg,.jpeg,.pdf"
-            onChange={handleUpload}
-          ></input>
-        </div>
-
-        <div
-          style={{ height: "160px", width: "100%", border: " 1px solid black " }}
-          className="row"
-        >
-          {docs?.length === 0 && (
-            <div className={clsx(addClaimFormStyle.contentCenter, "row p-3")}>
-              No attachments available for this item
-            </div>
-          )}
-          {docs?.map((elem: any, index: number) =>
-            elem.imgType == "pdf" ? (
-              <div className="col-2 m-2" key={index}>
-                <div
-                  style={{ position: "relative", left: "100px" }}
-                  onClick={() => handleDeleteImage(index)}
-                >
-                  {" "}
-                  <IoClose style={{ color: "#f20707" }} />
-                </div>
-                <div>
-                  <iframe
-                    key={index} // Add a unique key for each element
-                    src={elem.url}
-                    style={{
-                      display: "inline-block",
-                      objectFit: "cover",
-                      height: "100px",
-                      aspectRatio: 400 / 400,
-                    }}
-                  />
-                </div>
-                <div>
+              ) : (
+                <div className="col-2 m-2" key={index}>
+                  <div
+                    style={{ position: "relative", left: "100px" }}
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    {" "}
+                    <IoClose style={{ color: "#f20707" }} />
+                  </div>
+                  <div>
+                    <img
+                      onClick={() => openModal(elem.url, elem.imgType)}
+                      key={index}
+                      src={elem.url}
+                      alt={`Image ${index}`}
+                      style={{
+                        display: "inline-block",
+                        objectFit: "cover",
+                        height: "100px",
+                        aspectRatio: 400 / 400,
+                        cursor: "pointer",
+                      }}
+                    />
+                  </div>
                   <a
                     className={addClaimFormStyle.textEllipsis}
                     onClick={() => openModal(elem.url, elem.imgType)}
@@ -630,57 +674,27 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     {elem.url}
                   </a>
                 </div>
-              </div>
-            ) : (
-              <div className="col-2 m-2" key={index}>
-                <div
-                  style={{ position: "relative", left: "100px" }}
-                  onClick={() => handleDeleteImage(index)}
-                >
-                  {" "}
-                  <IoClose style={{ color: "#f20707" }} />
-                </div>
-                <div>
-                  <img
-                    key={index} // Add a unique key for each element
-                    src={elem.url}
-                    alt={`Image ${index}`} // Add alt text for accessibility
-                    style={{
-                      display: "inline-block",
-                      objectFit: "cover",
-                      height: "100px",
-                      aspectRatio: 400 / 400,
-                    }}
-                  />
-                </div>
-                <a
-                  className={addClaimFormStyle.textEllipsis}
-                  onClick={() => openModal(elem.url, elem.imgType)}
-                  key={index}
-                >
-                  {elem.url}
-                </a>
-              </div>
-            )
-          )}
-        </div>
-        <div className="col-8">
-          <ImagePreviewModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            handleZoomIn={handleZoomIn}
-            handleZoomOut={handleZoomOut}
-            handleZoomMid={handleZoomMid}
-            childComp={
-              <AttachementPreview
-                url={imagePreviewUrl}
-                imgType={imagePreviewType}
-                zoomLevel={zoomLevel}
-              />
-            }
-            modalClassName={true}
-            headingName={"Image preview model"}
-          ></ImagePreviewModal>
+              )
+            )}
+          </div>
+          <div className="col-8">
+            <ImagePreviewModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              handleZoomIn={handleZoomIn}
+              handleZoomOut={handleZoomOut}
+              handleZoomMid={handleZoomMid}
+              childComp={
+                <AttachementPreview
+                  url={imagePreviewUrl}
+                  imgType={imagePreviewType}
+                  zoomLevel={zoomLevel}
+                />
+              }
+              modalClassName={true}
+              headingName={"Image preview model"}
+            ></ImagePreviewModal>
+          </div>
         </div>
 
         {editItem ? (
@@ -728,9 +742,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </>
         ) : (
-          <div className="row col-12 m-2">
+          <div className={clsx(addClaimFormStyle.centerAlign, "row col-12 m-2")}>
             <div className="col-8" style={{ textAlign: "right" }}>
-              <a>SaveandAdd Another Item</a>
+              <a>Save and Add Another Item</a>
             </div>
 
             <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
@@ -741,9 +755,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </div>
         )}
-
-        {/* <GenericButton label="Add Item" type="submit" /> */}
-        {/* <GenericButton label="Sign in with SSO" theme="darkBlue" /> */}
       </form>
     </div>
   );

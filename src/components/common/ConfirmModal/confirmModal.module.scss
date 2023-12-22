@@ -1,5 +1,6 @@
 .overlay {
   align-items: start;
+  padding-top: 30px;
   .modal {
     transform: translateY(0);
     margin-top: 24px;
@@ -21,19 +22,22 @@
   margin-left: auto;
   gap: 8px;
 }
-
 .modalBody {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  .heading {
-    font-weight: 600;
-  }
-  .desc {
-    font-size: 14px;
-  }
+  font-size: 14px;
 }
+// .modalBody {
+//   display: flex;
+//   flex-direction: column;
+//   text-align: center;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 8px;
+//   padding: 12px;
+//   font-size: 14px;
+//   .heading {
+//     font-weight: 600;
+//   }
+//   .desc {
+//     font-size: 14px;
+//   }
+// }

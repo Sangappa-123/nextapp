@@ -1,3 +1,6 @@
+@use "@/scss/mixins.scss" as *;
+@use "@/scss/colors.scss" as *;
+
 .addItemContainer {
   position: relative;
   form {
@@ -23,6 +26,13 @@
   align-items: center;
   justify-content: space-around;
 }
+.inputBoxRoomInput {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 5px;
+}
 .genericSelect {
   display: flex;
   flex-direction: row;
@@ -38,6 +48,10 @@
   text-align: right;
 }
 .centerAlign {
+  align-items: center;
+}
+.centerAlignCrossIcon {
+  display: flex;
   align-items: center;
 }
 .labelStyle {
@@ -112,4 +126,62 @@
   .rightDisable {
     cursor: not-allowed;
   }
+}
+
+.margin {
+  margin: 5px;
+}
+.containerScroll {
+  height: 550px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  @include customscrollbar($lightGrey2, 6px, true);
+}
+.attachmentBox {
+  height: 160px;
+  width: 100%;
+  border: 1px solid #dddddd;
+  margin-right: 10px;
+  // margin-left: 5px;
+}
+.formControl {
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 10%;
+  gap: 3px;
+  margin-left: 20px;
+  .wrapper {
+    flex: 1;
+    margin: auto;
+    display: flex;
+    .inputField {
+      height: 20px;
+      display: flex;
+      gap: 2px;
+    }
+  }
+}
+.formControl1 {
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 10%;
+  gap: 3px;
+  margin-left: 20px;
+  .wrapper1 {
+    flex: 1;
+    margin: auto;
+    display: flex;
+    .inputField1 {
+      display: flex;
+      gap: 3px;
+      height: 20px;
+    }
+  }
+}
+.labelClassname {
+  font-size: 13px;
+}
+.radioButtonWrapper {
+  display: flex;
+  gap: 20px;
 }

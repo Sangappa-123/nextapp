@@ -13,7 +13,7 @@ import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 
 function ContentListComponent(props: any) {
-  const { claimContentListRes, addClaimContentListData, claimId } = props;
+  const { claimContentListRes, addClaimContentListData, claimId, editItemDetail } = props;
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -137,7 +137,7 @@ function ContentListComponent(props: any) {
             isOpen={isModalOpen}
             onClose={closeModal}
             childComp={<AddItemModalForm editItem={editItem} />}
-            headingName={editItem ? "Item# " + editItem.itemNumber : "Add Item"}
+            headingName={editItem ? "Item# " + editItemDetail.itemNumber : "Add Item"}
             modalWidthClassName={ContentListComponentStyle.modalWidth}
           ></Modal>
         </div>
@@ -152,8 +152,8 @@ function ContentListComponent(props: any) {
   );
 }
 
-const mapStateToProps = ({ claimdata }: any) => ({
-  claimId: claimdata.claimId,
+const mapStateToProps = ({ claimContentdata }: any) => ({
+  editItemDetail: claimContentdata.editItemDetail,
 });
 const mapDispatchToProps = {
   addClaimContentListData,

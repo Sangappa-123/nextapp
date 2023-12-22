@@ -24,9 +24,11 @@ import {
   clearFilter,
 } from "@/reducers/ClaimData/ClaimContentSlice";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+import Modal from "@/components/common/ModalPopups";
+import ConversationModal from "../ConversationModal";
 import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { fetchClaimContentItemDetails } from "src/services/AddItemContentService";
+import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
 
 interface typeProps {
   [key: string | number]: any;
@@ -56,6 +58,8 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
   const pageLimit = 20;
   const fetchSize = 20;
+
+  const [coversationModelOpen, setCoversationModelOpen] = React.useState(false);
 
   React.useEffect(() => {
     const defaultData: ContentListData[] = [...claimContentListData];
@@ -190,7 +194,12 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           cell: ({ row }) => {
             return (
               <div className={ContentListTableStyle.actionButtons}>
-                <div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleConversationModalOpen();
+                  }}
+                >
                   <RiFileInfoLine color="grey" size="20px" />
                 </div>
                 <div
@@ -229,6 +238,12 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     await fetchClaimContentItemDetails(payload);
     setEditItem(rowData);
     setIsModalOpen(true);
+  };
+  const handleConversationModalOpen = () => {
+    setCoversationModelOpen(true);
+  };
+  const handleConversationModalClose = () => {
+    setCoversationModelOpen(false);
   };
   const deleteAction = (rowData: any) => {
     const payload = {
@@ -315,6 +330,15 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
   };
   return (
     <>
+      <Modal
+        isOpen={coversationModelOpen}
+        iconComp={<RiFileInfoLine />}
+        headingName="Conversations"
+        onClose={handleConversationModalClose}
+        childComp={<ConversationModal />}
+        overlayClassName={ContentListTableStyle.modalContainer}
+        modalWidthClassName={ContentListTableStyle.modalContent}
+      />
       {deletePayload && (
         <div>
           <ConfirmModal

@@ -20,8 +20,8 @@ function ConfirmModal({
   submitHandler,
   closeBtnText = "",
   submitBtnText = "",
-  descText = "",
-  headingText = "",
+  // descText = "",
+  // headingText = "",
   modalHeading = "",
   childComp = null,
 }: props) {
@@ -30,19 +30,20 @@ function ConfirmModal({
       <Modal
         isOpen={showConfirmation}
         headingName={modalHeading}
-        childComp={childComp}
+        childComp={<div className={confirmModalStyle.modalBody}>{childComp}</div>}
         onClose={() => closeHandler && closeHandler()}
         footerContent={
           <div className={confirmModalStyle.modalFooter}>
             <GenericButton
               label={closeBtnText}
-              size="medium"
+              size="small"
+              theme="deleteBtn"
               onClickHandler={() => closeHandler && closeHandler()}
             />
             <GenericButton
               label={submitBtnText}
-              theme="deleteBtn"
-              size="medium"
+              theme="lightBlue"
+              size="small"
               onClickHandler={() => submitHandler && submitHandler()}
             />
           </div>
@@ -50,10 +51,10 @@ function ConfirmModal({
         overlayClassName={confirmModalStyle.overlay}
         modalClassName={confirmModalStyle.modal}
       />
-      <div className={confirmModalStyle.modalBody}>
+      {/* <div className={confirmModalStyle.modalBody}>
         {headingText && <h3 className={confirmModalStyle.heading}>{headingText}</h3>}
         {descText && <p className={confirmModalStyle.desc}>{descText}</p>}
-      </div>
+      </div> */}
     </>
   );
 }
