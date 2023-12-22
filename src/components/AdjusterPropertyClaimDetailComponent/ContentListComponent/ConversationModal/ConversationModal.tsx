@@ -56,7 +56,7 @@ const ConversationModal = () => {
             <IoSendSharp size={"25px"} />
           </div>
         </div>
-        <div className={clsx(ConversationModalStyle.borderBottom, "col-12 row pb-2")}>
+        <div className={clsx("col-12 row pb-2")}>
           {docs.length > 0 && (
             <div className={clsx(ConversationModalStyle.inputBoxAlign, "col-2")}>
               <label className={ConversationModalStyle.labelStyle}>Attachments</label>

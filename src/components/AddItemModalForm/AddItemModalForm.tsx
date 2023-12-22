@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import clsx from "clsx";
 import { object, string, number, minLength, Output } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
@@ -20,6 +21,7 @@ import { RiArrowLeftCircleFill } from "react-icons/ri";
 import { RiArrowRightCircleFill } from "react-icons/ri";
 import { ConnectedProps, connect } from "react-redux";
 import { getPreviousItem, getNextItem } from "@/services/AddItemContentService";
+import { getCategories } from "@/services/ClaimService";
 
 interface MyObject {
   imgType: string;
@@ -39,6 +41,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const [imagePreviewType, setImagePreviewType] = useState("");
   const [topping, setTopping] = useState("yes");
   const [sechduledItemRadio, setSechduledItemRadio] = useState("no");
+  const [categoriesData, setCategoriesData] = useState([]);
 
   const [docs, setDocs] = useState<string[]>([]);
 
@@ -66,6 +69,15 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     setZoomLevel(100);
   };
 
+  useEffect(() => {
+    getCategories()
+      .then((res: any) => {
+        console.log("Main category data", res);
+        setCategoriesData(res?.data);
+      })
+      .catch((error) => console.log("facing errr", error));
+  }, []);
+
   const options = [
     { value: "option1", label: "Option 1" },
     { value: "option2", label: "Option 2" },
@@ -74,15 +86,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const style = { height: "20px" };
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleDeleteImage = (index: number) => {
-    const docArray = docs.filter((elem, ind) => {
-      if (ind !== index) {
-        return elem;
-      }
-    });
-    setDocs([...docArray]);
-  };
 
   const openModal = (url: string, imageType: string) => {
     setImagePreviewType(imageType);
@@ -122,6 +125,15 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     console.log(selectedImageArr, "selectedImageArr");
     setDocs((prev: any) => [...prev, ...selectedImageArr]);
     console.log(docs, "checking docs");
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const docArray = docs.filter((elem, ind) => {
+      if (ind !== index) {
+        return elem;
+      }
+    });
+    setDocs([...docArray]);
   };
 
   const schema = object({
@@ -256,7 +268,13 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     render={({ field: { ...rest } }: any) => (
                       <GenericSelect
                         placeholder={""}
-                        options={options}
+                        options={categoriesData}
+                        getOptionLabel={(option: { categoryName: any }) =>
+                          option?.categoryName
+                        }
+                        getOptionValue={(option: { categoryId: any }) =>
+                          option.categoryId
+                        }
                         name={"category"}
                         showLabel={false}
                         style={style}

@@ -133,7 +133,7 @@
 }
 .containerScroll {
   height: 550px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   @include customscrollbar($lightGrey2, 6px, true);
 }
