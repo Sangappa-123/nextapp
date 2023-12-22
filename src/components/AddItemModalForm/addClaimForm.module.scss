@@ -135,6 +135,7 @@
 .containerScroll {
   height: 500px;
   overflow: auto;
+  overflow-x: hidden;
   @include customscrollbar($lightGrey2, 6px, true);
 }
 .attachmentBox {
