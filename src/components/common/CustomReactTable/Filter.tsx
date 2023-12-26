@@ -79,6 +79,7 @@ export default function Filter({
     if (filterFn) {
       filterFn(currentValue, column.id);
     }
+    setIsOpen(!isOpen);
     setShowFilterBLock(null);
   };
   const isChecked = (checkedValue: string) => {
@@ -259,7 +260,14 @@ export default function Filter({
             )}
           </div>
           <div className={CustomReactTableStyles.actionButtons}>
-            <a onClick={() => setShowFilterBLock(null)}>Cancel</a>
+            <a
+              onClick={() => {
+                setIsOpen(!isOpen);
+                setShowFilterBLock(null);
+              }}
+            >
+              Cancel
+            </a>
             <GenericButton
               label="OK"
               theme="lightBlue"
