@@ -77,7 +77,7 @@ export default function Filter({
   };
   const handleSubmit = () => {
     if (filterFn) {
-      filterFn(currentValue, column.id);
+      filterFn(currentValue, column.id, typeof firstValue);
     }
     setIsOpen(!isOpen);
     setShowFilterBLock(null);
@@ -167,9 +167,9 @@ export default function Filter({
                   <input
                     type="checkbox"
                     className={CustomReactTableStyles.filterCheckBox}
-                    id="selectAll"
-                    name="selectAll"
-                    value="all"
+                    id="0to25"
+                    name="0to25"
+                    value="0,24.99"
                     defaultChecked={true}
                   />
                   $0.00 - $24.99
