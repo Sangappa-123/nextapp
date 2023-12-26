@@ -2,49 +2,18 @@
 import { useState } from "react";
 import Cards from "@/components/common/Cards";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
-// import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
+import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
 import Link from "next/link";
 import MessageCardStyle from "./MessagesCrad.module.scss";
 import Modal from "@/components/common/ModalPopups";
 import AddNewMsgModalComponent from "./AddNewMsgModalComponent";
 import NewMsgListComponent from "./NewMsgListComponent";
+import { RootState } from "@/store/store";
+import { ConnectedProps, connect } from "react-redux";
 
-const MessagesComponent: React.FC = () => {
+const MessagesComponent: React.FC<connectorType> = (props: { messageList: any }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const dataArray = [
-    {
-      name: " Howell, Melissa",
-      content: " ssssssssssssssssssssssamdfnsdflks",
-      dataTime: "Dec 15, 10:22 PM",
-    },
-    {
-      name: "john Melissa",
-      content:
-        " kkkkkkkkkkkksssssssssssssamdfnsdflks div with background aand other stuff kfkf fkfjf fkffjf fjfjfjf fjfjfjf fjfjfj ffjffjf fjfjf jf fj fjfjfjf fjfj",
-      dataTime: "Nov 15, 10:22 PM",
-    },
-
-    {
-      name: " rock dwane",
-      content:
-        "lllllllllllsssssssssssamdfnsdflks div with background aand other stuff kfkf fkfjf fkffjf fjfjfjf fjfjfjf fjfjfj ffjffjf fjfjf jf fj fjfjfjf fjfj",
-      dataTime: "april 15, 10:22 PM",
-    },
-    {
-      name: " rock dwane",
-      content:
-        "lllllllllllsssssssssssamdfnsdflks div with background aand other stuff kfkf fkfjf fkffjf fjfjfjf fjfjfjf fjfjfj ffjffjf fjfjf jf fj fjfjfjf fjfj",
-      dataTime: "april 15, 10:22 PM",
-    },
-    {
-      name: " rock dwane",
-      content:
-        "lllllllllllsssssssssssamdfnsdflks div with background aand other stuff kfkf fkfjf fkffjf fjfjfjf fjfjfjf fjfjfj ffjffjf fjfjf jf fj fjfjfjf fjfj",
-      dataTime: "april 15, 10:22 PM",
-    },
-  ];
-
+  const { messageList } = props;
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
   };
@@ -68,16 +37,27 @@ const MessagesComponent: React.FC = () => {
           </div>
         </GenericComponentHeading>
         <div className={MessageCardStyle.messageListContainer}>
-          {/* <NoRecordComponent message="No New Message" /> */}
-          {dataArray.map((elem, index) => (
-            <NewMsgListComponent elem={elem} key={index} />
-          ))}
+          {messageList?.length > 0 ? (
+            messageList
+              ?.slice(0, 5)
+              ?.map((message: any, index: any) => (
+                <NewMsgListComponent message={message} key={index} />
+              ))
+          ) : (
+            <NoRecordComponent message="No New Message" />
+          )}
         </div>
         <div className="text-right">
-          <Link href="#">View all messages</Link>
+          <Link href="/all-notes">View all messages</Link>
         </div>
       </Cards>
     </>
   );
 };
-export default MessagesComponent;
+const mapStateToProps = (state: RootState) => ({
+  messageList: state.claimDetail.messageList,
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(MessagesComponent);

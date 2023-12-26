@@ -40,13 +40,19 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimRetailerRes,
 }) => {
   const dispatch = useAppDispatch();
-  // const scroll = useScroll();
-  // console.log("scroll", scroll);
 
-  dispatch(addCategories(categoryListRes?.data));
-  dispatch(addSubcategories(subcategoryListRes?.data));
-  dispatch(addPendingTasks(pendingTaskListRes?.data));
-  dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+  if (Array.isArray(categoryListRes?.data)) {
+    dispatch(addCategories(categoryListRes?.data));
+  }
+  if (Array.isArray(subcategoryListRes?.data)) {
+    dispatch(addSubcategories(subcategoryListRes?.data));
+  }
+  if (Array.isArray(pendingTaskListRes?.data)) {
+    dispatch(addPendingTasks(pendingTaskListRes?.data));
+  }
+  if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
+    dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+  }
   dispatch(addCondition(claimContitionRes?.data));
   dispatch(addRetailer(claimRetailerRes?.data));
 

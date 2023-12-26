@@ -44,6 +44,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     addNotification,
     setIsModalOpen,
     setEditItem,
+    claimContentListDataFull,
   } = props;
   const { claimId } = useParams();
   const router = useRouter();
@@ -54,7 +55,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
   const [claimResult, setClaimResult] = React.useState(claimContentListData);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  // const [filterSelected, setFilterSelected] = React.useState();
+  const [filterSelected, setFilterSelected] = React.useState([]);
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
   const pageLimit = 20;
   const fetchSize = 20;
@@ -301,18 +302,45 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
-  const filterFn = async (currentValue: any, columnId: string) => {
-    const newCLaim = claimContentListData.filter((item: any) => {
-      if (item[columnId] === null && currentValue.includes("BLANK")) {
-        return item;
-      } else if (item[columnId] === null && !currentValue.includes("BLANK")) {
-        return;
-      } else if (currentValue.some((row: any) => item[columnId].includes(row)))
-        return item;
+  const filterFn = async (currentValue: any, columnId: string, typeofFilter: string) => {
+    const newfilterArr: any = [...filterSelected];
+    const columnIndex = newfilterArr.findIndex((item: any) =>
+      Object.prototype.hasOwnProperty.call(item, columnId)
+    );
+
+    if (columnIndex !== -1) {
+      newfilterArr[columnIndex][columnId] = { currentValue };
+    } else {
+      newfilterArr.push({ [columnId]: { currentValue } });
+    }
+
+    setFilterSelected(newfilterArr);
+
+    let filterArr = claimContentListDataFull;
+
+    await newfilterArr.forEach((filterItem: any) => {
+      const colId = Object.keys(filterItem)[0];
+
+      const values = filterItem[colId].currentValue;
+
+      if (typeofFilter !== "number") {
+        filterArr = filterArr.filter((item: any) => {
+          if (item[colId] === null && values.includes("BLANK")) {
+            return true;
+          } else if (item[colId] === null && !values.includes("BLANK")) {
+            return false;
+          } else if (
+            values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
     });
 
-    await updateClaimContentListData({ claimContentList: newCLaim });
-    setClaimResult([...newCLaim.slice(0, fetchSize)]);
+    await updateClaimContentListData({ claimContentList: filterArr });
+    setClaimResult([...filterArr.slice(0, fetchSize)]);
   };
   const handleRowClick = (rowData: any) => {
     router.push(`/adjuster-line-item-detail/${claimId}/${rowData.itemId}`);
@@ -375,7 +403,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDataCount={claimContentListData.length}
           pageLimit={claimContentListData.length}
           loader={tableLoader}
-          tableDataErrorMsg={claimErrorMsg}
+          tableDataErrorMsg={claimResult.length === 0 ? "No Record Found" : claimErrorMsg}
           fetchNextPage={fetchNextPage}
           totalFetched={claimResult.length}
           totalDBRowCount={claimContentListData.length}
@@ -390,6 +418,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
 const mapStateToProps = ({ claimContentdata }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
+  claimContentListDataFull: claimContentdata.claimContentListDataFull,
   claimErrorMsg: claimContentdata.claimErrorMsg,
 });
 const mapDispatchToProps = {

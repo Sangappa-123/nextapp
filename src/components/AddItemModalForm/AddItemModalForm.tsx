@@ -752,7 +752,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </div>
           </div>
         ) : (
-          <div className={clsx(addClaimFormStyle.centerAlign, "row m-2")}>
+          <div className={clsx(addClaimFormStyle.centerAlign, "row mt-4")}>
             <div className="col-8" style={{ textAlign: "right" }}>
               <a>Save and Add Another Item</a>
             </div>

@@ -54,6 +54,8 @@
   // padding-top: 4px;
   // padding-bottom: 4px;
   cursor: pointer;
+  z-index: 1;
+  position: relative;
   // background-color: teal;
 }
 .dropDownInnerDiv:hover {

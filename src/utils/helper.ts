@@ -39,9 +39,14 @@ export const logoutHandler = () => {
 };
 
 export const convertToCurrentTimezone = (
-  unixDate: number,
+  unixDate: number | string,
   dateFormat = "MM/DD/YYYY h:mm A"
 ) => {
+  if (typeof unixDate === "string" && unixDate.includes("T")) {
+    const dateVal = unixDate.replace("T", " ");
+    const parsedDate = Date.parse(dateVal);
+    return dayjs(parsedDate).utc(true).format(dateFormat);
+  }
   return dayjs(unixDate).utc(true).format(dateFormat);
 };
 
