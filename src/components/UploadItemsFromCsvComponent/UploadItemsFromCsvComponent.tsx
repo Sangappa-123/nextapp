@@ -164,16 +164,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const claimId = searchParams.get("claimDetail");
   console.log("claimIdsssssssssssss", claimId);
 
-  // const handleRouteChange = () => {
-  //   if (claimId) {
-  //     console.log("Navigating to /adjuster-property-claim-details/", claimId);
-  //     router.push(`/adjuster-property-claim-details/${claimId}`);
-  //   } else {
-  //     console.log("Navigating to /new-claim");
-  //     router.push("/new-claim");
-  //   }
-  // };
-
   const handleRouteChange = () => {
     if (claimId) {
       console.log("Navi to /adjustr", claimId);

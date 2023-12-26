@@ -18,13 +18,13 @@ import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 import { creatClaim, postClaim } from "@/services/ClaimService";
 import { insuranceSelector } from "@/reducers/Session/SessionSlice";
-import { useAppSelector } from "@/hooks/reduxCustomHook";
+import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
 import { RootState } from "@/store/store";
 import dayjs from "dayjs";
 // import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { ConnectedProps, connect } from "react-redux";
 import {
   selectActiveSection,
@@ -34,8 +34,8 @@ import Loading from "@/app/[lang]/loading";
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   // const [activeSection, setActiveSection] = useState(0);
-  const dispatch = useDispatch();
-  const activeSection = useSelector(selectActiveSection);
+  const dispatch = useAppDispatch();
+  const activeSection = useAppSelector(selectActiveSection);
   const insuranceCompany = useAppSelector(insuranceSelector);
 
   console.log("insurancecompany", insuranceCompany);
@@ -256,7 +256,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
       console.log("formData", formData);
       const postlCaimRes = await postClaim(payload);
-      console.log("postlCaimRessssss", postlCaimRes);
       if (postlCaimRes?.status === 200) {
         dispatch(
           addNotification({
