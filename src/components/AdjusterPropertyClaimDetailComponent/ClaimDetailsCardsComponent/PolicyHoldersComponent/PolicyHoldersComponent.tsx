@@ -135,7 +135,7 @@ const PolicyHoldersComponent: React.FC = () => {
           </div>
         </div>
         <div className="text-right">
-          <Link href="#">View all</Link>
+          <Link href="/all-tasks">View all</Link>
         </div>
       </Cards>
     </>
