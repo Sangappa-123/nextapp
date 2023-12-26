@@ -81,7 +81,7 @@ function ContentListComponent(props: any) {
                   <div
                     className={ContentListComponentStyle.dropDownInnerDiv}
                     onClick={() =>
-                      router.push(`/uploadItemsFromCSV?claimDetail=${claimId}`)
+                      router.push(`/upload-items-from-csv?claimDetail=${claimId}`)
                     }
                   >
                     Load from file
