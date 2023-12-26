@@ -302,26 +302,38 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
-  const filterFn = async (currentValue: any, columnId: string, typeofFilter: string) => {
+  const filterFn = async (
+    currentValue: any,
+    columnId: string,
+    currentTypeofFilter: string
+  ) => {
     const newfilterArr: any = [...filterSelected];
     const columnIndex = newfilterArr.findIndex((item: any) =>
       Object.prototype.hasOwnProperty.call(item, columnId)
     );
 
     if (columnIndex !== -1) {
-      newfilterArr[columnIndex][columnId] = { currentValue };
+      newfilterArr[columnIndex][columnId] = {
+        currentValue,
+        typeofFilter: currentTypeofFilter,
+      };
     } else {
-      newfilterArr.push({ [columnId]: { currentValue } });
+      newfilterArr.push({
+        [columnId]: { currentValue, typeofFilter: currentTypeofFilter },
+      });
     }
 
     setFilterSelected(newfilterArr);
 
     let filterArr = claimContentListDataFull;
 
+    console.log(newfilterArr);
+
     await newfilterArr.forEach((filterItem: any) => {
       const colId = Object.keys(filterItem)[0];
 
       const values = filterItem[colId].currentValue;
+      const typeofFilter = filterItem[colId].typeofFilter;
 
       if (typeofFilter !== "number") {
         filterArr = filterArr.filter((item: any) => {
@@ -335,6 +347,34 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
             return true;
           }
           return false;
+        });
+      } else {
+        filterArr = filterArr.filter((item: any) => {
+          return values.some((selectedPrice: any) => {
+            console.log(selectedPrice);
+            if (
+              selectedPrice === "$0.00 - $24.99" &&
+              item[colId] >= 0 &&
+              item[colId] <= 24.99
+            ) {
+              return true;
+            } else if (
+              selectedPrice === "$25.00 - $99.99" &&
+              item[colId] >= 25.0 &&
+              item[colId] <= 99.99
+            ) {
+              return true;
+            } else if (
+              selectedPrice === "$100.00 - $999.99" &&
+              item[colId] >= 100.0 &&
+              item[colId] <= 999.99
+            ) {
+              return true;
+            } else if (selectedPrice === "$1,000.00+") {
+              return item[colId] >= 1000.0;
+            }
+            return false;
+          });
         });
       }
     });
