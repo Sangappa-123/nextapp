@@ -34,23 +34,10 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   const { postLossItemDetails, setExcelCsvUploadData, removeRowById, rowsProcessed } =
     props;
   console.log("postLossItemDetails", postLossItemDetails);
-  // const [editedIdRowData, setEditedIdRowData] = useState<any>({});
-  const [editedBrandRowData, setEditedBrandRowData] = useState<any>({});
-  const [editedModelRowData, setEditedModelRowData] = useState<any>({});
-  const [editedDescRowData, setEditedDescRowData] = useState<any>({});
-  const [editedAgeYearRowData, setEditedAgeYearRowData] = useState<any>({});
-  const [editedRowData, setEditedRowData] = useState<any>({});
-  const [editedConditionRowData, setEditedConditionRowData] = useState<any>({});
-  const [editedPurchaseFromRowData, setEditedPurchaseFromRowData] = useState<any>({});
-  const [editedPurchaseMethRowData, setEditedPurchaseMethRowData] = useState<any>({});
-  const [editedQuantityRowData, setEditedQuantityIdRowData] = useState<any>({});
-  const [editedStatedValRowData, setEditedStatedValRowData] = useState<any>({});
-  const [editedRoomNameRowData, setEditedRoomNameRowData] = useState<any>({});
-  const [editedRoomTypeRowData, setEditedRoomTypeRowData] = useState<any>({});
-  const [editedTotalCostRowData, setEditedTotalCostRowData] = useState<any>({});
-  const [editedCategoryRowData, setEditedCategoryRowData] = useState<any>({});
-  const [editedSubCatRowData, setEditedSubCatRowData] = useState<any>({});
+
+  const data = React.useMemo(() => postLossItemDetails, [postLossItemDetails]);
   const [editableRowId, setEditableRowId] = useState<number | null>(null);
+  const [editedData, setEditedData] = useState({ ...data });
 
   type ExcelTableData = {
     id: number;
@@ -72,594 +59,145 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     action: () => void;
   };
 
-  // useEffect(() => {
-  //   console.log('Updated:', postLossItemDetails);
-  // }, [postLossItemDetails]);
-  // const handleEditRowClick = (rowId: number) => {
-  //   // const rowToEdit = postLossItemDetails.find((row) => row.id === rowId);
-  //   setEditableRowId(rowId);
-  // };
-
   const handleSaveRow = async () => {
-    // const rowId = editableRowId  ;
-    console.log("Beforeeeeeee", {
-      editedBrandRowData,
-      editedAgeYearRowData,
-      editedRowData,
+    await updateData(editedData);
+    await setEditableRowId(null);
+  };
+
+  const handleEditRowClick = (rowData: any) => {
+    if (editableRowId !== rowData.id) {
+      setEditableRowId(rowData.id);
+      setEditedData({ ...rowData });
+    }
+  };
+
+  const handleCancelEdit = async () => {
+    await setEditedData({ ...postLossItemDetails });
+    await setEditableRowId(null);
+  };
+
+  const handleChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    columnName: string
+  ) => {
+    await setEditedData({
+      ...editedData,
+      [columnName]: e.target.value,
     });
-    console.log("editabeeeeeeeeee", editableRowId);
-    const updatedPostLossItemDetails = postLossItemDetails.map((row) =>
-      editableRowId === row.id
-        ? {
-            // ...row,
-            id: editableRowId,
-            isValidItem: row.isValidItem,
-            failedReasons: row.failedReasons,
-            // editableRowId,
-            // brand: editedBrandRowData.brand || row.brand,
-            brand:
-              editedBrandRowData.brand !== undefined
-                ? editedBrandRowData.brand
-                : row.brand,
-            ageInMonth:
-              editedRowData.ageInMonth !== undefined
-                ? editedRowData.ageInMonth
-                : row.ageInMonth,
-            ageInYear:
-              editedAgeYearRowData.ageInYear !== undefined
-                ? editedAgeYearRowData.ageInYear
-                : row.ageInYear,
-            model:
-              editedModelRowData.model !== undefined
-                ? editedModelRowData.model
-                : row.model,
-            description:
-              editedDescRowData.description !== undefined
-                ? editedDescRowData.description
-                : row.description,
-            condition:
-              editedConditionRowData.condition !== undefined
-                ? editedConditionRowData.condition
-                : row.condition,
-            purchasedFrom:
-              editedPurchaseFromRowData.purchasedFrom !== undefined
-                ? editedPurchaseFromRowData.purchasedFrom
-                : row.purchasedFrom,
-            purchasedMethod:
-              editedPurchaseMethRowData.purchasedMethod !== undefined
-                ? editedPurchaseMethRowData.purchasedMethod
-                : row.purchasedMethod,
-            quantity:
-              editedQuantityRowData.quantity !== undefined
-                ? editedQuantityRowData.quantity
-                : row.quantity,
-            replacementCost:
-              editedStatedValRowData.replacementCost !== undefined
-                ? editedStatedValRowData.replacementCost
-                : row.replacementCost,
-            roomType:
-              editedRoomTypeRowData.roomType !== undefined
-                ? editedRoomTypeRowData.roomType
-                : row.roomType,
-            roomName:
-              editedRoomNameRowData.roomName !== undefined
-                ? editedRoomNameRowData.roomName
-                : row.roomName,
-            totalCost:
-              editedTotalCostRowData.totalCost !== undefined
-                ? editedTotalCostRowData.totalCost
-                : row.totalCost,
-            category:
-              editedCategoryRowData.category !== undefined
-                ? editedCategoryRowData.category
-                : row.category,
-            subCategory:
-              editedSubCatRowData.subCategory !== undefined
-                ? editedSubCatRowData.subCategory
-                : row.subCategory,
-          }
-        : row
+  };
+  const updateData = async (updatedRow: any) => {
+    const updatedPostLossItemDetails = postLossItemDetails.map((row: any) =>
+      row.id === updatedRow.id ? updatedRow : row
     );
-    console.log("Afterrrrrrrrrrrr", updatedPostLossItemDetails);
-    await props.setExcelCsvUploadData({
+    await setExcelCsvUploadData({
       postLossItemDetails: updatedPostLossItemDetails,
       rowsProcessed: rowsProcessed,
       message: "",
       status: 0,
     });
-    setEditableRowId(null);
-    setEditedBrandRowData({});
-    setEditedAgeYearRowData({});
-    setEditedCategoryRowData({});
-    setEditedConditionRowData({});
-    setEditedDescRowData({});
-    setEditedModelRowData({});
-    setEditedRowData({});
-    setEditedPurchaseFromRowData({});
-    setEditedPurchaseMethRowData({});
-    setEditedQuantityIdRowData({});
-    setEditedRoomNameRowData({});
-    setEditedRoomTypeRowData({});
-    setEditedStatedValRowData({});
-    setEditedSubCatRowData({});
-    setEditedTotalCostRowData({});
-  };
-
-  const handleEditRowClick = (rowId: number) => {
-    setEditableRowId(rowId);
-  };
-
-  const handleCancelEdit = async () => {
-    setEditedBrandRowData({});
-    setEditedAgeYearRowData({});
-    setEditedCategoryRowData({});
-    setEditedConditionRowData({});
-    setEditedDescRowData({});
-    setEditedModelRowData({});
-    setEditedPurchaseFromRowData({});
-    setEditedPurchaseMethRowData({});
-    setEditedQuantityIdRowData({});
-    setEditedRoomNameRowData({});
-    setEditedRoomTypeRowData({});
-    setEditedStatedValRowData({});
-    setEditedSubCatRowData({});
-    setEditedTotalCostRowData({});
-    if (editableRowId !== null) {
-      const updatedPostLossItemDetails = postLossItemDetails.map((row) =>
-        row.id === editableRowId ? { ...row } : row
-      );
-
-      await setExcelCsvUploadData({
-        postLossItemDetails: updatedPostLossItemDetails,
-        rowsProcessed: rowsProcessed,
-        message: "",
-        status: 0,
-      });
-    }
-    setEditableRowId(null);
-    console.log("Cancelllllllllllllllllll");
   };
 
   const columnHelper = createColumnHelper<ExcelTableData>();
 
   const columns = [
-    // columnHelper.accessor("id", {
-    //   header: "Sl No #",
-    //   cell: (info) => {
-    //     return editableRowId === info.row.original.id ? (
-    //       <input
-    //         type="text"
-    //         style={{ width: "60px", height: "25px" }}
-    //         // disabled
-    //         readOnly
-    //         value={
-    //             info.row.original.id
-    //         }
-    //         // onChange={(e) =>
-    //         //   setEditedIdRowData({ ...editedIdRowData, id: e.target.value })
-    //         // }
-    //       />
-    //     ) : (
-    //       info.getValue()
-    //     );
-    //   },
-    //   enableSorting: true,
-    // }),
     columnHelper.accessor("id", {
-      // id: "Claim_Number",
       header: "Sl No #",
       cell: (info) => info.getValue(),
-      enableSorting: true,
       enableColumnFilter: false,
     }),
     columnHelper.accessor("brand", {
       header: "Brand",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedBrandRowData.brand !== undefined
-                ? editedBrandRowData.brand
-                : info.row.original.brand || ""
-            }
-            onChange={(e) =>
-              setEditedBrandRowData({ ...editedBrandRowData, brand: e.target.value })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
 
     columnHelper.accessor("model", {
       header: "Model",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedModelRowData.model !== undefined
-                ? editedModelRowData.model
-                : info.row.original.model || ""
-            }
-            onChange={(e) =>
-              setEditedModelRowData({ ...editedModelRowData, model: e.target.value })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
 
     columnHelper.accessor("description", {
       header: "Description",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedDescRowData.description !== undefined
-                ? editedDescRowData.description
-                : info.row.original.description || ""
-            }
-            onChange={(e) =>
-              setEditedDescRowData({ ...editedDescRowData, description: e.target.value })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
 
     columnHelper.accessor("ageInYear", {
       header: "Age In Year",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedAgeYearRowData.ageInYear !== undefined
-                ? editedAgeYearRowData.ageInYear
-                : info.row.original.ageInYear || ""
-            }
-            onChange={(e) =>
-              setEditedAgeYearRowData({
-                ...editedAgeYearRowData,
-                ageInYear: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
 
     columnHelper.accessor("ageInMonth", {
       header: "Age In Month",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedRowData.ageInMonth !== undefined
-                ? editedRowData.ageInMonth
-                : info.row.original.ageInMonth || ""
-            }
-            onChange={(e) =>
-              setEditedRowData({ ...editedRowData, ageInMonth: e.target.value })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("condition", {
       header: "Condition",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedConditionRowData.condition !== undefined
-                ? editedConditionRowData.condition
-                : info.row.original.condition || ""
-            }
-            onChange={(e) =>
-              setEditedConditionRowData({
-                ...editedConditionRowData,
-                condition: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("purchasedFrom", {
       header: "Purchased From",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedPurchaseFromRowData.purchasedFrom !== undefined
-                ? editedPurchaseFromRowData.purchasedFrom
-                : info.row.original.purchasedFrom || ""
-            }
-            onChange={(e) =>
-              setEditedPurchaseFromRowData({
-                ...editedPurchaseFromRowData,
-                purchasedFrom: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("purchasedMethod", {
       header: "Purchased Method",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedPurchaseMethRowData.purchasedMethod !== undefined
-                ? editedPurchaseMethRowData.purchasedMethod
-                : info.row.original.purchasedMethod || ""
-            }
-            onChange={(e) =>
-              setEditedPurchaseMethRowData({
-                ...editedPurchaseMethRowData,
-                purchasedMethod: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("quantity", {
       header: "Quantity",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedQuantityRowData.quantity !== undefined
-                ? editedQuantityRowData.quantity
-                : info.row.original.quantity || ""
-            }
-            onChange={(e) =>
-              setEditedQuantityIdRowData({
-                ...editedQuantityRowData,
-                quantity: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("replacementCost", {
       header: "Stated Value",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedStatedValRowData.replacementCost !== undefined
-                ? editedStatedValRowData.replacementCost
-                : info.row.original.replacementCost || ""
-            }
-            onChange={(e) =>
-              setEditedStatedValRowData({
-                ...editedStatedValRowData,
-                replacementCost: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("roomName", {
       header: "Room Name",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedRoomNameRowData.roomName !== undefined
-                ? editedRoomNameRowData.roomName
-                : info.row.original.roomName || ""
-            }
-            onChange={(e) =>
-              setEditedRoomNameRowData({
-                ...editedRoomNameRowData,
-                roomName: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("roomType", {
       header: "Room Type",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedRoomTypeRowData.roomType !== undefined
-                ? editedRoomTypeRowData.roomType
-                : info.row.original.roomType || ""
-            }
-            onChange={(e) =>
-              setEditedRoomTypeRowData({
-                ...editedRoomTypeRowData,
-                roomType: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("totalCost", {
       header: "Total Cost",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedTotalCostRowData.totalCost !== undefined
-                ? editedTotalCostRowData.totalCost
-                : info.row.original.totalCost || ""
-            }
-            onChange={(e) =>
-              setEditedTotalCostRowData({
-                ...editedTotalCostRowData,
-                totalCost: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("category", {
       header: "Category",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedCategoryRowData.category !== undefined
-                ? editedCategoryRowData.category
-                : info.row.original.category || ""
-            }
-            onChange={(e) =>
-              setEditedCategoryRowData({
-                ...editedCategoryRowData,
-                category: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("subCategory", {
       header: "Sub Category",
-      cell: (info) => {
-        console.log("editableRowId:", editableRowId);
-        console.log("info.row.original.id:", info.row.original.id);
-
-        return editableRowId === info.row.original.id ? (
-          <input
-            type="text"
-            style={{ width: "60px", height: "25px" }}
-            value={
-              editedSubCatRowData.subCategory !== undefined
-                ? editedSubCatRowData.subCategory
-                : info.row.original.subCategory || ""
-            }
-            onChange={(e) =>
-              setEditedSubCatRowData({
-                ...editedSubCatRowData,
-                subCategory: e.target.value,
-              })
-            }
-          />
-        ) : (
-          info.getValue()
-        );
+      meta: {
+        editableField: true,
       },
-      enableSorting: true,
     }),
     columnHelper.accessor("action", {
       header: "Action",
@@ -697,16 +235,14 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   ];
 
   const handleRemoveRow = (id: number) => {
-    console.log("yyyyyyyyxddddddddd", id);
     removeRowById(id);
   };
-  const data = React.useMemo(() => postLossItemDetails, [postLossItemDetails]);
-  console.log("dddd", data);
 
   const table = useReactTable({
     data: postLossItemDetails,
     columns,
     enableColumnFilters: false,
+    enableSorting: false,
     getCoreRowModel: getCoreRowModel<ExcelTableData>(),
   });
 
@@ -714,8 +250,10 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     <>
       <CustomReactTable
         table={table}
-        handleEditRowClick={handleEditRowClick}
-        handleRemoveRow={handleRemoveRow}
+        handleRowClick={handleEditRowClick}
+        editableRowId={editableRowId}
+        editedData={editedData}
+        handleEditChange={handleChange}
       />
     </>
   );
