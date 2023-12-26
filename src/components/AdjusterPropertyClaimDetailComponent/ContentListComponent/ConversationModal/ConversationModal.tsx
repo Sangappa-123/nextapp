@@ -14,6 +14,7 @@ const ConversationModal = () => {
     const imageUrl = event.target.files[0]?.name;
     selectedImageArr.push(imageUrl);
     setDocs((prev: any) => [...prev, ...selectedImageArr]);
+    event.target.value = null;
   };
 
   const handleDeleteImage = (index: number) => {

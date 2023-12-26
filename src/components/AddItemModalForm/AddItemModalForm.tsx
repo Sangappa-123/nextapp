@@ -11,7 +11,6 @@ import Tooltip from "@/components/common/ToolTip";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import { ImCross } from "react-icons/im";
-import { useRef } from "react";
 // import { OptionTypedList } from "@/hooks/useSelectOption";
 import { Controller } from "react-hook-form";
 import AttachementPreview from "./AttachementPreview";
@@ -71,7 +70,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   useEffect(() => {
     getCategories()
       .then((res: any) => {
-        console.log("Main category data", res);
         setCategoriesData(res?.data);
       })
       .catch((error) => console.log("facing errr", error));
@@ -83,8 +81,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     { value: "option3", label: "Option 3" },
   ];
   const style = { height: "20px" };
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const openModal = (url: string, imageType: string) => {
     setImagePreviewType(imageType);
@@ -104,10 +100,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   };
 
   const handleUpload = (event: any) => {
-    console.log(event, "handleUpload");
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     let selectedImageArr: any[];
-    console.log(event.target.files);
     if (event.target.files[0].type == "application/pdf") {
       const newObj: MyObject = {
         imgType: "pdf",
@@ -121,9 +115,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       };
       selectedImageArr = [newObj];
     }
-    console.log(selectedImageArr, "selectedImageArr");
     setDocs((prev: any) => [...prev, ...selectedImageArr]);
-    console.log(docs, "checking docs");
+    event.target.value = null;
   };
 
   const handleDeleteImage = (index: number) => {
@@ -613,7 +606,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               type="file"
               id="inp"
               multiple
-              ref={fileInputRef}
               style={{ display: "none" }}
               accept=".png,.jpg,.jpeg,.pdf"
               onChange={handleUpload}
