@@ -308,6 +308,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     currentTypeofFilter: string
   ) => {
     const newfilterArr: any = [...filterSelected];
+
     const columnIndex = newfilterArr.findIndex((item: any) =>
       Object.prototype.hasOwnProperty.call(item, columnId)
     );
@@ -315,7 +316,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     if (columnIndex !== -1) {
       newfilterArr[columnIndex][columnId] = {
         currentValue,
-        typeofFilter: currentTypeofFilter,
+        typeofFilter: newfilterArr[columnIndex][columnId].typeofFilter,
       };
     } else {
       newfilterArr.push({
@@ -326,8 +327,6 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     setFilterSelected(newfilterArr);
 
     let filterArr = claimContentListDataFull;
-
-    console.log(newfilterArr);
 
     await newfilterArr.forEach((filterItem: any) => {
       const colId = Object.keys(filterItem)[0];
@@ -351,7 +350,6 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       } else {
         filterArr = filterArr.filter((item: any) => {
           return values.some((selectedPrice: any) => {
-            console.log(selectedPrice);
             if (
               selectedPrice === "$0.00 - $24.99" &&
               item[colId] >= 0 &&
