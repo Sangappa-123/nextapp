@@ -247,6 +247,12 @@
           {
             URL: "/adjuster-service-request/{ID}",
           },
+          {
+            URL: "/all-notes",
+          },
+          {
+            URL: "/all-tasks",
+          },
         ],
       },
       {

@@ -302,7 +302,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
-  const filterFn = async (currentValue: any, columnId: string) => {
+  const filterFn = async (currentValue: any, columnId: string, typeofFilter: string) => {
     const newfilterArr: any = [...filterSelected];
     const columnIndex = newfilterArr.findIndex((item: any) =>
       Object.prototype.hasOwnProperty.call(item, columnId)
@@ -323,18 +323,20 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
       const values = filterItem[colId].currentValue;
 
-      filterArr = filterArr.filter((item: any) => {
-        if (item[colId] === null && values.includes("BLANK")) {
-          return true;
-        } else if (item[colId] === null && !values.includes("BLANK")) {
+      if (typeofFilter !== "number") {
+        filterArr = filterArr.filter((item: any) => {
+          if (item[colId] === null && values.includes("BLANK")) {
+            return true;
+          } else if (item[colId] === null && !values.includes("BLANK")) {
+            return false;
+          } else if (
+            values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
+          ) {
+            return true;
+          }
           return false;
-        } else if (
-          values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
-        ) {
-          return true;
-        }
-        return false;
-      });
+        });
+      }
     });
 
     await updateClaimContentListData({ claimContentList: filterArr });
@@ -401,7 +403,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDataCount={claimContentListData.length}
           pageLimit={claimContentListData.length}
           loader={tableLoader}
-          tableDataErrorMsg={claimErrorMsg}
+          tableDataErrorMsg={claimResult.length === 0 ? "No Record Found" : claimErrorMsg}
           fetchNextPage={fetchNextPage}
           totalFetched={claimResult.length}
           totalDBRowCount={claimContentListData.length}

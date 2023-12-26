@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Cards from "../common/Cards/index";
-import { object, email, string, minLength, number, boolean, any } from "valibot";
+import { object, email, string, minLength, number, any } from "valibot";
 // import { useRouter } from "next/navigation";
 import useCustomForm from "@/hooks/useCustomForm";
 import NewClaimsStyle from "./newClaimStyle.module.scss";
@@ -30,6 +30,7 @@ import {
   selectActiveSection,
   setActiveSection,
 } from "@/reducers/UploadCSV/navigationSlice";
+import Loading from "@/app/[lang]/loading";
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   // const [activeSection, setActiveSection] = useState(0);
@@ -85,11 +86,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     ]),
     taxRate: string("Tax Rate"),
     contentLimits: string("Content Limits", [minLength(1, "Policy number")]),
-    lossType: object({
-      id: number("id"),
-      name: string("name"),
-      active: boolean("active"),
-    }),
+    lossType: any(),
     homeOwnersPolicyType: object({
       id: number("id"),
       typeName: string("typeName"),
@@ -213,7 +210,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           claimType: "HOME",
           applyTax: true,
           taxRate: data.taxRate,
-          damageTypeId: data.lossType.id,
+          damageTypeId: data.lossType?.id ?? 9,
           deductible: data.claimDeductible,
           additionalNote: null,
           incidentDate: dayjs(data.claimDate).format("YYYY-MM-DDTHH:mm:ssZ[Z]"),
@@ -481,9 +478,11 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         </Cards>
       )}
       {activeSection === 2 && (
-        <Cards>
-          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
-        </Cards>
+        <Suspense fallback={<Loading />}>
+          <Cards>
+            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
+          </Cards>
+        </Suspense>
       )}
     </div>
   );
