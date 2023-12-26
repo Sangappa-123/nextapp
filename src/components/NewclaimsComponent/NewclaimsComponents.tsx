@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Cards from "../common/Cards/index";
 import { object, email, string, minLength, number, boolean, any } from "valibot";
 // import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useDispatch } from "react-redux";
+import Loading from "@/app/[lang]/loading";
 
 function NewclaimsComponent() {
   const dispatch = useDispatch();
@@ -472,9 +473,11 @@ function NewclaimsComponent() {
         </Cards>
       )}
       {activeSection === 2 && (
-        <Cards>
-          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
-        </Cards>
+        <Suspense fallback={<Loading />}>
+          <Cards>
+            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
+          </Cards>
+        </Suspense>
       )}
     </div>
   );
