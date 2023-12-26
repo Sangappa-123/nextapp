@@ -11,7 +11,7 @@ const LoadFileAddItemButton: React.FC = () => {
         label="Load From File"
         size="small"
         type="submit"
-        onClickHandler={() => router.push("/uploadItemsFromCSV")}
+        onClickHandler={() => router.push("/upload-items-from-csv")}
       />
     </>
   );
