@@ -41,14 +41,33 @@ export default function Filter({
         : Array.from(column.getFacetedUniqueValues().keys()).sort(),
     [column.getFacetedUniqueValues()]
   );
-
+  const priceRanges = [
+    { label: "$0.00 - $24.99", value: "$0.00 - $24.99" },
+    { label: "$25.00 - $99.99", value: "$25.00 - $99.99" },
+    { label: "$100.00 - $999.99", value: "$100.00 - $999.99" },
+    { label: "$1,000.00+", value: "$1,000.00+" },
+  ];
   React.useEffect(() => {
-    if (defaultAllChecked && sortedUniqueValues && sortedUniqueValuesFirst.length === 0) {
-      const uniqueValues = sortedUniqueValues.map((row) => {
-        return row === null || row === undefined ? "BLANK" : row;
-      });
-      setCurrentValue(uniqueValues);
-      setSortedUniqueValuesFirst(uniqueValues);
+    if (typeof firstValue !== "number") {
+      if (
+        defaultAllChecked &&
+        sortedUniqueValues &&
+        sortedUniqueValuesFirst.length === 0
+      ) {
+        const uniqueValues = sortedUniqueValues.map((row) => {
+          return row === null || row === undefined ? "BLANK" : row;
+        });
+        setCurrentValue(uniqueValues);
+        setSortedUniqueValuesFirst(uniqueValues);
+      }
+    } else {
+      if (defaultAllChecked && priceRanges && sortedUniqueValuesFirst.length === 0) {
+        const uniqueValues = priceRanges.map((row) => {
+          return row.value;
+        });
+        setCurrentValue(uniqueValues);
+        setSortedUniqueValuesFirst(uniqueValues);
+      }
     }
   }, [sortedUniqueValues]);
 
@@ -74,6 +93,17 @@ export default function Filter({
       setCurrentValue([...currentValue, e.target.value]);
     }
     // column.setFilterValue([...currentValue, e.target.value]);
+  };
+
+  const handlePriceCheckboxChange = (value: any) => {
+    let updatedPrices = [...currentValue];
+
+    if (updatedPrices.includes(value)) {
+      updatedPrices = updatedPrices.filter((price) => price !== value);
+    } else {
+      updatedPrices.push(value);
+    }
+    setCurrentValue(updatedPrices);
   };
   const handleSubmit = () => {
     if (filterFn) {
@@ -102,14 +132,26 @@ export default function Filter({
         setCurrentValue([]);
       }
     } else {
-      if (sortedUniqueValuesFirst.length !== currentValue.length) {
-        const custArr: any = [];
-        sortedUniqueValuesFirst.map((item: any) => {
-          custArr.push(item);
-        });
-        setCurrentValue(custArr);
+      if (typeof firstValue !== "number") {
+        if (sortedUniqueValuesFirst.length !== currentValue.length) {
+          const custArr: any = [];
+          sortedUniqueValuesFirst.map((item: any) => {
+            custArr.push(item);
+          });
+          setCurrentValue(custArr);
+        } else {
+          setCurrentValue([]);
+        }
       } else {
-        setCurrentValue([]);
+        if (priceRanges.length !== currentValue.length) {
+          const custArr: any = [];
+          priceRanges.map((item: any) => {
+            custArr.push(item.value);
+          });
+          setCurrentValue(custArr);
+        } else {
+          setCurrentValue([]);
+        }
       }
     }
   };
@@ -121,10 +163,18 @@ export default function Filter({
         setIsSelectAllChecked(true);
       }
     } else {
-      if (sortedUniqueValuesFirst.length !== currentValue.length) {
-        setIsSelectAllChecked(false);
+      if (typeof firstValue !== "number") {
+        if (sortedUniqueValuesFirst.length !== currentValue.length) {
+          setIsSelectAllChecked(false);
+        } else {
+          setIsSelectAllChecked(true);
+        }
       } else {
-        setIsSelectAllChecked(true);
+        if (priceRanges.length !== currentValue.length) {
+          setIsSelectAllChecked(false);
+        } else {
+          setIsSelectAllChecked(true);
+        }
       }
     }
   }, [currentValue]);
@@ -133,7 +183,7 @@ export default function Filter({
     <div className="position-relative">
       <Tooltip
         anchorSelect={`#${column.id}list`}
-        place="bottom"
+        place="top"
         style={{
           backgroundColor: "white",
           color: "black",
@@ -163,51 +213,21 @@ export default function Filter({
           <div className={CustomReactTableStyles.filterContents}>
             {typeof firstValue === "number" ? (
               <>
-                <div className={CustomReactTableStyles.filterContainer}>
-                  <input
-                    type="checkbox"
-                    className={CustomReactTableStyles.filterCheckBox}
-                    id="0to25"
-                    name="0to25"
-                    value="0,24.99"
-                    defaultChecked={true}
-                  />
-                  $0.00 - $24.99
-                </div>
-                <div className={CustomReactTableStyles.filterContainer}>
-                  <input
-                    type="checkbox"
-                    className={CustomReactTableStyles.filterCheckBox}
-                    id="selectAll"
-                    name="selectAll"
-                    value="all"
-                    defaultChecked={true}
-                  />
-                  $25.00 - $99.99{" "}
-                </div>
-
-                <div className={CustomReactTableStyles.filterContainer}>
-                  <input
-                    type="checkbox"
-                    className={CustomReactTableStyles.filterCheckBox}
-                    id="selectAll"
-                    name="selectAll"
-                    value="all"
-                    defaultChecked={true}
-                  />
-                  $100.00 - $999.99
-                </div>
-                <div className={CustomReactTableStyles.filterContainer}>
-                  <input
-                    type="checkbox"
-                    className={CustomReactTableStyles.filterCheckBox}
-                    id="selectAll"
-                    name="selectAll"
-                    value="all"
-                    defaultChecked={true}
-                  />
-                  $1,000.00+
-                </div>
+                {priceRanges.map((range) => (
+                  <div
+                    key={range.value}
+                    className={CustomReactTableStyles.filterContainer}
+                  >
+                    <input
+                      type="checkbox"
+                      className={CustomReactTableStyles.filterCheckBox}
+                      value={range.value}
+                      checked={currentValue.includes(range.value)}
+                      onChange={() => handlePriceCheckboxChange(range.value)}
+                    />
+                    {range.label}
+                  </div>
+                ))}
               </>
             ) : (
               <>
