@@ -151,13 +151,8 @@ function ClaimInformation({
     setHide(true);
   };
   const handleUpload = (event: any) => {
-    console.log(event, "handleUpload");
-    // setPreviewImage(true);
-
-    // let imageArr: any[] = [];
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     let selectedImageArr: any[];
-    console.log(event.target.files);
     if (event.target.files[0].type == "application/pdf") {
       const newObj: MyObject = {
         imgType: "pdf",
@@ -171,9 +166,8 @@ function ClaimInformation({
       };
       selectedImageArr = [newObj];
     }
-    console.log(selectedImageArr, "selectedImageArr");
     setDocs((prev: any) => [...prev, ...selectedImageArr]);
-    console.log(docs, "checking docs");
+    event.target.value = null;
   };
 
   const handleShow = () => {
@@ -184,23 +178,11 @@ function ClaimInformation({
   const [zoomLevel, setZoomLevel] = useState(100);
 
   const handleDeleteImage = (index: number) => {
-    console.log(index, "handleDeleteImage");
-
     const docArray = docs.filter((elem, ind) => {
       if (ind !== index) {
         return elem;
       }
     });
-    console.log(docArray, "docArray");
-
-    // docs.splice(index, 1);
-    // if(docs.length === 0){
-    //   setDocs([]);
-    // } else {
-    //   setDocs([...docs]);
-    // }
-    // console.log(docs, "Docs updated i delete func");
-
     setDocs([...docArray]);
   };
 
@@ -215,9 +197,6 @@ function ClaimInformation({
   const handleZoomMid = () => {
     setZoomLevel(100);
   };
-  useEffect(() => {
-    console.log(docs, "checking docs in useeffect");
-  }, [docs]);
 
   const openModal = (url: string, imageType: string) => {
     setImagePreviewType(imageType);
