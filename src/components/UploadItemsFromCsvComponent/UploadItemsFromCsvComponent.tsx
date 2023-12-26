@@ -5,11 +5,8 @@ import GenericComponentHeading from "../common/GenericComponentHeading";
 import GenericButton from "../common/GenericButton";
 import UploadItemsStyle from "./uploadItemsFromCsvComponent.module.scss";
 import ExcelSheetTable from "./ExcelSheetTable";
-import { ConnectedProps, connect } from "react-redux";
-// import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Cards from "../common/Cards";
-
 import { useRouter } from "next/navigation";
 // import { useSearchParams } from "next/navigation";
 // import { useRouter } from "next/router";
@@ -18,12 +15,11 @@ import { useSearchParams } from "next/navigation";
 import { setExcelCsvUploadData } from "@/reducers/UploadCSV/excelCsvUploadSlice";
 import { fetchExcelCsvTableData } from "@/services/ClaimService";
 import ProgressBar from "../common/ProgressBar/ProgressBar";
+import { ConnectedProps, connect } from "react-redux";
+import { setActiveSection } from "@/reducers/UploadCSV/navigationSlice";
 // import { useRouter } from "next/navigation";
 // import { getServerCookie } from "@/utils/utitlity";
 
-// interface ExcelSheetTableProps {
-//   postLossItemDetails: any[];
-// }
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const { rowsProcessed, postLossItemDetails } = props;
 
@@ -168,12 +164,23 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const claimId = searchParams.get("claimDetail");
   console.log("claimIdsssssssssssss", claimId);
 
+  // const handleRouteChange = () => {
+  //   if (claimId) {
+  //     console.log("Navigating to /adjuster-property-claim-details/", claimId);
+  //     router.push(`/adjuster-property-claim-details/${claimId}`);
+  //   } else {
+  //     console.log("Navigating to /new-claim");
+  //     router.push("/new-claim");
+  //   }
+  // };
+
   const handleRouteChange = () => {
     if (claimId) {
-      console.log("Navigating to /adjuster-property-claim-details/", claimId);
+      console.log("Navi to /adjustr", claimId);
       router.push(`/adjuster-property-claim-details/${claimId}`);
     } else {
-      console.log("Navigating to /new-claim");
+      console.log("NavAddItemsComponent");
+      dispatch(setActiveSection(1));
       router.push("/new-claim");
     }
   };
@@ -392,10 +399,12 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
 const mapStateToProps = (state: RootState) => ({
   postLossItemDetails: state.excelCsvUpload.postLossItemDetails,
   rowsProcessed: state.excelCsvUpload.rowsProcessed,
+  activeSection: state.navigation.activeSection,
 });
 
 const mapDispatchToProps = {
   setExcelCsvUploadData,
+  setActiveSection,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
