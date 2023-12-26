@@ -38,9 +38,11 @@ const MessagesComponent: React.FC<connectorType> = (props: { messageList: any })
         </GenericComponentHeading>
         <div className={MessageCardStyle.messageListContainer}>
           {messageList?.length > 0 ? (
-            messageList?.map((message: any, index: any) => (
-              <NewMsgListComponent message={message} key={index} />
-            ))
+            messageList
+              ?.slice(0, 5)
+              ?.map((message: any, index: any) => (
+                <NewMsgListComponent message={message} key={index} />
+              ))
           ) : (
             <NoRecordComponent message="No New Message" />
           )}
