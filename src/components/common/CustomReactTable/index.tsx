@@ -9,6 +9,7 @@ import { flexRender } from "@tanstack/react-table";
 import NoRecordComponent from "../NoRecordComponent/NoRecordComponent";
 
 import Filter from "./Filter";
+import GenericInput from "../GenericInput/index";
 
 const CustomReactTable: React.FC<any> = React.memo((props) => {
   const {
@@ -19,13 +20,15 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     loader = null,
     tableDataErrorMsg = null,
     handleRowClick = null,
-    handleEditRowClick = null,
     fetchNextPage = null,
     totalFetched = null,
     totalDBRowCount = null,
     filterFn = null,
     customFilterValues = null,
     showPaginationButtons = true,
+    editableRowId = null,
+    editedData = null,
+    handleEditChange = null,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -170,13 +173,6 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                           },
                         }
                       : {})}
-                    {...(handleEditRowClick
-                      ? {
-                          onClick: () => {
-                            handleEditRowClick(row.original.id);
-                          },
-                        }
-                      : {})}
                   >
                     {row.getVisibleCells().map((cell: any, index: number) => (
                       <td
@@ -196,7 +192,18 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                             : undefined
                         }
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {editableRowId === row.original.id &&
+                        cell.column.columnDef?.meta?.editableField ? (
+                          <GenericInput
+                            type="text"
+                            value={editedData[cell.column.columnDef?.accessorKey]}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              handleEditChange(e, cell.column.columnDef?.accessorKey)
+                            }
+                          />
+                        ) : (
+                          <>{flexRender(cell.column.columnDef.cell, cell.getContext())}</>
+                        )}
                       </td>
                     ))}
                   </tr>
