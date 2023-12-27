@@ -6,7 +6,7 @@
   margin-top: 10px;
   .taskContentContainer {
     height: 86%;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     @include customscrollbar($lightGrey2, 6px, true);
   }

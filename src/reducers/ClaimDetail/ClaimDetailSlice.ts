@@ -5,7 +5,7 @@ const initialState: unknownObjectType = {
   subCategory: [],
   category: [],
   pendingTaskList: [],
-  messageLsit: [],
+  messageList: [],
   condition: [],
   retailer: [],
   room: [],
@@ -32,7 +32,7 @@ const ClaimDetailSlice = createSlice({
     },
     addMessageList(state, action) {
       const { payload } = action;
-      state.messageList = [...state.messageLsit, ...payload];
+      state.messageList = [...state.messageList, ...payload];
       return state;
     },
     addCondition(state, action) {
