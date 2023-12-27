@@ -302,16 +302,6 @@ export const getPolicyInfo = async (param: object) => {
   throw error;
 };
 
-export const getParticipants = async (param: object) => {
-  const url = getApiEndPoint("getParticipants");
-  const http = new HttpService({ isClient: true });
-  const res = await http.post(url, param);
-  const { data, error } = res;
-  console.log("coverage", res);
-  if (data) return { data };
-  throw error;
-};
-
 export const creatClaim = async (param: object) => {
   try {
     const url = getApiEndPoint("saveClaim");
