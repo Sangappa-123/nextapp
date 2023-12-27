@@ -598,6 +598,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 paddingTop: "4px",
                 paddingBottom: "4px",
                 marginRight: "12px",
+                width: "auto",
               }}
             >
               Add attachements
