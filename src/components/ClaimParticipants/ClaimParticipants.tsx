@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Cards from "../common/Cards/index";
-import clsx from "clsx";
+import Cards from "@/components/common/Cards";
 import { FaUserCircle } from "react-icons/fa";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
-import { CiMail } from "react-icons/ci";
+// import { CiMail } from "react-icons/ci";
+import { SlEnvolope } from "react-icons/sl";
 import Modal from "@/components/common/ModalPopups";
 import styles from "./ClaimParticipants.module.scss";
 import { IconContext } from "react-icons";
@@ -42,7 +42,7 @@ export default function ClaimParticipants() {
       ></Modal>
       <div className="row">
         {data.map((item, i) => (
-          <div className={clsx("row float-lg-right", styles.claimCards)} key={i}>
+          <div className={styles.claimCards} key={i}>
             <Cards>
               <div className={styles.participantsCardContainer}>
                 <IconContext.Provider value={{ className: styles.useCircle }}>
@@ -51,15 +51,12 @@ export default function ClaimParticipants() {
                 <div className={styles.name}>{item}Gregory, Rafael</div>
                 <div className={styles.companyName}>Evolution</div>
                 <div className={styles.role}>Claim Supervisor</div>
-                <div className={clsx("row", styles.phoneDiv)}></div>
                 <div className={styles.contactDetails}>
-                  <div>
-                    <div className={styles.phone}>(565) -656-5656</div>
-                  </div>
+                  <div className={styles.phone}>(565) -656-5656</div>
                   <div className={styles.mail}>
                     <button className={styles.mail} onClick={openModal}>
                       <IconContext.Provider value={{ className: styles.ciMail }}>
-                        <CiMail />
+                        <SlEnvolope />
                       </IconContext.Provider>
                     </button>
                   </div>

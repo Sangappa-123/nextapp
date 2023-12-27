@@ -1,3 +1,5 @@
+@use "@/scss/colors.scss" as *;
+
 .claimParticipants {
   height: 300px;
 }
@@ -14,27 +16,28 @@
   font-weight: 600;
   text-align: center;
   font-size: 13px;
-  padding-top: 2%;
+  margin-top: 1px;
 }
 .companyName {
   text-align: center;
   font-size: 12px;
   font-weight: 100;
-  padding-top: 2%;
+  margin-top: 1px;
 }
 .role {
   text-align: center;
   font-size: 12px;
   font-weight: 550;
-  padding-top: 2%;
+  margin-top: 1px;
 }
 .phone {
   text-align: center;
   font-size: 13px;
   font-weight: 100;
+  flex-grow: 1;
 }
 .heading {
-  padding: 2%;
+  margin: 16px 25px 0 25px;
   font-size: 18px;
   font-weight: 100;
 }
@@ -42,20 +45,17 @@
   background-color: transparent;
   border: none;
 }
-.phoneDiv {
-  padding: 3%;
-}
 .modalWidth {
   width: 40%;
 }
 
 .ciMail {
-  color: #23527c;
+  color: $blueJay;
   width: 20px;
   height: 17px;
 }
 .useCircle {
-  color: #23527c;
+  color: $blueJay;
   width: 100px;
   height: 60px;
   vertical-align: middle;
@@ -72,7 +72,5 @@
 .contactDetails {
   display: flex;
   justify-content: center;
-}
-.mail {
-  display: flex;
+  padding: 0 8px;
 }
