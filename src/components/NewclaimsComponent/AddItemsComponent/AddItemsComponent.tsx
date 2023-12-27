@@ -4,6 +4,8 @@ import GenericButton from "@/components/common/GenericButton";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import AddStyle from "./addItemsComponent.module.scss";
 import AddItemsTableComponent from "./AddItemsTableComponent";
+// import Cards from "@/components/common/Cards/index";
+// import NewclaimsComponent from "../NewclaimsComponents";
 
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
