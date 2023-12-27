@@ -14,33 +14,28 @@
   font-weight: 600;
   text-align: center;
   font-size: 13px;
-  font-family: "Open Sans", sans-serif;
   padding-top: 2%;
 }
 .companyName {
   text-align: center;
   font-size: 12px;
   font-weight: 100;
-  font-family: "Open Sans", sans-serif;
   padding-top: 2%;
 }
 .role {
   text-align: center;
   font-size: 12px;
   font-weight: 550;
-  font-family: "Open Sans", sans-serif;
   padding-top: 2%;
 }
 .phone {
   text-align: center;
   font-size: 13px;
   font-weight: 100;
-  font-family: "Open Sans", sans-serif;
 }
 .heading {
   padding: 2%;
   font-size: 18px;
-  font-family: "Open Sans", sans-serif;
   font-weight: 100;
 }
 .mail {
@@ -52,5 +47,11 @@
 }
 .modalWidth {
   width: 40%;
-  // height: 82%
+}
+.userCircle {
+  color: "#23527c";
+  width: "100px";
+  height: "60px";
+  vertical-align: "middle";
+  text-align: "center";
 }

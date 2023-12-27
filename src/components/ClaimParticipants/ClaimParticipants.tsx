@@ -29,7 +29,7 @@ export default function ClaimParticipants() {
 
   return (
     <div className={styles.claimParticipants}>
-      <div className={clsx(styles.heading)}>
+      <div className={styles.heading}>
         <GenericComponentHeading title={"Claim Participants"} />
       </div>
       <Modal
@@ -42,10 +42,10 @@ export default function ClaimParticipants() {
       <div className="row">
         {data.map((item, i) => (
           <div className={clsx("row float-lg-right", styles.claimCards)} key={i}>
-            <Cards className={clsx("col")}>
-              <div className={clsx("row")}>
-                <div className={clsx("col-lg-2")} />
-                <div className={clsx("col-lg-4")}>
+            <Cards className={"col"}>
+              <div className={"row"}>
+                <div className={"col-lg-2"} />
+                <div className={"col-lg-4"}>
                   {/* {i} */}
                   <FaUserCircle
                     style={{
@@ -59,15 +59,15 @@ export default function ClaimParticipants() {
                 </div>
               </div>
               <div>
-                <h3 className={styles.name}>{item}Gregory, Rafael</h3>
-                <h6 className={styles.companyName}>Evolution</h6>
-                <h4 className={styles.role}>Claim Supervisor</h4>
+                <div className={styles.name}>{item}Gregory, Rafael</div>
+                <div className={styles.companyName}>Evolution</div>
+                <div className={styles.role}>Claim Supervisor</div>
                 <div className={clsx("row", styles.phoneDiv)}>
-                  <div className={clsx("col-lg-2")} />
-                  <div className={clsx("col-lg-8")}>
-                    <h3 className={styles.phone}>(565) -656-5656</h3>
+                  <div className={"col-lg-2"} />
+                  <div className={"col-lg-8"}>
+                    <div className={styles.phone}>(565) -656-5656</div>
                   </div>
-                  <div className={clsx("col-lg-2")}>
+                  <div className={"col-lg-2"}>
                     <button className={styles.mail} onClick={openModal}>
                       <CiMail
                         style={{ color: "#23527c", width: "20px", height: "17px" }}
