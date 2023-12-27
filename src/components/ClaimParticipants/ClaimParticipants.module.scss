@@ -48,10 +48,31 @@
 .modalWidth {
   width: 40%;
 }
-.userCircle {
-  color: "#23527c";
-  width: "100px";
-  height: "60px";
-  vertical-align: "middle";
-  text-align: "center";
+
+.ciMail {
+  color: #23527c;
+  width: 20px;
+  height: 17px;
+}
+.useCircle {
+  color: #23527c;
+  width: 100px;
+  height: 60px;
+  vertical-align: middle;
+  text-align: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.participantsCardContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.contactDetails {
+  display: flex;
+  justify-content: center;
+}
+.mail {
+  display: flex;
 }
