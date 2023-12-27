@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Cards from "../common/Cards/index";
 import clsx from "clsx";
 import { FaUserCircle } from "react-icons/fa";
@@ -9,20 +9,11 @@ import styles from "./ClaimParticipants.module.scss";
 
 import AddNewMsgModalComponent from "../AdjusterPropertyClaimDetailComponent/ClaimDetailsCardsComponent/MessagesComponent/AddNewMsgModalComponent/AddNewMsgModalComponent";
 
-export default function ClaimParticipants(props) {
+export default function ClaimParticipants() {
   const [isOpen, setIsOpen] = useState(false);
   const data = [1, 2, 3];
-  useEffect(() => {
-    console.log("claimnumber", props.claimContentListRes);
-    // getParticipants()
-    //   .then((res: any) => {
-    //     console.log("loss", res);
-    //   })
-    //   .catch((error) => console.log(" Losserrr", error));
-  });
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -31,10 +22,6 @@ export default function ClaimParticipants(props) {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  // const handleClick = () => {
-  //   console.log("hiii");
-  // };
 
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
@@ -67,7 +54,6 @@ export default function ClaimParticipants(props) {
                       height: "60px",
                       verticalAlign: "middle",
                       textAlign: "center",
-                      // paddingLeft: "56px",
                     }}
                   />
                 </div>
