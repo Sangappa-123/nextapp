@@ -44,16 +44,17 @@
 .mail {
   background-color: transparent;
   border: none;
+  height: 14px;
+  .ciMail {
+    color: $blueJay;
+    width: 20px;
+    height: 14px;
+  }
 }
 .modalWidth {
   width: 40%;
 }
 
-.ciMail {
-  color: $blueJay;
-  width: 20px;
-  height: 17px;
-}
 .useCircle {
   color: $blueJay;
   width: 100px;
