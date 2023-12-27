@@ -1,0 +1,78 @@
+.claimParticipants {
+  height: 300px;
+}
+.claimCards {
+  position: relative;
+  height: 30%;
+  width: 20%;
+  padding: 20px;
+  padding-left: 30px;
+}
+.name {
+  position: relative;
+  color: #65a0d0;
+  font-weight: 600;
+  text-align: center;
+  font-size: 13px;
+  padding-top: 2%;
+}
+.companyName {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 100;
+  padding-top: 2%;
+}
+.role {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 550;
+  padding-top: 2%;
+}
+.phone {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 100;
+}
+.heading {
+  padding: 2%;
+  font-size: 18px;
+  font-weight: 100;
+}
+.mail {
+  background-color: transparent;
+  border: none;
+}
+.phoneDiv {
+  padding: 3%;
+}
+.modalWidth {
+  width: 40%;
+}
+
+.ciMail {
+  color: #23527c;
+  width: 20px;
+  height: 17px;
+}
+.useCircle {
+  color: #23527c;
+  width: 100px;
+  height: 60px;
+  vertical-align: middle;
+  text-align: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.participantsCardContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.contactDetails {
+  display: flex;
+  justify-content: center;
+}
+.mail {
+  display: flex;
+}
