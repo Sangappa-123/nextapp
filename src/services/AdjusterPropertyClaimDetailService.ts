@@ -29,7 +29,7 @@ export const getSubCategories = async (param?: { categoryId: number }) => {
     const resp = await http.post(url, payload);
     return resp;
   } catch (err: any) {
-    return null;
+    return err;
   }
 };
 export const getPendingTaskList = async (param: { claimId: string }) => {
@@ -39,7 +39,49 @@ export const getPendingTaskList = async (param: { claimId: string }) => {
     const resp = await http.post(url, param);
     return resp;
   } catch (err: any) {
-    return null;
+    return err;
+  }
+};
+export const getClaimParticipantsList = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("claimParticipantsUrl");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+export const getclaimContents = async (param: { claimId: string }) => {
+  const payload = { id: param?.claimId };
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("claimContentsUrl");
+    const resp = await http.post(url, payload);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+export const getClaimPolicyInfo = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("policyInfo");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+export const getCompanyDetails = async (companyId: string) => {
+  const payload = { id: companyId };
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("companyDetailsUrl");
+    const resp = await http.post(url, payload);
+    return resp;
+  } catch (err: any) {
+    return err;
   }
 };
 
@@ -52,14 +94,10 @@ export const getClaimDetailMessageList = async (param: {
     const http = new HttpService();
     let url = getApiEndPoint("claimDetailMessageList");
     url = `${url}?page=${param?.pageNo}&limit=${param?.recordPerPage}&claim_id=${param?.claimId}`;
-    console.log("url", url);
-
     const resp = await http.get(url);
-    console.log("resp", resp);
-
     return resp;
   } catch (err: any) {
-    return null;
+    return err;
   }
 };
 
@@ -83,7 +121,6 @@ export const getClaimItemRoom = async (claim: string) => {
     const http = new HttpService();
     let url = getApiEndPoint("lineItemRoom");
     url = url.replace("{{CLAIM}}", claim);
-    console.log("-099999999", url);
     const resp = await http.get(url);
     const { error } = resp;
     if (!error) {
