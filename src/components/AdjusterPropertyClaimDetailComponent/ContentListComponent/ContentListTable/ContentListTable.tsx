@@ -302,16 +302,26 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
 
     return true;
   };
-  const filterFn = async (currentValue: any, columnId: string) => {
+  const filterFn = async (
+    currentValue: any,
+    columnId: string,
+    currentTypeofFilter: string
+  ) => {
     const newfilterArr: any = [...filterSelected];
+
     const columnIndex = newfilterArr.findIndex((item: any) =>
       Object.prototype.hasOwnProperty.call(item, columnId)
     );
 
     if (columnIndex !== -1) {
-      newfilterArr[columnIndex][columnId] = { currentValue };
+      newfilterArr[columnIndex][columnId] = {
+        currentValue,
+        typeofFilter: newfilterArr[columnIndex][columnId].typeofFilter,
+      };
     } else {
-      newfilterArr.push({ [columnId]: { currentValue } });
+      newfilterArr.push({
+        [columnId]: { currentValue, typeofFilter: currentTypeofFilter },
+      });
     }
 
     setFilterSelected(newfilterArr);
@@ -322,19 +332,49 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       const colId = Object.keys(filterItem)[0];
 
       const values = filterItem[colId].currentValue;
+      const typeofFilter = filterItem[colId].typeofFilter;
 
-      filterArr = filterArr.filter((item: any) => {
-        if (item[colId] === null && values.includes("BLANK")) {
-          return true;
-        } else if (item[colId] === null && !values.includes("BLANK")) {
+      if (typeofFilter !== "number") {
+        filterArr = filterArr.filter((item: any) => {
+          if (item[colId] === null && values.includes("BLANK")) {
+            return true;
+          } else if (item[colId] === null && !values.includes("BLANK")) {
+            return false;
+          } else if (
+            values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
+          ) {
+            return true;
+          }
           return false;
-        } else if (
-          values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
-        ) {
-          return true;
-        }
-        return false;
-      });
+        });
+      } else {
+        filterArr = filterArr.filter((item: any) => {
+          return values.some((selectedPrice: any) => {
+            if (
+              selectedPrice === "$0.00 - $24.99" &&
+              item[colId] >= 0 &&
+              item[colId] <= 24.99
+            ) {
+              return true;
+            } else if (
+              selectedPrice === "$25.00 - $99.99" &&
+              item[colId] >= 25.0 &&
+              item[colId] <= 99.99
+            ) {
+              return true;
+            } else if (
+              selectedPrice === "$100.00 - $999.99" &&
+              item[colId] >= 100.0 &&
+              item[colId] <= 999.99
+            ) {
+              return true;
+            } else if (selectedPrice === "$1,000.00+") {
+              return item[colId] >= 1000.0;
+            }
+            return false;
+          });
+        });
+      }
     });
 
     await updateClaimContentListData({ claimContentList: filterArr });
@@ -401,7 +441,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDataCount={claimContentListData.length}
           pageLimit={claimContentListData.length}
           loader={tableLoader}
-          tableDataErrorMsg={claimErrorMsg}
+          tableDataErrorMsg={claimResult.length === 0 ? "No Record Found" : claimErrorMsg}
           fetchNextPage={fetchNextPage}
           totalFetched={claimResult.length}
           totalDBRowCount={claimContentListData.length}

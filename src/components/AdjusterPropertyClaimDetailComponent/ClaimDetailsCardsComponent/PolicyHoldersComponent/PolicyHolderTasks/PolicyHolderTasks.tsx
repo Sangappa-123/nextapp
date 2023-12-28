@@ -1,13 +1,17 @@
-import React from "react";
 import clsx from "clsx";
 import PolicyHolderTasksStyle from "./PolicyHolderTasks.module.scss";
+import { convertToCurrentTimezone } from "@/utils/helper";
 
 interface PolicyHolderTasksProps {
-  elem: any;
+  pendingTask: any;
   handleOpenTaskModal: any;
 }
 
-const PolicyHolderTasks = ({ elem, handleOpenTaskModal }: PolicyHolderTasksProps) => {
+const PolicyHolderTasks = ({
+  pendingTask,
+  handleOpenTaskModal,
+}: PolicyHolderTasksProps) => {
+  const dateFormate = "MMM DD YYYY, h:mm A";
   return (
     <>
       <div
@@ -15,13 +19,13 @@ const PolicyHolderTasks = ({ elem, handleOpenTaskModal }: PolicyHolderTasksProps
         onClick={handleOpenTaskModal}
       >
         <div className={clsx(PolicyHolderTasksStyle.labelStyle, "col-5")}>
-          {elem.formName}
+          {pendingTask?.taskName}
         </div>
         <div className={clsx(PolicyHolderTasksStyle.labelStatus, "col-3")}>
-          {elem.status}
+          {pendingTask?.status?.status}
         </div>
         <div className={clsx(PolicyHolderTasksStyle.labelStyle, "col-4")}>
-          {elem.assignedDate}
+          {convertToCurrentTimezone(pendingTask?.assignedDate, dateFormate)}
         </div>
       </div>
     </>

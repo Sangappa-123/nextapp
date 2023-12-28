@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Cards from "@/components/common/Cards";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
-// import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
 import PolicyHolderTasks from "./PolicyHolderTasks";
 import Link from "next/link";
 import PolicyHolderCradStyle from "./PolicyHolderCard.module.scss";
@@ -10,77 +9,20 @@ import Modal from "@/components/common/ModalPopups";
 import PolicyCreateTaskModalComponent from "./PolicyCreateTaskModalComponent";
 import NewTaskModal from "./NewTaskModal.tsx";
 import clsx from "clsx";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
+import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
 
-const PolicyHoldersComponent: React.FC = () => {
+const PolicyHoldersComponent: React.FC<connectorType> = (props: {
+  pendingTaskList: any;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openTaskModal, setOpenTaskModal] = useState(false);
+  const { pendingTaskList } = props;
 
   const handleOpenTaskModal = () => {
     setOpenTaskModal(!openTaskModal);
   };
-
-  const dataArray = [
-    {
-      formName: "Attach Picture of the damage",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "List of sechduled items lost/damaged",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Police report",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Picture of the damage",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "List of sechduled items lost/damaged",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Police report",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Picture of the damage",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "List of sechduled items lost/damaged",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Police report",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Picture of the damage",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "List of sechduled items lost/damaged",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-    {
-      formName: "Attach Police report",
-      status: "PENDING",
-      assignedDate: "Dec 18, 2023 9:13 AM",
-    },
-  ];
 
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
@@ -105,24 +47,32 @@ const PolicyHoldersComponent: React.FC = () => {
           </div>
         </GenericComponentHeading>
         <div className={PolicyHolderCradStyle.taskContentContainer}>
-          <div className={clsx(PolicyHolderCradStyle.formNameContainer, "col-12 p-2")}>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-5")}>
-              Form Name
+          {pendingTaskList?.length > 0 && (
+            <div className={clsx(PolicyHolderCradStyle.formNameContainer, "col-12 p-2")}>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-5")}>
+                Form Name
+              </div>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-3")}>
+                Status
+              </div>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-4")}>
+                Assigned Date
+              </div>
             </div>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-3")}>Status</div>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-4")}>
-              Assigned Date
-            </div>
-          </div>
-          {/* <NoRecordComponent message="No task available" /> */}
-          {dataArray?.map((elem, index) => (
-            <PolicyHolderTasks
-              elem={elem}
-              key={index}
-              handleOpenTaskModal={handleOpenTaskModal}
-            />
-          ))}
-
+          )}
+          {pendingTaskList?.length > 0 ? (
+            pendingTaskList
+              ?.slice(0, 5)
+              ?.map((pendingTask: any, index: any) => (
+                <PolicyHolderTasks
+                  pendingTask={pendingTask}
+                  key={index}
+                  handleOpenTaskModal={handleOpenTaskModal}
+                />
+              ))
+          ) : (
+            <NoRecordComponent message="No task available" />
+          )}
           <div>
             <Modal
               isOpen={openTaskModal}
@@ -141,4 +91,10 @@ const PolicyHoldersComponent: React.FC = () => {
     </>
   );
 };
-export default PolicyHoldersComponent;
+const mapStateToProps = (state: RootState) => ({
+  pendingTaskList: state.claimDetail.pendingTaskList,
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(PolicyHoldersComponent);

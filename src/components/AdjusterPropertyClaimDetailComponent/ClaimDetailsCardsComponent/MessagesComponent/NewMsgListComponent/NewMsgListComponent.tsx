@@ -24,7 +24,7 @@ const NewMsgListComponent = ({ message }: newMsgProps) => {
   const changeReverted = () => {
     setDivVisible(false);
   };
-  const dateFormate = "MMM DD, h:mm a";
+  const dateFormate = "MMM DD, h:mm A";
   return (
     <>
       <div className={clsx(NewMsgStyle.container, "col-12 row")}>

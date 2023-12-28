@@ -258,6 +258,7 @@ function ClaimInformation({
             control={control}
             name="claimDate"
             rules={{ required: true }}
+            defaultValue={new Date()}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
               // console.log("console", { ...rest });
               return (
@@ -329,7 +330,7 @@ function ClaimInformation({
           <Controller
             control={control}
             name="lossType"
-            rules={{ required: true }}
+            rules={{ required: false }}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
               // console.log("console", { ...rest });
               return (

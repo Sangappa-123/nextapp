@@ -2,7 +2,7 @@
 
 import React, { Suspense, useState } from "react";
 import Cards from "../common/Cards/index";
-import { object, email, string, minLength, number, boolean, any } from "valibot";
+import { object, email, string, minLength, number, any } from "valibot";
 // import { useRouter } from "next/navigation";
 import useCustomForm from "@/hooks/useCustomForm";
 import NewClaimsStyle from "./newClaimStyle.module.scss";
@@ -18,18 +18,24 @@ import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 import { creatClaim, postClaim } from "@/services/ClaimService";
 import { insuranceSelector } from "@/reducers/Session/SessionSlice";
-import { useAppSelector } from "@/hooks/reduxCustomHook";
+import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
+import { RootState } from "@/store/store";
 import dayjs from "dayjs";
 // import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
+import { ConnectedProps, connect } from "react-redux";
+import {
+  selectActiveSection,
+  setActiveSection,
+} from "@/reducers/UploadCSV/navigationSlice";
 import Loading from "@/app/[lang]/loading";
 
-function NewclaimsComponent() {
-  const dispatch = useDispatch();
-  const [activeSection, setActiveSection] = useState(0);
-  // const router = useRouter();
+const NewclaimsComponent: React.FC<connectorType> = () => {
+  // const [activeSection, setActiveSection] = useState(0);
+  const dispatch = useAppDispatch();
+  const activeSection = useAppSelector(selectActiveSection);
   const insuranceCompany = useAppSelector(insuranceSelector);
 
   console.log("insurancecompany", insuranceCompany);
@@ -80,11 +86,7 @@ function NewclaimsComponent() {
     ]),
     taxRate: string("Tax Rate"),
     contentLimits: string("Content Limits", [minLength(1, "Policy number")]),
-    lossType: object({
-      id: number("id"),
-      name: string("name"),
-      active: boolean("active"),
-    }),
+    lossType: any(),
     homeOwnersPolicyType: object({
       id: number("id"),
       typeName: string("typeName"),
@@ -208,7 +210,7 @@ function NewclaimsComponent() {
           claimType: "HOME",
           applyTax: true,
           taxRate: data.taxRate,
-          damageTypeId: data.lossType.id,
+          damageTypeId: data.lossType?.id ?? 9,
           deductible: data.claimDeductible,
           additionalNote: null,
           incidentDate: dayjs(data.claimDate).format("YYYY-MM-DDTHH:mm:ssZ[Z]"),
@@ -264,7 +266,9 @@ function NewclaimsComponent() {
         );
         const creatClaimRes = await creatClaim(formData);
         if (creatClaimRes?.status === 200) {
-          setActiveSection((prev) => prev + 1);
+          const nextSection = activeSection + 1;
+          console.log("Next Section", nextSection);
+          dispatch(setActiveSection(nextSection));
           dispatch(
             addNotification({
               message: creatClaimRes.message,
@@ -305,17 +309,17 @@ function NewclaimsComponent() {
   };
 
   const handleSectionClick = (index: number) => {
-    if (index === activeSection) {
-      setActiveSection(index);
-    }
+    dispatch(setActiveSection(index));
   };
 
   const handleAssignItemsClick = () => {
-    setActiveSection(2);
+    dispatch(setActiveSection(2));
   };
 
   const handlePreviousClick = () => {
-    setActiveSection((prev) => prev - 1);
+    const prevSection = activeSection - 1;
+    console.log("Form Data on Previous Click", getValues());
+    dispatch(setActiveSection(prevSection));
   };
 
   const handleClose = () => {
@@ -481,6 +485,19 @@ function NewclaimsComponent() {
       )}
     </div>
   );
-}
+};
 
-export default NewclaimsComponent;
+// export default NewclaimsComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  activeSection: state.navigation.activeSection,
+});
+
+const mapDispatchToProps = {
+  selectActiveSection,
+  setActiveSection,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(NewclaimsComponent);
