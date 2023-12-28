@@ -7,10 +7,12 @@ import AssignItemsStyle from "./assignItemsComponent.module.scss";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
+  // selectedRowsData: any[];
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps> = ({
   onNewClaimsClick,
+  // selectedRowsData,
 }) => {
   const [isSbmitItemsDisabled, setSubmitItemsDisabled] = useState(true);
 
@@ -63,7 +65,10 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps> = ({
         />
       </div>
       <div>
-        <AssignItemsTableComponent />
+        <AssignItemsTableComponent
+          // selectedRowsData={selectedRowsData}
+          onNewClaimsClick={handlePreviousClick}
+        />
       </div>
       <div className="row mt-3 justify-content-end">
         <div className="col-auto">

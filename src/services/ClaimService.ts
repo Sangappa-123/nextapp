@@ -317,3 +317,17 @@ export const creatClaim = async (param: object) => {
     return err;
   }
 };
+
+export const fetchImportCsvData = async (payload: any) => {
+  const url = getApiEndPoint("importCsvTable");
+  const http = new HttpService({ isClient: true, isFormData: false });
+  const res = await http.post(url, payload);
+  return res;
+};
+
+export const fetchAddItemsTableCSVData = async (payload: any) => {
+  const url = getApiEndPoint("addItemsListTable");
+  const http = new HttpService({ isClient: true, isFormData: false });
+  const res = await http.post(url, payload);
+  return res;
+};

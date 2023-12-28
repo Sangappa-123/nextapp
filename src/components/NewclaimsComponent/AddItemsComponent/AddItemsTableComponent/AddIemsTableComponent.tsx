@@ -10,19 +10,32 @@ import SearchBoxAddItems from "./SearchBoxAddItems";
 import ListAddItemsTable from "./ListAddItemsTable";
 import Modal from "@/components/common/ModalPopups";
 import AddItemModalForm from "@/components/AddItemModalForm";
+import { ConnectedProps, connect } from "react-redux";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+// import { useAppSelector } from "@/hooks/reduxCustomHook";
+import {
+  setAddItemsTableData,
+  setSelectedItems,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { RootState } from "@/store/store";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
-  onSetAssignItemsDisabled: (value: boolean) => void;
-  isAssignItemsDisabled: boolean;
+  isAnyItemSelected: boolean;
+  // selectedItems
+  // selectedItems: any[];
 }
 
-const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
+const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
   onAssignItemsClick,
-  onSetAssignItemsDisabled,
-  isAssignItemsDisabled,
+  isAnyItemSelected,
+  selectedItems,
+  // addItemsTableData,
+  // selectedItems,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  // const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
 
   const openModal = () => {
@@ -31,6 +44,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCheckboxChange = (item: any) => {
+    const updatedSelectedItems = selectedItems.includes(item)
+      ? selectedItems.filter((selectedItem) => selectedItem !== item)
+      : [...selectedItems, item];
+    dispatch(setSelectedItems(updatedSelectedItems));
   };
 
   return (
@@ -61,12 +81,16 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
           <div
             className={`col-lg-2 col-md-2 col-sm-12 col-12 mt-2 mb-2 ${AddTableSTyle.assignButtonStyle}`}
           >
-            <AssignAddItemButton
+            {/* <AssignAddItemButton
               onAssignItemsClick={() => {
                 onAssignItemsClick();
                 onSetAssignItemsDisabled(true);
               }}
               isButtonDisabled={isAssignItemsDisabled}
+            /> */}
+            <AssignAddItemButton
+              isAnyItemSelected={isAnyItemSelected}
+              onClick={onAssignItemsClick}
             />
           </div>
           <div
@@ -82,9 +106,23 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
         </div>
       </div>
       <div className="row">
-        <ListAddItemsTable />
+        <ListAddItemsTable onCheckboxChange={handleCheckboxChange} />
       </div>
     </>
   );
 };
-export default AddItemsTableComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+  isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
+});
+
+const mapDispatchToProps = {
+  setAddItemsTableData,
+  setSelectedItems,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AddItemsTableComponent);

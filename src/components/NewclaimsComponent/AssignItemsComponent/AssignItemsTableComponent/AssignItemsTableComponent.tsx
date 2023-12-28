@@ -8,8 +8,22 @@ import ItemsAssignListTable from "./ItemsAssignListTable";
 import SearchBoxAssignItems from "./SearchBoxAssignItems";
 import VendorSearchBoxAssignItems from "./VendorSearchBoxAssignItems";
 import VendorAssignListTable from "./VendorAssignListTable";
+import { ConnectedProps, connect } from "react-redux";
+import {} from // setAddItemsTableData,
+// setSelectedItems,
+"@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { RootState } from "@/store/store";
 
-const AssignItemsTableComponent: React.FC = () => {
+interface AssignItemsTableComponentProps {
+  onNewClaimsClick: () => void;
+  // selectedRowsData: any[];
+}
+
+const AssignItemsTableComponent: React.FC<
+  AssignItemsTableComponentProps & connectorType
+> = () => {
+  // console.log(selectedRowsData);
+
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
@@ -99,7 +113,9 @@ const AssignItemsTableComponent: React.FC = () => {
         </div>
         {/* </div> */}
         <div className={AssignTableSTyle.styleTable}>
-          <ItemsAssignListTable />
+          <ItemsAssignListTable
+          // selectedRowsData={selectedRowsData}
+          />
         </div>
       </Cards>
       <Cards className="mt-2">
@@ -159,4 +175,17 @@ const AssignItemsTableComponent: React.FC = () => {
     </>
   );
 };
-export default AssignItemsTableComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+});
+
+const mapDispatchToProps = {
+  // setAddItemsTableData,
+  // setSelectedItems,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AssignItemsTableComponent);

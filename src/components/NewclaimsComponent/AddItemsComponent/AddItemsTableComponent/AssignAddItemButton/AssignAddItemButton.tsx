@@ -1,26 +1,27 @@
 import React from "react";
 import GenericButton from "@/components/common/GenericButton";
-
 interface AssignAddItemButtonProps {
-  onAssignItemsClick: () => void;
-  isButtonDisabled: boolean;
+  isAnyItemSelected: boolean;
+  // onAssignItemsClick: () => void;
+  onClick: () => void;
 }
 
-function AssignAddItemButton({
-  onAssignItemsClick,
-  isButtonDisabled,
-}: AssignAddItemButtonProps) {
+const AssignAddItemButton: React.FC<AssignAddItemButtonProps> = ({
+  isAnyItemSelected,
+  // onAssignItemsClick,
+  onClick,
+}) => {
   return (
     <>
       <GenericButton
         label="Assign Items"
         size="small"
         type="submit"
-        onClick={onAssignItemsClick}
-        disabled={isButtonDisabled}
+        disabled={isAnyItemSelected === undefined || !isAnyItemSelected}
+        onClick={onClick}
       />
     </>
   );
-}
+};
 
 export default AssignAddItemButton;

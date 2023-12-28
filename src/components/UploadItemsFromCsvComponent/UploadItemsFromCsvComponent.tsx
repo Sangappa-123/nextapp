@@ -17,8 +17,9 @@ import { fetchExcelCsvTableData } from "@/services/ClaimService";
 import ProgressBar from "../common/ProgressBar/ProgressBar";
 import { ConnectedProps, connect } from "react-redux";
 import { setActiveSection } from "@/reducers/UploadCSV/navigationSlice";
-// import { useRouter } from "next/navigation";
-// import { getServerCookie } from "@/utils/utitlity";
+import { fetchAddItemsTableCSVData, fetchImportCsvData } from "@/services/ClaimService";
+import { setAddItemsTableData } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { toast } from "react-toastify";
 
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const { rowsProcessed, postLossItemDetails } = props;
@@ -35,6 +36,10 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [validItemsCount, setValidItemsCount] = useState<number>(0);
   const [failedItemsCount, setFailedItemsCount] = useState<number>(0);
+  const [isUploadFinished, setIsUploadFinished] = useState(false);
+  const [shouldRenderContent, setShouldRenderContent] = useState(false);
+
+  // const [addItemsTableData, setAddItemsTableData] = useState<any[]>([]);
 
   const handleCancelClick = () => {
     setSelectedFile(null);
@@ -43,6 +48,8 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
     setIsLoading(false);
     setUploadProgress(0);
     setExcelData(null);
+    setIsUploadFinished(false);
+    setShouldRenderContent(false);
   };
 
   const serverAddress = process.env.NEXT_PUBLIC_SERVER_ADDRESS;
@@ -96,7 +103,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
           // setIsFileUploaded(true);
           const { postLossItemDetails } = response.data;
           dispatch(setExcelCsvUploadData(response.data));
-
+          // dispatch(setAddItemsTableData(postLossItemDetails));
           const failedItems = postLossItemDetails.filter(
             (item: any) => !item.isValidItem
           );
@@ -172,6 +179,100 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
       console.log("NavAddItemsComponent");
       dispatch(setActiveSection(1));
       router.push("/new-claim");
+    }
+  };
+
+  const handleFinishUpload = async () => {
+    let shouldNavigate = false;
+    if (isFileUploaded && excelData) {
+      const claimId = sessionStorage.getItem("claimId") || "";
+      const claimNumber = sessionStorage.getItem("claimNumber") || "";
+      const payload = { claimNumber, postlossItems: excelData };
+
+      try {
+        const importCsvResponse = await fetchImportCsvData(payload);
+
+        if (importCsvResponse.status === 200) {
+          const addItemsPayload = { claimId, claimNumber };
+          const addItemsTableResponse = await fetchAddItemsTableCSVData(addItemsPayload);
+
+          if (addItemsTableResponse.status === 200) {
+            dispatch(setAddItemsTableData(addItemsTableResponse.data));
+
+            const { failedItems } = addItemsTableResponse.data;
+
+            if (failedItems && failedItems.length > 0) {
+              setIsUploadFinished(true);
+              setUploadProgress(60);
+              shouldNavigate = false;
+              setShouldRenderContent(true);
+            } else {
+              const invalidItems = excelData.filter((item) => !item.isValidItem);
+
+              if (invalidItems.length > 0) {
+                setIsUploadFinished(true);
+
+                setUploadProgress(0);
+                setIsLoading(false);
+
+                const totalSteps = 6;
+                const interval = 1000;
+
+                for (let i = 0; i <= totalSteps; i++) {
+                  await new Promise((resolve) => setTimeout(resolve, interval));
+                  const percentage = ((i / totalSteps) * 60).toFixed(0);
+                  setUploadProgress(Number(percentage));
+                }
+                shouldNavigate = false;
+                setShouldRenderContent(true);
+                toast.error(
+                  "Error: Some items failed to import. Please check the details."
+                );
+              } else {
+                setIsUploadFinished(true);
+                setUploadProgress(0);
+                setIsLoading(false);
+
+                const totalSteps = 10;
+                const interval = 500;
+                toast.success("Success: All items imported successfully!");
+                for (let i = 0; i <= totalSteps; i++) {
+                  await new Promise((resolve) => setTimeout(resolve, interval));
+                  const percentage = ((i / totalSteps) * 100).toFixed(0);
+                  setUploadProgress(Number(percentage));
+                }
+                shouldNavigate = true;
+              }
+            }
+          } else {
+            console.error("Error fetching addItemsTable data", addItemsTableResponse);
+            toast.error("Error: Failed to fetch addItemsTable data.");
+          }
+        } else {
+          console.error("Error importing CSV data", importCsvResponse);
+          toast.error("Error: Failed to import CSV data.");
+        }
+      } catch (error) {
+        console.error("Error handling finish upload", error);
+        toast.error("Error: An unexpected error occurred.");
+      } finally {
+        setUploadProgress(0);
+        // setIsLoading(false);
+
+        // const totalSteps = 10;
+        // const interval = 500;
+
+        // for (let i = 0; i <= totalSteps; i++) {
+        //   await new Promise((resolve) => setTimeout(resolve, interval));
+        //   const percentage = ((i / totalSteps) * 100).toFixed(0);
+        //   setUploadProgress(Number(percentage));
+        // }
+        if (shouldNavigate) {
+          dispatch(setActiveSection(1));
+          router.push("/new-claim");
+          setShouldRenderContent(false);
+        }
+      }
     }
   };
 
@@ -278,7 +379,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
         </div>
         // </div>
       )}
-      {isFileUploaded && excelData && (
+      {isFileUploaded && excelData && !isUploadFinished && (
         <>
           <Cards className="ml-2 mr-2">
             <div>
@@ -318,6 +419,7 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                           // theme="lightBlue"
                           size="small"
                           type="submit"
+                          onClickHandler={handleFinishUpload}
                         />
                       </div>
                     </div>
@@ -375,12 +477,213 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
               </div>
 
               <ExcelSheetTable />
+
               {/* </div> */}
             </div>
           </Cards>
         </>
       )}
-      {console.log("exxxxxxxxxxxxx", excelData)}
+      {isUploadFinished && !shouldRenderContent && (
+        <Cards className="ml-2 mr-2">
+          <div>
+            <div className="p-2">
+              <GenericComponentHeading
+                title="Upload Status"
+                customHeadingClassname={UploadItemsStyle.infomationStyle}
+                customTitleClassname={UploadItemsStyle.customTitleClassname}
+              />
+            </div>
+            <div className="row">
+              <div className="col-lg-8 col-md-8 col-sm-12">
+                <p className={`mt-2 ${UploadItemsStyle.pTitleTextfinish}`}>
+                  File Name :{" "}
+                  <span className={UploadItemsStyle.spanTitle}>
+                    {selectedFile ? selectedFile.name : ""}
+                  </span>
+                </p>
+              </div>
+            </div>
+            {/* <div className="col-lg-4 col-md-4 col-sm-12"> */}
+            <div className="d-flex mt-2">
+              <div className="col-lg-2 col-md-2">
+                <p className={`mt-2 ${UploadItemsStyle.statusTextfinish}`}>Status : </p>
+              </div>
+              <div
+                className={`col-lg-7 col-md-7 mt-2 ${UploadItemsStyle.progressBarContainer2}`}
+              >
+                <ProgressBar value={uploadProgress} />
+              </div>
+              {/* </div> */}
+            </div>
+            <div>
+              <p className={`mt-2 ${UploadItemsStyle.pTitleTextRowsProcessfinish}`}>
+                Rows Processed :{" "}
+                <span className={UploadItemsStyle.spanTitle}>0/{rowsProcessed}</span>
+              </p>
+            </div>
+            <div>
+              <p className={`mt-2 ${UploadItemsStyle.newItemsCreatedfinish}`}>
+                New Items Created :{" "}
+                <span className={UploadItemsStyle.spanTitle}>0/{rowsProcessed}</span>
+              </p>
+            </div>
+            <div>
+              <p className={`mt-2 ${UploadItemsStyle.itemsUpdatedfinish}`}>
+                Item Updated :{" "}
+                <span className={UploadItemsStyle.spanTitle}>0/{rowsProcessed}</span>
+              </p>
+            </div>
+            <div>
+              <p className={`mt-2 ${UploadItemsStyle.pTitleTextRowsfinish}`}>
+                Valid Item(s):{" "}
+                <span className={UploadItemsStyle.spanTitle}>
+                  {validItemsCount}/{rowsProcessed}
+                </span>
+              </p>
+            </div>
+            <div>
+              <p className={`mt-2 mb-3 ${UploadItemsStyle.pTitleTextRowsFailedfinish}`}>
+                Failed Item(s):{" "}
+                <span className={UploadItemsStyle.spanTitle}>
+                  {failedItemsCount}/{rowsProcessed}
+                </span>
+              </p>
+            </div>
+            <div className="row mb-4">
+              <div className="col-2" />
+              <div className="col-7">
+                {failedItemsCount > 0 && (
+                  <div>
+                    <table className={UploadItemsStyle.customTable}>
+                      <thead>
+                        <tr>
+                          <th>Item #</th>
+                          <th>Reason</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {postLossItemDetails
+                          .filter((item) => item.isValidItem === false)
+                          .map((failedItem) => (
+                            <tr key={failedItem.id}>
+                              <td>{failedItem.id}</td>
+                              <td>{failedItem.failedReasons}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </Cards>
+      )}
+
+      {isFileUploaded && excelData && isUploadFinished && shouldRenderContent && (
+        <>
+          <Cards className="ml-2 mr-2">
+            <div>
+              <div>
+                <div className="p-2">
+                  <GenericComponentHeading
+                    title="Verify Information"
+                    customHeadingClassname={UploadItemsStyle.infomationStyle}
+                    customTitleClassname={UploadItemsStyle.customTitleClassname}
+                  />
+                </div>
+                <div className="row">
+                  <div className="col-lg-8 col-md-8 col-sm-12">
+                    <p className={`mt-2 ${UploadItemsStyle.pTitleText}`}>
+                      File Name :{" "}
+                      <span className={UploadItemsStyle.spanTitle}>
+                        {selectedFile ? selectedFile.name : ""}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="col-lg-4 col-md-4 col-sm-12">
+                    <div className="row justify-content-end">
+                      <div className="col-auto">
+                        <GenericButton
+                          label="Cancel"
+                          // theme="lightBlue"
+                          size="small"
+                          type="submit"
+                          onClick={() => {
+                            handleCancelClick();
+                          }}
+                        />
+                      </div>
+                      <div className="col-auto">
+                        <GenericButton
+                          label="Finish Upload"
+                          // theme="lightBlue"
+                          size="small"
+                          type="submit"
+                          onClickHandler={handleFinishUpload}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p className={`mt-2 ${UploadItemsStyle.pTitleTextRowsProcess}`}>
+                    Rows Processed :{" "}
+                    <span className={UploadItemsStyle.spanTitle}>{rowsProcessed}</span>
+                  </p>
+                </div>
+                <div>
+                  <p className={`mt-2 ${UploadItemsStyle.pTitleTextRows}`}>
+                    Valid Item(s):{" "}
+                    <span className={UploadItemsStyle.spanTitle}>
+                      {validItemsCount}/{rowsProcessed}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <p className={`mt-2 mb-3 ${UploadItemsStyle.pTitleTextRowsFailed}`}>
+                    Failed Item(s):{" "}
+                    <span className={UploadItemsStyle.spanTitle}>
+                      {failedItemsCount}/{rowsProcessed}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div className="row mb-4">
+                <div className="col-2" />
+                <div className="col-7">
+                  {failedItemsCount > 0 && (
+                    <div>
+                      <table className={UploadItemsStyle.customTable}>
+                        <thead>
+                          <tr>
+                            <th>Item #</th>
+                            <th>Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {postLossItemDetails
+                            .filter((item) => item.isValidItem === false)
+                            .map((failedItem) => (
+                              <tr key={failedItem.id}>
+                                <td>{failedItem.id}</td>
+                                <td>{failedItem.failedReasons}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <ExcelSheetTable />
+            </div>
+          </Cards>
+        </>
+      )}
+
+      {/* {!isUploadFinished && <p>skjjdddddddddddddddddh</p>} */}
     </>
   );
 };
@@ -390,11 +693,13 @@ const mapStateToProps = (state: RootState) => ({
   postLossItemDetails: state.excelCsvUpload.postLossItemDetails,
   rowsProcessed: state.excelCsvUpload.rowsProcessed,
   activeSection: state.navigation.activeSection,
+  addItemsTableData: state.addItemsTable.addItemsTableData,
 });
 
 const mapDispatchToProps = {
   setExcelCsvUploadData,
   setActiveSection,
+  setAddItemsTableData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

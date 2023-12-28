@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -7,9 +7,15 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableListStyle from "./itemsAssignListTable.module.scss";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
 
-const ItemsAssignListTable: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false);
+interface ItemsAssignListTableProps {
+  // selectedRowsData: any[];
+}
+const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = () => {
+  // const [isChecked, setIsChecked] = useState(false);
+  // const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
   type AddItemsData = {
     item: string;
@@ -28,29 +34,31 @@ const ItemsAssignListTable: React.FC = () => {
   const columnHelper = createColumnHelper<AddItemsData>();
 
   const columns = [
-    columnHelper.accessor("select", {
+    columnHelper.accessor("", {
       id: "checkbox",
-      header: () => <input type="checkbox" />,
+      header: () => (
+        <input
+          type="checkbox"
+          // onChange={() => handleCheckboxChange("header")}
+        />
+      ),
       cell: () => (
         <input
           type="checkbox"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-          //   className={TableLisStyle.checkboxInput}
+          // checked={selectedRowsData.some((row) => row.item === info.row.original.item)}
+          // onChange={() => handleCheckboxChange(info.row.original.item)}
         />
       ),
     }),
     columnHelper.accessor("item", {
       header: () => `Item #`,
     }),
-
     columnHelper.accessor("description", {
       header: () => `Description`,
     }),
     columnHelper.accessor("quantity", {
       header: () => `Quantity`,
     }),
-
     columnHelper.accessor("statedValue", {
       header: () => `Stated Value`,
     }),
@@ -59,7 +67,6 @@ const ItemsAssignListTable: React.FC = () => {
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-
     columnHelper.accessor("category", {
       header: () => `Category`,
     }),
@@ -102,11 +109,10 @@ const ItemsAssignListTable: React.FC = () => {
       scheduledItem: "No",
     },
   ];
-
   const table = useReactTable({
     columns,
     data,
-    getCoreRowModel: getCoreRowModel<AddItemsData>(),
+    getCoreRowModel: getCoreRowModel(),
     enableSorting: true,
     enableColumnFilters: false,
   });
@@ -141,4 +147,16 @@ const ItemsAssignListTable: React.FC = () => {
   );
 };
 
-export default ItemsAssignListTable;
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+});
+
+const mapDispatchToProps = {
+  // setAddItemsTableData,
+  // setSelectedItems,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ItemsAssignListTable);
