@@ -6,6 +6,10 @@ const initialState: unknownObjectType = {
   category: [],
   pendingTaskList: [],
   messageList: [],
+  participants: [],
+  contents: {},
+  policyInfo: {},
+  companyDetails: {},
   condition: [],
   retailer: [],
   room: [],
@@ -35,6 +39,26 @@ const ClaimDetailSlice = createSlice({
       state.messageList = [...state.messageList, ...payload];
       return state;
     },
+    addParticipants(state, action) {
+      const { payload } = action;
+      state.participants = [...state.participants, ...payload];
+      return state;
+    },
+    addContents(state, action) {
+      const { payload } = action;
+      state.constants = { ...state.constants, ...payload };
+      return state;
+    },
+    addPolicyInfo(state, action) {
+      const { payload } = action;
+      state.policyInfo = { ...state.policyInfo, ...payload };
+      return state;
+    },
+    addCompanyDetails(state, action) {
+      const { payload } = action;
+      state.companyDetails = { ...state.companyDetails, ...payload };
+      return state;
+    },
     addCondition(state, action) {
       const { payload } = action;
       state.condition = { ...state.condition, ...payload };
@@ -53,7 +77,11 @@ export const {
   addCategories,
   addSubcategories,
   addPendingTasks,
+  addContents,
+  addPolicyInfo,
+  addCompanyDetails,
   addMessageList,
   addCondition,
   addRetailer,
+  addParticipants,
 } = ClaimDetailSlice.actions;
