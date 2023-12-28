@@ -6,9 +6,6 @@ import AddStyle from "./addItemsComponent.module.scss";
 import AddItemsTableComponent from "./AddItemsTableComponent";
 import { useRouter } from "next/navigation";
 import { ConnectedProps, connect } from "react-redux";
-import {} from // setAddItemsTableData,
-// setSelectedItems,
-"@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 
 interface AddItemsComponentProps {

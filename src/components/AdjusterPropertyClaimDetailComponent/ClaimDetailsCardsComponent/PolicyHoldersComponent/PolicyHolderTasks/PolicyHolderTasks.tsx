@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import PolicyHolderTasksStyle from "./PolicyHolderTasks.module.scss";
 import { convertToCurrentTimezone } from "@/utils/helper";
@@ -7,12 +6,12 @@ interface PolicyHolderTasksProps {
   pendingTask: any;
   handleOpenTaskModal: any;
 }
-const dateFormate = "MMM DD YYYY, h:mm a";
 
 const PolicyHolderTasks = ({
   pendingTask,
   handleOpenTaskModal,
 }: PolicyHolderTasksProps) => {
+  const dateFormate = "MMM DD YYYY, h:mm A";
   return (
     <>
       <div

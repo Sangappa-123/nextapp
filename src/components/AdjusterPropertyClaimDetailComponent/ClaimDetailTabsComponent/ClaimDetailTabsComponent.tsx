@@ -1,3 +1,4 @@
+import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 
@@ -31,7 +32,12 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Claim Participants",
-      content: "",
+      content: (
+        <ClaimParticipants
+          claimContentListRes={props.claimContentListRes}
+          claimId={props.claimId}
+        />
+      ),
     },
     {
       name: "Activity Log",
