@@ -4,13 +4,13 @@ import { createSlice } from "@reduxjs/toolkit";
 type initialStateType = {
   [key: string]: any;
 };
-const initialState: initialStateType = {
+export const initialSessionState: initialStateType = {
   lang: "",
   name: "",
 };
 
 const SessionSlice = createSlice({
-  initialState,
+  initialState: initialSessionState,
   name: "session",
   reducers: {
     updateLoadingState(state, action) {

@@ -21,26 +21,31 @@ const ClaimDetailSlice = createSlice({
   reducers: {
     addCategories(state, action) {
       const { payload } = action;
+      state.category = new Set();
       state.category = [...state.category, ...payload];
       return state;
     },
     addSubcategories(state, action) {
       const { payload } = action;
+      state.subCategory = new Set();
       state.subCategory = [...state.subCategory, ...payload];
       return state;
     },
     addPendingTasks(state, action) {
       const { payload } = action;
+      state.pendingTaskList = new Set();
       state.pendingTaskList = [...state.pendingTaskList, ...payload];
       return state;
     },
     addMessageList(state, action) {
       const { payload } = action;
+      state.messageList = new Set();
       state.messageList = [...state.messageList, ...payload];
       return state;
     },
     addParticipants(state, action) {
       const { payload } = action;
+      state.participants = new Set();
       state.participants = [...state.participants, ...payload];
       return state;
     },
