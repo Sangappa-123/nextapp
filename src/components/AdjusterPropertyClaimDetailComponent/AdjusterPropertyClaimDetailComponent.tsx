@@ -12,6 +12,8 @@ import {
   addSubcategories,
   addCondition,
   addRetailer,
+  addRoom,
+  addRoomType,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 // import PageTitleSectionComponent from "./PageTitleSectionComponent";
 // import useScroll from "@/hooks/useScrollHook";
@@ -26,6 +28,8 @@ type propsTypes = {
   claimDetailMessageListRes: any;
   claimContitionRes: any;
   claimRetailerRes: any;
+  claimRoomRes: any;
+  claimRoomTypeRes: any;
 };
 
 const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
@@ -38,6 +42,8 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimDetailMessageListRes,
   claimContitionRes,
   claimRetailerRes,
+  claimRoomRes,
+  claimRoomTypeRes,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -54,7 +60,9 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
     dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
   }
   dispatch(addCondition(claimContitionRes?.data));
-  dispatch(addRetailer(claimRetailerRes?.data));
+  dispatch(addRetailer(claimRetailerRes?.data?.retailers));
+  dispatch(addRoom(claimRoomRes));
+  dispatch(addRoomType(claimRoomTypeRes));
 
   const pathList = [
     {

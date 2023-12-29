@@ -97,20 +97,26 @@ const ClaimContentSlice = createSlice({
       const { itemDetailData, previousItem, nextItem } = payload;
 
       const itemData = {
-        // description: itemDetailData.description,
-        // status: itemDetailData.status?.status ?? null,
-        // category: itemDetailData.category?.name ?? null,
-        // quantity: itemDetailData.quantity,
-        // rcvTotal: itemDetailData.rcvTotal,
-        // totalStatedAmount: itemDetailData.totalStatedAmount,
-        // vendorName: itemDetailData.vendorName,
-        // adjusterDescription: itemDetailData.adjusterDescription,
-        // itemTag: itemDetailData.itemTag ?? null,
-        // cashPayoutExposure: itemDetailData.cashPayoutExposure,
         claimId: itemDetailData.claimId,
         itemId: itemDetailData.id,
         itemUID: itemDetailData.itemUID,
         itemNumber: itemDetailData.itemNumber,
+        description: itemDetailData.description,
+        quantity: itemDetailData.quantity,
+        insuredPrice: itemDetailData.insuredPrice,
+        category: {
+          id: itemDetailData.category?.categoryId,
+          name: itemDetailData.category?.categoryName,
+        },
+        subCategory: itemDetailData.subCategory,
+        ageYears: itemDetailData.ageYears,
+        ageMonths: itemDetailData.ageMonths,
+        applyTax: itemDetailData.applyTax,
+        room: itemDetailData.room,
+        condition: itemDetailData.condition,
+        originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
+        isScheduledItem: itemDetailData.isScheduledItem,
+        scheduleAmount: itemDetailData.scheduleAmount,
       };
       state.editItemDetail = itemData;
       state.previousItem = previousItem;

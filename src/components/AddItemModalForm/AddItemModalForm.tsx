@@ -1,7 +1,7 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import clsx from "clsx";
-import { object, string, number, minLength, Output } from "valibot";
+import { object, string, number, minLength, Output, nullish } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 import GenericInput from "@/components/common/GenericInput";
 import GenericButton from "@/components/common/GenericButton";
@@ -18,10 +18,16 @@ import ImagePreviewModal from "./ImagePreviewModal";
 import { RiArrowLeftCircleFill } from "react-icons/ri";
 import { RiArrowRightCircleFill } from "react-icons/ri";
 import { ConnectedProps, connect } from "react-redux";
-import { getPreviousItem, getNextItem } from "@/services/AddItemContentService";
-import { getCategories } from "@/services/ClaimService";
+import {
+  getPreviousItem,
+  getNextItem,
+  addContentItem,
+} from "@/services/AddItemContentService";
+import GenericTextArea from "../common/GenericTextArea/index";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useParams } from "next/navigation";
 
-interface MyObject {
+interface objectType {
   imgType: string;
   url: string;
 }
@@ -30,29 +36,40 @@ interface typeProps {
   [key: string | number]: any;
 }
 const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
-  const { editItem, editItemDetail, previousItem, nextItem } = props;
-
+  const {
+    editItem,
+    editItemDetail,
+    previousItem,
+    nextItem,
+    category,
+    subCategory,
+    condition,
+    originallyPurchasedFrom,
+    roomType,
+    room,
+    addNotification,
+  } = props;
+  const { claimId } = useParams();
   const [newRetailerInputField, setNewRetailerInputField] = useState(false);
   const [newRoomInputField, setNewRoomInputField] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imagePreviewType, setImagePreviewType] = useState("");
-  const [topping, setTopping] = useState("yes");
-  const [sechduledItemRadio, setSechduledItemRadio] = useState("no");
-  const [categoriesData, setCategoriesData] = useState([]);
+  const [applyTaxState, setapplyTaxState] = useState("yes");
+  const [isScheduledItemState, SetScheduledItemState] = useState("no");
 
   const [docs, setDocs] = useState<string[]>([]);
 
   const [zoomLevel, setZoomLevel] = useState(100);
 
-  const onOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
-    setTopping(e.target.value);
+  const onTaxOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
+    setapplyTaxState(e.target.value);
   };
 
-  const onRadioButtonChange = (e: {
+  const onScheduleItemChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setSechduledItemRadio(e.target.value);
+    SetScheduledItemState(e.target.value);
   };
 
   const handleZoomIn = () => {
@@ -66,21 +83,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const handleZoomMid = () => {
     setZoomLevel(100);
   };
-
-  useEffect(() => {
-    getCategories()
-      .then((res: any) => {
-        setCategoriesData(res?.data);
-      })
-      .catch((error) => console.log("facing errr", error));
-  }, []);
-
-  const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ];
-  const style = { height: "20px" };
 
   const openModal = (url: string, imageType: string) => {
     setImagePreviewType(imageType);
@@ -103,13 +105,13 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     let selectedImageArr: any[];
     if (event.target.files[0].type == "application/pdf") {
-      const newObj: MyObject = {
+      const newObj: objectType = {
         imgType: "pdf",
         url: imageUrl,
       };
       selectedImageArr = [newObj];
     } else {
-      const newObj: MyObject = {
+      const newObj: objectType = {
         imgType: "jpg",
         url: imageUrl,
       };
@@ -127,69 +129,135 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     });
     setDocs([...docArray]);
   };
+  const defaultValue = useMemo(() => {
+    return {
+      description: editItemDetail.description ?? null,
+      quantity: editItemDetail.quantity ?? null,
+      insuredPrice: editItemDetail.insuredPrice ?? null,
+      category: editItemDetail.category ?? null,
+      subCategory: editItemDetail.subCategory ?? null,
+      ageYears: editItemDetail.ageYears ?? null,
+      ageMonths: editItemDetail.ageMonths ?? null,
+      room: editItemDetail.room ?? null,
+      condition: editItemDetail.condition ?? null,
+      originallyPurchasedFrom: editItemDetail.originallyPurchasedFrom ?? null,
+      scheduleAmount: editItemDetail.scheduleAmount ?? null,
+    };
+  }, [editItemDetail]);
 
   const schema = object({
-    // username: string("Your email must be a string.", [
-    //   minLength(1, "User name field is required."),
-    //   email("Please enter valid email."),
-    // ]),
-    description: string("Your description must be a string.", [
-      minLength(1, "description field is required."),
+    description: string(" Description must be a string.", [
+      minLength(1, "Description field is required."),
     ]),
-    quantity: number("Your quantity must be a string."),
-
-    price: string("Your price must be a number."),
-
-    category: object({
-      label: string("Your label must be a string."),
-      value: string("Your value must be a string."),
-    }),
-    subcategory: object({
-      label: string("Your label must be a string."),
-      value: string("Your value must be a string."),
-    }),
-    years: string("your years must be number"),
-
-    months: string("your months must be number"),
-
-    room: object({
-      label: string("Your label must be a string."),
-      value: string("Your value must be a string."),
-    }),
-    condition: object({
-      label: string("Your label must be a string."),
-      value: string("Your value must be a string."),
-    }),
-    originalPurchase: object({
-      label: string("Your label must be a string."),
-      value: string("Your value must be a string."),
-    }),
-    addRetailer: string("your add retailer string must be number"),
-
-    roomName: string("your roomName string must be string"),
-
-    sechduledAmount: string("Your sechduledAmount must be a string.", [
-      minLength(1, "sechduled Amount field is required."),
-    ]),
+    quantity: nullish(string("Quantity must be a number")),
+    insuredPrice: nullish(string("Price must be a number")),
+    category: nullish(
+      object({
+        categoryName: string(),
+        categoryId: number(),
+      })
+    ),
+    subCategory: nullish(
+      object({
+        name: string(),
+        id: number(),
+      })
+    ),
+    ageYears: nullish(string("Years must be a number")),
+    ageMonths: nullish(string("Month must be a number")),
+    room: nullish(
+      object({
+        roomName: string(),
+        id: number(),
+      })
+    ),
+    condition: nullish(
+      object({
+        conditionName: string(),
+        conditionId: number(),
+      })
+    ),
+    originallyPurchasedFrom: nullish(
+      object({
+        id: number(),
+        name: string(),
+      })
+    ),
+    scheduleAmount: nullish(string("Amount must be a number")),
+    roomName: nullish(string()),
+    addRetailer: nullish(string()),
   });
 
-  const { register, handleSubmit, formState, control } = useCustomForm(schema);
+  const { register, handleSubmit, formState, control, setValue } = useCustomForm(
+    schema,
+    defaultValue
+  );
 
   const { errors } = formState;
+  console.log(errors);
 
-  const onSubmit = (data: Output<typeof schema>) => {
-    console.log(register("quantity"), "quantity added");
+  useEffect(() => {
+    if (editItemDetail) {
+      setValue("description", editItemDetail.description ?? null);
+      setValue("quantity", editItemDetail.quantity ?? null);
+      setValue("insuredPrice", editItemDetail.insuredPrice ?? null);
+      setValue("category", editItemDetail.category ?? null);
+      setValue("subCategory", editItemDetail.subCategory ?? null);
+      setValue("ageYears", editItemDetail.ageYears ?? null);
+      setValue("ageMonths", editItemDetail.ageMonths ?? null);
+      setValue("room", editItemDetail.room ?? null);
+      setValue("condition", editItemDetail.condition ?? null);
+      setValue("originallyPurchasedFrom", editItemDetail.originallyPurchasedFrom ?? null);
+      setValue("scheduleAmount", editItemDetail.scheduleAmount ?? null);
+    }
+  }, [editItemDetail, setValue]);
 
-    console.log(data, "form got submitted on submit");
+  const formSubmit = async (data: Output<typeof schema>) => {
+    console.log(data);
+
+    const payload = {
+      claimId: claimId,
+      claimNumber: sessionStorage.getItem("claimNumber") ?? "",
+      description: data.description,
+      quantity: data.quantity,
+      insuredPrice: data.insuredPrice,
+      applyTax: applyTaxState === "yes" ? true : false,
+      ageYears: data.ageYears,
+      ageMonths: data.ageMonths,
+      isScheduledItem: isScheduledItemState === "yes" ? true : false,
+      scheduleAmount: data.scheduleAmount,
+      category: {
+        id: data?.category?.categoryId,
+        name: data?.category?.categoryName,
+      },
+      subCategory: data.subCategory,
+      room: data.room,
+      condition: data.condition,
+      originallyPurchasedFrom: data.originallyPurchasedFrom,
+    };
+    const formData = new FormData();
+    formData.append("itemDetails", JSON.stringify(payload));
+    console.log(formData);
+
+    const addItemRes = await addContentItem(formData);
+    if (addItemRes?.status === 200) {
+      addNotification({
+        message: "Item Added Successfully",
+        id: "add_content_item_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: addItemRes.message ?? "Something went wrong.",
+        id: "add_content_item_failure",
+        status: "error",
+      });
+    }
   };
-
-  // function selectFile(): any {
-  //   throw new Error("Function not implemented.");
-  // }
 
   return (
     <div className={addClaimFormStyle.addItemContainer}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(formSubmit)}>
         <div className={addClaimFormStyle.containerScroll}>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
@@ -197,11 +265,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               <label className={addClaimFormStyle.labelStyle}> Item Description:</label>
             </div>
             <div className="col-8">
-              <textarea
-                className="col-12"
-                // showError={errors["description"]}
-                // errorMsg={errors?.description?.message}
-                style={{ height: "50px", padding: "5px" }}
+              <GenericTextArea
+                showError={errors["description"]}
+                errorMsg={errors?.description?.message}
                 id="description"
                 placeholder="Description"
                 {...register("description")}
@@ -221,7 +287,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   placeholder="Quantity"
                   id="quantity"
                   autoComplete="off"
-                  // label="Quantity"
                   {...register("quantity")}
                   type={"number"}
                   inputFieldClassname="hideInputArrow"
@@ -233,13 +298,12 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               <div className="row col-4 p-0">
                 <GenericInput
                   formControlClassname={addClaimFormStyle.inputBox}
-                  showError={errors["price"]}
-                  errorMsg={errors?.price?.message}
+                  showError={errors["insuredPrice"]}
+                  errorMsg={errors?.insuredPrice?.message}
                   autoComplete="off"
                   placeholder="$0.00"
-                  id="price"
-                  // label="Price"
-                  {...register("price")}
+                  id="insuredPrice"
+                  {...register("insuredPrice")}
                   type={"number"}
                   inputFieldClassname="hideInputArrow"
                 />
@@ -256,20 +320,18 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   <Controller
                     control={control}
                     name={"category"}
-                    rules={{ required: true }}
                     render={({ field: { ...rest } }: any) => (
                       <GenericSelect
                         placeholder={""}
-                        options={categoriesData}
+                        options={category}
+                        name={"category"}
                         getOptionLabel={(option: { categoryName: any }) =>
-                          option?.categoryName
+                          option.categoryName
                         }
                         getOptionValue={(option: { categoryId: any }) =>
                           option.categoryId
                         }
-                        name={"category"}
                         showLabel={false}
-                        style={style}
                         {...rest}
                       />
                     )}
@@ -286,13 +348,14 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <div className="col-10">
                   <Controller
                     control={control}
-                    name={"subcategory"}
-                    rules={{ required: true }}
+                    name={"subCategory"}
                     render={({ field: { ...rest } }: any) => (
                       <GenericSelect
                         placeholder={""}
-                        options={options}
-                        name={"subcategory"}
+                        options={subCategory}
+                        name={"subCategory"}
+                        getOptionLabel={(option: { name: string }) => option.name}
+                        getOptionValue={(option: { id: number }) => option.id}
                         showLabel={false}
                         {...rest}
                       />
@@ -314,13 +377,13 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               <div className="col-3 p-0">
                 <GenericInput
                   formControlClassname={addClaimFormStyle.inputBox}
-                  // showError={errors["years"]}
-                  // errorMsg={errors?.username?.message}
+                  showError={errors["ageYears"]}
+                  errorMsg={errors?.ageYears?.message}
                   placeholder="Years"
-                  id="years"
+                  id="ageYears"
                   type="number"
                   inputFieldClassname="hideInputArrow"
-                  {...register("years")}
+                  {...register("ageYears")}
                 />
               </div>
               <div className="col-2">
@@ -329,14 +392,13 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               <div className="col-3 p-0">
                 <GenericInput
                   formControlClassname={addClaimFormStyle.inputBox}
-                  // showError={errors["months"]}
-                  // errorMsg={errors?.username?.message}
+                  showError={errors["ageMonths"]}
+                  errorMsg={errors?.ageMonths?.message}
                   placeholder="Months"
-                  id="months"
+                  id="ageMonths"
                   type="number"
                   inputFieldClassname="hideInputArrow"
-                  inputmode="numeric"
-                  {...register("months")}
+                  {...register("ageMonths")}
                 />
               </div>
               <div className="col-2">
@@ -357,7 +419,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   render={({ field: { ...rest } }: any) => (
                     <GenericSelect
                       placeholder={""}
-                      options={options}
+                      options={room}
+                      getOptionLabel={(option: { roomName: any }) => option.roomName}
+                      getOptionValue={(option: { id: any }) => option.id}
                       name={"room"}
                       showLabel={false}
                       // formControlClassname={addClaimFormStyle.genericSelect}
@@ -397,7 +461,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                         render={({ field: { ...rest } }: any) => (
                           <GenericSelect
                             placeholder={"RoomType"}
-                            options={options}
+                            options={roomType}
                             name={"room"}
                             showLabel={false}
                             // formControlClassname={addClaimFormStyle.genericSelect}
@@ -428,9 +492,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   inputFieldClassname={addClaimFormStyle.inputField}
                   value="yes"
                   label="Yes"
+                  name="applyTax"
                   labelClassname={addClaimFormStyle.labelClassname}
-                  checked={topping === "yes"}
-                  onChange={onOptionChange}
+                  checked={applyTaxState === "yes"}
+                  onChange={onTaxOptionChange}
                 />
                 <GenericInput
                   type="radio"
@@ -440,10 +505,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   value="no"
                   label="No"
                   labelClassname={addClaimFormStyle.labelClassname}
-                  // id="no"
-                  checked={topping === "no"}
-                  // name="applyTax"
-                  onChange={onOptionChange}
+                  checked={applyTaxState === "no"}
+                  name="applyTax"
+                  onChange={onTaxOptionChange}
                 />
               </div>
 
@@ -454,15 +518,18 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <Controller
                   control={control}
                   name={"condition"}
-                  rules={{ required: true }}
                   render={({ field: { ...rest } }: any) => (
                     <GenericSelect
                       placeholder={"Average"}
-                      options={options}
+                      options={condition}
                       name={"condition"}
+                      getOptionLabel={(option: { conditionName: any }) =>
+                        option.conditionName
+                      }
+                      getOptionValue={(option: { conditionId: any }) =>
+                        option.conditionId
+                      }
                       showLabel={false}
-                      // formControlClassname={addClaimFormStyle.genericSelect}
-                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
                       {...rest}
                     />
                   )}
@@ -481,13 +548,14 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               <div className="col-3 p-0">
                 <Controller
                   control={control}
-                  name={"originalPurchase"}
-                  rules={{ required: true }}
+                  name={"originallyPurchasedFrom"}
                   render={({ field: { ...rest } }: any) => (
                     <GenericSelect
                       placeholder={""}
-                      options={options}
-                      name={"originalPurchase"}
+                      name={"originallyPurchasedFrom"}
+                      options={originallyPurchasedFrom}
+                      getOptionLabel={(option: { name: string }) => option.name}
+                      getOptionValue={(option: { id: number }) => option.id}
                       showLabel={false}
                       isSearchable={true}
                       // formControlClassname={addClaimFormStyle.genericSelect}
@@ -539,10 +607,12 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   inputFieldWrapperClassName={addClaimFormStyle.wrapper}
                   inputFieldClassname={addClaimFormStyle.inputField}
                   value="yes"
+                  name="isScheduledItem"
+                  id="isScheduledItem-yes"
                   label="Yes"
                   labelClassname={addClaimFormStyle.labelClassname}
-                  checked={sechduledItemRadio === "yes"}
-                  onChange={onRadioButtonChange}
+                  checked={isScheduledItemState === "yes"}
+                  onChange={onScheduleItemChange}
                 />
                 <GenericInput
                   type="radio"
@@ -550,34 +620,39 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   inputFieldWrapperClassName={addClaimFormStyle.wrapper1}
                   inputFieldClassname={addClaimFormStyle.inputField1}
                   value="no"
+                  name="isScheduledItem"
+                  id="isScheduledItem-no"
                   label="No"
                   labelClassname={addClaimFormStyle.labelClassname}
-                  checked={sechduledItemRadio === "no"}
-                  onChange={onRadioButtonChange}
+                  checked={isScheduledItemState === "no"}
+                  onChange={onScheduleItemChange}
                 />
               </div>
 
-              {sechduledItemRadio === "yes" && (
-                <div className={clsx("col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
-                  <span style={{ color: "red" }}>*</span>
-                  <label className={addClaimFormStyle.labelStyle}>Scheduled Amount</label>
-                </div>
-              )}
-              {sechduledItemRadio === "yes" && (
-                <div className="row col-4 p-0">
-                  <GenericInput
-                    formControlClassname={addClaimFormStyle.inputBox}
-                    showError={errors["sechduledAmount"]}
-                    errorMsg={errors?.sechduledAmount?.message}
-                    autoComplete="off"
-                    placeholder="Scheduled Amount"
-                    id="sechduledAmount"
-                    // label="Price"
-                    {...register("sechduledAmount")}
-                    type={"number"}
-                    inputFieldClassname="hideInputArrow"
-                  />
-                </div>
+              {isScheduledItemState === "yes" && (
+                <>
+                  <div className={clsx("col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
+                    <span style={{ color: "red" }}>*</span>
+                    <label className={addClaimFormStyle.labelStyle}>
+                      Scheduled Amount
+                    </label>
+                  </div>
+
+                  <div className="row col-4 p-0">
+                    <GenericInput
+                      formControlClassname={addClaimFormStyle.inputBox}
+                      showError={errors["scheduleAmount"]}
+                      errorMsg={errors?.scheduleAmount?.message}
+                      autoComplete="off"
+                      placeholder="Scheduled Amount"
+                      id="scheduleAmount"
+                      // label="Price"
+                      {...register("scheduleAmount")}
+                      type={"number"}
+                      inputFieldClassname="hideInputArrow"
+                    />
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -588,7 +663,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             style={{ height: "25px", justifyContent: "right", alignItems: "center" }}
           >
             <label
-              htmlFor="inp"
+              htmlFor="file"
               className={clsx(addClaimFormStyle.labelStyle, "row col-8")}
               style={{
                 backgroundColor: "#dddddd",
@@ -605,7 +680,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             </label>
             <input
               type="file"
-              id="inp"
+              id="file"
               multiple
               style={{ display: "none" }}
               accept=".png,.jpg,.jpeg,.pdf"
@@ -770,12 +845,20 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   );
 };
 
-const mapStateToProps = ({ claimContentdata }: any) => ({
+const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
   editItemDetail: claimContentdata.editItemDetail,
   previousItem: claimContentdata.previousItem,
   nextItem: claimContentdata.nextItem,
+  category: claimDetail.category,
+  subCategory: claimDetail.subCategory,
+  condition: claimDetail.condition,
+  originallyPurchasedFrom: claimDetail.retailer,
+  room: claimDetail.room,
+  roomType: claimDetail.roomType,
 });
-
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = {
+  addNotification,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(AddItemModalForm);

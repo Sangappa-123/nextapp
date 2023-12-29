@@ -109,3 +109,26 @@ export const getClaimItemRetailers = async () => {
     return err;
   }
 };
+
+export const getClaimRoomData = async (claim: string) => {
+  try {
+    const http = new HttpService();
+    let url = getApiEndPoint("lineItemRoom");
+    url = url.replace("{{CLAIM}}", claim);
+    const resp = await http.get(url);
+    return resp?.data ?? [];
+  } catch (err: any) {
+    return [];
+  }
+};
+
+export const getClaimRoomTypeData = async () => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("roomTypeApi");
+    const resp = await http.get(url);
+    return resp?.data ?? [];
+  } catch (err: any) {
+    return [];
+  }
+};
