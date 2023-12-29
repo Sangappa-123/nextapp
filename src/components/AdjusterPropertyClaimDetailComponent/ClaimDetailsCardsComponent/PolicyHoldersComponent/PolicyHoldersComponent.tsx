@@ -47,15 +47,19 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
           </div>
         </GenericComponentHeading>
         <div className={PolicyHolderCradStyle.taskContentContainer}>
-          <div className={clsx(PolicyHolderCradStyle.formNameContainer, "col-12 p-2")}>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-5")}>
-              Form Name
+          {pendingTaskList?.length > 0 && (
+            <div className={clsx(PolicyHolderCradStyle.formNameContainer, "col-12 p-2")}>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-5")}>
+                Form Name
+              </div>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-3")}>
+                Status
+              </div>
+              <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-4")}>
+                Assigned Date
+              </div>
             </div>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-3")}>Status</div>
-            <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-4")}>
-              Assigned Date
-            </div>
-          </div>
+          )}
           {pendingTaskList?.length > 0 ? (
             pendingTaskList
               ?.slice(0, 5)

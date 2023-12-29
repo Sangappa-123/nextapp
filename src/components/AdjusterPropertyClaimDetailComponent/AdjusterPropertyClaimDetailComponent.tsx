@@ -4,7 +4,7 @@ import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
-import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import {
   addCategories,
   addMessageList,
@@ -14,7 +14,14 @@ import {
   addRetailer,
   addRoom,
   addRoomType,
+  addParticipants,
+  addContents,
+  addPolicyInfo,
+  addCompanyDetails,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import { useEffect } from "react";
+import selectCompanyId from "@/reducers/Session/Selectors/selectCompanyId";
+import { getCompanyDetails } from "@/services/AdjusterPropertyClaimDetailService";
 // import PageTitleSectionComponent from "./PageTitleSectionComponent";
 // import useScroll from "@/hooks/useScrollHook";
 
@@ -30,6 +37,9 @@ type propsTypes = {
   claimRetailerRes: any;
   claimRoomRes: any;
   claimRoomTypeRes: any;
+  claimParticipantsRes: any;
+  claimContentsRes: any;
+  policyInfoRes: any;
 };
 
 const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
@@ -44,8 +54,12 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimRetailerRes,
   claimRoomRes,
   claimRoomTypeRes,
+  claimParticipantsRes,
+  claimContentsRes,
+  policyInfoRes,
 }) => {
   const dispatch = useAppDispatch();
+  const companyId = useAppSelector(selectCompanyId);
 
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
@@ -59,6 +73,15 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
     dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
   }
+  if (Array.isArray(claimParticipantsRes?.data)) {
+    dispatch(addParticipants(claimParticipantsRes?.data));
+  }
+  if (claimContentsRes?.data) {
+    dispatch(addContents(claimContentsRes?.data));
+  }
+  if (policyInfoRes?.data) {
+    dispatch(addPolicyInfo(policyInfoRes?.data));
+  }
   dispatch(addCondition(claimContitionRes?.data));
   dispatch(addRetailer(claimRetailerRes?.data?.retailers));
   dispatch(addRoom(claimRoomRes));
@@ -68,7 +91,6 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
     {
       name: "Home",
       path: "/adjuster-dashboard",
-      // active: true,
     },
     {
       name: "055CLM5122023Avi",
@@ -76,6 +98,18 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
       active: true,
     },
   ];
+
+  useEffect(() => {
+    const getCompanyDetailInit = async () => {
+      if (companyId) {
+        const companyDetailsRes: any = await getCompanyDetails(companyId);
+        if (companyDetailsRes?.data) {
+          dispatch(addCompanyDetails(companyDetailsRes));
+        }
+      }
+    };
+    getCompanyDetailInit();
+  }, [companyId, dispatch]);
 
   if (claimContentListRes?.status === 200 && serviceRequestListRes?.status === 200) {
     return (
