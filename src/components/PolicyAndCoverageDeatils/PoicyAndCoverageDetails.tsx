@@ -7,14 +7,15 @@ import { ImLoop2 } from "react-icons/im";
 import { IconContext } from "react-icons";
 import {
   getCoreRowModel,
-  createColumnHelper, // SortingState,
+  createColumnHelper,
   useReactTable,
-  // PaginationState,
 } from "@tanstack/react-table";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
 import CustomReactTable from "../common/CustomReactTable/index";
 
 export default function PolicyAndCoverageDetails() {
+  // const [show, setShow] = useState(false);
+
   const columnHelper = createColumnHelper<unknown>();
   const columns = [
     columnHelper.accessor("categoryName", {
@@ -31,6 +32,9 @@ export default function PolicyAndCoverageDetails() {
       id: "Individual Item Limit",
     }),
   ];
+  // const handleClick = () => {
+  //   setShow(true);
+  // };
   const claimResult = [
     {
       categoryName: "Others	",
@@ -115,7 +119,7 @@ export default function PolicyAndCoverageDetails() {
           </div>
         </Cards>
       </div>
-      <div className={styles.card1}>
+      <div className={styles.card2}>
         <Cards className={styles.cardPolicy}>
           <GenericComponentHeading
             title={"Category Limits"}
@@ -207,14 +211,13 @@ export default function PolicyAndCoverageDetails() {
           </div>
         </Cards>
       </div>
-      <div>
+      <div className={styles.categoryLimit}>
         <GenericComponentHeading
           title={"Category Limits"}
           customHeadingClassname={styles.categoryLimit}
           customTitleClassname={styles.customTitleClassname}
         />
         <div className={styles.table}>
-          {/* <CommonTable columns={columns} data={[tableData]} /> */}
           <CustomReactTable table={table} />
         </div>
       </div>
