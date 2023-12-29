@@ -16,7 +16,7 @@ import CustomReactTable from "../common/CustomReactTable/index";
 export default function PolicyAndCoverageDetails() {
   // const [show, setShow] = useState(false);
 
-  const columnHelper = createColumnHelper<string, unknown>();
+  const columnHelper = createColumnHelper<string>();
   const columns = [
     columnHelper.accessor("categoryName", {
       header: () => "Category Name	",
