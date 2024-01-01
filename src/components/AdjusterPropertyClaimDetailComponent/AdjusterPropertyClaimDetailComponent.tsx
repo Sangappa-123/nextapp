@@ -61,6 +61,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
 
+  console.log(claimRoomRes);
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
   }
@@ -84,7 +85,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   }
   dispatch(addCondition(claimContitionRes?.data));
   dispatch(addRetailer(claimRetailerRes?.data?.retailers));
-  dispatch(addRoom(claimRoomRes));
+  dispatch(addRoom(claimRoomRes?.data));
   dispatch(addRoomType(claimRoomTypeRes));
 
   const pathList = [

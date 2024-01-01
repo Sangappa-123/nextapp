@@ -16,7 +16,10 @@ export const getCategories = async () => {
   }
 };
 
-export const getSubCategories = async (param?: { categoryId: number }) => {
+export const getSubCategories = async (
+  param?: { categoryId: number },
+  isClient?: boolean
+) => {
   let payload = null;
   if (!param) {
     payload = { categoryId: null };
@@ -24,7 +27,7 @@ export const getSubCategories = async (param?: { categoryId: number }) => {
     payload = param;
   }
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient: isClient ? true : false });
     const url = getApiEndPoint("lineItemSubCategory");
     const resp = await http.post(url, payload);
     return resp;
@@ -116,9 +119,9 @@ export const getClaimItemCondition = async () => {
   }
 };
 
-export const getClaimItemRoom = async (claim: string) => {
+export const getClaimItemRoom = async (claim: string, isClient = false) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     let url = getApiEndPoint("lineItemRoom");
     url = url.replace("{{CLAIM}}", claim);
     const resp = await http.get(url);
@@ -144,18 +147,6 @@ export const getClaimItemRetailers = async () => {
     return error;
   } catch (err: any) {
     return err;
-  }
-};
-
-export const getClaimRoomData = async (claim: string) => {
-  try {
-    const http = new HttpService();
-    let url = getApiEndPoint("lineItemRoom");
-    url = url.replace("{{CLAIM}}", claim);
-    const resp = await http.get(url);
-    return resp?.data ?? [];
-  } catch (err: any) {
-    return [];
   }
 };
 

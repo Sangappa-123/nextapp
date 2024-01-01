@@ -14,7 +14,13 @@ import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 
 function ContentListComponent(props: any) {
-  const { claimContentListRes, addClaimContentListData, claimId, editItemDetail } = props;
+  const {
+    claimContentListRes,
+    addClaimContentListData,
+    claimId,
+    editItemDetail,
+    claimContentListData,
+  } = props;
   console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
@@ -38,13 +44,14 @@ function ContentListComponent(props: any) {
   const closeModal = () => {
     setEditItem(null);
     setIsModalOpen(false);
+    router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
   return (
     <div className="row mb-4">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title="Content List"
+          title={`Content List (${claimContentListData.length})`}
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
         />
       </div>
@@ -144,7 +151,7 @@ function ContentListComponent(props: any) {
           <Modal
             isOpen={isModalOpen}
             onClose={closeModal}
-            childComp={<AddItemModalForm editItem={editItem} />}
+            childComp={<AddItemModalForm editItem={editItem} closeModal={closeModal} />}
             headingName={editItem ? "Item# " + editItemDetail.itemNumber : "Add Item"}
             modalWidthClassName={ContentListComponentStyle.modalWidth}
           ></Modal>
@@ -162,6 +169,7 @@ function ContentListComponent(props: any) {
 
 const mapStateToProps = ({ claimContentdata }: any) => ({
   editItemDetail: claimContentdata.editItemDetail,
+  claimContentListData: claimContentdata.claimContentListData,
 });
 const mapDispatchToProps = {
   addClaimContentListData,

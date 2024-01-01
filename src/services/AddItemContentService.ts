@@ -108,3 +108,34 @@ export const addContentItem = async (param: object) => {
     return err;
   }
 };
+export const addNewRoom = async (param: object) => {
+  try {
+    const url = getApiEndPoint("addNewRoomApi");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateContentItem = async (param: object) => {
+  try {
+    const url = getApiEndPoint("updateContentItemApi");
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};

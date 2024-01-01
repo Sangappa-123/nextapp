@@ -72,7 +72,7 @@ const ClaimDetailSlice = createSlice({
     },
     addRoom(state, action) {
       const { payload } = action;
-      state.room = [...payload];
+      state.room = payload ? [...payload] : [];
       return state;
     },
     addRoomType(state, action) {

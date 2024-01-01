@@ -7,7 +7,7 @@ import {
   getSubCategories,
   getClaimItemCondition,
   getClaimItemRetailers,
-  getClaimRoomData,
+  getClaimItemRoom,
   getClaimRoomTypeData,
   getClaimParticipantsList,
   getclaimContents,
@@ -40,7 +40,7 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
   });
   const claimContitionRes: any = await getClaimItemCondition();
   const claimRetailerRes: any = await getClaimItemRetailers();
-  const claimRoomRes: any = await getClaimRoomData(claimId);
+  const claimRoomRes: any = await getClaimItemRoom(claimId);
   const claimRoomTypeRes: any = await getClaimRoomTypeData();
 
   return (

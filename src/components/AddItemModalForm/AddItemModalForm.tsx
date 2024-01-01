@@ -22,10 +22,17 @@ import {
   getPreviousItem,
   getNextItem,
   addContentItem,
+  addNewRoom,
+  updateContentItem,
 } from "@/services/AddItemContentService";
 import GenericTextArea from "../common/GenericTextArea/index";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useParams } from "next/navigation";
+import {
+  getClaimItemRoom,
+  getSubCategories,
+} from "@/services/AdjusterPropertyClaimDetailService";
+import { addSubcategories } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 
 interface objectType {
   imgType: string;
@@ -48,8 +55,12 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     roomType,
     room,
     addNotification,
+    addSubcategories,
+    closeModal,
   } = props;
-  const { claimId } = useParams();
+
+  const { claimId }: { claimId: string } = useParams();
+  const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
   const [newRetailerInputField, setNewRetailerInputField] = useState(false);
   const [newRoomInputField, setNewRoomInputField] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,8 +68,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const [imagePreviewType, setImagePreviewType] = useState("");
   const [applyTaxState, setapplyTaxState] = useState("yes");
   const [isScheduledItemState, SetScheduledItemState] = useState("no");
-
+  const [showSubCat, setShowSubCategory] = useState(false);
   const [docs, setDocs] = useState<string[]>([]);
+  const [roomName, setRoomName] = useState<React.SetStateAction<string>>();
+  const [roomTypeSelected, setRoomTypeSelected] = useState<React.SetStateAction<any>>();
 
   const [zoomLevel, setZoomLevel] = useState(100);
 
@@ -90,17 +103,40 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closePreviewModal = () => {
     setIsModalOpen(false);
   };
 
-  const openRetailerInputBox = () => {
-    setNewRetailerInputField(!newRetailerInputField);
-  };
   const addRoom = () => {
     setNewRoomInputField(!newRoomInputField);
+    setRoomName("");
+    setRoomTypeSelected(null);
   };
 
+  const handleNewRoomCreation = async () => {
+    const param = {
+      claim: {
+        claimNumber: claimNumber,
+      },
+      roomType: roomTypeSelected,
+      roomName: roomName,
+    };
+    const res = await addNewRoom(param);
+    if (res?.status === 200) {
+      addNotification({
+        message: "New Room Created",
+        id: "room_created",
+        status: "success",
+      });
+      await getClaimItemRoom(claimId, true);
+    } else {
+      addNotification({
+        message: res.message ?? "Something went wrong.",
+        id: "room_creation_failure",
+        status: "error",
+      });
+    }
+  };
   const handleUpload = (event: any) => {
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     let selectedImageArr: any[];
@@ -129,19 +165,46 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     });
     setDocs([...docArray]);
   };
+  const handleCategoryChange = async (val: any) => {
+    const param = {
+      categoryId: val?.categoryId ?? null,
+    };
+    const subcategoryListRes: any = await getSubCategories(param, true);
+
+    addSubcategories(subcategoryListRes?.data);
+    if (val) {
+      setShowSubCategory(true);
+    } else {
+      setShowSubCategory(false);
+    }
+  };
   const defaultValue = useMemo(() => {
     return {
-      description: editItemDetail.description ?? null,
-      quantity: editItemDetail.quantity ?? null,
-      insuredPrice: editItemDetail.insuredPrice ?? null,
-      category: editItemDetail.category ?? null,
-      subCategory: editItemDetail.subCategory ?? null,
-      ageYears: editItemDetail.ageYears ?? null,
-      ageMonths: editItemDetail.ageMonths ?? null,
-      room: editItemDetail.room ?? null,
-      condition: editItemDetail.condition ?? null,
-      originallyPurchasedFrom: editItemDetail.originallyPurchasedFrom ?? null,
-      scheduleAmount: editItemDetail.scheduleAmount ?? null,
+      description:
+        editItem && editItemDetail.description ? editItemDetail.description : null,
+      quantity:
+        editItem && editItemDetail.quantity ? String(editItemDetail.quantity) : null,
+      insuredPrice:
+        editItem && editItemDetail?.insuredPrice
+          ? String(editItemDetail?.insuredPrice)
+          : null,
+      category: editItem && editItemDetail.category ? editItemDetail.category : null,
+      subCategory:
+        editItem && editItemDetail.subCategory ? editItemDetail.subCategory : null,
+      ageYears:
+        editItem && editItemDetail.ageYears ? String(editItemDetail.ageYears) : null,
+      ageMonths:
+        editItem && editItemDetail.ageMonths ? String(editItemDetail.ageMonths) : null,
+      room: editItem && editItemDetail.room ? editItemDetail.room : null,
+      condition: editItem && editItemDetail.condition ? editItemDetail.condition : null,
+      originallyPurchasedFrom:
+        editItem && editItemDetail.originallyPurchasedFrom
+          ? editItemDetail.originallyPurchasedFrom
+          : null,
+      scheduleAmount:
+        editItem && editItemDetail.scheduleAmount
+          ? String(editItemDetail.scheduleAmount)
+          : null,
     };
   }, [editItemDetail]);
 
@@ -184,40 +247,60 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       })
     ),
     scheduleAmount: nullish(string("Amount must be a number")),
-    roomName: nullish(string()),
     addRetailer: nullish(string()),
   });
 
-  const { register, handleSubmit, formState, control, setValue } = useCustomForm(
+  const { register, handleSubmit, formState, control, setValue, reset } = useCustomForm(
     schema,
     defaultValue
   );
 
   const { errors } = formState;
+  console.log(formState);
   console.log(errors);
 
   useEffect(() => {
-    if (editItemDetail) {
+    if (editItem && editItemDetail) {
       setValue("description", editItemDetail.description ?? null);
-      setValue("quantity", editItemDetail.quantity ?? null);
-      setValue("insuredPrice", editItemDetail.insuredPrice ?? null);
-      setValue("category", editItemDetail.category ?? null);
+      setValue(
+        "quantity",
+        editItemDetail.quantity ? String(editItemDetail.quantity) : null
+      );
+      setValue(
+        "insuredPrice",
+        editItemDetail?.insuredPrice ? String(editItemDetail?.insuredPrice) : null
+      );
+      setValue("category", editItemDetail.category ? editItemDetail.category : null);
       setValue("subCategory", editItemDetail.subCategory ?? null);
-      setValue("ageYears", editItemDetail.ageYears ?? null);
-      setValue("ageMonths", editItemDetail.ageMonths ?? null);
+      setValue(
+        "ageYears",
+        editItemDetail.ageYears ? String(editItemDetail.ageYears) : null
+      );
+      setValue(
+        "ageMonths",
+        editItemDetail.ageMonths ? String(editItemDetail.ageMonths) : null
+      );
       setValue("room", editItemDetail.room ?? null);
       setValue("condition", editItemDetail.condition ?? null);
       setValue("originallyPurchasedFrom", editItemDetail.originallyPurchasedFrom ?? null);
-      setValue("scheduleAmount", editItemDetail.scheduleAmount ?? null);
+      setValue(
+        "scheduleAmount",
+        editItemDetail.scheduleAmount ? String(editItemDetail.scheduleAmount) : null
+      );
+      setapplyTaxState(editItemDetail?.applyTax ? "yes" : "no");
+      SetScheduledItemState(editItemDetail?.isScheduledItem ? "yes" : "no");
     }
-  }, [editItemDetail, setValue]);
+  }, [editItem, editItemDetail, setValue]);
 
-  const formSubmit = async (data: Output<typeof schema>) => {
-    console.log(data);
-
+  const openRetailerInputBox = () => {
+    setValue("addRetailer", null);
+    setNewRetailerInputField(!newRetailerInputField);
+  };
+  const submitFormData = async (data: Output<typeof schema>) => {
     const payload = {
+      id: editItem && editItemDetail ? editItemDetail?.itemId : null,
       claimId: claimId,
-      claimNumber: sessionStorage.getItem("claimNumber") ?? "",
+      claimNumber: claimNumber,
       description: data.description,
       quantity: data.quantity,
       insuredPrice: data.insuredPrice,
@@ -233,14 +316,41 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       subCategory: data.subCategory,
       room: data.room,
       condition: data.condition,
-      originallyPurchasedFrom: data.originallyPurchasedFrom,
+      originallyPurchasedFrom: data.addRetailer
+        ? { name: data.addRetailer }
+        : data.originallyPurchasedFrom,
     };
     const formData = new FormData();
     formData.append("itemDetails", JSON.stringify(payload));
-    console.log(formData);
 
+    return formData;
+  };
+
+  const handleSaveAndNext = async (data: Output<typeof schema>) => {
+    const formData = await submitFormData(data);
     const addItemRes = await addContentItem(formData);
+
     if (addItemRes?.status === 200) {
+      reset();
+      addNotification({
+        message: "Item Added Successfully. You Can Add Another One",
+        id: "add_content_item_and_next_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: addItemRes.message ?? "Something went wrong.",
+        id: "add_content_item_and_next_failure",
+        status: "error",
+      });
+    }
+  };
+  const formSubmit = async (data: Output<typeof schema>) => {
+    const formData = await submitFormData(data);
+    const addItemRes = await addContentItem(formData);
+
+    if (addItemRes?.status === 200) {
+      closeModal();
       addNotification({
         message: "Item Added Successfully",
         id: "add_content_item_success",
@@ -250,6 +360,68 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       addNotification({
         message: addItemRes.message ?? "Something went wrong.",
         id: "add_content_item_failure",
+        status: "error",
+      });
+    }
+  };
+  const handleUpdate = async (data: Output<typeof schema>) => {
+    const formData = await submitFormData(data);
+
+    const updateItemRes = await updateContentItem(formData);
+
+    if (updateItemRes?.status === 200) {
+      closeModal();
+      addNotification({
+        message: "Item Updated Successfully",
+        id: "update_content_item_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: updateItemRes.message ?? "Something went wrong.",
+        id: "update_content_item_failure",
+        status: "error",
+      });
+    }
+  };
+  const handleUpdateAndNext = async (data: Output<typeof schema>) => {
+    const formData = await submitFormData(data);
+    const updateItemRes = await updateContentItem(formData);
+
+    if (updateItemRes?.status === 200) {
+      if (nextItem) {
+        getNextItem(editItemDetail.itemId);
+      }
+      addNotification({
+        message: "Item Updated Successfully",
+        id: "update_content_item_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: updateItemRes.message ?? "Something went wrong.",
+        id: "update_content_item_failure",
+        status: "error",
+      });
+    }
+  };
+  const handleUpdateAndPrevious = async (data: Output<typeof schema>) => {
+    const formData = await submitFormData(data);
+    const updateItemRes = await updateContentItem(formData);
+
+    if (updateItemRes?.status === 200) {
+      if (previousItem) {
+        getPreviousItem(editItemDetail.itemId);
+      }
+      addNotification({
+        message: "Item Updated Successfully",
+        id: "update_content_item_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: updateItemRes.message ?? "Something went wrong.",
+        id: "update_content_item_failure",
         status: "error",
       });
     }
@@ -319,19 +491,21 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <div className="col-10">
                   <Controller
                     control={control}
-                    name={"category"}
-                    render={({ field: { ...rest } }: any) => (
+                    name="category"
+                    render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
                       <GenericSelect
-                        placeholder={""}
                         options={category}
-                        name={"category"}
+                        name="category"
                         getOptionLabel={(option: { categoryName: any }) =>
                           option.categoryName
                         }
                         getOptionValue={(option: { categoryId: any }) =>
                           option.categoryId
                         }
-                        showLabel={false}
+                        onChange={(e: any) => {
+                          fieldOnChange(e);
+                          handleCategoryChange(e);
+                        }}
                         {...rest}
                       />
                     )}
@@ -352,7 +526,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     render={({ field: { ...rest } }: any) => (
                       <GenericSelect
                         placeholder={""}
-                        options={subCategory}
+                        options={showSubCat ? subCategory : []}
                         name={"subCategory"}
                         getOptionLabel={(option: { name: string }) => option.name}
                         getOptionValue={(option: { id: number }) => option.id}
@@ -424,8 +598,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                       getOptionValue={(option: { id: any }) => option.id}
                       name={"room"}
                       showLabel={false}
-                      // formControlClassname={addClaimFormStyle.genericSelect}
-                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
                       {...rest}
                     />
                   )}
@@ -445,11 +617,18 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                         placeholder="Room Name"
                         id="roomName"
                         type="text"
-                        {...register("roomName")}
+                        value={roomName}
+                        onChange={(e: {
+                          target: { value: React.SetStateAction<string> };
+                        }) => {
+                          setRoomName(e.target.value);
+                        }}
                       />
                     </div>
                     <div className={clsx("col-2")}>
-                      <a onClick={addRoom}>Cancel</a>
+                      <a className={addClaimFormStyle.cancelLink} onClick={addRoom}>
+                        Cancel
+                      </a>
                     </div>
                   </div>
                   <div className={clsx(addClaimFormStyle.margin, "row")}>
@@ -457,22 +636,32 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                       <Controller
                         control={control}
                         name={"room"}
-                        rules={{ required: true }}
-                        render={({ field: { ...rest } }: any) => (
+                        render={({
+                          field: { onChange: fieldOnChange, ...rest },
+                        }: any) => (
                           <GenericSelect
                             placeholder={"RoomType"}
                             options={roomType}
+                            getOptionLabel={(option: { name: string }) => option.name}
+                            getOptionValue={(option: { id: number }) => option.id}
                             name={"room"}
                             showLabel={false}
-                            // formControlClassname={addClaimFormStyle.genericSelect}
-                            // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                              fieldOnChange(e);
+                              setRoomTypeSelected(e);
+                            }}
                             {...rest}
                           />
                         )}
                       />
                     </div>
                     <div className="col-2">
-                      <a>Create</a>
+                      <a
+                        className={addClaimFormStyle.pointerCursor}
+                        onClick={handleNewRoomCreation}
+                      >
+                        Create
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -558,8 +747,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                       getOptionValue={(option: { id: number }) => option.id}
                       showLabel={false}
                       isSearchable={true}
-                      // formControlClassname={addClaimFormStyle.genericSelect}
-                      // selectBoxClassname={addClaimFormStyle.inputBoxWidth}
                       {...rest}
                     />
                   )}
@@ -567,7 +754,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
               <div className="row col-6">
                 {!newRetailerInputField && (
-                  <a onClick={openRetailerInputBox}>
+                  <a
+                    className={addClaimFormStyle.pointerCursor}
+                    onClick={openRetailerInputBox}
+                  >
                     Not found? click to add new retailer
                   </a>
                 )}
@@ -576,8 +766,6 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     <div className="col-10 p-0">
                       <GenericInput
                         formControlClassname={addClaimFormStyle.inputBox}
-                        // showError={errors["username"]}
-                        // errorMsg={errors?.username?.message}
                         placeholder="Add Retailer"
                         id="addRetailer"
                         {...register("addRetailer")}
@@ -765,7 +953,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           <div className="col-8">
             <ImagePreviewModal
               isOpen={isModalOpen}
-              onClose={closeModal}
+              onClose={closePreviewModal}
               handleZoomIn={handleZoomIn}
               handleZoomOut={handleZoomOut}
               handleZoomMid={handleZoomMid}
@@ -789,11 +977,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   [addClaimFormStyle.arrowLeft]: true,
                   [addClaimFormStyle.leftDisable]: !previousItem,
                 })}
-                onClick={() => {
-                  if (previousItem) {
-                    getPreviousItem(editItemDetail.itemId);
-                  }
-                }}
+                onClick={handleSubmit(handleUpdateAndPrevious)}
               >
                 <RiArrowLeftCircleFill
                   size="50px"
@@ -805,11 +989,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   [addClaimFormStyle.arrowRight]: true,
                   [addClaimFormStyle.rightDisable]: !nextItem,
                 })}
-                onClick={() => {
-                  if (nextItem) {
-                    getNextItem(editItemDetail.itemId);
-                  }
-                }}
+                onClick={handleSubmit(handleUpdateAndNext)}
               >
                 {" "}
                 <RiArrowRightCircleFill size="50px" fill={nextItem ? "black" : "grey"} />
@@ -818,10 +998,15 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             <div className="row m-2 flex-row-reverse">
               <div className="row col-12 m-2 flex-row-reverse">
                 <div className="row col-2">
-                  <GenericButton label="Cancel" size="medium" />
+                  <GenericButton label="Cancel" onClick={closeModal} size="medium" />
                 </div>
                 <div className="row col-2">
-                  <GenericButton label="Update Item" type="submit" size="medium" />
+                  <GenericButton
+                    label="Update Item"
+                    type="submit"
+                    onClick={handleSubmit(handleUpdate)}
+                    size="medium"
+                  />
                 </div>
               </div>
             </div>
@@ -829,14 +1014,20 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
         ) : (
           <div className={clsx(addClaimFormStyle.centerAlign, "row mt-4")}>
             <div className="col-8" style={{ textAlign: "right" }}>
-              <a>Save and Add Another Item</a>
+              <a
+                type="submit"
+                className={addClaimFormStyle.pointerCursor}
+                onClick={handleSubmit(handleSaveAndNext)}
+              >
+                Save and Add Another Item
+              </a>
             </div>
 
             <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
               <GenericButton label="Add Item" type="submit" size="medium" />
             </div>
             <div className="row col-2">
-              <GenericButton label="Reset" size="medium" />
+              <GenericButton label="Reset" size="medium" onClick={() => reset()} />
             </div>
           </div>
         )}
@@ -858,6 +1049,7 @@ const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
 });
 const mapDispatchToProps = {
   addNotification,
+  addSubcategories,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

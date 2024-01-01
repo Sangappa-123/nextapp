@@ -104,10 +104,12 @@ const ClaimContentSlice = createSlice({
         description: itemDetailData.description,
         quantity: itemDetailData.quantity,
         insuredPrice: itemDetailData.insuredPrice,
-        category: {
-          id: itemDetailData.category?.categoryId,
-          name: itemDetailData.category?.categoryName,
-        },
+        category: itemDetailData.category
+          ? {
+              categoryId: itemDetailData.category?.id,
+              categoryName: itemDetailData.category?.name,
+            }
+          : null,
         subCategory: itemDetailData.subCategory,
         ageYears: itemDetailData.ageYears,
         ageMonths: itemDetailData.ageMonths,
@@ -130,7 +132,29 @@ const ClaimContentSlice = createSlice({
     builder.addCase(fetchClaimContentAction.fulfilled, (state, action) => {
       const payload = action.payload;
       if (payload?.status === 200) {
-        state.claimContentListData = payload?.data;
+        let newArr;
+        const claimRes: any = [];
+
+        payload.data.map((item: any) => {
+          newArr = {
+            description: item.description,
+            status: item.status?.status ?? null,
+            category: item.category?.name ?? null,
+            quantity: item.quantity,
+            rcvTotal: item.rcvTotal,
+            totalStatedAmount: item.totalStatedAmount,
+            vendorName: item.vendorName,
+            adjusterDescription: item.adjusterDescription,
+            itemTag: item.itemTag ?? null,
+            cashPayoutExposure: item.cashPayoutExposure,
+            claimId: item.claimId,
+            itemId: item.id,
+            itemUID: item.itemUID,
+            itemNumber: item.itemNumber,
+          };
+          claimRes.push(newArr);
+        });
+        state.claimContentListData = claimRes;
       }
     });
   },
