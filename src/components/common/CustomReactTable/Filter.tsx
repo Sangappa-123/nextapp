@@ -48,6 +48,7 @@ export default function Filter({
     { label: "$1,000.00+", value: "$1,000.00+" },
   ];
   React.useEffect(() => {
+    console.log(sortedUniqueValuesFirst);
     if (typeof firstValue !== "number") {
       if (
         defaultAllChecked &&
