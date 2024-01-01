@@ -186,3 +186,13 @@
   display: flex;
   gap: 20px;
 }
+.pointerCursor {
+  cursor: pointer;
+}
+.cancelLink {
+  cursor: pointer;
+  color: red;
+  &:hover {
+    color: maroon;
+  }
+}

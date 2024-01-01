@@ -97,20 +97,28 @@ const ClaimContentSlice = createSlice({
       const { itemDetailData, previousItem, nextItem } = payload;
 
       const itemData = {
-        // description: itemDetailData.description,
-        // status: itemDetailData.status?.status ?? null,
-        // category: itemDetailData.category?.name ?? null,
-        // quantity: itemDetailData.quantity,
-        // rcvTotal: itemDetailData.rcvTotal,
-        // totalStatedAmount: itemDetailData.totalStatedAmount,
-        // vendorName: itemDetailData.vendorName,
-        // adjusterDescription: itemDetailData.adjusterDescription,
-        // itemTag: itemDetailData.itemTag ?? null,
-        // cashPayoutExposure: itemDetailData.cashPayoutExposure,
         claimId: itemDetailData.claimId,
         itemId: itemDetailData.id,
         itemUID: itemDetailData.itemUID,
         itemNumber: itemDetailData.itemNumber,
+        description: itemDetailData.description,
+        quantity: itemDetailData.quantity,
+        insuredPrice: itemDetailData.insuredPrice,
+        category: itemDetailData.category
+          ? {
+              categoryId: itemDetailData.category?.id,
+              categoryName: itemDetailData.category?.name,
+            }
+          : null,
+        subCategory: itemDetailData.subCategory,
+        ageYears: itemDetailData.ageYears,
+        ageMonths: itemDetailData.ageMonths,
+        applyTax: itemDetailData.applyTax,
+        room: itemDetailData.room,
+        condition: itemDetailData.condition,
+        originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
+        isScheduledItem: itemDetailData.isScheduledItem,
+        scheduleAmount: itemDetailData.scheduleAmount,
       };
       state.editItemDetail = itemData;
       state.previousItem = previousItem;
@@ -124,7 +132,29 @@ const ClaimContentSlice = createSlice({
     builder.addCase(fetchClaimContentAction.fulfilled, (state, action) => {
       const payload = action.payload;
       if (payload?.status === 200) {
-        state.claimContentListData = payload?.data;
+        let newArr;
+        const claimRes: any = [];
+
+        payload.data.map((item: any) => {
+          newArr = {
+            description: item.description,
+            status: item.status?.status ?? null,
+            category: item.category?.name ?? null,
+            quantity: item.quantity,
+            rcvTotal: item.rcvTotal,
+            totalStatedAmount: item.totalStatedAmount,
+            vendorName: item.vendorName,
+            adjusterDescription: item.adjusterDescription,
+            itemTag: item.itemTag ?? null,
+            cashPayoutExposure: item.cashPayoutExposure,
+            claimId: item.claimId,
+            itemId: item.id,
+            itemUID: item.itemUID,
+            itemNumber: item.itemNumber,
+          };
+          claimRes.push(newArr);
+        });
+        state.claimContentListData = claimRes;
       }
     });
   },
