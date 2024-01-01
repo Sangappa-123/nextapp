@@ -43,6 +43,13 @@ enum apiEndPoints {
   pendingTaskList = "web/claim/pendingtasklist",
   claimDetailMessageList = "web/messages",
   deleteServiceRequestItem = "web/delete/servicerequest",
+  roomTypeApi = "web/room/types",
+  addContentItemApi = "web/add/itemtopostloss",
+  claimParticipantsUrl = "web/claim/participants",
+  claimContentsUrl = "web/adjuster/claim/contents",
+  companyDetailsUrl = "web/company/details",
+  addNewRoomApi = "customer/add/room",
+  updateContentItemApi = "web/claim/update/postlossitem",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

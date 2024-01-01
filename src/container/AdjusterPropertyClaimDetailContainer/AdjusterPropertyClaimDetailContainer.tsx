@@ -7,6 +7,11 @@ import {
   getSubCategories,
   getClaimItemCondition,
   getClaimItemRetailers,
+  getClaimItemRoom,
+  getClaimRoomTypeData,
+  getClaimParticipantsList,
+  getclaimContents,
+  getClaimPolicyInfo,
 } from "@/services/AdjusterPropertyClaimDetailService";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
@@ -24,6 +29,10 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
   const categoryListRes: any = await getCategories();
   const subcategoryListRes: any = await getSubCategories();
   const pendingTaskListRes: any = await getPendingTaskList(payload);
+  const claimParticipantsRes: any = await getClaimParticipantsList(payload);
+  const claimContentsRes: any = await getclaimContents(payload);
+  const policyInfoRes: any = await getClaimPolicyInfo(payload);
+
   const claimDetailMessageListRes: any = await getClaimDetailMessageList({
     pageNo: 1,
     recordPerPage: PAGINATION_LIMIT_10,
@@ -31,8 +40,8 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
   });
   const claimContitionRes: any = await getClaimItemCondition();
   const claimRetailerRes: any = await getClaimItemRetailers();
-
-  console.log("claimDetailMessageListRes", claimDetailMessageListRes);
+  const claimRoomRes: any = await getClaimItemRoom(claimId);
+  const claimRoomTypeRes: any = await getClaimRoomTypeData();
 
   return (
     <>
@@ -46,6 +55,11 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
         claimDetailMessageListRes={claimDetailMessageListRes}
         claimContitionRes={claimContitionRes}
         claimRetailerRes={claimRetailerRes}
+        claimRoomRes={claimRoomRes}
+        claimRoomTypeRes={claimRoomTypeRes}
+        claimParticipantsRes={claimParticipantsRes}
+        claimContentsRes={claimContentsRes}
+        policyInfoRes={policyInfoRes}
       />
     </>
   );
