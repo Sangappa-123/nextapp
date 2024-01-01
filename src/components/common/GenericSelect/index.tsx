@@ -139,7 +139,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
             container: () => selectStyle.reactSelectContainer,
             control: () => (disabled ? selectStyle.disabled : ""),
           }}
-          menuPortalTarget={document.body}
+          // menuPortalTarget={document.body}
           {...rest}
         />
         <div

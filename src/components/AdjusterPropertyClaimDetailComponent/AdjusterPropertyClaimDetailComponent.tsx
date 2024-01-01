@@ -12,6 +12,8 @@ import {
   addSubcategories,
   addCondition,
   addRetailer,
+  addRoom,
+  addRoomType,
   addParticipants,
   addContents,
   addPolicyInfo,
@@ -33,6 +35,8 @@ type propsTypes = {
   claimDetailMessageListRes: any;
   claimContitionRes: any;
   claimRetailerRes: any;
+  claimRoomRes: any;
+  claimRoomTypeRes: any;
   claimParticipantsRes: any;
   claimContentsRes: any;
   policyInfoRes: any;
@@ -48,6 +52,8 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimDetailMessageListRes,
   claimContitionRes,
   claimRetailerRes,
+  claimRoomRes,
+  claimRoomTypeRes,
   claimParticipantsRes,
   claimContentsRes,
   policyInfoRes,
@@ -55,6 +61,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
 
+  console.log(claimRoomRes);
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
   }
@@ -77,7 +84,9 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
     dispatch(addPolicyInfo(policyInfoRes?.data));
   }
   dispatch(addCondition(claimContitionRes?.data));
-  dispatch(addRetailer(claimRetailerRes?.data));
+  dispatch(addRetailer(claimRetailerRes?.data?.retailers));
+  dispatch(addRoom(claimRoomRes?.data));
+  dispatch(addRoomType(claimRoomTypeRes));
 
   const pathList = [
     {

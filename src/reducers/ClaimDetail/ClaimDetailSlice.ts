@@ -13,6 +13,7 @@ const initialState: unknownObjectType = {
   condition: [],
   retailer: [],
   room: [],
+  roomType: [],
 };
 
 const ClaimDetailSlice = createSlice({
@@ -21,12 +22,12 @@ const ClaimDetailSlice = createSlice({
   reducers: {
     addCategories(state, action) {
       const { payload } = action;
-      state.category = [...state.category, ...payload];
+      state.category = [...payload];
       return state;
     },
     addSubcategories(state, action) {
       const { payload } = action;
-      state.subCategory = [...state.subCategory, ...payload];
+      state.subCategory = [...payload];
       return state;
     },
     addPendingTasks(state, action) {
@@ -61,12 +62,22 @@ const ClaimDetailSlice = createSlice({
     },
     addCondition(state, action) {
       const { payload } = action;
-      state.condition = { ...state.condition, ...payload };
+      state.condition = [...payload];
       return state;
     },
     addRetailer(state, action) {
       const { payload } = action;
-      state.retailer = { ...state.retailer, ...payload };
+      state.retailer = [...payload];
+      return state;
+    },
+    addRoom(state, action) {
+      const { payload } = action;
+      state.room = payload ? [...payload] : [];
+      return state;
+    },
+    addRoomType(state, action) {
+      const { payload } = action;
+      state.roomType = [...payload];
       return state;
     },
   },
@@ -83,5 +94,7 @@ export const {
   addMessageList,
   addCondition,
   addRetailer,
+  addRoom,
+  addRoomType,
   addParticipants,
 } = ClaimDetailSlice.actions;

@@ -199,6 +199,8 @@ const OpenClaimTable: React.FC<connectorType & typeProps> = (props) => {
     }
   };
   const handleRowClick = async (rowData: any) => {
+    sessionStorage.setItem("claimNumber", rowData?.claimNumber);
+    sessionStorage.setItem("claimId", rowData?.claimId);
     await addSelectedClaimId({
       claimId: rowData?.claimId,
     });
