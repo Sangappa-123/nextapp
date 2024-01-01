@@ -1,9 +1,9 @@
-import selectRootState from "@/reducers/selectRootState";
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
+import selectSessionState from "@/reducers/Session/Selectors/selectSessionState";
 
-const selectCompanyId = createSelector([selectRootState], (rootState: RootState) => {
-  return rootState?.session?.companyId;
-});
+const selectCompanyId = createSelector(
+  [selectSessionState],
+  (session) => session?.companyId
+);
 
 export default selectCompanyId;
