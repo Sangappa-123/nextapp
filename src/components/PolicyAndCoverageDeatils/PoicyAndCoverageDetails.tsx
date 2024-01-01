@@ -12,11 +12,12 @@ import {
 } from "@tanstack/react-table";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
 import CustomReactTable from "../common/CustomReactTable/index";
+import { unknownObjectType } from "@/constants/customTypes";
 
 export default function PolicyAndCoverageDetails() {
   // const [show, setShow] = useState(false);
 
-  const columnHelper = createColumnHelper<unknown>();
+  const columnHelper = createColumnHelper<unknownObjectType>();
   const columns = [
     columnHelper.accessor("categoryName", {
       header: () => "Category Name	",
