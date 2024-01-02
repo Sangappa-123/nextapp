@@ -10,14 +10,9 @@ import TableListStyle from "./itemsAssignListTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 
-interface ItemsAssignListTableProps {
-  // selectedRowsData: any[];
-}
+interface ItemsAssignListTableProps {}
 const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = () => {
-  // const [isChecked, setIsChecked] = useState(false);
-  // const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
-
-  type AddItemsData = {
+  type AssignItemsData = {
     item: string;
     description: string;
     status: string;
@@ -31,23 +26,42 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     scheduledItem: string;
   };
 
-  const columnHelper = createColumnHelper<AddItemsData>();
+  const columnHelper = createColumnHelper<AssignItemsData>();
+  const checkboxAccessor = (data: AssignItemsData) => data.select;
 
   const columns = [
-    columnHelper.accessor("", {
-      id: "checkbox",
+    columnHelper.accessor(checkboxAccessor, {
       header: () => (
-        <input
-          type="checkbox"
-          // onChange={() => handleCheckboxChange("header")}
-        />
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        </div>
       ),
+      meta: {},
+      id: "check",
+      enableColumnFilter: false,
       cell: () => (
-        <input
-          type="checkbox"
-          // checked={selectedRowsData.some((row) => row.item === info.row.original.item)}
-          // onChange={() => handleCheckboxChange(info.row.original.item)}
-        />
+        <div
+          className="d-flex justify-content-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={() => {
+              // handleCheckboxChange(row.original);
+            }}
+          />
+        </div>
       ),
     }),
     columnHelper.accessor("item", {
@@ -81,7 +95,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     }),
   ];
 
-  const data: AddItemsData[] = [
+  const data: AssignItemsData[] = [
     {
       item: "Item 1",
       description: "Description 1",
@@ -120,14 +134,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
   return (
     <>
       <div className={TableListStyle.addListTableContainer}>
-        <CustomReactTable
-          table={table}
-          // totalClaims={props.totalClaims}
-          // pageLimit={pageLimit}
-          // showStatusColor={true}
-          // loader={loader}
-          // tableDataErrorMsg={props.claimErrorMsg}
-        />
+        <CustomReactTable table={table} />
       </div>
       <div className="row">
         <label className={TableListStyle.labelStyles}>Item(s) Summary</label>
@@ -152,10 +159,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
 });
 
-const mapDispatchToProps = {
-  // setAddItemsTableData,
-  // setSelectedItems,
-};
+const mapDispatchToProps = {};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

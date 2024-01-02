@@ -9,21 +9,15 @@ import SearchBoxAssignItems from "./SearchBoxAssignItems";
 import VendorSearchBoxAssignItems from "./VendorSearchBoxAssignItems";
 import VendorAssignListTable from "./VendorAssignListTable";
 import { ConnectedProps, connect } from "react-redux";
-import {} from // setAddItemsTableData,
-// setSelectedItems,
-"@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 
 interface AssignItemsTableComponentProps {
   onNewClaimsClick: () => void;
-  // selectedRowsData: any[];
 }
 
 const AssignItemsTableComponent: React.FC<
   AssignItemsTableComponentProps & connectorType
 > = () => {
-  // console.log(selectedRowsData);
-
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
@@ -162,8 +156,6 @@ const AssignItemsTableComponent: React.FC<
         </div>
         <div className={`row mt-3 ${AssignTableSTyle.textAreaSyle}`}>
           <textarea
-            // value={text}
-            // onChange={handleChange}
             rows={4}
             cols={50}
             maxLength={1000}
@@ -181,10 +173,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
 });
 
-const mapDispatchToProps = {
-  // setAddItemsTableData,
-  // setSelectedItems,
-};
+const mapDispatchToProps = {};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

@@ -2,13 +2,11 @@ import React from "react";
 import GenericButton from "@/components/common/GenericButton";
 interface AssignAddItemButtonProps {
   isAnyItemSelected: boolean;
-  // onAssignItemsClick: () => void;
   onClick: () => void;
 }
 
 const AssignAddItemButton: React.FC<AssignAddItemButtonProps> = ({
   isAnyItemSelected,
-  // onAssignItemsClick,
   onClick,
 }) => {
   return (

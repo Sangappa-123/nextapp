@@ -8,10 +8,7 @@ import ExcelSheetTable from "./ExcelSheetTable";
 import { RootState } from "@/store/store";
 import Cards from "../common/Cards";
 import { useRouter } from "next/navigation";
-// import { useSearchParams } from "next/navigation";
-// import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
-// import { unknownObjectType } from "@/constants/customTypes";
 import { setExcelCsvUploadData } from "@/reducers/UploadCSV/excelCsvUploadSlice";
 import { fetchExcelCsvTableData } from "@/services/ClaimService";
 import ProgressBar from "../common/ProgressBar/ProgressBar";
@@ -39,8 +36,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const [isUploadFinished, setIsUploadFinished] = useState(false);
   const [shouldRenderContent, setShouldRenderContent] = useState(false);
 
-  // const [addItemsTableData, setAddItemsTableData] = useState<any[]>([]);
-
   const handleCancelClick = () => {
     setSelectedFile(null);
     setIsFileChosen(false);
@@ -57,7 +52,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
 
   const downloadLink = `${serverAddress}${itemTemplate}`;
 
-  // const userId = getServerCookie("userId");
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileUploaded = event.target.files && event.target.files[0];
     if (fileUploaded) {
@@ -90,20 +84,8 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
         const response = await fetchExcelCsvTableData(formData);
 
         if (response.status === 200) {
-          // dispatch(setExcelCsvUploadData(response.data));
-          // const failedItems = response.data.failedItems || [];
-          // if (failedItems.length > 0) {
-          //   console.log("Failed Items:", failedItems);
-          // }
-
-          // console.log("rrrrrrrrrrr", response);
-          // console.log("ssssssss", response.data);
-          // console.log("lllllllll", response.data.postLossItemDetails);
-          // setExcelData(response.data.postLossItemDetails);
-          // setIsFileUploaded(true);
           const { postLossItemDetails } = response.data;
           dispatch(setExcelCsvUploadData(response.data));
-          // dispatch(setAddItemsTableData(postLossItemDetails));
           const failedItems = postLossItemDetails.filter(
             (item: any) => !item.isValidItem
           );
@@ -137,18 +119,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
       hiddenFileInput.current.click();
     }
   };
-
-  // useEffect(() => {
-  //   setFailedItemsCount((prevCount) => {
-  //     const updatedFailedItems = postLossItemDetails.filter((item) => !item.isValidItem);
-  //     return updatedFailedItems.length;
-  //   });
-
-  //   setValidItemsCount((prevCount) => {
-  //     const updatedValidItems = postLossItemDetails.filter((item) => item.isValidItem);
-  //     return updatedValidItems.length;
-  //   });
-  // }, [postLossItemDetails, setFailedItemsCount, setValidItemsCount]);
 
   useEffect(() => {
     const updatedFailedItems = postLossItemDetails.filter((item) => !item.isValidItem);
@@ -257,16 +227,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
         toast.error("Error: An unexpected error occurred.");
       } finally {
         setUploadProgress(0);
-        // setIsLoading(false);
-
-        // const totalSteps = 10;
-        // const interval = 500;
-
-        // for (let i = 0; i <= totalSteps; i++) {
-        //   await new Promise((resolve) => setTimeout(resolve, interval));
-        //   const percentage = ((i / totalSteps) * 100).toFixed(0);
-        //   setUploadProgress(Number(percentage));
-        // }
         if (shouldNavigate) {
           dispatch(setActiveSection(1));
           router.push("/new-claim");
@@ -283,8 +243,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
           <div className={UploadItemsStyle.uploadSpacing}>
             <GenericComponentHeading title="Bulk Upload Items" />
           </div>
-          {/* // )}
-      // {!isFileUploaded && ( */}
           <div className="row">
             <div className="col-lg-8 mt-2">
               <p className={`mt-2 mb-2 ${UploadItemsStyle.stepsTextStyle}`}>
@@ -371,13 +329,11 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                 type="submit"
                 btnClassname={UploadItemsStyle.newClaimBtn}
                 onClick={handleStartUpload}
-                // disabled={!isFileChosen}
                 disabled={!isFileChosen || isLoading}
               />
             </div>
           </div>
         </div>
-        // </div>
       )}
       {isFileUploaded && excelData && !isUploadFinished && (
         <>
@@ -477,8 +433,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
               </div>
 
               <ExcelSheetTable />
-
-              {/* </div> */}
             </div>
           </Cards>
         </>
@@ -503,7 +457,6 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
                 </p>
               </div>
             </div>
-            {/* <div className="col-lg-4 col-md-4 col-sm-12"> */}
             <div className="d-flex mt-2">
               <div className="col-lg-2 col-md-2">
                 <p className={`mt-2 ${UploadItemsStyle.statusTextfinish}`}>Status : </p>
@@ -682,13 +635,10 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
           </Cards>
         </>
       )}
-
-      {/* {!isUploadFinished && <p>skjjdddddddddddddddddh</p>} */}
     </>
   );
 };
 
-// export default UploadItemsFromCsvComponent;
 const mapStateToProps = (state: RootState) => ({
   postLossItemDetails: state.excelCsvUpload.postLossItemDetails,
   rowsProcessed: state.excelCsvUpload.rowsProcessed,

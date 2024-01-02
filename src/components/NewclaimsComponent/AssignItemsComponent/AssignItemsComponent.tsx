@@ -7,12 +7,10 @@ import AssignItemsStyle from "./assignItemsComponent.module.scss";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
-  // selectedRowsData: any[];
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps> = ({
   onNewClaimsClick,
-  // selectedRowsData,
 }) => {
   const [isSbmitItemsDisabled, setSubmitItemsDisabled] = useState(true);
 

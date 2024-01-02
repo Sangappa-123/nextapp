@@ -5,7 +5,6 @@ import {
   useReactTable,
   getCoreRowModel,
 } from "@tanstack/react-table";
-// import { useDispatch } from "react-redux";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableLisStyle from "./listAddItems.module.scss";
 import { ConnectedProps, connect } from "react-redux";
@@ -23,7 +22,6 @@ interface ListAddItemsTableProps {
 const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   addItemsTableData,
   onCheckboxChange,
-  // selectedItems,
 }) => {
   const handleCheckboxChange = (item: any) => {
     console.log("Selected Item", item);
@@ -62,9 +60,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
           />
         </div>
       ),
-      meta: {
-        // headerClass: ContentListTableStyle.checkHeader,
-      },
+      meta: {},
       id: "check",
       enableColumnFilter: false,
       cell: ({ row }) => (
@@ -137,14 +133,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
 
   return (
     <div className={TableLisStyle.addListTableContainer}>
-      <CustomReactTable
-        table={table}
-        // totalClaims={props.totalClaims}
-        // pageLimit={pageLimit}
-        // showStatusColor={true}
-        // loader={loader}
-        // tableDataErrorMsg={props.claimErrorMsg}
-      />
+      <CustomReactTable table={table} />
     </div>
   );
 };

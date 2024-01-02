@@ -18,8 +18,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
   onNewClaimsClick,
 }) => {
   const router = useRouter();
-  // const [isAssignItemsDisabled, setAssignItemsDisabled] = useState(true);
-  // const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
   const handlePreviousClick = () => {
     onNewClaimsClick();
@@ -55,10 +53,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
-              // disabled={isAssignItemsDisabled}
-              // onClick={() => {
-              //   setAssignItemsDisabled(true);
-              // }}
             />
           </div>
         </div>
@@ -71,12 +65,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
         />
       </div>
       <div>
-        <AddItemsTableComponent
-          onAssignItemsClick={onAssignItemsClick}
-          // onSetAssignItemsDisabled={setAssignItemsDisabled}
-          // isAssignItemsDisabled={isAssignItemsDisabled}
-          // selectedItems={selectedItems}
-        />
+        <AddItemsTableComponent onAssignItemsClick={onAssignItemsClick} />
       </div>
       <div className="row justify-content-end">
         <div className="col-auto">
@@ -103,10 +92,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
-            // disabled={isAssignItemsDisabled}
-            // onClick={() => {
-            //   setAssignItemsDisabled(true);
-            // }}
           />
         </div>
       </div>
@@ -119,10 +104,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
 });
 
-const mapDispatchToProps = {
-  // setAddItemsTableData,
-  // setSelectedItems,
-};
+const mapDispatchToProps = {};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

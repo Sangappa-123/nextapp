@@ -10,6 +10,8 @@ import SearchBoxAddItems from "./SearchBoxAddItems";
 import ListAddItemsTable from "./ListAddItemsTable";
 import Modal from "@/components/common/ModalPopups";
 import AddItemModalForm from "@/components/AddItemModalForm";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ConnectedProps, connect } from "react-redux";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 // import { useAppSelector } from "@/hooks/reduxCustomHook";
@@ -22,21 +24,18 @@ import { RootState } from "@/store/store";
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
   isAnyItemSelected: boolean;
-  // selectedItems
-  // selectedItems: any[];
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
   onAssignItemsClick,
   isAnyItemSelected,
   selectedItems,
-  // addItemsTableData,
-  // selectedItems,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const { claimId } = useSearchParams();
+
   const dispatch = useAppDispatch();
-  // const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
-  // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -44,6 +43,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
 
   const closeModal = () => {
     setIsModalOpen(false);
+    router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
   const handleCheckboxChange = (item: any) => {
@@ -81,13 +81,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
           <div
             className={`col-lg-2 col-md-2 col-sm-12 col-12 mt-2 mb-2 ${AddTableSTyle.assignButtonStyle}`}
           >
-            {/* <AssignAddItemButton
-              onAssignItemsClick={() => {
-                onAssignItemsClick();
-                onSetAssignItemsDisabled(true);
-              }}
-              isButtonDisabled={isAssignItemsDisabled}
-            /> */}
             <AssignAddItemButton
               isAnyItemSelected={isAnyItemSelected}
               onClick={onAssignItemsClick}
