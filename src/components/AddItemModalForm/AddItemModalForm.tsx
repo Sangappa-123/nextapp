@@ -33,6 +33,8 @@ import {
   getSubCategories,
 } from "@/services/AdjusterPropertyClaimDetailService";
 import { addSubcategories } from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import { claimContentList } from "@/services/ClaimContentListService";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 
 interface objectType {
   imgType: string;
@@ -57,6 +59,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     addNotification,
     addSubcategories,
     closeModal,
+    addClaimContentListData,
   } = props;
 
   const { claimId }: { claimId: string } = useParams();
@@ -259,6 +262,15 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   console.log(formState);
   console.log(errors);
 
+  const itemListApi = async () => {
+    const payload = {
+      claimId,
+    };
+    const claimContentListRes: any = await claimContentList(payload, true);
+    if (claimContentListRes) {
+      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+    }
+  };
   useEffect(() => {
     if (editItem && editItemDetail) {
       setValue("description", editItemDetail.description ?? null);
@@ -351,6 +363,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
     if (addItemRes?.status === 200) {
       closeModal();
+      await itemListApi();
       addNotification({
         message: "Item Added Successfully",
         id: "add_content_item_success",
@@ -371,6 +384,8 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
     if (updateItemRes?.status === 200) {
       closeModal();
+      await itemListApi();
+
       addNotification({
         message: "Item Updated Successfully",
         id: "update_content_item_success",
@@ -998,7 +1013,14 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             <div className="row m-2 flex-row-reverse">
               <div className="row col-12 m-2 flex-row-reverse">
                 <div className="row col-2">
-                  <GenericButton label="Cancel" onClick={closeModal} size="medium" />
+                  <GenericButton
+                    label="Cancel"
+                    onClick={async () => {
+                      closeModal();
+                      await itemListApi();
+                    }}
+                    size="medium"
+                  />
                 </div>
                 <div className="row col-2">
                   <GenericButton
@@ -1050,6 +1072,7 @@ const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
 const mapDispatchToProps = {
   addNotification,
   addSubcategories,
+  addClaimContentListData,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

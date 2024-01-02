@@ -10,8 +10,6 @@ import SearchBoxAddItems from "./SearchBoxAddItems";
 import ListAddItemsTable from "./ListAddItemsTable";
 import Modal from "@/components/common/ModalPopups";
 import AddItemModalForm from "@/components/AddItemModalForm";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
@@ -25,9 +23,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
   isAssignItemsDisabled,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
-  const router = useRouter();
-  const { claimId } = useSearchParams();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -35,7 +30,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
 
   const closeModal = () => {
     setIsModalOpen(false);
-    router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
   return (

@@ -51,6 +51,7 @@ const ClaimContentSlice = createSlice({
             itemId: item.id,
             itemUID: item.itemUID,
             itemNumber: item.itemNumber,
+            selected: false,
           };
           claimRes.push(newArr);
         });
@@ -119,6 +120,7 @@ const ClaimContentSlice = createSlice({
         originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
         isScheduledItem: itemDetailData.isScheduledItem,
         scheduleAmount: itemDetailData.scheduleAmount,
+        selected: false,
       };
       state.editItemDetail = itemData;
       state.previousItem = previousItem;
