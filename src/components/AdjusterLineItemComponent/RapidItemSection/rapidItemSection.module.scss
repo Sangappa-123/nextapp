@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  column-gap: 4px;
+  padding: 4px;
+  border: 1px solid #c7ccd0;
+  border-top: none;
+  border-bottom: none;
+  box-shadow: 0 0 10px #c7ccd0;
+}

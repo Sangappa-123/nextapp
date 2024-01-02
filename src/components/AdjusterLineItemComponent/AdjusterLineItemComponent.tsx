@@ -19,6 +19,8 @@ import {
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+import { useInView } from "react-intersection-observer";
+import RapidItemSection from "./RapidItemSection";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
@@ -32,10 +34,16 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchRetailersDetails,
   } = props;
   const { itemId, claimId } = useParams();
+  const { ref, inView } = useInView({
+    threshold: 0,
+    // rootMargin: "200px",
+  });
+  console.log("ooooooooooo", inView);
+
   const tabData = [
     {
       name: "Item Details",
-      content: <LineItemDetailComponent />,
+      content: <LineItemDetailComponent rapidDivRef={ref} />,
     },
   ];
   const pathList = [
@@ -107,6 +115,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
             [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
           })}
         />
+        {!inView && isInit.current && <RapidItemSection />}
       </div>
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />
