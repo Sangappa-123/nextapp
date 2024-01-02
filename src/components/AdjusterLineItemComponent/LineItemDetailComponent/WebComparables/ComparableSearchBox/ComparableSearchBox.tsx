@@ -78,12 +78,4 @@ const ComparableSearchBox = (props: comparableSearchBoxType) => {
   );
 };
 
-// const mapStateToProps = (state: RootState) => ({
-//   isSearching: state.lineItemDetail.webSearch.isSearching,
-//   searchKey: state.lineItemDetail.webSearch.searchKey,
-//   selectedEngine: state.lineItemDetail.webSearch.selectedEngine,
-// });
-
-// const connector = connect(mapStateToProps, null);
-// type connectorType = ConnectedProps<typeof connector>;
 export default ComparableSearchBox;

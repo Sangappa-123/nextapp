@@ -8,9 +8,12 @@ import AddedComparables from "./AddedComparables";
 import useCustomForm from "@/hooks/useCustomForm";
 import { Output, any, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
+import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 
 function LineItemDetailComponentForm() {
-  const lineItem = useAppSelector((state) => state.lineItemDetail?.lineItem);
+  const lineItem = useAppSelector(
+    (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
+  );
   const CRN = useAppSelector((state) => state.session?.CRN);
   // const roomSchema = object({
   //   id: number("Room id"),
