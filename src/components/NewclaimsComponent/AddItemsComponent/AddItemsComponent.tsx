@@ -1,22 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import GenericButton from "@/components/common/GenericButton";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import AddStyle from "./addItemsComponent.module.scss";
 import AddItemsTableComponent from "./AddItemsTableComponent";
-// import Cards from "@/components/common/Cards/index";
-// import NewclaimsComponent from "../NewclaimsComponents";
+import { useRouter } from "next/navigation";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
   onNewClaimsClick: () => void;
 }
 
-const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
+const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
   onAssignItemsClick,
   onNewClaimsClick,
 }) => {
-  const [isAssignItemsDisabled, setAssignItemsDisabled] = useState(true);
+  const router = useRouter();
 
   const handlePreviousClick = () => {
     onNewClaimsClick();
@@ -34,6 +35,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
+              onClick={() => router.push("/adjuster-dashboard")}
             />
           </div>
           <div className="col-auto">
@@ -51,10 +53,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
-              disabled={isAssignItemsDisabled}
-              onClick={() => {
-                setAssignItemsDisabled(true);
-              }}
             />
           </div>
         </div>
@@ -67,11 +65,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
         />
       </div>
       <div>
-        <AddItemsTableComponent
-          onAssignItemsClick={onAssignItemsClick}
-          onSetAssignItemsDisabled={setAssignItemsDisabled}
-          isAssignItemsDisabled={isAssignItemsDisabled}
-        />
+        <AddItemsTableComponent onAssignItemsClick={onAssignItemsClick} />
       </div>
       <div className="row justify-content-end">
         <div className="col-auto">
@@ -80,6 +74,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
+            onClick={() => router.push("/adjuster-dashboard")}
           />
         </div>
         <div className="col-auto">
@@ -97,10 +92,6 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
-            disabled={isAssignItemsDisabled}
-            onClick={() => {
-              setAssignItemsDisabled(true);
-            }}
           />
         </div>
       </div>
@@ -108,4 +99,13 @@ const AddItemsComponent: React.FC<AddItemsComponentProps> = ({
   );
 };
 
-export default AddItemsComponent;
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AddItemsComponent);

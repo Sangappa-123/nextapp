@@ -11,6 +11,7 @@ import ExcelCsvUploadSlice from "./UploadCSV/excelCsvUploadSlice";
 import LineItemDetailSlice from "./LineItemDetail/LineItemDetailSlice";
 import ClaimDetailSlice from "./ClaimDetail/ClaimDetailSlice";
 import NavigationSlice from "./UploadCSV/navigationSlice";
+import AddItemsTableCSVSlice from "./UploadCSV/AddItemsTableCSVSlice";
 
 const rootReducer = combineReducers({
   [SessionSlice.name]: SessionSlice.reducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   [LineItemDetailSlice.name]: LineItemDetailSlice.reducer,
   [ClaimDetailSlice.name]: ClaimDetailSlice.reducer,
   [NavigationSlice.name]: NavigationSlice.reducer,
+  [AddItemsTableCSVSlice.name]: AddItemsTableCSVSlice.reducer,
 });
 
 export default rootReducer;
