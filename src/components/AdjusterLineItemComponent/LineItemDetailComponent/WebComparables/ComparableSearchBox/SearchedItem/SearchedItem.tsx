@@ -2,10 +2,11 @@ import React from "react";
 import { unknownObjectType } from "@/constants/customTypes";
 import Image from "next/image";
 import searchedItemStyle from "./searchedItem.module.scss";
-import { FaStarHalfAlt, FaStar } from "react-icons/fa";
+// import { FaStarHalfAlt, FaStar } from "react-icons/fa";
 import { SEARCH_COMPARABLE_DESC_LIMIT } from "@/constants/constants";
 import GenericButton from "@/components/common/GenericButton";
 import { getUSDCurrency } from "@/utils/utitlity";
+import StarRating from "@/components/common/StarRating/StarRating";
 
 type propsType = {
   key: number;
@@ -15,34 +16,34 @@ type propsType = {
 function SearchedItem(props: propsType) {
   const { key, data = {} } = props;
   const imgUrl = data?.itemImage;
-  function getStarCount(num: number) {
-    let numberOfStars = Math.ceil(parseFloat(`${num}`));
-    if (numberOfStars > 5) numberOfStars = 5;
-    const data = new Array(numberOfStars);
-    for (let i = 0; i < data.length; i++) {
-      data[i] = i;
-    }
-    return data;
-  }
+  // function getStarCount(num: number) {
+  //   let numberOfStars = Math.ceil(parseFloat(`${num}`));
+  //   if (numberOfStars > 5) numberOfStars = 5;
+  //   const data = new Array(numberOfStars);
+  //   for (let i = 0; i < data.length; i++) {
+  //     data[i] = i;
+  //   }
+  //   return data;
+  // }
 
-  const StarRating = ({ rating }: { rating: number }) => {
-    const stars = getStarCount(rating).map((a: number) => {
-      if (!(rating >= a + 1) && rating >= a + 1 - 1) {
-        return <FaStarHalfAlt key={a} fill="#ff4500" />;
-      } else if (rating >= a + 1) {
-        return <FaStar key={a} fill="#ff4500" />;
-      }
-    });
-    return (
-      <>
-        {stars}
-        {stars.length < 5 &&
-          new Array(5 - stars.length)
-            .fill(0)
-            .map((_, i) => <FaStar key={i} fill="#8d8b89" />)}
-      </>
-    );
-  };
+  // const StarRating = ({ rating }: { rating: number }) => {
+  //   const stars = getStarCount(rating).map((a: number) => {
+  //     if (!(rating >= a + 1) && rating >= a + 1 - 1) {
+  //       return <FaStarHalfAlt key={a} fill="#ff4500" />;
+  //     } else if (rating >= a + 1) {
+  //       return <FaStar key={a} fill="#ff4500" />;
+  //     }
+  //   });
+  //   return (
+  //     <>
+  //       {stars}
+  //       {stars.length < 5 &&
+  //         new Array(5 - stars.length)
+  //           .fill(0)
+  //           .map((_, i) => <FaStar key={i} fill="#8d8b89" />)}
+  //     </>
+  //   );
+  // };
 
   const getShortDesc = (desc: string) => {
     if (desc.length > 60) return desc.slice(0, SEARCH_COMPARABLE_DESC_LIMIT) + "...";
@@ -68,7 +69,6 @@ function SearchedItem(props: propsType) {
               {getShortDesc(data?.description)}
             </div>
             <div className={searchedItemStyle.rating}>
-              5.0
               <StarRating rating={data?.rating ?? 0} />
             </div>
           </div>
