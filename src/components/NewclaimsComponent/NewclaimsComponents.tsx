@@ -14,7 +14,6 @@ import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 import { creatClaim, postClaim } from "@/services/ClaimService";
-import { insuranceSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
 import { RootState } from "@/store/store";
 import dayjs from "dayjs";
@@ -26,6 +25,7 @@ import {
   setActiveSection,
 } from "@/reducers/UploadCSV/navigationSlice";
 import Loading from "@/app/[lang]/loading";
+import selectInsuranceCompanyName from "@/reducers/Session/Selectors/selectInsuranceCompanyName";
 
 const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
   loading: () => <Loading />,
@@ -34,7 +34,7 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
   const activeSection = useAppSelector(selectActiveSection);
-  const insuranceCompany = useAppSelector(insuranceSelector);
+  const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
 
   console.log("insurancecompany", insuranceCompany);
   const schema = object({
