@@ -14,11 +14,14 @@ import {
 } from "@/services/AdjusterMyClaimServices/LineItemDetailService";
 import { RootState } from "@/store/store";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import EnumStoreSlice from "../EnumStoreSlice";
 
 const initialState: unknownObjectType = {
   isLoading: true,
   isFetching: false,
   lineItem: null,
+  comparableItems: null,
+  replacementItem: null,
   subCategory: [],
   category: [],
   condition: [],
@@ -109,7 +112,7 @@ export const fetchLineItemDetail = createAsyncThunk(
         const insuredPrice = res.data.insuredPrice;
         const searchKey = res.data.description;
         const pincode = res.data.policyHolderPinCode;
-        if (!state.lineItemDetail?.webSearch?.isSearching)
+        if (!state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.isSearching)
           dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
         if (res?.data?.category?.id) {
           dispatch(fetchSubCategory(res?.data?.category?.id));
@@ -152,7 +155,8 @@ export const searchComparable = createAsyncThunk(
     try {
       let { startPrice: priceFrom, endPrice: priceTo } = payload;
       const selectedEngine =
-        payload.selectedEngine ?? state.lineItemDetail.webSearch?.selectedEngine;
+        payload.selectedEngine ??
+        state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch?.selectedEngine;
       const { isInit = false } = payload;
       const pageNo = 1; // initially pageno is 1
       if (isInit) {
@@ -174,12 +178,15 @@ export const searchComparable = createAsyncThunk(
         })
       );
       const api_payload: searchComparableReq = {
-        item: payload.searchKey ?? state.lineItemDetail?.webSearch?.searchKey,
+        item:
+          payload.searchKey ??
+          state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.searchKey,
         id: selectedEngine.id,
         numberOfCounts: 10,
         priceFrom: priceFrom ?? 0,
-        pincode: payload.pincode ?? state.lineItemDetail?.webSearch?.pincode,
-        pageNo: pageNo ?? state.lineItemDetail?.webSearch?.pageNo,
+        pincode:
+          payload.pincode ?? state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.pincode,
+        pageNo: pageNo ?? state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.pageNo,
         serfWowSearch: true,
         ids: [1],
       };
@@ -196,7 +203,7 @@ export const searchComparable = createAsyncThunk(
 
 const LineItemDetailSlice = createSlice({
   initialState,
-  name: "lineItemDetail",
+  name: EnumStoreSlice.LINE_ITEM_DETAIL,
   reducers: {
     resetLineItemDetail() {
       return initialState;
@@ -230,6 +237,22 @@ const LineItemDetailSlice = createSlice({
       state.isFetching = false;
       state.isLoading = false;
       if (payload.status === 200) {
+        let tempComparable = null;
+        let tempReplacement = null;
+        if (payload?.data?.comparableItems) {
+          tempComparable = [];
+          for (const item of payload.data.comparableItems) {
+            if (item?.isReplacementItem) {
+              tempReplacement = item;
+            } else {
+              tempComparable.push(item);
+            }
+          }
+        }
+        // state.comparableItems = payload.data?.comparableItems?.filter();
+        state.comparableItems = tempComparable;
+        state.replacementItem = tempReplacement;
+        delete payload?.data?.comparableItems;
         state.lineItem = payload.data;
       }
     });
