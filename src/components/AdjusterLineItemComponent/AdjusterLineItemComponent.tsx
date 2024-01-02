@@ -15,7 +15,6 @@ import {
   fetchLineItemCatergory,
   fetchLineItemDetail,
   fetchRetailersDetails,
-  // resetLineItemDetail,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
@@ -25,7 +24,6 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
     isLoading,
     lineItem,
-    // resetLineItemDetail,
     claimData = [],
     fetchLineItemDetail,
     fetchClaimContentAction,
@@ -125,7 +123,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   fetchLineItemDetail,
-  // resetLineItemDetail,
   fetchClaimContentAction,
   fetchLineItemCatergory,
   fetchCondition,
