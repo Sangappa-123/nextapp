@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import NavStyle from "./headerStyle.module.scss";
-import { nameSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
+import selectLoggedInUserName from "@/reducers/Session/Selectors/selectLoggedInUserName";
 
 function ProfileDetail({ signoutHandle }: { signoutHandle: () => void }) {
-  const name = useAppSelector(nameSelector);
+  const name = useAppSelector(selectLoggedInUserName);
   const [firstName = "", lastName = ""] = name.split(",") ?? [];
   const [load, setLoad] = useState(false);
 
