@@ -49,7 +49,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     condition: string | null;
     purchasedFrom: string | null;
     purchasedMethod: string | null;
-    quantity: string | null;
+    quantity: number;
     replacementCost: number;
     roomType: string | null;
     roomName: string | null;
@@ -76,15 +76,41 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     await setEditableRowId(null);
   };
 
+  // const handleChange = async (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   columnName: string
+  // ) => {
+  //   await setEditedData({
+  //     ...editedData,
+  //     [columnName]: e.target.value,
+  //   });
+  // };
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     columnName: string
   ) => {
-    await setEditedData({
-      ...editedData,
-      [columnName]: e.target.value,
-    });
+    const { value } = e.target;
+    let updatedData = { ...editedData, [columnName]: value };
+
+    if (columnName === "quantity" || columnName === "replacementCost") {
+      const updatedQuantity =
+        columnName === "quantity" ? parseFloat(value) : editedData.quantity;
+      const updatedReplacementCost =
+        columnName === "replacementCost" ? parseFloat(value) : editedData.replacementCost;
+
+      const updatedTotalCost =
+        isNaN(updatedQuantity) || isNaN(updatedReplacementCost)
+          ? 0
+          : updatedQuantity * updatedReplacementCost;
+
+      updatedData = { ...updatedData, totalCost: updatedTotalCost };
+    }
+
+    await setEditedData(updatedData);
+    await updateData(updatedData);
   };
+
   const updateData = async (updatedRow: any) => {
     const updatedPostLossItemDetails = postLossItemDetails.map((row: any) =>
       row.id === updatedRow.id ? updatedRow : row
@@ -184,7 +210,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     columnHelper.accessor("totalCost", {
       header: "Total Cost",
       meta: {
-        editableField: true,
+        editableField: false,
       },
     }),
     columnHelper.accessor("category", {

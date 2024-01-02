@@ -12,22 +12,30 @@ import Modal from "@/components/common/ModalPopups";
 import AddItemModalForm from "@/components/AddItemModalForm";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { ConnectedProps, connect } from "react-redux";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+// import { useAppSelector } from "@/hooks/reduxCustomHook";
+import {
+  setAddItemsTableData,
+  setSelectedItems,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { RootState } from "@/store/store";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
-  onSetAssignItemsDisabled: (value: boolean) => void;
-  isAssignItemsDisabled: boolean;
+  isAnyItemSelected: boolean;
 }
 
-const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
+const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
   onAssignItemsClick,
-  onSetAssignItemsDisabled,
-  isAssignItemsDisabled,
+  isAnyItemSelected,
+  selectedItems,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const [isAssignButtonDisabled, setIsAssignButtonDisabled] = useState<boolean>(false);
   const router = useRouter();
   const { claimId } = useSearchParams();
+
+  const dispatch = useAppDispatch();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -38,6 +46,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
     router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
+  const handleCheckboxChange = (item: any) => {
+    const updatedSelectedItems = selectedItems.includes(item)
+      ? selectedItems.filter((selectedItem) => selectedItem !== item)
+      : [...selectedItems, item];
+    dispatch(setSelectedItems(updatedSelectedItems));
+  };
+
   return (
     <>
       <div className={AddTableSTyle.addItemsContainer}>
@@ -45,7 +60,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
           <Modal
             isOpen={isModalOpen}
             onClose={closeModal}
-            childComp={<AddItemModalForm closeModal={closeModal} />}
+            childComp={<AddItemModalForm />}
             headingName="Add Item"
             modalWidthClassName={AddTableSTyle.modalWidth}
           ></Modal>
@@ -67,11 +82,8 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
             className={`col-lg-2 col-md-2 col-sm-12 col-12 mt-2 mb-2 ${AddTableSTyle.assignButtonStyle}`}
           >
             <AssignAddItemButton
-              onAssignItemsClick={() => {
-                onAssignItemsClick();
-                onSetAssignItemsDisabled(true);
-              }}
-              isButtonDisabled={isAssignItemsDisabled}
+              isAnyItemSelected={isAnyItemSelected}
+              onClick={onAssignItemsClick}
             />
           </div>
           <div
@@ -87,9 +99,23 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
         </div>
       </div>
       <div className="row">
-        <ListAddItemsTable />
+        <ListAddItemsTable onCheckboxChange={handleCheckboxChange} />
       </div>
     </>
   );
 };
-export default AddItemsTableComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+  isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
+});
+
+const mapDispatchToProps = {
+  setAddItemsTableData,
+  setSelectedItems,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AddItemsTableComponent);

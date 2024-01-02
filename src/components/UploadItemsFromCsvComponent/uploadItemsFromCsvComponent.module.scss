@@ -178,6 +178,62 @@
 //   overflow: auto;
 // }
 
+.pTitleTextRowsFailedfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 103px;
+}
+
+.pTitleTextRowsfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 110px;
+}
+
+.statusTextfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 151px;
+}
+
+.itemsUpdatedfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 100px;
+}
+
+.newItemsCreatedfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 66px;
+}
+
+.pTitleTextRowsProcessfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 89px;
+}
+
+.progressBarContainer2 {
+  // width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pTitleTextfinish {
+  font-size: 13px;
+  color: #659be0;
+  font-weight: bold;
+  margin-left: 129px;
+}
 @media only screen and (min-width: 2560px) {
   .formControl {
     width: 100%;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -7,59 +7,109 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableLisStyle from "./listAddItems.module.scss";
+import { ConnectedProps, connect } from "react-redux";
+import {
+  setAddItemsTableData,
+  setSelectedItems,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { RootState } from "@/store/store";
 
-const ListAddItemsTable: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false);
+interface ListAddItemsTableProps {
+  addItemsTableData: any[];
+  onCheckboxChange: (item: any) => void;
+}
+
+const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
+  addItemsTableData,
+  onCheckboxChange,
+}) => {
+  const handleCheckboxChange = (item: any) => {
+    console.log("Selected Item", item);
+    onCheckboxChange(item);
+  };
+
+  const pageLimit = 100;
   type AddItemsData = {
-    item: string;
+    itemNumber: number;
     description: string;
-    status: string;
-    totalValue: number;
-    qty: string;
+    status: { status: string };
+    totalStatedAmount: number;
+    quantity: string;
     category: string;
-    age: number;
+    ageMonths: number;
     action: { edit: boolean; delete: boolean };
     select: boolean;
   };
 
   const columnHelper = createColumnHelper<AddItemsData>();
+  const checkboxAccessor = (data: AddItemsData) => data.select;
 
   const columns = [
-    columnHelper.accessor("select", {
-      id: "checkbox",
-      header: () => <input type="checkbox" />,
-      cell: () => (
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-          //   className={TableLisStyle.checkboxInput}
-        />
+    columnHelper.accessor(checkboxAccessor, {
+      header: () => (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        </div>
+      ),
+      meta: {},
+      id: "check",
+      enableColumnFilter: false,
+      cell: ({ row }) => (
+        <div
+          className="d-flex justify-content-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={() => {
+              handleCheckboxChange(row.original);
+            }}
+          />
+        </div>
       ),
     }),
-    columnHelper.accessor("item", {
-      header: () => `Item #`,
+    columnHelper.accessor("itemNumber", {
+      header: () => "Item #",
+      id: "itemNumber",
+      enableColumnFilter: false,
     }),
-
     columnHelper.accessor("description", {
-      header: () => `Description`,
+      header: () => "Description",
+      id: "Description",
+      enableColumnFilter: false,
     }),
-    columnHelper.accessor("status", {
-      header: () => `Status`,
-    }),
-
-    columnHelper.accessor("totalValue", {
-      header: () => `Total Value`,
-    }),
-    columnHelper.accessor("qty", {
-      header: () => `Qty`,
+    columnHelper.accessor((data) => data.status.status, {
+      header: () => "Status",
+      id: "status",
     }),
 
+    columnHelper.accessor("totalStatedAmount", {
+      header: () => "Total Value",
+      id: "totalStatedAmount",
+    }),
+    columnHelper.accessor("quantity", {
+      header: () => "Qty",
+      id: "quantity",
+      enableColumnFilter: false,
+    }),
     columnHelper.accessor("category", {
-      header: () => `Category`,
+      header: () => "Catogory",
+      id: "category",
     }),
-    columnHelper.accessor("age", {
-      header: () => `Age`,
+    columnHelper.accessor("ageMonths", {
+      header: () => "Age",
+      id: "ageMonths",
     }),
     columnHelper.accessor("action", {
       header: () => `Action`,
@@ -72,39 +122,33 @@ const ListAddItemsTable: React.FC = () => {
     }),
   ];
 
-  const data: AddItemsData[] = [
-    {
-      item: "Item 1",
-      description: "Description 1",
-      status: "Status1",
-      totalValue: 1,
-      qty: "qty",
-      category: "category1",
-      age: 1,
-      action: { edit: true, delete: true },
-      select: false,
-    },
-  ];
-
   const table = useReactTable({
     columns,
-    data,
+    data: addItemsTableData,
     enableColumnFilters: false,
-    getCoreRowModel: getCoreRowModel<AddItemsData>(),
+    pageCount: Math.ceil(addItemsTableData.length / pageLimit),
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
   });
 
   return (
     <div className={TableLisStyle.addListTableContainer}>
-      <CustomReactTable
-        table={table}
-        // totalClaims={props.totalClaims}
-        // pageLimit={pageLimit}
-        // showStatusColor={true}
-        // loader={loader}
-        // tableDataErrorMsg={props.claimErrorMsg}
-      />
+      <CustomReactTable table={table} />
     </div>
   );
 };
 
-export default ListAddItemsTable;
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+  isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
+});
+
+const mapDispatchToProps = {
+  setAddItemsTableData,
+  setSelectedItems,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ListAddItemsTable);
