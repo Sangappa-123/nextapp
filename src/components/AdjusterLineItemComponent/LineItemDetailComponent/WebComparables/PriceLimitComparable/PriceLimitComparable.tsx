@@ -75,12 +75,4 @@ const PriceLimitComparable = (props: priceLimitPropType) => {
   );
 };
 
-// const mapStateToProps = (state: RootState) => ({
-//   priceFrom: state.lineItemDetail.webSearch.priceFrom,
-//   priceTo: state.lineItemDetail.webSearch.priceTo,
-// });
-
-// const connector = connect(mapStateToProps, null);
-// type connectorType = ConnectedProps<typeof connector>;
-// export default connector(PriceLimitComparable);
 export default PriceLimitComparable;

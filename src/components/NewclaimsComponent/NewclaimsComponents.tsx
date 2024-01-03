@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { ConnectedProps, connect } from "react-redux";
+import { Suspense } from "react";
 import {
   selectActiveSection,
   setActiveSection,
@@ -33,6 +34,7 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
+  // const router = useRouter();
   const activeSection = useAppSelector(selectActiveSection);
   const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
 
@@ -91,6 +93,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
+  // const [claimNumberr, setClaimNumber] = useState<string | null>(null);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -235,7 +238,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           })
         );
         const creatClaimRes = await creatClaim(formData);
+        console.log("ccccccccc", creatClaimRes);
         if (creatClaimRes?.status === 200) {
+          sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
+          sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
           const nextSection = activeSection + 1;
           console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
@@ -278,6 +284,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const handleAssignItemsClick = () => {
     dispatch(setActiveSection(2));
+    // router.push("/new-claim");
   };
 
   const handlePreviousClick = () => {
@@ -421,13 +428,19 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           <AddItemsComponent
             onAssignItemsClick={handleAssignItemsClick}
             onNewClaimsClick={handlePreviousClick}
+            // claimNumber={claimNumberr || ""}
           />
         </Cards>
       )}
       {activeSection === 2 && (
-        <Cards>
-          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
-        </Cards>
+        <Suspense fallback={<Loading />}>
+          <Cards>
+            <AssignItemsComponent
+              onNewClaimsClick={handlePreviousClick}
+              // selectedRowsData={[]}
+            />
+          </Cards>
+        </Suspense>
       )}
     </div>
   );

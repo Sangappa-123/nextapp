@@ -43,6 +43,8 @@ enum apiEndPoints {
   pendingTaskList = "web/claim/pendingtasklist",
   claimDetailMessageList = "web/messages",
   deleteServiceRequestItem = "web/delete/servicerequest",
+  addItemsListTable = "web/claim/creation/line/items",
+  importCsvTable = "web/import/postloss/items",
   roomTypeApi = "web/room/types",
   addContentItemApi = "web/add/itemtopostloss",
   claimParticipantsUrl = "web/claim/participants",
