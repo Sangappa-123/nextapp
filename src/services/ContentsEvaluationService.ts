@@ -44,6 +44,40 @@ export const getCoverageSummary = async (
   }
 };
 
+export const getPolicyholderPayouts = async (
+  payload: { claimNumber: string },
+  isClient?: boolean
+) => {
+  try {
+    const http = new HttpService({ isClient });
+    let url = getApiEndPoint("policyholderPayouts");
+    console.log("url $$$", url, payload);
+    url = `${url}`;
+    const resp = await http.post(url, payload);
+    console.log("resp", resp);
+    return resp;
+  } catch (err: any) {
+    return null;
+  }
+};
+
+export const getPolicySummary = async (
+  payload: { claimNumber: string },
+  isClient?: boolean
+) => {
+  try {
+    const http = new HttpService({ isClient });
+    let url = getApiEndPoint("paymentSummaryTable");
+    console.log("url $$$", url, payload);
+    url = `${url}`;
+    const resp = await http.post(url, payload);
+    console.log("resp", resp);
+    return resp;
+  } catch (err: any) {
+    return null;
+  }
+};
+
 export const searchDetailedInventory = async (searchKeyword = "") => {
   const state = store.getState();
   const searchWord = searchKeyword ?? state.detailedInventorydata.searchKeyword;
@@ -106,6 +140,22 @@ export const getDetailInventoryExcel = async function (param) {
       param.claimNumber +
       "&format=" +
       param.format;
+    console.log("url $$$", url, param);
+    url = `${url}`;
+    const resp = await http.getFile(url);
+    console.log("resp000", resp);
+    return resp;
+  } catch (err: any) {
+    console.log("resp111");
+    return null;
+  }
+};
+
+export const getSendDetailedInventory = async function (param) {
+  try {
+    const http = new HttpService({ isClient: true });
+    let url =
+      getApiEndPoint("detailedInventoryReportSend") + "?claimNumber=" + param.claimNumber;
     console.log("url $$$", url, param);
     url = `${url}`;
     const resp = await http.getFile(url);

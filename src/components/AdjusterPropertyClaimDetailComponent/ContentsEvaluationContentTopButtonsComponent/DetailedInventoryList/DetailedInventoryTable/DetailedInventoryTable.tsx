@@ -16,6 +16,7 @@ import { Tooltip } from "react-tooltip";
 import {
   exportDetailedInventory,
   exportDetailedInventoryToPDF,
+  sendDetailedInventory,
 } from "../DetailedInventoryFucn";
 
 type DetailedInventoryProps = {
@@ -332,6 +333,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                 theme="normal"
                 size="small"
                 type="submit"
+                onClick={() => sendDetailedInventory(claimNumber)}
                 btnClassname={DetailListComponentStyle.contentListBtn}
               />
             </div>
