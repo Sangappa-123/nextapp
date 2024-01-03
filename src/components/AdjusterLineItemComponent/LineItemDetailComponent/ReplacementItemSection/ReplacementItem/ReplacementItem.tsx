@@ -12,7 +12,6 @@ interface replaceItemInterface {
 
 function ReplacementItem(props: replaceItemInterface) {
   const { itemDetail } = props;
-  console.log("---------", itemDetail);
   return (
     <div className={replacementItemStyle.root}>
       <div className={replacementItemStyle.descriptionDiv}>

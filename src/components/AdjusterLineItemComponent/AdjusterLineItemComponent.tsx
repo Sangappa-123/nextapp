@@ -38,7 +38,6 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     threshold: 0,
     // rootMargin: "200px",
   });
-  console.log("ooooooooooo", inView);
 
   const tabData = [
     {
