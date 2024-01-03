@@ -4,6 +4,9 @@
   flex-direction: column;
   row-gap: 16px;
   padding-bottom: 16px;
+  .topItemSection {
+    position: relative;
+  }
   .topItemSection,
   .bottomItemSection {
     display: grid;
