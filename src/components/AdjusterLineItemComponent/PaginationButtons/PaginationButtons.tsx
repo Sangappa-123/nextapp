@@ -48,7 +48,6 @@ function PaginationButtons({
     };
   }, [totalPages, pageIndex]);
 
-  console.log("llllll", pager);
   return (
     <div className={lineItemPaginationStyle.root}>
       <ul className={lineItemPaginationStyle.btnList}>
