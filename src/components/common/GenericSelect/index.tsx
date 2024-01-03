@@ -68,6 +68,8 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     placeholder: (styles: any) => ({
       ...styles,
       fontSize: "13px",
+      textAlign: "left",
+      fontWeight: "400",
       ...customStyles.placeholder,
     }),
     singleValue: (styles: any) => ({
