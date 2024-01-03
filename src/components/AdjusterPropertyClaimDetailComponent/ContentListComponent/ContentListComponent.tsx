@@ -8,10 +8,9 @@ import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { Tooltip } from "react-tooltip";
-import Modal from "@/components/common/ModalPopups";
 import { useRouter } from "next/navigation";
-import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
+import AddItemModal from "@/components/AddItemModal/AddItemModal";
 
 function ContentListComponent(props: any) {
   const {
@@ -148,13 +147,12 @@ function ContentListComponent(props: any) {
           </div>
         </div>
         <div className="col-12">
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            childComp={<AddItemModalForm editItem={editItem} closeModal={closeModal} />}
-            headingName={editItem ? "Item# " + editItemDetail.itemNumber : "Add Item"}
-            modalWidthClassName={ContentListComponentStyle.modalWidth}
-          ></Modal>
+          <AddItemModal
+            closeModal={closeModal}
+            isModalOpen={isModalOpen}
+            editItem={editItem}
+            editItemDetail={editItemDetail}
+          />
         </div>
       </div>
       <ContentListTable

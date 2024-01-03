@@ -10,7 +10,7 @@ import { Output, any, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 
-function LineItemDetailComponentForm() {
+function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
   const lineItem = useAppSelector(
     (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
   );
@@ -160,6 +160,7 @@ function LineItemDetailComponentForm() {
     >
       <GroupedActionButtons />
       <div className={lineItemDetailComponentStyle.topItemSection}>
+        <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
         <OrginalItemForm
           register={register}
           control={control}
