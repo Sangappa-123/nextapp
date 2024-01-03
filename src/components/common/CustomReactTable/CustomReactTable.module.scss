@@ -9,6 +9,11 @@
       top: 0;
       z-index: 1;
     }
+    tfoot {
+      position: sticky;
+      bottom: 0;
+      z-index: 1;
+    }
     tbody tr:nth-child(even) {
       background-color: #337ab708;
     }

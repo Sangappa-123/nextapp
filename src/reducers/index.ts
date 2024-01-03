@@ -12,6 +12,7 @@ import LineItemDetailSlice from "./LineItemDetail/LineItemDetailSlice";
 import ClaimDetailSlice from "./ClaimDetail/ClaimDetailSlice";
 import NavigationSlice from "./UploadCSV/navigationSlice";
 import AddItemsTableCSVSlice from "./UploadCSV/AddItemsTableCSVSlice";
+import DetailedInventorySlice from "./ContentsEvaluation/DetailedInventorySlice";
 
 const rootReducer = combineReducers({
   [SessionSlice.name]: SessionSlice.reducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   [ClaimDetailSlice.name]: ClaimDetailSlice.reducer,
   [NavigationSlice.name]: NavigationSlice.reducer,
   [AddItemsTableCSVSlice.name]: AddItemsTableCSVSlice.reducer,
+  [DetailedInventorySlice.name]: DetailedInventorySlice.reducer,
 });
 
 export default rootReducer;
