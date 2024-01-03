@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 700px;
-  height: 50%;
+  height: 90%;
   padding-left: 30px;
   padding-top: 20px;
 }
@@ -10,14 +10,27 @@
   display: flex;
   flex-direction: column;
   width: 700px;
-  height: 50%;
+  height: 90%;
   padding-top: 20px;
 }
 .cardPolicy {
-  height: 330px;
+  height: 360px;
 }
-
+.editableDiv {
+  // background-color: #fed9ff;
+  width: 600px;
+  height: 320px;
+  text-align: center;
+  padding: 20px;
+  // height: 100px;
+  overflow-y: scroll;
+}
 .policyNo {
+  font-size: 13px;
+  font-weight: 600;
+  padding-left: 15px;
+}
+.address {
   font-size: 13px;
   font-weight: 600;
   padding-left: 15px;
@@ -27,7 +40,11 @@
   flex-direction: column;
   font-size: 13px;
   font-weight: 600;
-  justify-content: center;
+}
+.graceSmith {
+  display: flex;
+  font-size: 13px;
+  font-weight: 600;
 }
 .policyNumber {
   padding-left: 10px;
@@ -80,7 +97,9 @@
 .categoryLimit {
   padding-top: 10px;
 }
-
+.cancelButton {
+  padding-left: 380px;
+}
 @media only screen and (min-width: 1820px) {
   .card1 {
     display: flex;
