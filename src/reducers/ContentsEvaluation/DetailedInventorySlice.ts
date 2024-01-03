@@ -2,13 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getCoverageSummary,
   getDetailedInventory,
+  getPolicyholderPayouts,
+  getPolicySummary,
 } from "../../services/ContentsEvaluationService";
 
 const initialState = {
   detailedInventoryListDataFull: [],
   detailedInventoryListAPIData: [],
   coverageSummaryListDataFull: [],
+  policyHolderListDataFull: {},
   detailedInventorySummaryData: [],
+  policySummaryListDataFull: [],
   searchKeyword: "",
 };
 
@@ -34,6 +38,38 @@ export const fetchCoverageSummaryAction = createAsyncThunk(
     console.log("coverage444");
     try {
       const res = await getCoverageSummary(payload, true);
+      console.log("coverage k", res);
+
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchPolicyHolderTableAction = createAsyncThunk(
+  "policyholder/fetchData",
+  async (payload: { claimNumber: string }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    console.log("coverage444");
+    try {
+      const res = await getPolicyholderPayouts(payload, true);
+      console.log("coverage k", res);
+
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchPolicySummaryTableAction = createAsyncThunk(
+  "policysummary/fetchData",
+  async (payload: { claimNumber: string }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    console.log("coverage444");
+    try {
+      const res = await getPolicySummary(payload, true);
       console.log("coverage k", res);
 
       return res;
@@ -78,6 +114,24 @@ const DetailedInventorySlice = createSlice({
       const payload = action.payload;
       if (payload?.status === 200) {
         state.coverageSummaryListDataFull = payload?.data;
+      }
+    });
+    builder.addCase(fetchPolicyHolderTableAction.pending, (state) => {
+      state.policyHolderListDataFull = {};
+    });
+    builder.addCase(fetchPolicyHolderTableAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      if (payload?.status === 200) {
+        state.policyHolderListDataFull = payload?.data;
+      }
+    });
+    builder.addCase(fetchPolicySummaryTableAction.pending, (state) => {
+      state.policySummaryListDataFull = [];
+    });
+    builder.addCase(fetchPolicySummaryTableAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      if (payload?.status === 200) {
+        state.policySummaryListDataFull = payload?.data;
       }
     });
   },

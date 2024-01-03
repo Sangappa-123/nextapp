@@ -5,6 +5,7 @@ import cvStyle from "./content-evaluation.module.scss";
 // import { RootState } from "@/store/store";
 import CoverageSummaryList from "./CoverageSummaryList/CoverageSummaryList";
 import DetailedInventoryList from "./DetailedInventoryList/DetailedInventoryList";
+import PolicyholderPayouts from "./PolicyholderPayouts/PolicyholderPayouts";
 // import { useEffect } from "react";
 
 const ContentsEvaluationContentTopButtonsComponent: React.FC<propTypes> = () => {
@@ -27,7 +28,7 @@ const ContentsEvaluationContentTopButtonsComponent: React.FC<propTypes> = () => 
     },
     {
       name: "Policyholder Payouts",
-      content: "",
+      content: <PolicyholderPayouts />,
     },
   ];
 
