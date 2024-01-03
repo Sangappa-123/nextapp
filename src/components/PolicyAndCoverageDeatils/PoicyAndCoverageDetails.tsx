@@ -36,8 +36,6 @@ export default function PolicyAndCoverageDetails() {
     state: "CA",
     zipcode: null,
   });
-  // const [addressTwo, setAddressTwo] = useState(null);
-  // const [city, setCity] = useState(null);
   const [secondaryAddress, setSecondaryAddress] = useState({
     addressOne: null,
     addressTwo: null,
@@ -45,10 +43,6 @@ export default function PolicyAndCoverageDetails() {
     state: "Ia",
     zipcode: null,
   });
-  // const [secondaryAddressTwo, setSecondaryAddressTwo] = useState(null);
-  // const [secondaryAddressCity, setSecondaryAddressCity] = useState(null);
-  // const [state, setState] = useState("CA");
-  // const [zipcode, setZipCode] = useState(null);
 
   const columnHelper = createColumnHelper<unknownObjectType>();
   const dispatch = useAppDispatch();
@@ -60,16 +54,15 @@ export default function PolicyAndCoverageDetails() {
       enableColumnFilter: false,
     }),
     columnHelper.accessor("aggregateLimit", {
-      header: () => "Aggregate Limit	", // filter option true should have same id as value
+      header: () => "Aggregate Limit	",
       id: "Aggregate Limit",
     }),
     columnHelper.accessor("individualItemLimit", {
-      header: () => "Individual Item Limit", // filter option true should have same id as value
+      header: () => "Individual Item Limit",
       id: "Individual Item Limit",
     }),
   ];
   const handleClick = () => {
-    console.log("hiii");
     setShow(true);
   };
   const handleCancel = () => {
@@ -85,11 +78,9 @@ export default function PolicyAndCoverageDetails() {
           status: "success",
         })
       );
-      console.log(email, "hiiiii");
     }
   };
   const handleUpdate = () => {
-    console.log(email, "email");
     if (email === null) {
       dispatch(
         addNotification({
@@ -98,7 +89,6 @@ export default function PolicyAndCoverageDetails() {
           status: "error",
         })
       );
-      console.log(email, "hiiiii");
     } else if (email.match(regex) != null) {
       dispatch(
         addNotification({
@@ -156,11 +146,7 @@ export default function PolicyAndCoverageDetails() {
     <div className={clsx("row", styles.policyAndCoverageDetails)}>
       <div className={styles.card1}>
         <Cards className={styles.cardPolicy}>
-          <GenericComponentHeading
-            title={"Policy Coverage Details"}
-            // customHeadingClassname={NewClaimsStyle.PolicyholderText}
-            // customTitleClassname={NewClaimsStyle.customTitleClassname}
-          />
+          <GenericComponentHeading title={"Policy Coverage Details"} />
           <div className={styles.policyCoverageDetails}>
             <div className={clsx("row align-items-center", styles.policyNumber)}>
               <div className={clsx("col-lg-6 col-md-2 col-sm-12 mt-2 text-right")}>
@@ -207,11 +193,7 @@ export default function PolicyAndCoverageDetails() {
       </div>
       <div className={styles.card2}>
         <Cards className={styles.cardPolicy}>
-          <GenericComponentHeading
-            title={"Category Limits"}
-            // customHeadingClassname={NewClaimsStyle.PolicyholderText}
-            // customTitleClassname={NewClaimsStyle.customTitleClassname}
-          />
+          <GenericComponentHeading title={"Category Limits"} />
           {show ? (
             <>
               <div className={styles.editableDiv}>
@@ -271,9 +253,6 @@ export default function PolicyAndCoverageDetails() {
                           target: { value: React.SetStateAction<string> };
                         }) => setCoverageValue(e.target.value)}
                         maxlength="10"
-                        // name="phone-number"
-                        // pattern={pattern}
-                        // {...register("secondaryPhonenumber")}
                       />
                     </span>
                   </div>
@@ -318,7 +297,6 @@ export default function PolicyAndCoverageDetails() {
                         onChange={(e: any) =>
                           setAddress((prev) => ({ ...prev, addressOne: e.target.value }))
                         } // pattern={pattern}
-                        // {...register("address")}
                       />
                       <GenericInput
                         placeholder="Street Address 2"
@@ -326,8 +304,6 @@ export default function PolicyAndCoverageDetails() {
                         onChange={(e: any) =>
                           setAddress((prev) => ({ ...prev, addressTwo: e.target.value }))
                         } // pattern={pattern}
-
-                        // {...register("address1")}
                       />
                       <GenericInput
                         placeholder="City / Town"
@@ -335,8 +311,6 @@ export default function PolicyAndCoverageDetails() {
                         onChange={(e: any) =>
                           setAddress((prev) => ({ ...prev, city: e.target.value }))
                         } // pattern={pattern}
-
-                        // {...register("address2")}
                       />
                     </span>
                   </div>
@@ -347,27 +321,8 @@ export default function PolicyAndCoverageDetails() {
                   </div>
                   <div className={clsx("col-lg-8 col-md-3 col-sm-12 ")}>
                     <span className={styles.number}>
-                      {/* <Controller
-                        // control={control}
-                        name="state"
-                        // rules={{ required: true }}
-                        render={({
-                          field: { onChange: fieldOnChange, ...rest },
-                        }: any) => ( */}
                       <GenericSelect
-                        // labelText={selectLabel}
-                        // placeholder={selectPlaceholder}
-                        // options={options}
                         name="state"
-                        // onChange={(e: any) => {
-                        //   fieldOnChange(e);
-                        //   resetField("homeOwnersPolicyType");
-                        //   console.log("onselect", e?.state);
-                        //   if (e) getPolicyType(e.id);
-                        //   else updateHomeOwnerType([]);
-                        // }}
-                        // {...rest}
-
                         getOptionLabel={(option: { state: any }) => option.state}
                         getOptionValue={(option: { id: any }) => option.id}
                       />
@@ -389,7 +344,7 @@ export default function PolicyAndCoverageDetails() {
                         value={address.zipcode}
                         onChange={(e: any) =>
                           setAddress((prev) => ({ ...prev, zipcode: e.target.value }))
-                        } // pattern={pattern}
+                        }
                         maxlength="5"
                       />{" "}
                     </span>
@@ -410,9 +365,6 @@ export default function PolicyAndCoverageDetails() {
                             addressOne: e.target.value,
                           }))
                         }
-                        // pattern={pattern}
-
-                        // {...register("address")}
                       />
                       <GenericInput
                         placeholder="Street Address 2"
@@ -422,10 +374,7 @@ export default function PolicyAndCoverageDetails() {
                             ...prev,
                             addressTwo: e.target.value,
                           }))
-                        } // pattern={pattern}
-
-                        // formControlClassname="mb-3"
-                        // {...register("address1")}
+                        }
                       />
                       <GenericInput
                         placeholder="City / Town"
@@ -435,9 +384,7 @@ export default function PolicyAndCoverageDetails() {
                             ...prev,
                             addressTwo: e.target.value,
                           }))
-                        } // pattern={pattern}
-
-                        // {...register("address2")}
+                        }
                       />
                     </div>
                   </div>
@@ -448,17 +395,7 @@ export default function PolicyAndCoverageDetails() {
                   </div>
                   <div className={clsx("col-lg-8 col-md-3 col-sm-12 ")}>
                     <div className={styles.number}>
-                      {/* <Controller
-                        // control={control}
-                        name="state"
-                        // rules={{ required: true }}
-                        render={({
-                          field: { onChange: fieldOnChange, ...rest },
-                        }: any) => ( */}
                       <GenericSelect
-                        // labelText={selectLabel}
-                        // placeholder={selectPlaceholder}
-                        // options={options}
                         name="state"
                         value={secondaryAddress.state}
                         onChange={(e: any) =>
@@ -467,12 +404,9 @@ export default function PolicyAndCoverageDetails() {
                             state: e.target.value,
                           }))
                         }
-                        // {...rest}
                         getOptionLabel={(option: { state: any }) => option.state}
                         getOptionValue={(option: { id: any }) => option.id}
                       />
-                      {/* )}
-                      /> */}
                     </div>
                   </div>
                 </div>
