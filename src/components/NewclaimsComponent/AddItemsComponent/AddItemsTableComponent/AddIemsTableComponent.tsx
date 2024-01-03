@@ -8,13 +8,9 @@ import SelectBoxAddItems from "./SelectBoxAddItems";
 import LoadFileAddItemButton from "./LoadFileAddItemButton";
 import SearchBoxAddItems from "./SearchBoxAddItems";
 import ListAddItemsTable from "./ListAddItemsTable";
-import Modal from "@/components/common/ModalPopups";
-import AddItemModalForm from "@/components/AddItemModalForm";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import { ConnectedProps, connect } from "react-redux";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
-// import { useAppSelector } from "@/hooks/reduxCustomHook";
 import {
   setAddItemsTableData,
   setSelectedItems,
@@ -32,8 +28,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   selectedItems,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const router = useRouter();
-  const { claimId } = useSearchParams();
 
   const dispatch = useAppDispatch();
 
@@ -43,7 +37,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
 
   const closeModal = () => {
     setIsModalOpen(false);
-    router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
   const handleCheckboxChange = (item: any) => {
@@ -57,13 +50,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
     <>
       <div className={AddTableSTyle.addItemsContainer}>
         <div className="col-12">
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            childComp={<AddItemModalForm />}
-            headingName="Add Item"
-            modalWidthClassName={AddTableSTyle.modalWidth}
-          ></Modal>
+          <AddItemModal closeModal={closeModal} isModalOpen={isModalOpen} />
         </div>
 
         <div className={`row gx-2 ${AddTableSTyle.addItemsContentContainer}`}>
