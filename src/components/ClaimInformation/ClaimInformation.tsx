@@ -15,8 +15,8 @@ import {
 } from "@/services/ClaimService";
 import { IoClose } from "react-icons/io5";
 import CategoryCoverage from "./CategoryCoverage";
-import ImagePreviewModal from "../AddItemModalForm/ImagePreviewModal/index";
-import AttachementPreview from "../AddItemModalForm/AttachementPreview/index";
+import ImagePreviewModal from "../AddItemModal/ImagePreviewModal/index";
+import AttachementPreview from "../AddItemModal/AttachementPreview/index";
 
 interface MyObject {
   imgType: string;

@@ -120,6 +120,7 @@ const ClaimContentSlice = createSlice({
         originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
         isScheduledItem: itemDetailData.isScheduledItem,
         scheduleAmount: itemDetailData.scheduleAmount,
+        attachments: itemDetailData.attachments,
         selected: false,
       };
       state.editItemDetail = itemData;

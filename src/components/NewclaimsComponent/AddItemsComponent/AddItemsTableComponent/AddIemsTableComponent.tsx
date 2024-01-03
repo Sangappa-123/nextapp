@@ -8,8 +8,7 @@ import SelectBoxAddItems from "./SelectBoxAddItems";
 import LoadFileAddItemButton from "./LoadFileAddItemButton";
 import SearchBoxAddItems from "./SearchBoxAddItems";
 import ListAddItemsTable from "./ListAddItemsTable";
-import Modal from "@/components/common/ModalPopups";
-import AddItemModalForm from "@/components/AddItemModalForm";
+import AddItemModal from "@/components/AddItemModal/AddItemModal";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
@@ -36,13 +35,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps> = ({
     <>
       <div className={AddTableSTyle.addItemsContainer}>
         <div className="col-12">
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            childComp={<AddItemModalForm closeModal={closeModal} />}
-            headingName="Add Item"
-            modalWidthClassName={AddTableSTyle.modalWidth}
-          ></Modal>
+          <AddItemModal closeModal={closeModal} isModalOpen={isModalOpen} />
         </div>
 
         <div className={`row gx-2 ${AddTableSTyle.addItemsContentContainer}`}>
