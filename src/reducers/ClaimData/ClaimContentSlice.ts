@@ -127,6 +127,12 @@ const ClaimContentSlice = createSlice({
       state.previousItem = previousItem;
       state.nextItem = nextItem;
     },
+
+    updateClaimContentListFullData(state, action) {
+      const { payload } = action;
+      const { claimContentListFull } = payload;
+      state.claimContentListDataFull = claimContentListFull;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchClaimContentAction.pending, (state) => {
@@ -158,6 +164,7 @@ const ClaimContentSlice = createSlice({
           claimRes.push(newArr);
         });
         state.claimContentListData = claimRes;
+        state.claimContentListDataFull = claimRes;
       }
     });
   },
@@ -171,4 +178,5 @@ export const {
   deleteClaimContentListItem,
   addClaimListKeyWord,
   addEditItemDetail,
+  updateClaimContentListFullData,
 } = ClaimContentSlice.actions;

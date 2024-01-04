@@ -29,8 +29,13 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
   } = props;
 
   const { claimId }: { claimId: string } = useParams();
-  const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
-
+  let claimNumber: string;
+  try {
+    claimNumber = sessionStorage.getItem("claimNumber") ?? "";
+  } catch (error) {
+    console.error("Error accessing sessionStorage:", error);
+    claimNumber = "";
+  }
   const [docs, setDocs] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<any>([]);
   const [deletedFile, setDeletedFile] = useState<any>([]);

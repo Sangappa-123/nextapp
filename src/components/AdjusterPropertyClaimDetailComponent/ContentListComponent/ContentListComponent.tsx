@@ -19,6 +19,7 @@ function ContentListComponent(props: any) {
     claimId,
     editItemDetail,
     claimContentListData,
+    claimContentListDataFull,
   } = props;
   console.log("calimID", props.claimId);
   const router = useRouter();
@@ -44,6 +45,39 @@ function ContentListComponent(props: any) {
     setEditItem(null);
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);
+  };
+  const checkStatus = () => {
+    const isCreatedSelected = claimContentListDataFull.some(
+      (item: any) => item.status === "CREATED" && item.selected === true
+    );
+    const isNotCreatedSelected = claimContentListDataFull.some(
+      (item: any) => item.status !== "CREATED" && item.selected === true
+    );
+
+    if (isNotCreatedSelected) {
+      return false;
+    } else if (isCreatedSelected) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const getNumberSelected = () => {
+    const isCreatedSelected = claimContentListDataFull.filter(
+      (item: any) => item.status === "CREATED" && item.selected === true
+    );
+    const isNotCreatedSelected = claimContentListDataFull.filter(
+      (item: any) => item.status !== "CREATED" && item.selected === true
+    );
+
+    if (isNotCreatedSelected.length > 0) {
+      return 0;
+    } else if (isCreatedSelected.length > 0) {
+      return isCreatedSelected.length;
+    } else {
+      return 0;
+    }
   };
 
   return (
@@ -109,7 +143,7 @@ function ContentListComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={true}
+                disabled={!checkStatus()}
               />
               <GenericButton
                 label="Map Receipts"
@@ -118,13 +152,40 @@ function ContentListComponent(props: any) {
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
+              <Tooltip
+                anchorSelect="#more-btn-element"
+                place="bottom"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  padding: "0px",
+                  zIndex: "999",
+                  boxShadow: "2px 2px 2px 2px #888888",
+                }}
+                openOnClick={true}
+                clickable={true}
+              >
+                <div className="p-0">
+                  <span className={ContentListComponentStyle.selectedItemsLine}>
+                    ({getNumberSelected()}) items selected
+                  </span>
+                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                    Change Category
+                  </div>
+
+                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                    Change Status
+                  </div>
+                </div>
+              </Tooltip>
               <GenericButton
                 label="More"
                 theme="normal"
                 size="small"
                 type="submit"
+                id="more-btn-element"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={true}
+                disabled={!checkStatus()}
               />
               <GenericButton
                 label="Accept Min. Values"
@@ -168,6 +229,7 @@ function ContentListComponent(props: any) {
 const mapStateToProps = ({ claimContentdata }: any) => ({
   editItemDetail: claimContentdata.editItemDetail,
   claimContentListData: claimContentdata.claimContentListData,
+  claimContentListDataFull: claimContentdata.claimContentListDataFull,
 });
 const mapDispatchToProps = {
   addClaimContentListData,
