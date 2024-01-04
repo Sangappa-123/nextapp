@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import { ConnectedProps, connect } from "react-redux";
 import { RiSearch2Line } from "react-icons/ri";
 import DetailedInventorySearchStyle from "./DetailedInventorySearchBox.module.scss";
 import { searchDetailedInventory } from "@/services/ContentsEvaluationService.ts";
 import { addDetailedInventorySearchKeyWord } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
-import { ConnectedProps, connect } from "react-redux";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
@@ -44,7 +44,7 @@ const DetailedInventorySearchBox: React.FC<connectorType & typeProps> = (props) 
       <RiSearch2Line className={DetailedInventorySearchStyle.searchIcon} />
       <input
         type="text"
-        placeholder="Item Description, Room, Category"
+        placeholder="Item description, Room, Category"
         value={searchValue}
         onChange={(e) => handleSearch(e)}
         onKeyDown={(e) => searchKey(e)}
