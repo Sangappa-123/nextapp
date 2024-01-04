@@ -10,6 +10,7 @@ import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchPolicyHolderTableAction } from "../../../../reducers/ContentsEvaluation/DetailedInventorySlice";
 import { exportPaymentSummaryToPDF } from "../DetailedInventoryList/DetailedInventoryFucn";
+import { toast } from "react-toastify";
 
 type PolicyHolderPayouts = {
   policyholderPayoutsData: any;
@@ -38,7 +39,17 @@ function PolicyholderPayouts(props: PolicyHolderPayouts): React.FC<connectorType
 
   return (
     <div className="row mb-4 mt-3 p-3">
-      <div onClick={() => exportPaymentSummaryToPDF(claimNumber)} className={style.link}>
+      <div
+        onClick={async () => {
+          const status = await exportPaymentSummaryToPDF(claimNumber);
+          if (status === "success") {
+            toast.success("Successfully download the PDF!");
+          } else if (status === "error") {
+            toast.error("Failed download the PDF!");
+          }
+        }}
+        className={style.link}
+      >
         <Link href="#">Export to PDF</Link>
       </div>
       <div className="d-flex justify-content-center">

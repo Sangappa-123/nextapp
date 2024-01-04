@@ -17,18 +17,24 @@ export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getDetailInventoryPDF(param);
-  console.log("fileDetails", fileDetails);
-  try {
-    const blob = await fileDetails.blob();
-    const newBlob = new Blob([blob]);
-    const blobUrl = window.URL.createObjectURL(newBlob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${ClaimNumber}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-  } catch (ex) {
-    console.exception(ex);
+  if (fileDetails.status === 200) {
+    console.log("fileDetails", fileDetails);
+    try {
+      const blob = await fileDetails.blob();
+      const newBlob = new Blob([blob]);
+      const blobUrl = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `${ClaimNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      return "success";
+    } catch (ex) {
+      console.exception(ex);
+      return "error";
+    }
+  } else {
+    return "error";
   }
 }
 
@@ -44,17 +50,23 @@ export async function exportPaymentSummaryToPDF(ClaimNumber: string) {
 
   const fileDetails = await getCoverageSummaryPDF(param);
   console.log("fileDetails", fileDetails);
-  try {
-    const blob = await fileDetails.blob();
-    const newBlob = new Blob([blob]);
-    const blobUrl = window.URL.createObjectURL(newBlob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${ClaimNumber}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-  } catch (ex) {
-    console.exception(ex);
+  if (fileDetails.status === 200) {
+    try {
+      const blob = await fileDetails.blob();
+      const newBlob = new Blob([blob]);
+      const blobUrl = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `${ClaimNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      return "success";
+    } catch (ex) {
+      console.exception(ex);
+      return "error";
+    }
+  } else {
+    return "error";
   }
 }
 export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
@@ -64,17 +76,23 @@ export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
 
   const fileDetails = await getCoverageSummaryPDF(param);
   console.log("fileDetails", fileDetails);
-  try {
-    const blob = await fileDetails.blob();
-    const newBlob = new Blob([blob]);
-    const blobUrl = window.URL.createObjectURL(newBlob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${ClaimNumber}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-  } catch (ex) {
-    console.exception(ex);
+  if (fileDetails.status === 200) {
+    try {
+      const blob = await fileDetails.blob();
+      const newBlob = new Blob([blob]);
+      const blobUrl = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `${ClaimNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      return "success";
+    } catch (ex) {
+      console.exception(ex);
+      return "error";
+    }
+  } else {
+    return "error";
   }
 }
 
@@ -86,16 +104,10 @@ export async function sendDetailedInventory(ClaimNumber: string) {
   const fileDetails = await getSendDetailedInventory(param);
   console.log("fileDetails", fileDetails);
   try {
-    const blob = await fileDetails.blob();
-    const newBlob = new Blob([blob]);
-    const blobUrl = window.URL.createObjectURL(newBlob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${ClaimNumber}.pdf`);
-    document.body.appendChild(link);
-    link.click();
+    return fileDetails;
   } catch (ex) {
     console.exception(ex);
+    return ex;
   }
 }
 
@@ -109,16 +121,22 @@ export const exportDetailedInventory = async function (
   };
   const fileDetails = await getDetailInventoryExcel(claimDetails);
   console.log("fileDetails", fileDetails);
-  try {
-    const blob = await fileDetails.blob();
-    const newBlob = new Blob([blob]);
-    const blobUrl = window.URL.createObjectURL(newBlob);
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${ClaimNumber}.xls`);
-    document.body.appendChild(link);
-    link.click();
-  } catch (ex) {
-    console.exception(ex);
+  if (fileDetails.status === 200) {
+    try {
+      const blob = await fileDetails.blob();
+      const newBlob = new Blob([blob]);
+      const blobUrl = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `${ClaimNumber}.xls`);
+      document.body.appendChild(link);
+      link.click();
+      return "success";
+    } catch (ex) {
+      console.exception(ex);
+      return "error";
+    }
+  } else {
+    return "error";
   }
 };
