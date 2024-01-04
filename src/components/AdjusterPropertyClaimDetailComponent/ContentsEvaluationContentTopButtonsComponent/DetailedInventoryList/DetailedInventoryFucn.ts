@@ -25,7 +25,7 @@ export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
       const blobUrl = window.URL.createObjectURL(newBlob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.setAttribute("download", `${ClaimNumber}.pdf`);
+      link.setAttribute("download", `DetailedInventory-${ClaimNumber}.pdf`);
       document.body.appendChild(link);
       link.click();
       return "success";
@@ -83,7 +83,7 @@ export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
       const blobUrl = window.URL.createObjectURL(newBlob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.setAttribute("download", `${ClaimNumber}.pdf`);
+      link.setAttribute("download", `Coverage-Summary-${ClaimNumber}.pdf`);
       document.body.appendChild(link);
       link.click();
       return "success";
@@ -128,7 +128,7 @@ export const exportDetailedInventory = async function (
       const blobUrl = window.URL.createObjectURL(newBlob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.setAttribute("download", `${ClaimNumber}.xls`);
+      link.setAttribute("download", `Detailed Inventory-${ClaimNumber}.xls`);
       document.body.appendChild(link);
       link.click();
       return "success";

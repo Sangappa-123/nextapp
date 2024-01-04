@@ -314,7 +314,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                       if (status === "success") {
                         toast.success("Successfully download the excel!");
                       } else if (status === "error") {
-                        toast.error("Failed download the excel!");
+                        toast.error("Failed to export the details. Please try again..");
                       }
                     }}
                   >
@@ -368,7 +368,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       </div>
 
       <div className={DetailListComponentStyle.DetailedInventoryTableScrollContainer}>
-        {listData.length > 0 && (
+        {listData?.length > 0 && (
           <CustomReactTable table={table} loader={tableLoader} showFooter={true} />
         )}
       </div>
