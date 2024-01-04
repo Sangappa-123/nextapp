@@ -18,6 +18,7 @@ import {
   exportDetailedInventoryToPDF,
   sendDetailedInventory,
 } from "../DetailedInventoryFucn";
+import { toast } from "react-toastify";
 
 type DetailedInventoryProps = {
   listData: Array<object>;
@@ -35,6 +36,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
   const columnHelper = createColumnHelper<detailedInventoryData>();
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
   const { listData, fetchDetailedInventoryAction, detailedInventorySummaryData } = props;
+
   useEffect(() => {
     fetchDetailedInventoryAction({
       pageNo: 1,
@@ -307,14 +309,28 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                 <div className="p-0">
                   <div
                     className={DetailListComponentStyle.dropDownInnerDiv}
-                    onClick={() => exportDetailedInventory(claimNumber, "excel")}
+                    onClick={async () => {
+                      const status = await exportDetailedInventory(claimNumber, "excel");
+                      if (status === "success") {
+                        toast.success("Successfully download the excel!");
+                      } else if (status === "error") {
+                        toast.error("Failed download the excel!");
+                      }
+                    }}
                   >
                     Excel
                   </div>
 
                   <div
                     className={DetailListComponentStyle.dropDownInnerDiv}
-                    onClick={() => exportDetailedInventoryToPDF(claimNumber)}
+                    onClick={async () => {
+                      const status = await exportDetailedInventoryToPDF(claimNumber);
+                      if (status === "success") {
+                        toast.success("Successfully download the PDF!");
+                      } else if (status === "error") {
+                        toast.error("Failed download the PDF!");
+                      }
+                    }}
                   >
                     PDF
                   </div>
@@ -333,7 +349,14 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                 theme="normal"
                 size="small"
                 type="submit"
-                onClick={() => sendDetailedInventory(claimNumber)}
+                onClick={async () => {
+                  const data = await sendDetailedInventory(claimNumber);
+                  if (data.status === 200) {
+                    toast.success(data.message);
+                  } else {
+                    toast.error("Failed download the PDF!");
+                  }
+                }}
                 btnClassname={DetailListComponentStyle.contentListBtn}
               />
             </div>

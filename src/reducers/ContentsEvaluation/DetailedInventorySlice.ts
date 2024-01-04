@@ -71,7 +71,6 @@ export const fetchPolicySummaryTableAction = createAsyncThunk(
     try {
       const res = await getPolicySummary(payload, true);
       console.log("coverage k", res);
-
       return res;
     } catch (error) {
       return rejectWithValue(error);

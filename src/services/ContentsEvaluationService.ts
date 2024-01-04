@@ -158,7 +158,7 @@ export const getSendDetailedInventory = async function (param) {
       getApiEndPoint("detailedInventoryReportSend") + "?claimNumber=" + param.claimNumber;
     console.log("url $$$", url, param);
     url = `${url}`;
-    const resp = await http.getFile(url);
+    const resp = await http.get(url);
     console.log("resp000", resp);
     return resp;
   } catch (err: any) {
