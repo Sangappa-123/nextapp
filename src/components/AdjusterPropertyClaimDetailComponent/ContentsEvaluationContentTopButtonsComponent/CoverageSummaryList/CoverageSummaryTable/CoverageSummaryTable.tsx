@@ -27,13 +27,11 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
 
   useEffect(() => {
-    console.log("claimNumber", claimNumber);
     fetchCoverageSummaryAction({
       claimNumber: claimNumber,
     });
   }, [claimNumber, fetchCoverageSummaryAction]);
 
-  console.log("coverageSummaryListData", listData);
   const columns = [
     columnHelper.accessor("categoryName", {
       cell: (info) => info.getValue(),
@@ -80,13 +78,12 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
       header: () => "Total Settlement Value",
     }),
   ];
+
   const table = useReactTable({
     data: listData?.claimCategoryDetails,
     columns,
     pageCount: 20,
-    state: {
-      // columnFilters,
-    },
+    state: {},
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     manualSorting: true,
@@ -97,7 +94,6 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
 
   // const [tableLoader, setTableLoader] = React.useState<boolean>(false);
 
-  console.log(props);
   return (
     <div>
       <div className={CoverageSummaryListStyle.detailListContainer}>

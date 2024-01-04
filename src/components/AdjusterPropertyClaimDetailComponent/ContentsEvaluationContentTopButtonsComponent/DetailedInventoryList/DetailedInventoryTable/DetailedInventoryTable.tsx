@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -11,22 +11,35 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 import GenericButton from "@/components/common/GenericButton/index";
 import DetailListComponentStyle from "../DetailedInventoryList.module.scss";
 import DetailedInventorySearchBox from "../DetailedInventorySearchBox/DetailedInventorySearchBox";
-import { fetchDetailedInventoryAction } from "../../../../../reducers/ContentsEvaluation/DetailedInventorySlice";
+import { fetchDetailedInventoryAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 import { Tooltip } from "react-tooltip";
 import {
   exportDetailedInventory,
   exportDetailedInventoryToPDF,
   sendDetailedInventory,
 } from "../DetailedInventoryFucn";
+import CustomLoader from "@/components/common/CustomLoader";
 import { toast } from "react-toastify";
 
 type DetailedInventoryProps = {
   listData: Array<object>;
   fetchDetailedInventoryAction: any;
   detailedInventorySummaryData: any;
+  isfetching: boolean;
 };
 
 interface detailedInventoryData {
+  [key: string | number]: any;
+}
+
+function convertToDollar(value) {
+  if (value) return `$${Number.parseFloat(value).toFixed(2)}`;
+  else {
+    return "$0.00";
+  }
+}
+
+interface listData {
   [key: string | number]: any;
 }
 
@@ -35,7 +48,15 @@ const DetailedInventoryTable: React.FC<connectorType> = (
 ) => {
   const columnHelper = createColumnHelper<detailedInventoryData>();
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
-  const { listData, fetchDetailedInventoryAction, detailedInventorySummaryData } = props;
+  const {
+    listData,
+    fetchDetailedInventoryAction,
+    detailedInventorySummaryData,
+    isfetching,
+  } = props;
+  const [, setData] = useState(listData);
+  const pageLimit = 20;
+  const fetchSize = 20;
 
   useEffect(() => {
     fetchDetailedInventoryAction({
@@ -45,7 +66,12 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     });
   }, [claimNumber, fetchDetailedInventoryAction]);
 
-  useEffect(() => {}, [detailedInventorySummaryData, listData]);
+  React.useEffect(() => {
+    if (listData) {
+      const defaultData: listData[] = [...listData];
+      setData([...defaultData.slice(0, fetchSize)]);
+    }
+  }, [listData]);
 
   const columns = [
     columnHelper.accessor("itemNumber", {
@@ -76,14 +102,9 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     }),
     columnHelper.accessor("totalPrice", {
       header: () => "Total Price",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalPrice
-            ? `$${Number.parseFloat(detailedInventorySummaryData.totalPrice).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(detailedInventorySummaryData.totalPrice)}`}</span>
       ),
     }),
     columnHelper.accessor("categoryDetails.name", {
@@ -96,7 +117,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     }),
     columnHelper.accessor("itemLimit", {
       header: () => "Individual Limit",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
     }),
     columnHelper.accessor("replacementItemDescription", {
       header: () => "Replacement Description",
@@ -108,117 +129,69 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     }),
     columnHelper.accessor("replacementTotalCost", {
       header: () => "Replacement Cost",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalReplacementCost
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalReplacementCost
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalReplacementCost
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("replacementExposure", {
       header: () => "Replacement Exposure",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalReplacementExposure
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalReplacementExposure
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalReplacementExposure
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("depreciationPercent", {
       header: () => "Annual Dep%",
       cell: (info) =>
-        info.getValue() && (
-          <span>{`${Number.parseFloat(info.getValue()).toFixed(2)}%`}</span>
-        ),
+        info.getValue() && <span>{`{convertToDollar(info.getValue())}%`}</span>,
     }),
     columnHelper.accessor("depreciationAmount", {
       header: () => "Depreciation $",
       cell: (info) =>
-        info.getValue() && (
-          <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
-        ),
+        info.getValue() && <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalDepreciationAmount
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalDepreciationAmount
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalDepreciationAmount
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("cashPayoutExposure", {
       header: () => "Cash Exposure",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalCashPayoutExposure
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalCashPayoutExposure
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalCashPayoutExposure
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("maxHoldover", {
       header: () => "Max. Recoverable Depreciation",
-      cell: (info) => (
-        <span>
-          {" "}
-          {info.getValue()
-            ? `$${Number.parseFloat(info.getValue()).toFixed(2)}`
-            : `$0.00`}
-        </span>
-      ),
+      cell: (info) => <span> {`${convertToDollar(info.getValue())}`} </span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalMaxRecoverableDepreciation
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalMaxRecoverableDepreciation
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalMaxRecoverableDepreciation
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("itemOverage", {
       header: () => "Item Overage",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalItemOverage
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalItemOverage
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(detailedInventorySummaryData.totalItemOverage)}`}</span>
       ),
     }),
     columnHelper.accessor("settlementExposure", {
       header: () => "Settlement Exposure",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalSettlementExposure
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalSettlementExposure
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(
+          detailedInventorySummaryData.totalSettlementExposure
+        )}`}</span>
       ),
     }),
     columnHelper.accessor("settlementComment", {
@@ -227,49 +200,34 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     }),
     columnHelper.accessor("holdOverPaid", {
       header: () => "Holdover Paid",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>
-          {" "}
-          {detailedInventorySummaryData.totalHoldOverPaid
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalHoldOverPaid
-              ).toFixed(2)}`
-            : `$0.00`}
+          {`${convertToDollar(detailedInventorySummaryData.totalHoldOverPaid)}`}
         </span>
       ),
     }),
     columnHelper.accessor("settlementValue", {
       header: () => "Amount Paid",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>{`$${Number.parseFloat(detailedInventorySummaryData.paidToInsured).toFixed(
-          2
-        )}`}</span>
+        <span>{`${convertToDollar(detailedInventorySummaryData.paidToInsured)}`}</span>
       ),
     }),
     columnHelper.accessor("holdOverDue", {
       header: () => "Holdover Due",
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
+      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
-        <span>
-          {" "}
-          {detailedInventorySummaryData.totalHoldOverDue
-            ? `$${Number.parseFloat(
-                detailedInventorySummaryData.totalHoldOverDue
-              ).toFixed(2)}`
-            : `$0.00`}
-        </span>
+        <span>{`${convertToDollar(detailedInventorySummaryData.totalHoldOverDue)}`}</span>
       ),
     }),
   ];
+
   const table = useReactTable({
-    data: listData,
+    data: listData || [],
     columns,
-    pageCount: 20,
-    state: {
-      // columnFilters,
-    },
+    pageCount: Math.ceil(listData?.length / pageLimit),
+    state: {},
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     manualSorting: true,
@@ -278,11 +236,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     enableColumnFilters: false,
   });
 
-  console.log("coverage", listData);
-
   const [tableLoader, setTableLoader] = React.useState<boolean>(false);
-
-  console.log(props);
   return (
     <div>
       <div className={DetailListComponentStyle.detailListContainer}>
@@ -320,7 +274,6 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                   >
                     Excel
                   </div>
-
                   <div
                     className={DetailListComponentStyle.dropDownInnerDiv}
                     onClick={async () => {
@@ -368,8 +321,15 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       </div>
 
       <div className={DetailListComponentStyle.DetailedInventoryTableScrollContainer}>
-        {listData?.length > 0 && (
-          <CustomReactTable table={table} loader={tableLoader} showFooter={true} />
+        {isfetching ? (
+          <CustomLoader />
+        ) : (
+          <CustomReactTable
+            table={table}
+            tableDataErrorMsg={!listData && "No Record Found"}
+            loader={tableLoader}
+            showFooter={true}
+          />
         )}
       </div>
     </div>
@@ -378,6 +338,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
 
 const mapStateToProps = (state: RootState) => ({
   listData: state.detailedInventorydata?.detailedInventoryListDataFull,
+  isfetching: state.detailedInventorydata?.detailedInventoryfetching,
   detailedInventorySummaryData: state.detailedInventorydata?.detailedInventorySummaryData,
 });
 
