@@ -82,6 +82,7 @@ a {
     margin: 0;
   }
   &[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield;
   }
 }
@@ -101,4 +102,7 @@ textarea {
     outline: none;
     border-color: $royalBlue;
   }
+}
+.errorText {
+  color: $errorRed;
 }

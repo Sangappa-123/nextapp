@@ -5,7 +5,7 @@ import replacementItemStyle from "./replacementItemStyle.module.scss";
 import GenericInput from "@/components/common/GenericInput";
 import clsx from "clsx";
 import SettlementSummarySection from "./SettlementSummarySection";
-
+import noImage from "@/assets/images/no-image.png";
 interface replaceItemInterface {
   itemDetail: unknownObjectType;
 }
@@ -18,7 +18,7 @@ function ReplacementItem(props: replaceItemInterface) {
         <div className={replacementItemStyle.imageDiv}>
           <Image
             unoptimized={true}
-            src={itemDetail?.imageURL}
+            src={itemDetail?.imageURL ?? noImage}
             alt="products"
             fill={true}
             sizes="100%"
