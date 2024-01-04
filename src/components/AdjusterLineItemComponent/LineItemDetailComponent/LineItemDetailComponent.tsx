@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import lineItemDetailComponentStyle from "./lineItemDetailComponent.module.scss";
 import GroupedActionButtons from "./GroupedActionButtons";
 import OrginalItemForm from "./OrginalItemForm";
@@ -9,8 +9,11 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { Output, any, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+import Modal from "@/components/common/ModalPopups";
+import GenericButton from "@/components/common/GenericButton";
+import CustomComparable from "./CustomComparable";
 
-function LineItemDetailComponentForm() {
+function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
   const lineItem = useAppSelector(
     (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
   );
@@ -19,6 +22,7 @@ function LineItemDetailComponentForm() {
   //   id: number("Room id"),
   //   roomName: string("Room Name"),
   // });
+  const [openCustomComparableModal, setOpenCustomComparableModal] = useState(true);
   const schema = object({
     description: string("Item description"),
     category: object({
@@ -148,9 +152,9 @@ function LineItemDetailComponentForm() {
             lineItem.depreciationAmount > 0 ? lineItem.depreciationAmount : 0,
         },
       };
-      console.log("============", payload);
+      console.log("payload:::", payload);
     } catch (error) {
-      console.log();
+      console.log("error>>>>", error);
     }
   };
   return (
@@ -158,15 +162,35 @@ function LineItemDetailComponentForm() {
       onSubmit={handleSubmit(handleFormSubmit)}
       className={lineItemDetailComponentStyle.root}
     >
+      <Modal
+        isOpen={openCustomComparableModal}
+        onClose={() => {
+          setOpenCustomComparableModal(false);
+        }}
+        modalWidthClassName={lineItemDetailComponentStyle.modal}
+        overlayClassName={lineItemDetailComponentStyle.modalOverlay}
+        headingName="New Custom Comparable"
+        footerContent={
+          <div className={lineItemDetailComponentStyle.customComparableModalButton}>
+            <GenericButton label="Mark Replacement" size="medium" />
+            <GenericButton label="Add Comparable" size="medium" />
+            <GenericButton label="Cancel" size="medium" />
+          </div>
+        }
+        childComp={<CustomComparable />}
+      />
       <GroupedActionButtons />
       <div className={lineItemDetailComponentStyle.topItemSection}>
+        <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
         <OrginalItemForm
           register={register}
           control={control}
           getValues={getValues}
           setValue={setValue}
         />
-        <ReplacementItemSection />
+        <ReplacementItemSection
+          showCustomComparableModal={() => setOpenCustomComparableModal(true)}
+        />
       </div>
       <div className={lineItemDetailComponentStyle.bottomItemSection}>
         <WebComparables />
