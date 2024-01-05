@@ -15,16 +15,17 @@ import {
   fetchLineItemCatergory,
   fetchLineItemDetail,
   fetchRetailersDetails,
-  // resetLineItemDetail,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
+import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+import { useInView } from "react-intersection-observer";
+import RapidItemSection from "./RapidItemSection";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
     isLoading,
     lineItem,
-    // resetLineItemDetail,
     claimData = [],
     fetchLineItemDetail,
     fetchClaimContentAction,
@@ -33,10 +34,15 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchRetailersDetails,
   } = props;
   const { itemId, claimId } = useParams();
+  const { ref, inView } = useInView({
+    threshold: 0,
+    // rootMargin: "200px",
+  });
+
   const tabData = [
     {
       name: "Item Details",
-      content: <LineItemDetailComponent />,
+      content: <LineItemDetailComponent rapidDivRef={ref} />,
     },
   ];
   const pathList = [
@@ -108,6 +114,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
             [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
           })}
         />
+        {!inView && isInit.current && <RapidItemSection />}
       </div>
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />
@@ -117,14 +124,13 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 };
 
 const mapStateToProps = (state: RootState) => ({
-  isLoading: state.lineItemDetail.isLoading,
-  lineItem: state.lineItemDetail.lineItem,
+  isLoading: state[EnumStoreSlice.LINE_ITEM_DETAIL].isLoading,
+  lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL].lineItem,
   claimData: state.claimContentdata?.claimContentListData,
 });
 
 const mapDispatchToProps = {
   fetchLineItemDetail,
-  // resetLineItemDetail,
   fetchClaimContentAction,
   fetchLineItemCatergory,
   fetchCondition,

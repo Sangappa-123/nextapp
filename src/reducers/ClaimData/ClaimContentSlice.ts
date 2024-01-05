@@ -51,6 +51,7 @@ const ClaimContentSlice = createSlice({
             itemId: item.id,
             itemUID: item.itemUID,
             itemNumber: item.itemNumber,
+            selected: false,
           };
           claimRes.push(newArr);
         });
@@ -119,10 +120,18 @@ const ClaimContentSlice = createSlice({
         originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
         isScheduledItem: itemDetailData.isScheduledItem,
         scheduleAmount: itemDetailData.scheduleAmount,
+        attachments: itemDetailData.attachments,
+        selected: false,
       };
       state.editItemDetail = itemData;
       state.previousItem = previousItem;
       state.nextItem = nextItem;
+    },
+
+    updateClaimContentListFullData(state, action) {
+      const { payload } = action;
+      const { claimContentListFull } = payload;
+      state.claimContentListDataFull = claimContentListFull;
     },
   },
   extraReducers(builder) {
@@ -155,6 +164,7 @@ const ClaimContentSlice = createSlice({
           claimRes.push(newArr);
         });
         state.claimContentListData = claimRes;
+        state.claimContentListDataFull = claimRes;
       }
     });
   },
@@ -168,4 +178,5 @@ export const {
   deleteClaimContentListItem,
   addClaimListKeyWord,
   addEditItemDetail,
+  updateClaimContentListFullData,
 } = ClaimContentSlice.actions;

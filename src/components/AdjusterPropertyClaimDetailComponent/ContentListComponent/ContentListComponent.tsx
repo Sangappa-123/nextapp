@@ -8,10 +8,9 @@ import GenericButton from "@/components/common/GenericButton/index";
 import { connect } from "react-redux";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { Tooltip } from "react-tooltip";
-import Modal from "@/components/common/ModalPopups";
 import { useRouter } from "next/navigation";
-import AddItemModalForm from "@/components/AddItemModalForm";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
+import AddItemModal from "@/components/AddItemModal/AddItemModal";
 
 function ContentListComponent(props: any) {
   const {
@@ -20,6 +19,7 @@ function ContentListComponent(props: any) {
     claimId,
     editItemDetail,
     claimContentListData,
+    claimContentListDataFull,
   } = props;
   console.log("calimID", props.claimId);
   const router = useRouter();
@@ -27,6 +27,10 @@ function ContentListComponent(props: any) {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
+  const [openMore, setOpenMore] = useState(false);
+  const [checkedValues, setcheckStatus] = useState(false);
+  const [getNumberSelected, setNumberSelected] = useState(0);
+  const [openStatus, setOpenStatus] = useState(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes;
@@ -46,6 +50,30 @@ function ContentListComponent(props: any) {
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);
   };
+
+  React.useEffect(() => {
+    if (claimContentListDataFull.length > 0) {
+      const isCreatedSelected = claimContentListDataFull.filter(
+        (item: any) => item.status === "CREATED" && item.selected === true
+      );
+      const isNotCreatedSelected = claimContentListDataFull.filter(
+        (item: any) => item.status !== "CREATED" && item.selected === true
+      );
+
+      if (isNotCreatedSelected.length > 0) {
+        setcheckStatus(false);
+        setOpenMore(false);
+        setNumberSelected(0);
+      } else if (isCreatedSelected.length > 0) {
+        setcheckStatus(true);
+        setNumberSelected(isCreatedSelected.length);
+      } else {
+        setcheckStatus(false);
+        setOpenMore(false);
+        setNumberSelected(0);
+      }
+    }
+  }, [claimContentListDataFull]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="row mb-4">
@@ -110,7 +138,7 @@ function ContentListComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={true}
+                disabled={!checkedValues}
               />
               <GenericButton
                 label="Map Receipts"
@@ -119,13 +147,75 @@ function ContentListComponent(props: any) {
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
+              <Tooltip
+                anchorSelect="#more-btn-element"
+                place="bottom"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  padding: "0px",
+                  zIndex: "999",
+                  boxShadow: "2px 2px 2px 2px #888888",
+                }}
+                hidden={!openMore}
+                openOnClick={true}
+                clickable={true}
+              >
+                <div className="p-0">
+                  <div className={ContentListComponentStyle.selectedItemsLine}>
+                    ({getNumberSelected}) items selected
+                  </div>
+                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                    Change Category
+                  </div>
+
+                  <div
+                    id="more-status-btn-element"
+                    onClick={() => {
+                      setOpenStatus(!openStatus);
+                    }}
+                    className={ContentListComponentStyle.dropDownInnerDiv}
+                  >
+                    Change Status
+                  </div>
+                  <Tooltip
+                    anchorSelect="#more-status-btn-element"
+                    place="right-start"
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      padding: "0px",
+                      zIndex: "999",
+                      boxShadow: "2px 2px 2px 2px #888888",
+                    }}
+                    hidden={!openStatus}
+                    openOnClick={true}
+                    clickable={true}
+                  >
+                    <div className="p-0">
+                      <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                        Mark Valued
+                      </div>
+
+                      <div
+                        id="more-status-btn-element"
+                        className={ContentListComponentStyle.dropDownInnerDiv}
+                      >
+                        Supervisor Review
+                      </div>
+                    </div>
+                  </Tooltip>
+                </div>
+              </Tooltip>
               <GenericButton
                 label="More"
                 theme="normal"
                 size="small"
                 type="submit"
+                id="more-btn-element"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={true}
+                disabled={!checkedValues}
+                onClickHandler={() => setOpenMore(!openMore)}
               />
               <GenericButton
                 label="Accept Min. Values"
@@ -148,13 +238,12 @@ function ContentListComponent(props: any) {
           </div>
         </div>
         <div className="col-12">
-          <Modal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            childComp={<AddItemModalForm editItem={editItem} closeModal={closeModal} />}
-            headingName={editItem ? "Item# " + editItemDetail.itemNumber : "Add Item"}
-            modalWidthClassName={ContentListComponentStyle.modalWidth}
-          ></Modal>
+          <AddItemModal
+            closeModal={closeModal}
+            isModalOpen={isModalOpen}
+            editItem={editItem}
+            editItemDetail={editItemDetail}
+          />
         </div>
       </div>
       <ContentListTable
@@ -170,6 +259,7 @@ function ContentListComponent(props: any) {
 const mapStateToProps = ({ claimContentdata }: any) => ({
   editItemDetail: claimContentdata.editItemDetail,
   claimContentListData: claimContentdata.claimContentListData,
+  claimContentListDataFull: claimContentdata.claimContentListDataFull,
 });
 const mapDispatchToProps = {
   addClaimContentListData,

@@ -6,6 +6,7 @@ import GenericSelect from "@/components/common/GenericSelect";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { Controller } from "react-hook-form";
+import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 
 interface originalItemTyped {
   register: any;
@@ -395,13 +396,13 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
 };
 
 const mapStateToProps = (state: RootState) => ({
-  lineItem: state.lineItemDetail?.lineItem,
-  category: state.lineItemDetail.category,
-  condition: state.lineItemDetail.condition,
-  subCategory: state.lineItemDetail.subCategory,
-  room: state.lineItemDetail.room,
-  retailer: state.lineItemDetail.retailer,
-  paymentTypes: state.lineItemDetail.paymentTypes,
+  lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem,
+  category: state[EnumStoreSlice.LINE_ITEM_DETAIL].category,
+  condition: state[EnumStoreSlice.LINE_ITEM_DETAIL].condition,
+  subCategory: state[EnumStoreSlice.LINE_ITEM_DETAIL].subCategory,
+  room: state[EnumStoreSlice.LINE_ITEM_DETAIL].room,
+  retailer: state[EnumStoreSlice.LINE_ITEM_DETAIL].retailer,
+  paymentTypes: state[EnumStoreSlice.LINE_ITEM_DETAIL].paymentTypes,
 });
 
 const connector = connect(mapStateToProps, null);

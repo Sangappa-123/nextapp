@@ -3,6 +3,11 @@
 
 .addItemContainer {
   position: relative;
+  height: 60vh;
+  max-height: 570px;
+  overflow-y: scroll;
+  @include customscrollbar($lightGrey2, 6px, true);
+
   form {
     padding: 15px;
   }
@@ -133,10 +138,10 @@
   margin: 5px;
 }
 .containerScroll {
-  height: 500px;
-  overflow: auto;
-  overflow-x: hidden;
-  @include customscrollbar($lightGrey2, 6px, true);
+  // height: 500px;
+  // overflow: auto;
+  // overflow-x: hidden;
+  // @include customscrollbar($lightGrey2, 6px, true);
 }
 .attachmentBox {
   height: 160px;
@@ -195,4 +200,7 @@
   &:hover {
     color: maroon;
   }
+}
+.modalWidth {
+  width: 100%;
 }

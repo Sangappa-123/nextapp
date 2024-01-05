@@ -226,6 +226,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         },
       };
       const formData = new FormData();
+      console.log(formData);
       formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
       const postlCaimRes = await postClaim(payload);
       if (postlCaimRes?.status === 200) {
