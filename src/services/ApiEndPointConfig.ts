@@ -53,6 +53,7 @@ enum apiEndPoints {
   addNewRoomApi = "customer/add/room",
   updateContentItemApi = "web/claim/update/postlossitem",
   newCustomComparable = "web/add/custom/item",
+  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

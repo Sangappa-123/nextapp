@@ -109,3 +109,10 @@ export const addCustomItem = async (param: unknownObjectType) => {
   const resp = await http.post(url, param);
   return resp;
 };
+
+export const removeCustomComparable = async (id: number) => {
+  const url = getApiEndPoint("deleteCustomItemApi").replace("{{COMPARABLE_ID}}", `${id}`);
+  const http = new HttpService({ isClient: true });
+  const resp = await http.get(url);
+  return resp;
+};
