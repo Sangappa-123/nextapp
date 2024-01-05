@@ -2,12 +2,13 @@ import { unknownObjectType } from "@/constants/customTypes";
 import Image from "next/image";
 import React from "react";
 import comparableItemStyle from "./comparableItem.module.scss";
-import { SEARCH_COMPARABLE_DESC_LIMIT } from "@/constants/constants";
+import { NO_IMAGE, SEARCH_COMPARABLE_DESC_LIMIT } from "@/constants/constants";
 import StarRating from "@/components/common/StarRating/StarRating";
 import { getUSDCurrency } from "@/utils/utitlity";
 import GenericButton from "@/components/common/GenericButton";
 import { IoMdClose } from "react-icons/io";
-import noImage from "@/assets/images/no-image.png";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { deleteCustomItem } from "@/reducers/LineItemDetail/LineItemThunkService";
 
 type propsType = {
   key: number;
@@ -16,15 +17,23 @@ type propsType = {
 
 function ComparableItem(props: propsType) {
   const { key, data = {} } = props;
-  const imgUrl = data?.imageURL ?? noImage;
+  const imgUrl = data?.imageURL ?? NO_IMAGE;
+  const dispatch = useAppDispatch();
 
   const getShortDesc = (desc: string) => {
     if (desc.length > 60) return desc.slice(0, SEARCH_COMPARABLE_DESC_LIMIT) + "...";
     return desc;
   };
 
+  const removeFromComparableList = (item: unknownObjectType) => {
+    if (item?.customItem) {
+      dispatch(deleteCustomItem(item));
+    }
+  };
+
   return (
     <div key={key} className={comparableItemStyle.root}>
+      {data?.customItem && <div className={comparableItemStyle.customTag}>Custom</div>}
       <div className={comparableItemStyle.imageDiv}>
         <Image
           unoptimized={true}
@@ -33,6 +42,10 @@ function ComparableItem(props: propsType) {
           fill={true}
           sizes="100%"
           style={{ objectFit: "contain" }}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = NO_IMAGE;
+          }}
         />
       </div>
       <div className={comparableItemStyle.content}>
@@ -55,7 +68,7 @@ function ComparableItem(props: propsType) {
         </div>
         <div className={comparableItemStyle.actionDiv}>
           <div className={comparableItemStyle.removeIcon}>
-            <IoMdClose onClick={() => console.log("remove item")} size={20} />
+            <IoMdClose onClick={() => removeFromComparableList(data)} size={20} />
           </div>
           <div className={comparableItemStyle.price}>
             {getUSDCurrency(+data?.price ?? 0)}

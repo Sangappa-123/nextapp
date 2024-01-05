@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import customComparableStyle from "./customComparable.module.scss";
 import GenericInput from "@/components/common/GenericInput";
 import Image from "next/image";
-import noImage from "@/assets/images/no-image.png";
 import { IoMdCloseCircle } from "react-icons/io";
 import useCustomForm from "@/hooks/useCustomForm";
 import GenericButton from "@/components/common/GenericButton";
@@ -12,9 +11,12 @@ import { parseFloatWithFixedDecimal } from "@/utils/utitlity";
 import { useParams } from "next/navigation";
 import selectItemUID from "@/reducers/LineItemDetail/Selectors/selectItemUID";
 import { addCustomItem } from "@/services/AdjusterMyClaimServices/LineItemDetailService";
-import { fetchLineItemDetail } from "@/reducers/LineItemDetail/LineItemDetailSlice";
+import { fetchLineItemDetail } from "@/reducers/LineItemDetail/LineItemThunkService";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { NO_IMAGE } from "@/constants/constants";
+import selectItemTaxDetail from "@/reducers/LineItemDetail/Selectors/selectItemTaxDetail";
+import selectItemQuantity from "@/reducers/LineItemDetail/Selectors/selectItemQuantity";
 
 interface propType {
   closeCustomComparable: () => void;
@@ -26,8 +28,9 @@ function CustomComparable({
 }: propType) {
   const fileRef = useRef<null | HTMLInputElement>(null);
   const [file, setFile] = useState<File>();
-  const taxRate = 12;
-  const applyTax = true;
+  const ItemQuantity = useAppSelector(selectItemQuantity);
+
+  const { taxRate, applyTax } = useAppSelector(selectItemTaxDetail);
   const [taxAmount, setTaxAmount] = useState(0);
   const { claimId, itemId } = useParams();
   const itemUID = useAppSelector(selectItemUID);
@@ -44,12 +47,12 @@ function CustomComparable({
     SupplierWebsite: string(),
   });
 
-  const { register, handleSubmit, formState, getValues, setValue } = useCustomForm(
+  const { register, handleSubmit, formState, getValues, setValue, reset } = useCustomForm(
     schema,
     {
       ItemPrice: "",
       unitPrice: "",
-      ItemQuantity: "1",
+      ItemQuantity,
       ItemDescription: "",
       supplier: "",
       SupplierWebsite: "",
@@ -67,23 +70,16 @@ function CustomComparable({
     const ItemQuantity = Number(param.ItemQuantity ?? getValues("ItemQuantity") ?? 1);
     const totalAmount =
       (!unitPrice ? 0 : Number(unitPrice)) * (!ItemQuantity ? 1 : Number(ItemQuantity));
-    console.log("TotalAmount", totalAmount);
     const rcv = parseFloatWithFixedDecimal(totalAmount);
-    console.log("rcv", rcv);
     let appliedTax = 0;
     if (applyTax) {
       appliedTax = taxRate;
     }
-    console.log("appliedTax", appliedTax);
     const taxAmt = parseFloatWithFixedDecimal((rcv * appliedTax) / 100);
-    console.log("taxAmt", taxAmt);
     const rcvTotal = rcv + taxAmt;
-    console.log("rcvTotal", rcvTotal);
     setValue("ItemPrice", parseFloatWithFixedDecimal(rcvTotal).toString());
     setTaxAmount(taxAmt);
   };
-
-  console.log("error>>>", errors);
 
   const getFileExtension = (file: File) => {
     const fileExtension = `.${file.name.split(".").pop()}`;
@@ -179,6 +175,7 @@ function CustomComparable({
       }
       closeCustomComparable();
       dispatch(fetchLineItemDetail({ itemId: +itemId }));
+      reset();
       return dispatch(
         addNotification({
           message: res?.message,
@@ -187,6 +184,7 @@ function CustomComparable({
         })
       );
     } catch (error) {
+      reset();
       console.log("customComparable_error", error);
     }
   };
@@ -240,7 +238,7 @@ function CustomComparable({
                 <div className={customComparableStyle.imageWrapper}>
                   <Image
                     unoptimized={true}
-                    src={file ? URL.createObjectURL(file) : noImage}
+                    src={file ? URL.createObjectURL(file) : NO_IMAGE}
                     alt="products"
                     fill={true}
                     sizes="100%"

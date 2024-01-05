@@ -63,6 +63,7 @@ enum apiEndPoints {
   coverageSummaryReportPDF = "web/export/claim/category/statistics",
   detailedInventoryReportExcel = "web/export/detailed/inventory",
   newCustomComparable = "web/add/custom/item",
+  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
