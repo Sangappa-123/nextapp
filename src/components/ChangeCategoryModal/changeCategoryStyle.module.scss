@@ -1,0 +1,54 @@
+@use "@/scss/mixins.scss" as *;
+@use "@/scss/colors.scss" as *;
+
+
+.addItemContainer{
+position: relative;
+  height: 60vh;
+  padding:  10px 20px;
+  max-height: 570px;
+  overflow-y: scroll;
+  @include customscrollbar($lightGrey2, 6px, true);
+  max-width: 600px;
+}
+
+.formControl {
+  // display: flex;
+  flex-direction: row-reverse;  
+  .wrapper {
+    // flex: 1;
+    flex-direction: row-reverse;  
+    margin: auto;
+    display: flex;
+
+  }
+}
+
+.inputField {
+  display: flex;
+  gap: 3px;
+  height: 20px;
+}
+
+.labelClassname {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.radioButtonWrapper {
+  display: flex;
+  // flex-direction: column;
+  gap: 20px;
+}
+
+.modalWidth {
+  width: 50%;
+}
+
+
+.formControlClassname {
+  display: flex;
+  flex-direction: column;
+}
+
+

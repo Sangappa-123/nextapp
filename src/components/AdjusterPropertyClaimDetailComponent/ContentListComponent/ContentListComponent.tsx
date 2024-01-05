@@ -11,6 +11,7 @@ import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
+import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
 
 function ContentListComponent(props: any) {
   const {
@@ -20,12 +21,14 @@ function ContentListComponent(props: any) {
     editItemDetail,
     claimContentListData,
     claimContentListDataFull,
+    categoryListRes
   } = props;
   console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
   const [openMore, setOpenMore] = useState(false);
   const [checkedValues, setcheckStatus] = useState(false);
@@ -49,6 +52,13 @@ function ContentListComponent(props: any) {
     setEditItem(null);
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);
+  };
+
+  const openModalChangeCat = () => {
+    setIsModalOpenChangeCat(true);
+  };
+  const closeModalChangeCat = () => {
+    setIsModalOpenChangeCat(false);
   };
 
   React.useEffect(() => {
@@ -162,10 +172,13 @@ function ContentListComponent(props: any) {
                 clickable={true}
               >
                 <div className="p-0">
-                  <div className={ContentListComponentStyle.selectedItemsLine}>
+                  <span className={ContentListComponentStyle.selectedItemsLine}>
                     ({getNumberSelected}) items selected
-                  </div>
-                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                  </span>
+                  <div 
+                    className={ContentListComponentStyle.dropDownInnerDiv}
+                    onClick={openModalChangeCat}
+                    >
                     Change Category
                   </div>
 
@@ -243,6 +256,14 @@ function ContentListComponent(props: any) {
             isModalOpen={isModalOpen}
             editItem={editItem}
             editItemDetail={editItemDetail}
+          />
+        </div>
+        <div className="col-12">
+          <ChangeCategoryModal
+            closeModal={closeModalChangeCat}
+            isModalOpen={isModalOpenChangeCat}
+            categoryListRes={categoryListRes}
+            claimContentListDataFull={claimContentListDataFull}
           />
         </div>
       </div>
