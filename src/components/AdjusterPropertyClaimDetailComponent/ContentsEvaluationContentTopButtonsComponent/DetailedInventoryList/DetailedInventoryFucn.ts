@@ -3,7 +3,7 @@ import {
   getDetailInventoryExcel,
   getDetailInventoryPDF,
   getSendDetailedInventory,
-} from "../../../../services/ContentsEvaluationService";
+} from "@/services/ContentsEvaluationService";
 
 export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
   const param = {
@@ -18,7 +18,6 @@ export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
 
   const fileDetails = await getDetailInventoryPDF(param);
   if (fileDetails.status === 200) {
-    console.log("fileDetails", fileDetails);
     try {
       const blob = await fileDetails.blob();
       const newBlob = new Blob([blob]);
@@ -30,7 +29,6 @@ export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
       link.click();
       return "success";
     } catch (ex) {
-      console.exception(ex);
       return "error";
     }
   } else {
@@ -49,7 +47,6 @@ export async function exportPaymentSummaryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getCoverageSummaryPDF(param);
-  console.log("fileDetails", fileDetails);
   if (fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
@@ -62,7 +59,6 @@ export async function exportPaymentSummaryToPDF(ClaimNumber: string) {
       link.click();
       return "success";
     } catch (ex) {
-      console.exception(ex);
       return "error";
     }
   } else {
@@ -75,7 +71,6 @@ export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getCoverageSummaryPDF(param);
-  console.log("fileDetails", fileDetails);
   if (fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
@@ -88,7 +83,6 @@ export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
       link.click();
       return "success";
     } catch (ex) {
-      console.exception(ex);
       return "error";
     }
   } else {
@@ -102,11 +96,9 @@ export async function sendDetailedInventory(ClaimNumber: string) {
   };
 
   const fileDetails = await getSendDetailedInventory(param);
-  console.log("fileDetails", fileDetails);
   try {
     return fileDetails;
   } catch (ex) {
-    console.exception(ex);
     return ex;
   }
 }
@@ -120,7 +112,6 @@ export const exportDetailedInventory = async function (
     format: type,
   };
   const fileDetails = await getDetailInventoryExcel(claimDetails);
-  console.log("fileDetails", fileDetails);
   if (fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
@@ -133,7 +124,6 @@ export const exportDetailedInventory = async function (
       link.click();
       return "success";
     } catch (ex) {
-      console.exception(ex);
       return "error";
     }
   } else {

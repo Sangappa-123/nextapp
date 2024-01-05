@@ -2,15 +2,16 @@
 import React, { useEffect } from "react";
 import PolicyholderCard from "./components/PolicyholderCard";
 import Cards from "@/components/common/Cards";
-import Link from "../../../../../node_modules/next/link";
+import Link from "next/link";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import style from "./components/policyholderCard.module.scss";
 import PolicyHolderTable from "./PolicyHolderTable/PolicyHolderTable";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { fetchPolicyHolderTableAction } from "../../../../reducers/ContentsEvaluation/DetailedInventorySlice";
+import { fetchPolicyHolderTableAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 import { exportPaymentSummaryToPDF } from "../DetailedInventoryList/DetailedInventoryFucn";
-import { toast } from "react-toastify";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 type PolicyHolderPayouts = {
   policyholderPayoutsData: any;
@@ -18,7 +19,6 @@ type PolicyHolderPayouts = {
 };
 
 function reStructure(value: any) {
-  console.log(value);
   if (value) return Number.parseFloat(value).toFixed(2);
   else {
     return "0.00";
@@ -28,14 +28,13 @@ function reStructure(value: any) {
 function PolicyholderPayouts(props: PolicyHolderPayouts): React.FC<connectorType> {
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
   const { policyholderPayoutsData, fetchPolicyHolderTableAction } = props;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log("claimNumber", claimNumber);
     fetchPolicyHolderTableAction({
       claimNumber: claimNumber,
     });
   }, [claimNumber, fetchPolicyHolderTableAction]);
-  console.log("policyholderPayoutsData 2", policyholderPayoutsData);
 
   return (
     <div className="row mb-4 mt-3 p-3">
@@ -43,9 +42,21 @@ function PolicyholderPayouts(props: PolicyHolderPayouts): React.FC<connectorType
         onClick={async () => {
           const status = await exportPaymentSummaryToPDF(claimNumber);
           if (status === "success") {
-            toast.success("Successfully download the PDF!");
+            dispatch(
+              addNotification({
+                message: "Successfully download the PDF!",
+                id: "good",
+                status: "success",
+              })
+            );
           } else if (status === "error") {
-            toast.error("Failed download the PDF!");
+            dispatch(
+              addNotification({
+                message: "Failed download the PDF!",
+                id: "good",
+                status: "error",
+              })
+            );
           }
         }}
         className={style.link}
@@ -214,7 +225,6 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-// @typescript-eslint/no-unused-vars
 type connectorType = ConnectedProps<typeof connector>;
 
 export default connector(PolicyholderPayouts);

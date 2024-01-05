@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -9,7 +9,7 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 import CoverageSummaryListStyle from "../CoverageSummaryList.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { fetchCoverageSummaryAction } from "../../../../../reducers/ContentsEvaluation/DetailedInventorySlice";
+import { fetchCoverageSummaryAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 
 type CoverageSummaryProps = {
   listData: any;
@@ -23,9 +23,10 @@ interface coverageSummaryData {
 function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorType> {
   const columnHelper = createColumnHelper<coverageSummaryData>();
   const { listData, fetchCoverageSummaryAction } = props;
-
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
-
+  const [newData, setData] = useState();
+  const pageLimit = 20;
+  const fetchSize = 20;
   useEffect(() => {
     fetchCoverageSummaryAction({
       claimNumber: claimNumber,
@@ -79,10 +80,18 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
     }),
   ];
 
+  useEffect(() => {
+    if (listData) {
+      const defaultData: listData[] = [...listData];
+      const recvData = [...defaultData.slice(0, fetchSize)];
+      setData(recvData);
+    }
+  }, [listData]);
+
   const table = useReactTable({
-    data: listData?.claimCategoryDetails,
+    data: newData || [],
     columns,
-    pageCount: 20,
+    pageCount: Math.ceil(listData?.length / pageLimit),
     state: {},
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
@@ -92,7 +101,14 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
     enableColumnFilters: false,
   });
 
-  // const [tableLoader, setTableLoader] = React.useState<boolean>(false);
+  const fetchNextPage = () => {
+    if (newData) {
+      const nextPageData = listData.slice(newData?.length, newData?.length + fetchSize);
+      const recvData = [...newData, ...nextPageData];
+      setData(recvData);
+    }
+    return true;
+  };
 
   return (
     <div>
@@ -101,17 +117,23 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
           className={`row col-12 ${CoverageSummaryListStyle.detailListContentContainer}`}
         ></div>
       </div>
-      {listData?.claimCategoryDetails && (
-        <div>
-          <CustomReactTable table={table} />
-        </div>
-      )}
+      <div>
+        <CustomReactTable
+          table={table}
+          totalDataCount={listData?.length}
+          tableDataErrorMsg={!listData && "No Record Found"}
+          fetchNextPage={fetchNextPage}
+          totalFetched={newData?.length}
+          totalDBRowCount={listData?.length}
+        />
+      </div>
     </div>
   );
 }
 
 const mapStateToProps = (state: RootState) => ({
-  listData: state.detailedInventorydata?.coverageSummaryListDataFull,
+  listData:
+    state.detailedInventorydata?.coverageSummaryListDataFull?.claimCategoryDetails,
 });
 
 const mapDispatchToProps = {
@@ -119,7 +141,6 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-// @typescript-eslint/no-unused-vars
 type connectorType = ConnectedProps<typeof connector>;
 
 export default connector(CoverageSummaryTable);

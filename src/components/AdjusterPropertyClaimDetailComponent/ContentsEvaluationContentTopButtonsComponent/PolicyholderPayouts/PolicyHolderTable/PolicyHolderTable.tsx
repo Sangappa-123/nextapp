@@ -9,7 +9,7 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 import PolicyHolderTableListStyle from "./policyholderpayouts.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { fetchPolicySummaryTableAction } from "../../../../../reducers/ContentsEvaluation/DetailedInventorySlice";
+import { fetchPolicySummaryTableAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading/index";
 
 type PolicyHolderTableProps = {
@@ -28,13 +28,10 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
 
   useEffect(() => {
-    console.log("claimNumber", claimNumber);
     fetchPolicySummaryTableAction({
       claimNumber: claimNumber,
     });
   }, [claimNumber, fetchPolicySummaryTableAction]);
-
-  console.log("PolicyHolderTable", listData);
 
   const columns = [
     columnHelper.accessor("Payment Id	", {
@@ -68,9 +65,6 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
     data: listData?.paymentSummaryDetails,
     columns,
     pageCount: 20,
-    state: {
-      // columnFilters,
-    },
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     manualSorting: true,
@@ -79,9 +73,6 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
     enableColumnFilters: false,
   });
 
-  // const [tableLoader, setTableLoader] = React.useState<boolean>(false);
-
-  console.log(props);
   return (
     <div>
       <GenericComponentHeading
@@ -111,7 +102,6 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-// @typescript-eslint/no-unused-vars
 type connectorType = ConnectedProps<typeof connector>;
 
 export default connector(PolicyHolderTable);
