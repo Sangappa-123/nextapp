@@ -11,6 +11,16 @@
     overflow: hidden;
   }
 }
+
+@keyframes modal {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .customComparableModalButton {
   display: flex;
   column-gap: 8px;
