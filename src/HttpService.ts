@@ -81,7 +81,7 @@ class HttpService {
       });
     });
   }
-
+  // Retrive file / pdf using params and get method using api
   async getFile(url: string, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
@@ -101,8 +101,8 @@ class HttpService {
       });
     });
   }
-
-  async postFile(
+  // Retrive file / pdf using payload and post method using api
+  async getFileByPayload(
     url: string,
     payload: any,
     headers?: object

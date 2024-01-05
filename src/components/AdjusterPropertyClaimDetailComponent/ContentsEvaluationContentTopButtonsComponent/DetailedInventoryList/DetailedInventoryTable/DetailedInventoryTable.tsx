@@ -19,7 +19,8 @@ import {
   sendDetailedInventory,
 } from "../DetailedInventoryFucn";
 import CustomLoader from "@/components/common/CustomLoader";
-import { toast } from "react-toastify";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 type DetailedInventoryProps = {
   listData: Array<object>;
@@ -54,9 +55,10 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     detailedInventorySummaryData,
     isfetching,
   } = props;
-  const [, setData] = useState(listData);
+  const [newData, setData] = useState();
   const pageLimit = 20;
   const fetchSize = 20;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetchDetailedInventoryAction({
@@ -69,9 +71,19 @@ const DetailedInventoryTable: React.FC<connectorType> = (
   React.useEffect(() => {
     if (listData) {
       const defaultData: listData[] = [...listData];
-      setData([...defaultData.slice(0, fetchSize)]);
+      const recvData = [...defaultData.slice(0, fetchSize)];
+      setData(recvData);
     }
   }, [listData]);
+
+  const fetchNextPage = () => {
+    if (newData) {
+      const nextPageData = listData.slice(newData?.length, newData?.length + fetchSize);
+      const recvData = [...newData, ...nextPageData];
+      setData(recvData);
+    }
+    return true;
+  };
 
   const columns = [
     columnHelper.accessor("itemNumber", {
@@ -224,7 +236,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
   ];
 
   const table = useReactTable({
-    data: listData || [],
+    data: newData || [],
     columns,
     pageCount: Math.ceil(listData?.length / pageLimit),
     state: {},
@@ -266,9 +278,21 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                     onClick={async () => {
                       const status = await exportDetailedInventory(claimNumber, "excel");
                       if (status === "success") {
-                        toast.success("Successfully download the excel!");
+                        dispatch(
+                          addNotification({
+                            message: "Successfully download the excel!",
+                            id: "good",
+                            status: "success",
+                          })
+                        );
                       } else if (status === "error") {
-                        toast.error("Failed to export the details. Please try again..");
+                        dispatch(
+                          addNotification({
+                            message: "Failed to export the details. Please try again..",
+                            id: "good",
+                            status: "error",
+                          })
+                        );
                       }
                     }}
                   >
@@ -279,9 +303,21 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                     onClick={async () => {
                       const status = await exportDetailedInventoryToPDF(claimNumber);
                       if (status === "success") {
-                        toast.success("Successfully download the PDF!");
+                        dispatch(
+                          addNotification({
+                            message: "Successfully download the PDF!",
+                            id: "good",
+                            status: "success",
+                          })
+                        );
                       } else if (status === "error") {
-                        toast.error("Failed download the PDF!");
+                        dispatch(
+                          addNotification({
+                            message: "Failed to export the details. Please try again..",
+                            id: "good",
+                            status: "error",
+                          })
+                        );
                       }
                     }}
                   >
@@ -305,9 +341,21 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                 onClick={async () => {
                   const data = await sendDetailedInventory(claimNumber);
                   if (data.status === 200) {
-                    toast.success(data.message);
+                    dispatch(
+                      addNotification({
+                        message: data.message,
+                        id: "good",
+                        status: "success",
+                      })
+                    );
                   } else {
-                    toast.error("Failed download the PDF!");
+                    dispatch(
+                      addNotification({
+                        message: "Failed to send the PDF!",
+                        id: "good",
+                        status: "error",
+                      })
+                    );
                   }
                 }}
                 btnClassname={DetailListComponentStyle.contentListBtn}
@@ -319,15 +367,18 @@ const DetailedInventoryTable: React.FC<connectorType> = (
           </div>
         </div>
       </div>
-
       <div className={DetailListComponentStyle.DetailedInventoryTableScrollContainer}>
         {isfetching ? (
           <CustomLoader />
         ) : (
           <CustomReactTable
             table={table}
-            tableDataErrorMsg={!listData && "No Record Found"}
+            totalDataCount={listData?.length}
             loader={tableLoader}
+            tableDataErrorMsg={!listData && "No Record Found"}
+            fetchNextPage={fetchNextPage}
+            totalFetched={newData?.length}
+            totalDBRowCount={listData?.length}
             showFooter={true}
           />
         )}
