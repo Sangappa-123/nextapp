@@ -40,6 +40,7 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
           setfileType(0);
           setfilePath(attachment.url);
           setfileName(attachment.name);
+          instDownloadDoc(attachment.url, attachment.name);
         } else if (
           fileExtension.includes("jpg") ||
           fileExtension.includes("png") ||
@@ -58,6 +59,17 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
       }
     }
   }, [data]);
+
+  const instDownloadDoc = (filePath: any, fileName: any) => {
+    fetch(filePath).then(function (t) {
+      return t.blob().then((b) => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(b);
+        a.setAttribute("download", fileName);
+        a.click();
+      });
+    });
+  };
 
   const downloadDoc = () => {
     console.log("filePath====>", filePath, fileName);

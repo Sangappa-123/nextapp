@@ -65,25 +65,40 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
     } else if (obj.activityType == "message") {
       if (obj.messageType == "outgoing") {
         if (obj.attachments != null) {
-          const fileExtension = obj.attachments[0]?.url.substr(
-            obj.attachments[0]?.url.lastIndexOf(".")
-          );
-          let placeHolderImg: any = "";
-          if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
-            placeHolderImg = excelImg.src;
-          } else if (fileExtension.includes("pdf")) {
-            placeHolderImg = pdfImg.src;
-          } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
-            placeHolderImg = docImg.src;
-          } else if (
-            fileExtension.includes("jpg") ||
-            fileExtension.includes("jpeg") ||
-            fileExtension.includes("png")
-          ) {
-            placeHolderImg = obj.attachments[0]?.url;
-          } else {
-            placeHolderImg = unKnownImg.src;
-          }
+          const DocListView = obj.attachments.map((attachment: any, i: any) => {
+            console.log("attachment======>", attachment);
+            const fileExtension = attachment.url.substr(attachment.url.lastIndexOf("."));
+            let placeHolderImg: any = "";
+            if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+              placeHolderImg = excelImg.src;
+            } else if (fileExtension.includes("pdf")) {
+              placeHolderImg = pdfImg.src;
+            } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
+              placeHolderImg = docImg.src;
+            } else if (
+              fileExtension.includes("jpg") ||
+              fileExtension.includes("jpeg") ||
+              fileExtension.includes("png")
+            ) {
+              placeHolderImg = obj.attachments[0]?.url;
+            } else {
+              placeHolderImg = unKnownImg.src;
+            }
+            return (
+              <div className={styles.DocViewListSty} key={i}>
+                <img
+                  className={styles.attDoc}
+                  src={placeHolderImg}
+                  alt="Preview"
+                  style={{ maxWidth: "100%", width: "80px" }}
+                />
+                <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                  {obj.attachments[0]?.name}
+                </a>
+              </div>
+            );
+          });
+
           return (
             <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
               <div className="">
@@ -106,17 +121,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                   <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
                 </div>
               </div>
-              <div className={styles.attCont}>
-                <img
-                  className={styles.attDoc}
-                  src={placeHolderImg}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", width: "80px" }}
-                />
-                <a onClick={() => openModal(obj)} className={styles.attTitle}>
-                  {obj.attachments[0]?.name}
-                </a>
-              </div>
+              <div className={styles.attCont}>{DocListView}</div>
             </div>
           );
         } else {
@@ -147,25 +152,58 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
         }
       } else if (obj.messageType == "incoming") {
         if (obj.attachments != null) {
-          const fileExtension = obj.attachments[0]?.url.substr(
-            obj.attachments[0]?.url.lastIndexOf(".")
-          );
-          let placeHolderImg: any = "";
-          if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
-            placeHolderImg = excelImg.src;
-          } else if (fileExtension.includes("pdf")) {
-            placeHolderImg = pdfImg.src;
-          } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
-            placeHolderImg = docImg.src;
-          } else if (
-            fileExtension.includes("jpg") ||
-            fileExtension.includes("jpeg") ||
-            fileExtension.includes("png")
-          ) {
-            placeHolderImg = obj.attachments[0]?.url;
-          } else {
-            placeHolderImg = unKnownImg.src;
-          }
+          const DocListView = obj.attachments.map((attachment: any, i: any) => {
+            console.log("attachment======>", attachment);
+            const fileExtension = attachment.url.substr(attachment.url.lastIndexOf("."));
+            let placeHolderImg: any = "";
+            if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+              placeHolderImg = excelImg.src;
+            } else if (fileExtension.includes("pdf")) {
+              placeHolderImg = pdfImg.src;
+            } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
+              placeHolderImg = docImg.src;
+            } else if (
+              fileExtension.includes("jpg") ||
+              fileExtension.includes("jpeg") ||
+              fileExtension.includes("png")
+            ) {
+              placeHolderImg = obj.attachments[0]?.url;
+            } else {
+              placeHolderImg = unKnownImg.src;
+            }
+            return (
+              <div className={styles.DocViewListSty} key={i}>
+                <img
+                  className={styles.attDoc}
+                  src={placeHolderImg}
+                  alt="Preview"
+                  style={{ maxWidth: "100%", width: "80px" }}
+                />
+                <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                  {obj.attachments[0]?.name}
+                </a>
+              </div>
+            );
+          });
+          // const fileExtension = obj.attachments[0]?.url.substr(
+          //   obj.attachments[0]?.url.lastIndexOf(".")
+          // );
+          // let placeHolderImg: any = "";
+          // if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+          //   placeHolderImg = excelImg.src;
+          // } else if (fileExtension.includes("pdf")) {
+          //   placeHolderImg = pdfImg.src;
+          // } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
+          //   placeHolderImg = docImg.src;
+          // } else if (
+          //   fileExtension.includes("jpg") ||
+          //   fileExtension.includes("jpeg") ||
+          //   fileExtension.includes("png")
+          // ) {
+          //   placeHolderImg = obj.attachments[0]?.url;
+          // } else {
+          //   placeHolderImg = unKnownImg.src;
+          // }
           return (
             <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
               <div className="">
@@ -188,17 +226,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                   <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
                 </div>
               </div>
-              <div className={styles.attCont}>
-                <img
-                  className={styles.attDoc}
-                  src={placeHolderImg}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", width: "80px" }}
-                />
-                <a onClick={() => openModal(obj)} className={styles.attTitle}>
-                  {obj.attachments[0]?.name}
-                </a>
-              </div>
+              <div className={styles.attCont}>{DocListView}</div>
             </div>
           );
         } else {
