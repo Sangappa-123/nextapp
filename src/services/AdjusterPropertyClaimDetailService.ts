@@ -160,3 +160,36 @@ export const getClaimRoomTypeData = async () => {
     return [];
   }
 };
+
+export const getActivityLogData = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("activityLogHistoryApi");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const downloadActivityLogData = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("downloadActivityLogApi");
+    const resp = await http.postBlob(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const uploadActivityLogData = async (formData: any) => {
+  try {
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const url = getApiEndPoint("uploadActivityLogDataApi");
+    const resp = await http.post(url, formData);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};

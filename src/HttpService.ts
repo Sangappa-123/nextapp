@@ -59,6 +59,36 @@ class HttpService {
       });
     });
   }
+
+  async postBlob(
+    url: string,
+    payload: any,
+    headers?: object
+  ): Promise<unknownObjectType> {
+    return new Promise((resolve, reject) => {
+      this.validateToken().then(() => {
+        const bodyData = this.isFormData ? payload : JSON.stringify(payload);
+        try {
+          fetch(url, {
+            method: "POST",
+            headers: { ...this.header, ...headers },
+            // body: JSON.stringify(payload),
+            body: bodyData,
+          })
+            .then((response) => response.arrayBuffer())
+            .then((result: any) => {
+              // const data = result?.data;
+              return resolve(result);
+            })
+            .catch((error) => reject({ error }));
+        } catch (error) {
+          console.error("Post API error", error);
+          return reject({ error });
+        }
+      });
+    });
+  }
+
   async get(url: string, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {

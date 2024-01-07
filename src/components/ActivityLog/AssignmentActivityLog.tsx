@@ -1,0 +1,280 @@
+import React, { useState } from "react";
+import styles from "./AssignmentActivityLog.module.scss";
+import clsx from "clsx";
+import { HiOutlineChevronDoubleDown } from "react-icons/hi";
+import { HiOutlineChevronDoubleUp } from "react-icons/hi";
+// import { RootState } from "@/store/store";
+// import { connect } from "react-redux";
+import profileImage from "@/assets/images/user-profile.png";
+import Image from "next/image";
+import excelImg from "@/assets/images/excel-img.png";
+import pdfImg from "@/assets/images/pdf-img.png";
+import docImg from "@/assets/images/word-img.png";
+import unKnownImg from "@/assets/images/unknown.png";
+import ActivityLogDocPreview from "./ActivityLogDocPreview";
+import ModalWithoutHeaderPopups from "@/components/common/ModalWithoutHeaderPopups";
+
+// export default function AssignmentActivityLog() {
+interface AssignmentActivityLogProps {
+  groupedObjData: any;
+}
+const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
+  groupedObjData,
+}) => {
+  const options: any = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+  const [showMe, setshowMe] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [AttData, setAttData] = useState({});
+  const toggle = () => {
+    setshowMe(!showMe);
+  };
+
+  const openModal = (data: any) => {
+    setAttData(data);
+    setIsModalOpen(true);
+  };
+
+  // const closeModal = () => {
+  //     setIsModalOpen(false);
+  // };
+
+  const handleOpenModal = () => {
+    setIsOpen(!isOpen);
+    setIsModalOpen(false);
+  };
+
+  const Ui = groupedObjData[1].map((obj: any, i: React.Key | null | undefined) => {
+    const date = new Date(obj.logCreatedDate);
+    if (obj.activityType == "action") {
+      return (
+        <div key={i} className={styles.d_block}>
+          <h6 className={styles.dateCont}>
+            {"" + date.toLocaleString("en-US", options) + ""}
+          </h6>
+          <h6 className={styles.itemDetailCont}>{obj.message}</h6>
+        </div>
+      );
+    } else if (obj.activityType == "message") {
+      if (obj.messageType == "outgoing") {
+        if (obj.attachments != null) {
+          const fileExtension = obj.attachments[0]?.url.substr(
+            obj.attachments[0]?.url.lastIndexOf(".")
+          );
+          let placeHolderImg: any = "";
+          if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+            placeHolderImg = excelImg.src;
+          } else if (fileExtension.includes("pdf")) {
+            placeHolderImg = pdfImg.src;
+          } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
+            placeHolderImg = docImg.src;
+          } else if (
+            fileExtension.includes("jpg") ||
+            fileExtension.includes("jpeg") ||
+            fileExtension.includes("png")
+          ) {
+            placeHolderImg = obj.attachments[0]?.url;
+          } else {
+            placeHolderImg = unKnownImg.src;
+          }
+          return (
+            <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
+              <div className="">
+                <h6
+                  className={
+                    obj.activityEventName != null
+                      ? styles.itemDetailMsg
+                      : styles.itemDetailMsgSent
+                  }
+                >
+                  {obj.message}
+                </h6>
+                <div className={clsx("", styles.itemDetailProfile)}>
+                  <Image
+                    src={profileImage}
+                    alt="image"
+                    className={styles.profileIcon}
+                    style={{ height: "42px", width: "42px" }}
+                  />
+                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+                </div>
+              </div>
+              <div className={styles.attCont}>
+                <img
+                  className={styles.attDoc}
+                  src={placeHolderImg}
+                  alt="Preview"
+                  style={{ maxWidth: "100%", width: "80px" }}
+                />
+                <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                  {obj.attachments[0]?.name}
+                </a>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+              <div className="">
+                <h6
+                  className={
+                    obj.activityEventName != null
+                      ? styles.itemDetailMsg
+                      : styles.itemDetailMsgSent
+                  }
+                >
+                  {obj.message}
+                </h6>
+                <div className={clsx("", styles.itemDetailProfile)}>
+                  <Image
+                    src={profileImage}
+                    alt="image"
+                    className={styles.profileIcon}
+                    style={{ height: "42px", width: "42px" }}
+                  />
+                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      } else if (obj.messageType == "incoming") {
+        if (obj.attachments != null) {
+          const fileExtension = obj.attachments[0]?.url.substr(
+            obj.attachments[0]?.url.lastIndexOf(".")
+          );
+          let placeHolderImg: any = "";
+          if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+            placeHolderImg = excelImg.src;
+          } else if (fileExtension.includes("pdf")) {
+            placeHolderImg = pdfImg.src;
+          } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
+            placeHolderImg = docImg.src;
+          } else if (
+            fileExtension.includes("jpg") ||
+            fileExtension.includes("jpeg") ||
+            fileExtension.includes("png")
+          ) {
+            placeHolderImg = obj.attachments[0]?.url;
+          } else {
+            placeHolderImg = unKnownImg.src;
+          }
+          return (
+            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+              <div className="">
+                <h6
+                  className={
+                    obj.activityEventName != null
+                      ? styles.itemDetailMsg
+                      : styles.itemDetailMsgReceived
+                  }
+                >
+                  {obj.message}
+                </h6>
+                <div className={clsx("", styles.itemDetailProfile)}>
+                  <Image
+                    src={profileImage}
+                    alt="image"
+                    className={styles.profileIcon}
+                    style={{ height: "42px", width: "42px" }}
+                  />
+                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+                </div>
+              </div>
+              <div className={styles.attCont}>
+                <img
+                  className={styles.attDoc}
+                  src={placeHolderImg}
+                  alt="Preview"
+                  style={{ maxWidth: "100%", width: "80px" }}
+                />
+                <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                  {obj.attachments[0]?.name}
+                </a>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+              <div className="">
+                <h6
+                  className={
+                    obj.activityEventName != null
+                      ? styles.itemDetailMsg
+                      : styles.itemDetailMsgReceived
+                  }
+                >
+                  {obj.message}
+                </h6>
+                <div className={clsx("", styles.itemDetailProfile)}>
+                  <Image
+                    src={profileImage}
+                    alt="image"
+                    className={styles.profileIcon}
+                    style={{ height: "42px", width: "42px" }}
+                  />
+                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      }
+    }
+  });
+
+  return (
+    <div className={clsx(styles.container, "p-2 row")}>
+      <div className="row">
+        <h6 className={styles.headerCont}>
+          <span>{groupedObjData && groupedObjData[0]}</span>
+          <span className={styles.headArrowActionBtn} onClick={toggle}>
+            <HiOutlineChevronDoubleUp
+              style={{
+                display: !showMe ? "block" : "none",
+              }}
+            />{" "}
+            <HiOutlineChevronDoubleDown
+              style={{
+                display: showMe ? "block" : "none",
+              }}
+            />
+          </span>
+        </h6>
+        <div
+          style={{
+            display: showMe ? "block" : "none",
+          }}
+        >
+          {Ui}
+        </div>
+      </div>
+      <ModalWithoutHeaderPopups
+        isOpen={isModalOpen}
+        childComp={
+          <ActivityLogDocPreview handleOpenModal={handleOpenModal} data={AttData} />
+        }
+        modalWidthClassName={styles.modalWidth}
+      ></ModalWithoutHeaderPopups>
+    </div>
+  );
+};
+
+// const mapStateToProps = (state: RootState) => ({
+
+// });
+
+// const mapDispatchToProps = {
+// };
+// const connector = connect(mapStateToProps, mapDispatchToProps);
+// // type connectorType = ConnectedProps<typeof connector>;
+// export default connector(AssignmentActivityLog);
+export default AssignmentActivityLog;
