@@ -32,17 +32,17 @@ const ClaimDetailSlice = createSlice({
     },
     addPendingTasks(state, action) {
       const { payload } = action;
-      state.pendingTaskList = [...state.pendingTaskList, ...payload];
+      state.pendingTaskList = [...payload];
       return state;
     },
     addMessageList(state, action) {
       const { payload } = action;
-      state.messageList = [...state.messageList, ...payload];
+      state.messageList = [...payload];
       return state;
     },
     addParticipants(state, action) {
       const { payload } = action;
-      state.participants = [...state.participants, ...payload];
+      state.participants = [...payload];
       return state;
     },
     addContents(state, action) {

@@ -2,6 +2,7 @@ import { TABLE_LIMIT_20 } from "@/constants/constants";
 import { fetchUrgentClaimList } from "@/services/ClaimService";
 import { RootState } from "@/store/store";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import EnumStoreSlice from "../EnumStoreSlice";
 
 const initialState = {
   urgentClaimListData: [],
@@ -49,7 +50,7 @@ export const handleUrgentClaimSearch = createAsyncThunk(
     const rejectWithValue = api.rejectWithValue;
     const state = api.getState() as RootState;
     try {
-      const userId = state.session.userId;
+      const userId = state[EnumStoreSlice.SESSION].userId;
       const sortBy = initialState.sortBy;
       const orderBy = initialState.orderBy;
       const pageNumber = 1;

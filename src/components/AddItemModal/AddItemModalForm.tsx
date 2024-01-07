@@ -1,10 +1,6 @@
 "use client";
-import { useEffect, useMemo } from "react";
 import clsx from "clsx";
-import { object, string, number, minLength, Output, nullish } from "valibot";
-import useCustomForm from "@/hooks/useCustomForm";
 import GenericInput from "@/components/common/GenericInput";
-import GenericButton from "@/components/common/GenericButton";
 import addClaimFormStyle from "./addClaimForm.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
 import Tooltip from "@/components/common/ToolTip";
@@ -15,16 +11,8 @@ import { ImCross } from "react-icons/im";
 import { Controller } from "react-hook-form";
 import AttachementPreview from "./AttachementPreview";
 import ImagePreviewModal from "./ImagePreviewModal";
-import { RiArrowLeftCircleFill } from "react-icons/ri";
-import { RiArrowRightCircleFill } from "react-icons/ri";
 import { ConnectedProps, connect } from "react-redux";
-import {
-  getPreviousItem,
-  getNextItem,
-  addContentItem,
-  addNewRoom,
-  updateContentItem,
-} from "@/services/AddItemContentService";
+import { addNewRoom } from "@/services/AddItemContentService";
 import GenericTextArea from "../common/GenericTextArea/index";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useParams } from "next/navigation";
@@ -33,21 +21,21 @@ import {
   getSubCategories,
 } from "@/services/AdjusterPropertyClaimDetailService";
 import { addSubcategories } from "@/reducers/ClaimDetail/ClaimDetailSlice";
-
-interface objectType {
-  imgType: string;
-  url: string;
-}
-
+import { RiArrowLeftCircleFill } from "react-icons/ri";
+import { RiArrowRightCircleFill } from "react-icons/ri";
+import {
+  getPreviousItem,
+  getNextItem,
+  updateContentItem,
+} from "@/services/AddItemContentService";
 interface typeProps {
   [key: string | number]: any;
 }
 const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const {
     editItem,
-    editItemDetail,
-    previousItem,
     nextItem,
+    previousItem,
     category,
     subCategory,
     condition,
@@ -56,7 +44,22 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     room,
     addNotification,
     addSubcategories,
-    closeModal,
+
+    setSelectedFile,
+    setDeletedFile,
+    setapplyTaxState,
+    SetScheduledItemState,
+    docs,
+    setDocs,
+    register,
+    control,
+    setValue,
+    errors,
+    isScheduledItemState,
+    applyTaxState,
+    handleSubmit,
+    editItemDetail,
+    submitFormData,
   } = props;
 
   const { claimId }: { claimId: string } = useParams();
@@ -66,10 +69,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [imagePreviewType, setImagePreviewType] = useState("");
-  const [applyTaxState, setapplyTaxState] = useState("yes");
-  const [isScheduledItemState, SetScheduledItemState] = useState("no");
   const [showSubCat, setShowSubCategory] = useState(false);
-  const [docs, setDocs] = useState<string[]>([]);
   const [roomName, setRoomName] = useState<React.SetStateAction<string>>();
   const [roomTypeSelected, setRoomTypeSelected] = useState<React.SetStateAction<any>>();
 
@@ -138,32 +138,56 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     }
   };
   const handleUpload = (event: any) => {
-    const imageUrl = URL.createObjectURL(event.target.files[0]);
-    let selectedImageArr: any[];
-    if (event.target.files[0].type == "application/pdf") {
-      const newObj: objectType = {
-        imgType: "pdf",
-        url: imageUrl,
-      };
-      selectedImageArr = [newObj];
-    } else {
-      const newObj: objectType = {
-        imgType: "jpg",
-        url: imageUrl,
-      };
-      selectedImageArr = [newObj];
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const selectedFiles: File[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        const nameExists = docs.some((item: any) => item.fileName.includes(file.name));
+
+        if (!nameExists) {
+          const imageUrl = URL.createObjectURL(file);
+
+          const newObj = {
+            fileName: file.name,
+            fileType: file.type,
+            filePurpose: "ITEM",
+            imgType: file.type === "application/pdf" ? "pdf" : "jpeg",
+            url: imageUrl,
+          };
+
+          setDocs((prev: any) => [...prev, newObj]);
+          selectedFiles.push(file);
+        }
+      }
+
+      setSelectedFile((prev: any) => [...prev, ...selectedFiles]);
     }
-    setDocs((prev: any) => [...prev, ...selectedImageArr]);
     event.target.value = null;
   };
 
-  const handleDeleteImage = (index: number) => {
-    const docArray = docs.filter((elem, ind) => {
+  const handleDeleteImage = (
+    index: number,
+    fileNameToDelete: string,
+    id: number,
+    imageUID: string
+  ) => {
+    if (id) {
+      const payload = { id, imageUID };
+      setDeletedFile((prev: any) => [...prev, payload]);
+    }
+    const docArray = docs.filter((elem: any, ind: number) => {
       if (ind !== index) {
         return elem;
       }
     });
     setDocs([...docArray]);
+    setSelectedFile((prevFiles: any[]) => {
+      const updatedFiles = prevFiles.filter((file) => file.name !== fileNameToDelete);
+      return updatedFiles;
+    });
   };
   const handleCategoryChange = async (val: any) => {
     const param = {
@@ -178,213 +202,13 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       setShowSubCategory(false);
     }
   };
-  const defaultValue = useMemo(() => {
-    return {
-      description:
-        editItem && editItemDetail.description ? editItemDetail.description : null,
-      quantity:
-        editItem && editItemDetail.quantity ? String(editItemDetail.quantity) : null,
-      insuredPrice:
-        editItem && editItemDetail?.insuredPrice
-          ? String(editItemDetail?.insuredPrice)
-          : null,
-      category: editItem && editItemDetail.category ? editItemDetail.category : null,
-      subCategory:
-        editItem && editItemDetail.subCategory ? editItemDetail.subCategory : null,
-      ageYears:
-        editItem && editItemDetail.ageYears ? String(editItemDetail.ageYears) : null,
-      ageMonths:
-        editItem && editItemDetail.ageMonths ? String(editItemDetail.ageMonths) : null,
-      room: editItem && editItemDetail.room ? editItemDetail.room : null,
-      condition: editItem && editItemDetail.condition ? editItemDetail.condition : null,
-      originallyPurchasedFrom:
-        editItem && editItemDetail.originallyPurchasedFrom
-          ? editItemDetail.originallyPurchasedFrom
-          : null,
-      scheduleAmount:
-        editItem && editItemDetail.scheduleAmount
-          ? String(editItemDetail.scheduleAmount)
-          : null,
-    };
-  }, [editItemDetail]);
-
-  const schema = object({
-    description: string(" Description must be a string.", [
-      minLength(1, "Description field is required."),
-    ]),
-    quantity: nullish(string("Quantity must be a number")),
-    insuredPrice: nullish(string("Price must be a number")),
-    category: nullish(
-      object({
-        categoryName: string(),
-        categoryId: number(),
-      })
-    ),
-    subCategory: nullish(
-      object({
-        name: string(),
-        id: number(),
-      })
-    ),
-    ageYears: nullish(string("Years must be a number")),
-    ageMonths: nullish(string("Month must be a number")),
-    room: nullish(
-      object({
-        roomName: string(),
-        id: number(),
-      })
-    ),
-    condition: nullish(
-      object({
-        conditionName: string(),
-        conditionId: number(),
-      })
-    ),
-    originallyPurchasedFrom: nullish(
-      object({
-        id: number(),
-        name: string(),
-      })
-    ),
-    scheduleAmount: nullish(string("Amount must be a number")),
-    addRetailer: nullish(string()),
-  });
-
-  const { register, handleSubmit, formState, control, setValue, reset } = useCustomForm(
-    schema,
-    defaultValue
-  );
-
-  const { errors } = formState;
-  console.log(formState);
-  console.log(errors);
-
-  useEffect(() => {
-    if (editItem && editItemDetail) {
-      setValue("description", editItemDetail.description ?? null);
-      setValue(
-        "quantity",
-        editItemDetail.quantity ? String(editItemDetail.quantity) : null
-      );
-      setValue(
-        "insuredPrice",
-        editItemDetail?.insuredPrice ? String(editItemDetail?.insuredPrice) : null
-      );
-      setValue("category", editItemDetail.category ? editItemDetail.category : null);
-      setValue("subCategory", editItemDetail.subCategory ?? null);
-      setValue(
-        "ageYears",
-        editItemDetail.ageYears ? String(editItemDetail.ageYears) : null
-      );
-      setValue(
-        "ageMonths",
-        editItemDetail.ageMonths ? String(editItemDetail.ageMonths) : null
-      );
-      setValue("room", editItemDetail.room ?? null);
-      setValue("condition", editItemDetail.condition ?? null);
-      setValue("originallyPurchasedFrom", editItemDetail.originallyPurchasedFrom ?? null);
-      setValue(
-        "scheduleAmount",
-        editItemDetail.scheduleAmount ? String(editItemDetail.scheduleAmount) : null
-      );
-      setapplyTaxState(editItemDetail?.applyTax ? "yes" : "no");
-      SetScheduledItemState(editItemDetail?.isScheduledItem ? "yes" : "no");
-    }
-  }, [editItem, editItemDetail, setValue]);
 
   const openRetailerInputBox = () => {
     setValue("addRetailer", null);
     setNewRetailerInputField(!newRetailerInputField);
   };
-  const submitFormData = async (data: Output<typeof schema>) => {
-    const payload = {
-      id: editItem && editItemDetail ? editItemDetail?.itemId : null,
-      claimId: claimId,
-      claimNumber: claimNumber,
-      description: data.description,
-      quantity: data.quantity,
-      insuredPrice: data.insuredPrice,
-      applyTax: applyTaxState === "yes" ? true : false,
-      ageYears: data.ageYears,
-      ageMonths: data.ageMonths,
-      isScheduledItem: isScheduledItemState === "yes" ? true : false,
-      scheduleAmount: data.scheduleAmount,
-      category: {
-        id: data?.category?.categoryId,
-        name: data?.category?.categoryName,
-      },
-      subCategory: data.subCategory,
-      room: data.room,
-      condition: data.condition,
-      originallyPurchasedFrom: data.addRetailer
-        ? { name: data.addRetailer }
-        : data.originallyPurchasedFrom,
-    };
-    const formData = new FormData();
-    formData.append("itemDetails", JSON.stringify(payload));
 
-    return formData;
-  };
-
-  const handleSaveAndNext = async (data: Output<typeof schema>) => {
-    const formData = await submitFormData(data);
-    const addItemRes = await addContentItem(formData);
-
-    if (addItemRes?.status === 200) {
-      reset();
-      addNotification({
-        message: "Item Added Successfully. You Can Add Another One",
-        id: "add_content_item_and_next_success",
-        status: "success",
-      });
-    } else {
-      addNotification({
-        message: addItemRes.message ?? "Something went wrong.",
-        id: "add_content_item_and_next_failure",
-        status: "error",
-      });
-    }
-  };
-  const formSubmit = async (data: Output<typeof schema>) => {
-    const formData = await submitFormData(data);
-    const addItemRes = await addContentItem(formData);
-
-    if (addItemRes?.status === 200) {
-      closeModal();
-      addNotification({
-        message: "Item Added Successfully",
-        id: "add_content_item_success",
-        status: "success",
-      });
-    } else {
-      addNotification({
-        message: addItemRes.message ?? "Something went wrong.",
-        id: "add_content_item_failure",
-        status: "error",
-      });
-    }
-  };
-  const handleUpdate = async (data: Output<typeof schema>) => {
-    const formData = await submitFormData(data);
-
-    const updateItemRes = await updateContentItem(formData);
-
-    if (updateItemRes?.status === 200) {
-      closeModal();
-      addNotification({
-        message: "Item Updated Successfully",
-        id: "update_content_item_success",
-        status: "success",
-      });
-    } else {
-      addNotification({
-        message: updateItemRes.message ?? "Something went wrong.",
-        id: "update_content_item_failure",
-        status: "error",
-      });
-    }
-  };
-  const handleUpdateAndNext = async (data: Output<typeof schema>) => {
+  const handleUpdateAndNext = async (data: any) => {
     const formData = await submitFormData(data);
     const updateItemRes = await updateContentItem(formData);
 
@@ -405,7 +229,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       });
     }
   };
-  const handleUpdateAndPrevious = async (data: Output<typeof schema>) => {
+  const handleUpdateAndPrevious = async (data: any) => {
     const formData = await submitFormData(data);
     const updateItemRes = await updateContentItem(formData);
 
@@ -426,10 +250,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
       });
     }
   };
-
   return (
     <div className={addClaimFormStyle.addItemContainer}>
-      <form onSubmit={handleSubmit(formSubmit)}>
+      <form>
         <div className={addClaimFormStyle.containerScroll}>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
@@ -887,7 +710,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <div className="col-2 m-2" key={index}>
                   <div
                     style={{ position: "relative", left: "100px" }}
-                    onClick={() => handleDeleteImage(index)}
+                    onClick={() =>
+                      handleDeleteImage(index, docs.name, elem?.id, elem?.imageUID)
+                    }
                   >
                     {" "}
                     <IoClose style={{ color: "#f20707" }} />
@@ -919,7 +744,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 <div className="col-2 m-2" key={index}>
                   <div
                     style={{ position: "relative", left: "100px" }}
-                    onClick={() => handleDeleteImage(index)}
+                    onClick={() =>
+                      handleDeleteImage(index, docs.name, elem?.id, elem?.imageUID)
+                    }
                   >
                     {" "}
                     <IoClose style={{ color: "#f20707" }} />
@@ -969,65 +796,26 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
             ></ImagePreviewModal>
           </div>
         </div>
-        {editItem ? (
-          <div>
-            <div className={addClaimFormStyle.arrowContainer}>
-              <div
-                className={clsx({
-                  [addClaimFormStyle.arrowLeft]: true,
-                  [addClaimFormStyle.leftDisable]: !previousItem,
-                })}
-                onClick={handleSubmit(handleUpdateAndPrevious)}
-              >
-                <RiArrowLeftCircleFill
-                  size="50px"
-                  fill={previousItem ? "black" : "grey"}
-                />
-              </div>
-              <div
-                className={clsx({
-                  [addClaimFormStyle.arrowRight]: true,
-                  [addClaimFormStyle.rightDisable]: !nextItem,
-                })}
-                onClick={handleSubmit(handleUpdateAndNext)}
-              >
-                {" "}
-                <RiArrowRightCircleFill size="50px" fill={nextItem ? "black" : "grey"} />
-              </div>
+        {editItem && (
+          <div className={addClaimFormStyle.arrowContainer}>
+            <div
+              className={clsx({
+                [addClaimFormStyle.arrowLeft]: true,
+                [addClaimFormStyle.leftDisable]: !previousItem,
+              })}
+              onClick={handleSubmit(handleUpdateAndPrevious)}
+            >
+              <RiArrowLeftCircleFill size="50px" fill={previousItem ? "black" : "grey"} />
             </div>
-            <div className="row m-2 flex-row-reverse">
-              <div className="row col-12 m-2 flex-row-reverse">
-                <div className="row col-2">
-                  <GenericButton label="Cancel" onClick={closeModal} size="medium" />
-                </div>
-                <div className="row col-2">
-                  <GenericButton
-                    label="Update Item"
-                    type="submit"
-                    onClick={handleSubmit(handleUpdate)}
-                    size="medium"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className={clsx(addClaimFormStyle.centerAlign, "row mt-4")}>
-            <div className="col-8" style={{ textAlign: "right" }}>
-              <a
-                type="submit"
-                className={addClaimFormStyle.pointerCursor}
-                onClick={handleSubmit(handleSaveAndNext)}
-              >
-                Save and Add Another Item
-              </a>
-            </div>
-
-            <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
-              <GenericButton label="Add Item" type="submit" size="medium" />
-            </div>
-            <div className="row col-2">
-              <GenericButton label="Reset" size="medium" onClick={() => reset()} />
+            <div
+              className={clsx({
+                [addClaimFormStyle.arrowRight]: true,
+                [addClaimFormStyle.rightDisable]: !nextItem,
+              })}
+              onClick={handleSubmit(handleUpdateAndNext)}
+            >
+              {" "}
+              <RiArrowRightCircleFill size="50px" fill={nextItem ? "black" : "grey"} />
             </div>
           </div>
         )}
@@ -1037,15 +825,14 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 };
 
 const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
-  editItemDetail: claimContentdata.editItemDetail,
-  previousItem: claimContentdata.previousItem,
-  nextItem: claimContentdata.nextItem,
   category: claimDetail.category,
   subCategory: claimDetail.subCategory,
   condition: claimDetail.condition,
   originallyPurchasedFrom: claimDetail.retailer,
   room: claimDetail.room,
   roomType: claimDetail.roomType,
+  previousItem: claimContentdata.previousItem,
+  nextItem: claimContentdata.nextItem,
 });
 const mapDispatchToProps = {
   addNotification,

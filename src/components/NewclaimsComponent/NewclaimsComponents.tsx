@@ -14,18 +14,19 @@ import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 import { creatClaim, postClaim } from "@/services/ClaimService";
-import { insuranceSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
 import { RootState } from "@/store/store";
 import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { ConnectedProps, connect } from "react-redux";
+import { Suspense } from "react";
 import {
   selectActiveSection,
   setActiveSection,
 } from "@/reducers/UploadCSV/navigationSlice";
 import Loading from "@/app/[lang]/loading";
+import selectInsuranceCompanyName from "@/reducers/Session/Selectors/selectInsuranceCompanyName";
 
 const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
   loading: () => <Loading />,
@@ -33,8 +34,9 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
+  // const router = useRouter();
   const activeSection = useAppSelector(selectActiveSection);
-  const insuranceCompany = useAppSelector(insuranceSelector);
+  const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
 
   console.log("insurancecompany", insuranceCompany);
   const schema = object({
@@ -91,6 +93,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
+  // const [claimNumberr, setClaimNumber] = useState<string | null>(null);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -223,6 +226,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         },
       };
       const formData = new FormData();
+      console.log(formData);
       formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
       const postlCaimRes = await postClaim(payload);
       if (postlCaimRes?.status === 200) {
@@ -234,7 +238,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           })
         );
         const creatClaimRes = await creatClaim(formData);
+        console.log("ccccccccc", creatClaimRes);
         if (creatClaimRes?.status === 200) {
+          sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
+          sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
           const nextSection = activeSection + 1;
           console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
@@ -277,6 +284,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const handleAssignItemsClick = () => {
     dispatch(setActiveSection(2));
+    // router.push("/new-claim");
   };
 
   const handlePreviousClick = () => {
@@ -420,13 +428,19 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           <AddItemsComponent
             onAssignItemsClick={handleAssignItemsClick}
             onNewClaimsClick={handlePreviousClick}
+            // claimNumber={claimNumberr || ""}
           />
         </Cards>
       )}
       {activeSection === 2 && (
-        <Cards>
-          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
-        </Cards>
+        <Suspense fallback={<Loading />}>
+          <Cards>
+            <AssignItemsComponent
+              onNewClaimsClick={handlePreviousClick}
+              // selectedRowsData={[]}
+            />
+          </Cards>
+        </Suspense>
       )}
     </div>
   );

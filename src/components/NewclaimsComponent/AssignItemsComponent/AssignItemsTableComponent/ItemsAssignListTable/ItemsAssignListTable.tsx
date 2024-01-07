@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -7,11 +7,12 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableListStyle from "./itemsAssignListTable.module.scss";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
 
-const ItemsAssignListTable: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  type AddItemsData = {
+interface ItemsAssignListTableProps {}
+const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = () => {
+  type AssignItemsData = {
     item: string;
     description: string;
     status: string;
@@ -25,32 +26,53 @@ const ItemsAssignListTable: React.FC = () => {
     scheduledItem: string;
   };
 
-  const columnHelper = createColumnHelper<AddItemsData>();
+  const columnHelper = createColumnHelper<AssignItemsData>();
+  const checkboxAccessor = (data: AssignItemsData) => data.select;
 
   const columns = [
-    columnHelper.accessor("select", {
-      id: "checkbox",
-      header: () => <input type="checkbox" />,
+    columnHelper.accessor(checkboxAccessor, {
+      header: () => (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        </div>
+      ),
+      meta: {},
+      id: "check",
+      enableColumnFilter: false,
       cell: () => (
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-          //   className={TableLisStyle.checkboxInput}
-        />
+        <div
+          className="d-flex justify-content-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={() => {
+              // handleCheckboxChange(row.original);
+            }}
+          />
+        </div>
       ),
     }),
     columnHelper.accessor("item", {
       header: () => `Item #`,
     }),
-
     columnHelper.accessor("description", {
       header: () => `Description`,
     }),
     columnHelper.accessor("quantity", {
       header: () => `Quantity`,
     }),
-
     columnHelper.accessor("statedValue", {
       header: () => `Stated Value`,
     }),
@@ -59,7 +81,6 @@ const ItemsAssignListTable: React.FC = () => {
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-
     columnHelper.accessor("category", {
       header: () => `Category`,
     }),
@@ -74,7 +95,7 @@ const ItemsAssignListTable: React.FC = () => {
     }),
   ];
 
-  const data: AddItemsData[] = [
+  const data: AssignItemsData[] = [
     {
       item: "Item 1",
       description: "Description 1",
@@ -102,11 +123,10 @@ const ItemsAssignListTable: React.FC = () => {
       scheduledItem: "No",
     },
   ];
-
   const table = useReactTable({
     columns,
     data,
-    getCoreRowModel: getCoreRowModel<AddItemsData>(),
+    getCoreRowModel: getCoreRowModel(),
     enableSorting: true,
     enableColumnFilters: false,
   });
@@ -114,14 +134,7 @@ const ItemsAssignListTable: React.FC = () => {
   return (
     <>
       <div className={TableListStyle.addListTableContainer}>
-        <CustomReactTable
-          table={table}
-          // totalClaims={props.totalClaims}
-          // pageLimit={pageLimit}
-          // showStatusColor={true}
-          // loader={loader}
-          // tableDataErrorMsg={props.claimErrorMsg}
-        />
+        <CustomReactTable table={table} />
       </div>
       <div className="row">
         <label className={TableListStyle.labelStyles}>Item(s) Summary</label>
@@ -141,4 +154,13 @@ const ItemsAssignListTable: React.FC = () => {
   );
 };
 
-export default ItemsAssignListTable;
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ItemsAssignListTable);

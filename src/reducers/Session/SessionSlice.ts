@@ -1,17 +1,17 @@
-import type { RootState } from "@/store/store";
 import { createSlice } from "@reduxjs/toolkit";
+import EnumStoreSlice from "../EnumStoreSlice";
 
 type initialStateType = {
   [key: string]: any;
 };
-const initialState: initialStateType = {
+export const initialSessionState: initialStateType = {
   lang: "",
   name: "",
 };
 
 const SessionSlice = createSlice({
-  initialState,
-  name: "session",
+  initialState: initialSessionState,
+  name: EnumStoreSlice.SESSION,
   reducers: {
     updateLoadingState(state, action) {
       const { payload } = action;
@@ -24,7 +24,7 @@ const SessionSlice = createSlice({
       return state;
     },
     resetSessionState() {
-      return initialState;
+      return initialSessionState;
     },
   },
 });
@@ -32,8 +32,3 @@ export default SessionSlice;
 
 export const { updateLoadingState, addSessionData, resetSessionState } =
   SessionSlice.actions;
-
-export const nameSelector = (state: RootState) => state?.session?.name;
-
-export const insuranceSelector = (state: RootState) =>
-  state?.session?.insuranceCompanyName;
