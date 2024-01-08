@@ -1,5 +1,4 @@
 .reactTable {
-  padding-bottom: 35px;
   table {
     width: 100%;
     margin-top: -1px;
@@ -7,6 +6,11 @@
     thead {
       position: sticky;
       top: 0;
+      z-index: 1;
+    }
+    tfoot {
+      position: sticky;
+      bottom: 0;
       z-index: 1;
     }
     tbody tr:nth-child(even) {

@@ -2,6 +2,7 @@ import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants"
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
+import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
 
 type propTypes = {
   serviceRequestListRes: any;
@@ -22,6 +23,10 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
       ),
       // content: <DashboardNotification data={data} />,
       // className: TabsStyle.tab1,
+    },
+    {
+      name: "Contents Evaluation",
+      content: <ContentsEvaluationContentTopButtonsComponent />,
     },
     {
       name: "Vendor Assignments",

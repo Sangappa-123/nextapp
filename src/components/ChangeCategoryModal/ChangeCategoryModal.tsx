@@ -9,6 +9,7 @@ import changeCategoryStyle from "./changeCategoryStyle.module.scss";
 import GenericInput from "../common/GenericInput";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { useParams } from "next/navigation";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 
 interface typeProps {
   [key: string | number]: any;
@@ -39,9 +40,12 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
 
     const updateItemRes = await updateCliamCategoryFun(payload);
     if (updateItemRes?.status === 200) {
-      const payload = { claimId };
-      const claimContentListRes = await claimContentList(payload, true);
+      const claimData = { claimId };
+      const claimContentListRes = await claimContentList(claimData, true);
+
       if (claimContentListRes) {
+        props.addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+
            props.addNotification({
              message: "Category Updated Successfully",
              id: "update_content_item_success",
@@ -112,7 +116,8 @@ const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
   claimContentdata:claimContentdata
 })
 const mapDispatchToProps = {
-  addNotification
+  addNotification,
+  addClaimContentListData
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
