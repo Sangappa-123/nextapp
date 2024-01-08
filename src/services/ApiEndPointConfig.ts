@@ -54,6 +54,8 @@ enum apiEndPoints {
   updateContentItemApi = "web/claim/update/postlossitem",
   newCustomComparable = "web/add/custom/item",
   deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
+  pushNoteApiUrl = "web/push/note",
+  claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
