@@ -10,7 +10,7 @@ import AssignmentActivityLog from "./AssignmentActivityLog";
 import {
   getActivityLogData,
   downloadActivityLogData,
-} from "@/services/AdjusterPropertyClaimDetailService";
+} from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 
 interface propsTypes {}
 const ActivityLog: React.FC<propsTypes> = () => {

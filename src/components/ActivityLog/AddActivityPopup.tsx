@@ -11,7 +11,7 @@ import excelImg from "@/assets/images/excel-img.png";
 import pdfImg from "@/assets/images/pdf-img.png";
 import docImg from "@/assets/images/word-img.png";
 import unKnownImg from "@/assets/images/unknown.png";
-import { uploadActivityLogData } from "@/services/AdjusterPropertyClaimDetailService";
+import { uploadActivityLogData } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 interface AddActivityPopupProps {
   handleOpenModal: () => void;
 }
