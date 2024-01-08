@@ -1,5 +1,6 @@
 import HttpService from "@/HttpService";
 import { getApiEndPoint } from "../ApiEndPointConfig";
+import { unknownObjectType } from "@/constants/customTypes";
 
 export const fetchClaimItemDetails = async (
   payload: { itemId: number },
@@ -100,4 +101,18 @@ export const getLineItemRetailers = async () => {
   } catch (err: any) {
     return { paymentTypes: [], retailers: [] };
   }
+};
+
+export const addCustomItem = async (param: unknownObjectType) => {
+  const url = getApiEndPoint("newCustomComparable");
+  const http = new HttpService({ isClient: true, isFormData: true });
+  const resp = await http.post(url, param);
+  return resp;
+};
+
+export const removeCustomComparable = async (id: number) => {
+  const url = getApiEndPoint("deleteCustomItemApi").replace("{{COMPARABLE_ID}}", `${id}`);
+  const http = new HttpService({ isClient: true });
+  const resp = await http.get(url);
+  return resp;
 };

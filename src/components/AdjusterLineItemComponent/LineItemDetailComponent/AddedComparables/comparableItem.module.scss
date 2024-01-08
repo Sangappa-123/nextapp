@@ -9,6 +9,21 @@
   display: flex;
   overflow: auto;
   column-gap: 8px;
+  position: relative;
+  .customTag {
+    height: 22px;
+    width: 85px;
+    background: #ca56a1;
+    top: 0;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+    z-index: 1;
+    opacity: 0.8;
+    font-size: 13px;
+  }
   .imageDiv {
     min-height: 100%;
     width: 128px;

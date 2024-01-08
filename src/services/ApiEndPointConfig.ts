@@ -60,6 +60,8 @@ enum apiEndPoints {
   detailedInventoryReportPDF = "web/claim/settlement/PDF",
   coverageSummaryReportPDF = "web/export/claim/category/statistics",
   detailedInventoryReportExcel = "web/export/detailed/inventory",
+  newCustomComparable = "web/add/custom/item",
+  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
   pushNoteApiUrl = "web/push/note",
   claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
 }
