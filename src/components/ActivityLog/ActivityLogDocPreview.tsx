@@ -29,7 +29,6 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
     if (prevProps.current !== data) {
       const attachment = data.attachments ? data.attachments[0] : null;
       if (attachment) {
-        console.log("DocData====>", attachment);
         const fileExtension = attachment.url.substr(attachment.url.lastIndexOf("."));
         if (
           fileExtension.includes("xlsx") ||
@@ -72,7 +71,6 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
   };
 
   const downloadDoc = () => {
-    console.log("filePath====>", filePath, fileName);
     fetch(filePath).then(function (t) {
       return t.blob().then((b) => {
         const a = document.createElement("a");

@@ -17,7 +17,6 @@ interface AddActivityPopupProps {
 }
 
 const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) => {
-  // const [docs, setDocs] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string>("...");
   const [prevImg, setPrevImg] = useState<any>(noImg.src);
   const [showMe, setshowMe] = useState<boolean>(false);
@@ -31,11 +30,9 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
   };
 
   const handleUpload = (event: any) => {
-    console.log("handle upload triggered");
     setFileName(event.target.files[0]?.name);
     const file = event.target.files[0];
     setFile(file);
-    console.log("File====>", file);
 
     const fileExtension = file.name.substr(file.name.lastIndexOf("."));
     const size = file.size;
@@ -71,10 +68,6 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
     } else {
       toast.error("File type jpg ,jpeg ,png ,word ,excel ,pdf  is supported");
     }
-
-    // selectedImageArr.push(imageUrl);
-    // setDocs((prev: any) => [...prev, ...selectedImageArr]);
-    // event.target.value = null;
   };
 
   const handleImageError = () => {
@@ -100,7 +93,6 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
   };
 
   const handleBlur = () => {
-    console.log("Textarea value:", description);
     if (description && description.trim() != "") {
       setshowError(false);
     } else {
@@ -110,36 +102,27 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
   };
 
   const publishActivity = async () => {
-    console.log("publishActivity", file, sessionStorage.getItem("CRN"));
     const messageReceipient: any = [];
     // let internal: boolean = true;
     // let registration: any;
-    // angular.forEach($scope.CommonObj.ParticipantList, function (item) {
-    //     if (item.participantType.participantType.toUpperCase() == 'EXTERNAL' ||
-    //         item.participantType.participantType.toUpperCase() == 'EXISTING VENDOR' ||
-    //         item.participantType.participantType.toUpperCase() == 'NEW VENDOR'
-    //         // item.participantType.participantType.toUpperCase() == 'VENDOR ASSOCIATE' ||
-    //         // item.participantType.participantType.toUpperCase() == 'POLICY HOLDER' ||
-    //         // item.participantType.participantType.toUpperCase() == 'GEMLAB ASSOCIATE' ||
-    //         // item.participantType.participantType.toUpperCase() == 'CLAIM REPRESENTATIVE'
-    //     ) {
-    //         internal = false;
-    //         registration = item.vendorRegistration;
-    //         messageReceipient.push({
-    //             "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }, "vendorRegistration": item ? item.vendorRegistration : null
-    //         });
-    //         // if($scope.viewedByAll == true){
-    //         //     messageReceipient.push({
-    //         //         "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }, "vendorRegistration": item ? item.vendorRegistration : null
-    //         //     });
-    //         // }
-    //     }
-    //     else {
-    //         messageReceipient.push({
-    //             "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }
-    //         });
-    //     }
-    // });
+    //checking needed
+    // if (item.participantType.participantType.toUpperCase() == 'EXTERNAL' ||
+    //   item.participantType.participantType.toUpperCase() == 'EXISTING VENDOR' ||
+    //   item.participantType.participantType.toUpperCase() == 'NEW VENDOR'
+    // ) {
+    //   internal = false;
+    //   registration = item.vendorRegistration;
+    //   messageReceipient.push({
+    //     "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }, "vendorRegistration": item ? item.vendorRegistration : null
+    //   });
+    // }
+    // else {
+    //   messageReceipient.push({
+    //     "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }
+    //   });
+    // }
+    //checking needed end
+
     const formData = new FormData();
     formData.append(
       "customActivity",
@@ -172,17 +155,11 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
       formData.append("file", JSON.stringify([]));
     }
 
-    // const response = await fetch('web/claim/add/custom/activitylog', {
-    //     method: 'POST',
-    //     body: formData,
-    // });
-
     const result = await uploadActivityLogData(formData);
     if (result.status == 200) {
       toast.success(result.message);
       handleOpenModal();
     }
-    console.log("uploadActivityLogData====>", result);
   };
 
   return (
@@ -255,7 +232,6 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
 
         <div className={clsx(modalStyle.alignRight, "row col-12 mt-2")}>
           <div className={modalStyle.buttonContStyle}>
-            {/* <div className={clsx("row col-6", modalStyle.centerAlign)}> */}
             <GenericButton
               className={modalStyle.buttonStyle}
               label="Cancel"

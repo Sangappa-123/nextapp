@@ -25,38 +25,44 @@
 
 .itemDetailMsg {
   background: #ecb92d none repeat scroll 0 0;
-  color: #fff;
+  color: #000;
   padding: 6px 5px;
-  border-radius: 5px;
-  width: 49vw;
+  border-radius: 2px;
+  width: 40vw;
   display: inline-block;
-  margin: 0 0 0 30vw;
+  margin: 0 0 0 42vw;
   vertical-align: top;
   margin-top: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .itemDetailMsgSent {
   background: #05728f none repeat scroll 0 0;
   color: #fff;
   padding: 6px 5px;
-  border-radius: 5px;
-  width: 49vw;
+  border-radius: 2px;
+  width: 40vw;
   display: inline-block;
-  margin: 0 0 0 30vw;
+  margin: 0 0 0 42vw;
   vertical-align: top;
   margin-top: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .itemDetailMsgReceived {
   background: #ebebeb none repeat scroll 0 0;
-  color: #fff;
+  color: #000;
   padding: 6px 5px;
-  border-radius: 5px;
-  width: 49vw;
+  border-radius: 2px;
+  width: 40vw;
   display: inline-block;
-  margin: 0 0 0 30vw;
+  margin: 0 0 0 42vw;
   vertical-align: top;
   margin-top: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .dateCont {
@@ -107,7 +113,7 @@
 
 .attCont {
   display: block;
-  margin-left: 30vw;
+  margin-left: 42vw;
   margin-top: 5px;
   width: fit-content;
 }
@@ -120,4 +126,13 @@
   width: fit-content;
   display: inline-block;
   margin-right: 20px;
+}
+
+.showMoreLessBtn {
+  color: #fff;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
 }

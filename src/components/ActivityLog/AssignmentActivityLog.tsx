@@ -18,6 +18,35 @@ import ModalWithoutHeaderPopups from "@/components/common/ModalWithoutHeaderPopu
 interface AssignmentActivityLogProps {
   groupedObjData: any;
 }
+interface ExpandableTextProps {
+  text: any;
+}
+
+const ExpandableText: React.FC<ExpandableTextProps> = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const limit: number = 200;
+  const toggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const displayedText = isExpanded
+    ? text
+    : text.slice(0, limit) + (text.length > limit ? "..." : "");
+
+  return (
+    <div>
+      <p>
+        {displayedText}{" "}
+        {text.length > limit && (
+          <button className={styles.showMoreLessBtn} onClick={toggleExpansion}>
+            {isExpanded ? "Less" : "More"}
+          </button>
+        )}
+      </p>
+    </div>
+  );
+};
+
 const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   groupedObjData,
 }) => {
@@ -51,213 +80,212 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
     setIsModalOpen(false);
   };
 
-  const Ui = groupedObjData[1].map((obj: any, i: React.Key | null | undefined) => {
-    const date = new Date(obj.logCreatedDate);
-    if (obj.activityType == "action") {
-      return (
-        <div key={i} className={styles.d_block}>
-          <h6 className={styles.dateCont}>
-            {"" + date.toLocaleString("en-US", options) + ""}
-          </h6>
-          <h6 className={styles.itemDetailCont}>{obj.message}</h6>
-        </div>
-      );
-    } else if (obj.activityType == "message") {
-      if (obj.messageType == "outgoing") {
-        if (obj.attachments != null) {
-          const DocListView = obj.attachments.map((attachment: any, i: any) => {
-            console.log("attachment======>", attachment);
-            const fileExtension = attachment.url.substr(attachment.url.lastIndexOf("."));
-            let placeHolderImg: any = "";
-            if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
-              placeHolderImg = excelImg.src;
-            } else if (fileExtension.includes("pdf")) {
-              placeHolderImg = pdfImg.src;
-            } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
-              placeHolderImg = docImg.src;
-            } else if (
-              fileExtension.includes("jpg") ||
-              fileExtension.includes("jpeg") ||
-              fileExtension.includes("png")
-            ) {
-              placeHolderImg = obj.attachments[0]?.url;
-            } else {
-              placeHolderImg = unKnownImg.src;
-            }
-            return (
-              <div className={styles.DocViewListSty} key={i}>
-                <img
-                  className={styles.attDoc}
-                  src={placeHolderImg}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", width: "80px" }}
-                />
-                <a onClick={() => openModal(obj)} className={styles.attTitle}>
-                  {obj.attachments[0]?.name}
-                </a>
-              </div>
-            );
-          });
+  const ActivityView = groupedObjData[1].map(
+    (obj: any, i: React.Key | null | undefined) => {
+      const date = new Date(obj.logCreatedDate);
+      if (obj.activityType == "action") {
+        return (
+          <div key={i} className={styles.d_block}>
+            <h6 className={styles.dateCont}>
+              {"" + date.toLocaleString("en-US", options) + ""}
+            </h6>
+            <h6 className={styles.itemDetailCont}>{obj.message}</h6>
+          </div>
+        );
+      } else if (obj.activityType == "message") {
+        if (obj.messageType == "outgoing") {
+          if (obj.attachments != null) {
+            const DocListView = obj.attachments.map((attachment: any, i: any) => {
+              const fileExtension = attachment.url.substr(
+                attachment.url.lastIndexOf(".")
+              );
+              let placeHolderImg: any = "";
+              if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+                placeHolderImg = excelImg.src;
+              } else if (fileExtension.includes("pdf")) {
+                placeHolderImg = pdfImg.src;
+              } else if (
+                fileExtension.includes("doc") ||
+                fileExtension.includes("docx")
+              ) {
+                placeHolderImg = docImg.src;
+              } else if (
+                fileExtension.includes("jpg") ||
+                fileExtension.includes("jpeg") ||
+                fileExtension.includes("png")
+              ) {
+                placeHolderImg = obj.attachments[0]?.url;
+              } else {
+                placeHolderImg = unKnownImg.src;
+              }
+              return (
+                <div className={styles.DocViewListSty} key={i}>
+                  <img
+                    className={styles.attDoc}
+                    src={placeHolderImg}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", width: "80px" }}
+                  />
+                  <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                    {obj.attachments[0]?.name}
+                  </a>
+                </div>
+              );
+            });
 
-          return (
-            <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
-              <div className="">
-                <h6
-                  className={
-                    obj.activityEventName != null
-                      ? styles.itemDetailMsg
-                      : styles.itemDetailMsgSent
-                  }
-                >
-                  {obj.message}
-                </h6>
-                <div className={clsx("", styles.itemDetailProfile)}>
-                  <Image
-                    src={profileImage}
-                    alt="image"
-                    className={styles.profileIcon}
-                    style={{ height: "42px", width: "42px" }}
-                  />
-                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
-                </div>
-              </div>
-              <div className={styles.attCont}>{DocListView}</div>
-            </div>
-          );
-        } else {
-          return (
-            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-              <div className="">
-                <h6
-                  className={
-                    obj.activityEventName != null
-                      ? styles.itemDetailMsg
-                      : styles.itemDetailMsgSent
-                  }
-                >
-                  {obj.message}
-                </h6>
-                <div className={clsx("", styles.itemDetailProfile)}>
-                  <Image
-                    src={profileImage}
-                    alt="image"
-                    className={styles.profileIcon}
-                    style={{ height: "42px", width: "42px" }}
-                  />
-                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
-                </div>
-              </div>
-            </div>
-          );
-        }
-      } else if (obj.messageType == "incoming") {
-        if (obj.attachments != null) {
-          const DocListView = obj.attachments.map((attachment: any, i: any) => {
-            console.log("attachment======>", attachment);
-            const fileExtension = attachment.url.substr(attachment.url.lastIndexOf("."));
-            let placeHolderImg: any = "";
-            if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
-              placeHolderImg = excelImg.src;
-            } else if (fileExtension.includes("pdf")) {
-              placeHolderImg = pdfImg.src;
-            } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
-              placeHolderImg = docImg.src;
-            } else if (
-              fileExtension.includes("jpg") ||
-              fileExtension.includes("jpeg") ||
-              fileExtension.includes("png")
-            ) {
-              placeHolderImg = obj.attachments[0]?.url;
-            } else {
-              placeHolderImg = unKnownImg.src;
-            }
             return (
-              <div className={styles.DocViewListSty} key={i}>
-                <img
-                  className={styles.attDoc}
-                  src={placeHolderImg}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", width: "80px" }}
-                />
-                <a onClick={() => openModal(obj)} className={styles.attTitle}>
-                  {obj.attachments[0]?.name}
-                </a>
+              <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
+                <div className="">
+                  <h6
+                    className={
+                      obj.activityEventName != null
+                        ? styles.itemDetailMsg
+                        : styles.itemDetailMsgSent
+                    }
+                  >
+                    <ExpandableText text={obj.message} />
+                  </h6>
+                  <div className={clsx("", styles.itemDetailProfile)}>
+                    <Image
+                      src={profileImage}
+                      alt="image"
+                      className={styles.profileIcon}
+                      style={{ height: "42px", width: "42px" }}
+                    />
+                    <label className={styles.updateUserName}>
+                      {obj.updatedByUserName}
+                    </label>
+                  </div>
+                </div>
+                <div className={styles.attCont}>{DocListView}</div>
               </div>
             );
-          });
-          // const fileExtension = obj.attachments[0]?.url.substr(
-          //   obj.attachments[0]?.url.lastIndexOf(".")
-          // );
-          // let placeHolderImg: any = "";
-          // if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
-          //   placeHolderImg = excelImg.src;
-          // } else if (fileExtension.includes("pdf")) {
-          //   placeHolderImg = pdfImg.src;
-          // } else if (fileExtension.includes("doc") || fileExtension.includes("docx")) {
-          //   placeHolderImg = docImg.src;
-          // } else if (
-          //   fileExtension.includes("jpg") ||
-          //   fileExtension.includes("jpeg") ||
-          //   fileExtension.includes("png")
-          // ) {
-          //   placeHolderImg = obj.attachments[0]?.url;
-          // } else {
-          //   placeHolderImg = unKnownImg.src;
-          // }
-          return (
-            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-              <div className="">
-                <h6
-                  className={
-                    obj.activityEventName != null
-                      ? styles.itemDetailMsg
-                      : styles.itemDetailMsgReceived
-                  }
-                >
-                  {obj.message}
-                </h6>
-                <div className={clsx("", styles.itemDetailProfile)}>
-                  <Image
-                    src={profileImage}
-                    alt="image"
-                    className={styles.profileIcon}
-                    style={{ height: "42px", width: "42px" }}
-                  />
-                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+          } else {
+            return (
+              <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+                <div className="">
+                  <h6
+                    className={
+                      obj.activityEventName != null
+                        ? styles.itemDetailMsg
+                        : styles.itemDetailMsgSent
+                    }
+                  >
+                    <ExpandableText text={obj.message} />
+                  </h6>
+                  <div className={clsx("", styles.itemDetailProfile)}>
+                    <Image
+                      src={profileImage}
+                      alt="image"
+                      className={styles.profileIcon}
+                      style={{ height: "42px", width: "42px" }}
+                    />
+                    <label className={styles.updateUserName}>
+                      {obj.updatedByUserName}
+                    </label>
+                  </div>
                 </div>
               </div>
-              <div className={styles.attCont}>{DocListView}</div>
-            </div>
-          );
-        } else {
-          return (
-            <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-              <div className="">
-                <h6
-                  className={
-                    obj.activityEventName != null
-                      ? styles.itemDetailMsg
-                      : styles.itemDetailMsgReceived
-                  }
-                >
-                  {obj.message}
-                </h6>
-                <div className={clsx("", styles.itemDetailProfile)}>
-                  <Image
-                    src={profileImage}
-                    alt="image"
-                    className={styles.profileIcon}
-                    style={{ height: "42px", width: "42px" }}
+            );
+          }
+        } else if (obj.messageType == "incoming") {
+          if (obj.attachments != null) {
+            const DocListView = obj.attachments.map((attachment: any, i: any) => {
+              const fileExtension = attachment.url.substr(
+                attachment.url.lastIndexOf(".")
+              );
+              let placeHolderImg: any = "";
+              if (fileExtension.includes("xlsx") || fileExtension.includes("xls")) {
+                placeHolderImg = excelImg.src;
+              } else if (fileExtension.includes("pdf")) {
+                placeHolderImg = pdfImg.src;
+              } else if (
+                fileExtension.includes("doc") ||
+                fileExtension.includes("docx")
+              ) {
+                placeHolderImg = docImg.src;
+              } else if (
+                fileExtension.includes("jpg") ||
+                fileExtension.includes("jpeg") ||
+                fileExtension.includes("png")
+              ) {
+                placeHolderImg = obj.attachments[0]?.url;
+              } else {
+                placeHolderImg = unKnownImg.src;
+              }
+              return (
+                <div className={styles.DocViewListSty} key={i}>
+                  <img
+                    className={styles.attDoc}
+                    src={placeHolderImg}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", width: "80px" }}
                   />
-                  <label className={styles.updateUserName}>{obj.updatedByUserName}</label>
+                  <a onClick={() => openModal(obj)} className={styles.attTitle}>
+                    {obj.attachments[0]?.name}
+                  </a>
+                </div>
+              );
+            });
+            return (
+              <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+                <div className="">
+                  <h6
+                    className={
+                      obj.activityEventName != null
+                        ? styles.itemDetailMsg
+                        : styles.itemDetailMsgReceived
+                    }
+                  >
+                    <ExpandableText text={obj.message} />
+                  </h6>
+                  <div className={clsx("", styles.itemDetailProfile)}>
+                    <Image
+                      src={profileImage}
+                      alt="image"
+                      className={styles.profileIcon}
+                      style={{ height: "42px", width: "42px" }}
+                    />
+                    <label className={styles.updateUserName}>
+                      {obj.updatedByUserName}
+                    </label>
+                  </div>
+                </div>
+                <div className={styles.attCont}>{DocListView}</div>
+              </div>
+            );
+          } else {
+            return (
+              <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
+                <div className="">
+                  <h6
+                    className={
+                      obj.activityEventName != null
+                        ? styles.itemDetailMsg
+                        : styles.itemDetailMsgReceived
+                    }
+                  >
+                    <ExpandableText text={obj.message} />
+                  </h6>
+                  <div className={clsx("", styles.itemDetailProfile)}>
+                    <Image
+                      src={profileImage}
+                      alt="image"
+                      className={styles.profileIcon}
+                      style={{ height: "42px", width: "42px" }}
+                    />
+                    <label className={styles.updateUserName}>
+                      {obj.updatedByUserName}
+                    </label>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          }
         }
       }
     }
-  });
+  );
 
   return (
     <div className={clsx(styles.container, "p-2 row")}>
@@ -282,7 +310,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
             display: showMe ? "block" : "none",
           }}
         >
-          {Ui}
+          {ActivityView}
         </div>
       </div>
       <ModalWithoutHeaderPopups
