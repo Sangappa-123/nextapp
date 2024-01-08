@@ -12,7 +12,8 @@ import {
   getClaimParticipantsList,
   getclaimContents,
   getClaimPolicyInfo,
-} from "@/services/AdjusterPropertyClaimDetailService";
+  getClaimSettlement,
+} from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
 interface propsTypes {
@@ -42,6 +43,8 @@ const AdjusterPropertyClaimDetailContainer: React.FC<propsTypes> = async ({
   const claimRetailerRes: any = await getClaimItemRetailers();
   const claimRoomRes: any = await getClaimItemRoom(claimId);
   const claimRoomTypeRes: any = await getClaimRoomTypeData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const ClaimSettlementRes: any = await getClaimSettlement(claimId);
 
   return (
     <>
