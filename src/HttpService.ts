@@ -6,12 +6,19 @@ class HttpService {
   isClient: boolean;
   isPublic: boolean;
   isFormData: boolean;
+  isArrayBuffer: boolean;
   header: unknownObjectType;
-  constructor(obj?: { isPublic?: boolean; isClient?: boolean; isFormData?: boolean }) {
+  constructor(obj?: {
+    isPublic?: boolean;
+    isClient?: boolean;
+    isFormData?: boolean;
+    isArrayBuffer?: boolean;
+  }) {
     this.accessToken = undefined;
     this.isClient = obj?.isClient ?? false;
     this.isPublic = obj?.isPublic ?? false;
     this.isFormData = obj?.isFormData ?? false;
+    this.isArrayBuffer = obj?.isArrayBuffer ?? false;
     this.header = {
       Accept: "application/json",
       "X-originator": process.env.NEXT_PUBLIC_XORIGINATOR,
@@ -46,7 +53,9 @@ class HttpService {
             // body: JSON.stringify(payload),
             body: bodyData,
           })
-            .then((response) => response.json())
+            .then((response) =>
+              this.isArrayBuffer ? response.arrayBuffer() : response.json()
+            )
             .then((result) => {
               // const data = result?.data;
               return resolve(result);
@@ -59,6 +68,7 @@ class HttpService {
       });
     });
   }
+
   async get(url: string, headers?: object): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
