@@ -17,6 +17,9 @@ import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import CustomLoader from "@/components/common/CustomLoader";
 import AddNewMsgModalComponent from "@/components/common/AddNewMessageModalComponent";
+import { getClaimDetailMessageList } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { PAGINATION_LIMIT_10 } from "@/constants/constants";
+import { addMessageList } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 
 type messagesComponentType = {
   participants: [];
@@ -114,12 +117,29 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
     return formData;
   };
 
+  const fecthMessageList = async () => {
+    const claimDetailMessageListRes: any = await getClaimDetailMessageList(
+      {
+        pageNo: 1,
+        recordPerPage: PAGINATION_LIMIT_10,
+        claimId,
+      },
+      true
+    );
+    if (claimDetailMessageListRes?.data !== null) {
+      dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+    } else {
+      dispatch(addMessageList([]));
+    }
+  };
+
   const handleMessageSubmit = async (data: any) => {
     setShowLoader(true);
     handleOpenModal();
     const formData = constructFormData(data);
     const addMessageResp = await addMessage(formData);
     if (addMessageResp?.status === 200) {
+      fecthMessageList();
       setShowLoader(false);
       dispatch(
         addNotification({

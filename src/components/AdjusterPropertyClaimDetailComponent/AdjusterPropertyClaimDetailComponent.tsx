@@ -58,7 +58,6 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
 }) => {
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
-
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
   }
@@ -67,12 +66,18 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   }
   if (Array.isArray(pendingTaskListRes?.data)) {
     dispatch(addPendingTasks(pendingTaskListRes?.data));
+  } else {
+    dispatch(addPendingTasks([]));
   }
   if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
     dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+  } else {
+    dispatch(addMessageList([]));
   }
   if (Array.isArray(claimParticipantsRes?.data)) {
     dispatch(addParticipants(claimParticipantsRes?.data));
+  } else {
+    dispatch(addParticipants([]));
   }
   if (claimContentsRes?.data) {
     dispatch(addContents(claimContentsRes?.data));
