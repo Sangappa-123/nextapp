@@ -57,8 +57,6 @@ const SearchBox: React.FC<typeProps & connectorType> = ({
             options={formattedCategories}
             onChange={handleCategoryChange}
             value={selectedCategory}
-            // customStyles={customStyles}
-            // hideSelectedOptions={false}
           />
         </div>
       </div>
