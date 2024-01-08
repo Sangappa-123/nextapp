@@ -1,5 +1,22 @@
 @use "@/scss/colors" as *;
 
+.modalOverlay {
+  align-items: flex-start;
+  padding-top: 48px;
+  .modal {
+    animation-name: modal;
+    animation-duration: 0.8s;
+    animation-direction: linear;
+    transform: translateY(0);
+    overflow: hidden;
+  }
+}
+.customComparableModalButton {
+  display: flex;
+  column-gap: 8px;
+  margin-left: auto;
+}
+
 .root {
   max-width: 598px;
   padding: 8px;

@@ -62,6 +62,7 @@ enum apiEndPoints {
   detailedInventoryReportPDF = "web/claim/settlement/PDF",
   coverageSummaryReportPDF = "web/export/claim/category/statistics",
   detailedInventoryReportExcel = "web/export/detailed/inventory",
+  newCustomComparable = "web/add/custom/item",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

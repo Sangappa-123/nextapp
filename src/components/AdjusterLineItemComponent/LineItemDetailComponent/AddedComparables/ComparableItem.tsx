@@ -7,6 +7,7 @@ import StarRating from "@/components/common/StarRating/StarRating";
 import { getUSDCurrency } from "@/utils/utitlity";
 import GenericButton from "@/components/common/GenericButton";
 import { IoMdClose } from "react-icons/io";
+import noImage from "@/assets/images/no-image.png";
 
 type propsType = {
   key: number;
@@ -15,7 +16,7 @@ type propsType = {
 
 function ComparableItem(props: propsType) {
   const { key, data = {} } = props;
-  const imgUrl = data?.imageURL;
+  const imgUrl = data?.imageURL ?? noImage;
 
   const getShortDesc = (desc: string) => {
     if (desc.length > 60) return desc.slice(0, SEARCH_COMPARABLE_DESC_LIMIT) + "...";
