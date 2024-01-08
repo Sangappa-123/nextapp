@@ -15,7 +15,7 @@ import {
   fetchLineItemCatergory,
   fetchLineItemDetail,
   fetchRetailersDetails,
-} from "@/reducers/LineItemDetail/LineItemDetailSlice";
+} from "@/reducers/LineItemDetail/LineItemThunkService";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
@@ -32,6 +32,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchLineItemCatergory,
     fetchCondition,
     fetchRetailersDetails,
+    isFetching = false,
   } = props;
   const { itemId, claimId } = useParams();
   const { ref, inView } = useInView({
@@ -93,6 +94,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
   return (
     <div className={lineItemComponentStyle.root}>
+      {isFetching && <Loading />}
       <div className={lineItemComponentStyle.stickyContainer}>
         <GenericBreadcrumb
           dataList={pathList}
@@ -125,6 +127,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
 const mapStateToProps = (state: RootState) => ({
   isLoading: state[EnumStoreSlice.LINE_ITEM_DETAIL].isLoading,
+  isFetching: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.isFetching,
   lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL].lineItem,
   claimData: state.claimContentdata?.claimContentListData,
 });
