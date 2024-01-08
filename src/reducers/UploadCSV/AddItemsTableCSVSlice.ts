@@ -8,6 +8,7 @@ interface AddItemsTableState {
   categories: any[];
   selectedCategory: string;
   searchKeyword: string;
+  categoryRows: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -18,6 +19,7 @@ const initialState: AddItemsTableState = {
   categories: [],
   selectedCategory: "",
   searchKeyword: "",
+  categoryRows: [],
 };
 
 const AddItemsTableCSVSlice = createSlice({
@@ -32,7 +34,10 @@ const AddItemsTableCSVSlice = createSlice({
       state.isAnyItemSelected = action.payload.length > 0;
     },
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
-      state.selectedRows = action.payload;
+      state.selectedRows = [...state.selectedRows, ...action.payload];
+    },
+    setCategoryRows: (state, action: PayloadAction<any[]>) => {
+      state.categoryRows = [...action.payload];
     },
     setCategories: (state, action: PayloadAction<any[]>) => {
       state.categories = action.payload;
@@ -56,9 +61,10 @@ export const {
   setAddItemsTableData,
   setSelectedItems,
   setSelectedRows,
-  setCategories,
-  setSelectedCategory,
   setSearchKeyword,
   deleteClaimContentListItem,
+  setCategoryRows,
+  setCategories,
+  setSelectedCategory,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

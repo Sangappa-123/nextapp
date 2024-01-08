@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useState } from "react";
 import AddItemsButton from "./AddItemsButton";
 import AddTableSTyle from "./addItemsTableComponent.module.scss";
@@ -15,6 +14,8 @@ import {
   setAddItemsTableData,
   setSelectedItems,
   setSelectedCategory,
+  setSelectedRows,
+  setCategoryRows,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 
@@ -41,10 +42,15 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   };
 
   const handleCheckboxChange = (item: any) => {
+    console.log(item, "handle checkbox running on addItem main file");
+
     const updatedSelectedItems = selectedItems.includes(item)
       ? selectedItems.filter((selectedItem) => selectedItem !== item)
       : [...selectedItems, item];
+    console.log(updatedSelectedItems, "updatedSelectedItems checking");
+
     dispatch(setSelectedItems(updatedSelectedItems));
+    dispatch(setSelectedRows(updatedSelectedItems));
   };
 
   return (
@@ -104,6 +110,8 @@ const mapDispatchToProps = {
   setAddItemsTableData,
   setSelectedItems,
   setSelectedCategory,
+  setSelectedRows,
+  setCategoryRows,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

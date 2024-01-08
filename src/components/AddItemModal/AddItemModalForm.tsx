@@ -19,7 +19,7 @@ import { useParams } from "next/navigation";
 import {
   getClaimItemRoom,
   getSubCategories,
-} from "@/services/AdjusterPropertyClaimDetailService";
+} from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { addSubcategories } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 import { RiArrowLeftCircleFill } from "react-icons/ri";
 import { RiArrowRightCircleFill } from "react-icons/ri";
