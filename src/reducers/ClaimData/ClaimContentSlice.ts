@@ -39,7 +39,7 @@ const ClaimContentSlice = createSlice({
           newArr = {
             ...item,
             statusName: item.status?.status ?? null,
-            categoryName: item.category?.category ?? null,
+            categoryName: item.category?.name ?? null,
             selected: false,
             itemId: item.id,
           };
@@ -138,7 +138,7 @@ const ClaimContentSlice = createSlice({
           newArr = {
             ...item,
             statusName: item.status?.status ?? null,
-            categoryName: item.category?.category ?? null,
+            categoryName: item.category?.name ?? null,
             selected: false,
             itemId: item.id,
           };
