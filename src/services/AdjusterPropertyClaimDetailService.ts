@@ -174,9 +174,9 @@ export const getActivityLogData = async (param: { claimId: string }) => {
 
 export const downloadActivityLogData = async (param: { claimId: string }) => {
   try {
-    const http = new HttpService({ isClient: true });
+    const http = new HttpService({ isClient: true, isArrayBuffer: true });
     const url = getApiEndPoint("downloadActivityLogApi");
-    const resp = await http.postBlob(url, param);
+    const resp = await http.post(url, param);
     return resp;
   } catch (err: any) {
     return err;
