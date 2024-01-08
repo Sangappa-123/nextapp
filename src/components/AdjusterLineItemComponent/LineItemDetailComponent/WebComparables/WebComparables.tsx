@@ -8,7 +8,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "@/store/store";
 import SearchedItem from "./ComparableSearchBox/SearchedItem";
 import { unknownObjectType } from "@/constants/customTypes";
-import { searchComparable } from "@/reducers/LineItemDetail/LineItemDetailSlice";
+import { searchComparable } from "@/reducers/LineItemDetail/LineItemThunkService";
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
 import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
