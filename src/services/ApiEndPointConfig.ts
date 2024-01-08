@@ -55,6 +55,10 @@ enum apiEndPoints {
   activityLogHistoryApi = "web/claim/assignment/history",
   downloadActivityLogApi = "web/export/claim_log/pdf",
   uploadActivityLogDataApi = "web/claim/add/custom/activitylog",
+  newCustomComparable = "web/add/custom/item",
+  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
+  pushNoteApiUrl = "web/push/note",
+  claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

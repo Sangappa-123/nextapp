@@ -5,25 +5,28 @@ import replacementItemStyle from "./replacementItemStyle.module.scss";
 import GenericInput from "@/components/common/GenericInput";
 import clsx from "clsx";
 import SettlementSummarySection from "./SettlementSummarySection";
-
+import { NO_IMAGE } from "@/constants/constants";
 interface replaceItemInterface {
   itemDetail: unknownObjectType;
 }
 
 function ReplacementItem(props: replaceItemInterface) {
   const { itemDetail } = props;
-  console.log("---------", itemDetail);
   return (
     <div className={replacementItemStyle.root}>
       <div className={replacementItemStyle.descriptionDiv}>
         <div className={replacementItemStyle.imageDiv}>
           <Image
             unoptimized={true}
-            src={itemDetail?.imageURL}
+            src={itemDetail?.imageURL ?? NO_IMAGE}
             alt="products"
             fill={true}
             sizes="100%"
             style={{ objectFit: "contain" }}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null;
+              currentTarget.src = NO_IMAGE;
+            }}
           />
         </div>
         <div className={replacementItemStyle.formGroup}>

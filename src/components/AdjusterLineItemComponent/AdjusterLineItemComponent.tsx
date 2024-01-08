@@ -15,10 +15,12 @@ import {
   fetchLineItemCatergory,
   fetchLineItemDetail,
   fetchRetailersDetails,
-} from "@/reducers/LineItemDetail/LineItemDetailSlice";
+} from "@/reducers/LineItemDetail/LineItemThunkService";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+import { useInView } from "react-intersection-observer";
+import RapidItemSection from "./RapidItemSection";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
@@ -30,12 +32,18 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchLineItemCatergory,
     fetchCondition,
     fetchRetailersDetails,
+    isFetching = false,
   } = props;
   const { itemId, claimId } = useParams();
+  const { ref, inView } = useInView({
+    threshold: 0,
+    // rootMargin: "200px",
+  });
+
   const tabData = [
     {
       name: "Item Details",
-      content: <LineItemDetailComponent />,
+      content: <LineItemDetailComponent rapidDivRef={ref} />,
     },
   ];
   const pathList = [
@@ -86,6 +94,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
   return (
     <div className={lineItemComponentStyle.root}>
+      {isFetching && <Loading />}
       <div className={lineItemComponentStyle.stickyContainer}>
         <GenericBreadcrumb
           dataList={pathList}
@@ -107,6 +116,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
             [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
           })}
         />
+        {!inView && isInit.current && <RapidItemSection />}
       </div>
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />
@@ -117,6 +127,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
 const mapStateToProps = (state: RootState) => ({
   isLoading: state[EnumStoreSlice.LINE_ITEM_DETAIL].isLoading,
+  isFetching: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.isFetching,
   lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL].lineItem,
   claimData: state.claimContentdata?.claimContentListData,
 });

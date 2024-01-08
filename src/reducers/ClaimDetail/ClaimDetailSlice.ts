@@ -1,7 +1,8 @@
 import { unknownObjectType } from "@/constants/customTypes";
 import { createSlice } from "@reduxjs/toolkit";
+import EnumStoreSlice from "../EnumStoreSlice";
 
-const initialState: unknownObjectType = {
+export const initialCalimDetailState: unknownObjectType = {
   subCategory: [],
   category: [],
   pendingTaskList: [],
@@ -17,8 +18,8 @@ const initialState: unknownObjectType = {
 };
 
 const ClaimDetailSlice = createSlice({
-  initialState,
-  name: "claimDetail",
+  initialState: initialCalimDetailState,
+  name: EnumStoreSlice.CLAIM_DETAIL,
   reducers: {
     addCategories(state, action) {
       const { payload } = action;
@@ -47,7 +48,7 @@ const ClaimDetailSlice = createSlice({
     },
     addContents(state, action) {
       const { payload } = action;
-      state.constants = { ...state.constants, ...payload };
+      state.contents = { ...payload };
       return state;
     },
     addPolicyInfo(state, action) {
