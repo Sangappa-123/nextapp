@@ -7,7 +7,8 @@ import { updateCliamCategoryFun } from "@/services/AdjusterPropertyClaimDetailSe
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import changeCategoryStyle from "./changeCategoryStyle.module.scss";
 import GenericInput from "../common/GenericInput";
-import { fetchContentList } from "@/services/ClaimContentListService";
+import { claimContentList } from "@/services/ClaimContentListService";
+import { useParams } from "next/navigation";
 
 interface typeProps {
   [key: string | number]: any;
@@ -18,9 +19,11 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
     isModalOpen,
     closeModal,
     category,
-    claimContentListDataFull
+    claimContentListDataFull,
   } = props;
   const [categotyFilter, setCategoryFilter] = useState("");
+
+  const { claimId }: { claimId: string } = useParams();
 
   const updateClaimCategoty = async (data: any) => {
 
@@ -31,16 +34,14 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
     
     const payload ={
       itemIds: selectedClaimsIds,
-      categoryId: data
+      categoryId: parseInt(data)
     }
 
     const updateItemRes = await updateCliamCategoryFun(payload);
-    console.log('updateItemRes 200', updateItemRes)
     if (updateItemRes?.status === 200) {
-        const result = await fetchContentList()
-        console.log('updateItemRes 200', updateItemRes)
-
-        if(result){
+      const payload = { claimId };
+      const claimContentListRes = await claimContentList(payload, true);
+      if (claimContentListRes) {
            props.addNotification({
              message: "Category Updated Successfully",
              id: "update_content_item_success",
@@ -90,8 +91,10 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
                     inputFieldClassname={changeCategoryStyle.inputField}
                     value={item.value}
                     label={item.label}
+                    id={item.label}
                     labelClassname={changeCategoryStyle.labelClassname}
                     onClick={(event:any)=>{updateClaimCategoty(event.target.value)} }
+                    key={item.label}
                   />
                 )
               })}

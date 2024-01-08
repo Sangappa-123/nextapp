@@ -14,7 +14,7 @@ import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailService";
-import { fetchContentList } from "@/services/ClaimContentListService";
+import { claimContentList } from "@/services/ClaimContentListService";
 
 function ContentListComponent(props: any) {
   const {
@@ -26,7 +26,6 @@ function ContentListComponent(props: any) {
     claimContentListDataFull,
     categoryListRes
   } = props;
-  console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
@@ -64,24 +63,25 @@ function ContentListComponent(props: any) {
     setIsModalOpenChangeCat(false);
   };
 
-  const handleStatus = async () => {
+  const handleStatusChanges = async () => {
     const selectedClaims = claimContentListDataFull && claimContentListDataFull.length>0 && claimContentListDataFull.filter(
-      (item: any) =>  item.selected === true
+      (item: any) =>  (item.selected === true && item.status === "CREATED")
     );
     const selectedClaimsIds= selectedClaims && selectedClaims.map((item:any)=>+item.itemId)
     
     const param={
-      claimItems:selectedClaimsIds,
+      claimItems:selectedClaims,
       itemStatus: "VALUED"
     }
     const updateStatusresult = await updateCliamStatus(param);
     console.log("updateStatusresult", updateStatusresult)
     
     if (updateStatusresult?.status === 200) {
-        const contentResult = await fetchContentList()
-        console.log('contentResult', contentResult)
+      const payload = { claimId };
+      const claimContentListRes = await claimContentList(payload, true);        
+      console.log('claimContentListRes', claimContentListRes)
 
-        if(contentResult){
+        if(claimContentListRes){
            props.addNotification({
              message: "Category Updated Successfully",
              id: "update_content_item_success",
@@ -245,7 +245,7 @@ function ContentListComponent(props: any) {
                   >
                     <div className="p-0">
                       <div className={ContentListComponentStyle.dropDownInnerDiv}
-                      onClick={handleStatus}
+                      onClick={handleStatusChanges}
                       >
                         Mark Valued
                       </div>
