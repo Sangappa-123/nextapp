@@ -13,6 +13,7 @@ import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import {
   setAddItemsTableData,
   setSelectedItems,
+  setSelectedCategory,
   setSelectedRows,
   setCategoryRows,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
@@ -102,11 +103,13 @@ const mapStateToProps = (state: RootState) => ({
   addItemsTableData: state.addItemsTable.addItemsTableData,
   selectedItems: state.addItemsTable.selectedItems,
   isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
+  selectedCategory: state.addItemsTable.selectedCategory,
 });
 
 const mapDispatchToProps = {
   setAddItemsTableData,
   setSelectedItems,
+  setSelectedCategory,
   setSelectedRows,
   setCategoryRows,
 };

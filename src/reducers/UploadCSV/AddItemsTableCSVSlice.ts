@@ -5,9 +5,10 @@ interface AddItemsTableState {
   selectedItems: any[];
   isAnyItemSelected: boolean;
   selectedRows: any[];
-  categoryRows: any[];
   categories: any[];
   selectedCategory: string;
+  searchKeyword: string;
+  categoryRows: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -15,9 +16,10 @@ const initialState: AddItemsTableState = {
   selectedItems: [],
   isAnyItemSelected: false,
   selectedRows: [],
-  categoryRows: [],
   categories: [],
   selectedCategory: "",
+  searchKeyword: "",
+  categoryRows: [],
 };
 
 const AddItemsTableCSVSlice = createSlice({
@@ -43,6 +45,15 @@ const AddItemsTableCSVSlice = createSlice({
     setSelectedCategory: (state, action: PayloadAction<string>) => {
       state.selectedCategory = action.payload;
     },
+    setSearchKeyword: (state, action: PayloadAction<string>) => {
+      state.searchKeyword = action.payload;
+    },
+    deleteClaimContentListItem: (state, action: PayloadAction<any>) => {
+      const itemIdToDelete = action.payload.id;
+      state.addItemsTableData = state.addItemsTableData.filter(
+        (item) => item.id !== itemIdToDelete
+      );
+    },
   },
 });
 
@@ -50,6 +61,8 @@ export const {
   setAddItemsTableData,
   setSelectedItems,
   setSelectedRows,
+  setSearchKeyword,
+  deleteClaimContentListItem,
   setCategoryRows,
   setCategories,
   setSelectedCategory,
