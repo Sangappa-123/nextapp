@@ -40,6 +40,13 @@ function convertToDollar(value) {
   }
 }
 
+function convertToPercent(value) {
+  if (value) return `${Number.parseFloat(value).toFixed(2)}`;
+  else {
+    return "0.00";
+  }
+}
+
 interface listData {
   [key: string | number]: any;
 }
@@ -160,7 +167,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     columnHelper.accessor("depreciationPercent", {
       header: () => "Annual Dep%",
       cell: (info) =>
-        info.getValue() && <span>{`{convertToDollar(info.getValue())}%`}</span>,
+        info.getValue() && <span>{`${convertToPercent(info.getValue())}%`}</span>,
     }),
     columnHelper.accessor("depreciationAmount", {
       header: () => "Depreciation $",
