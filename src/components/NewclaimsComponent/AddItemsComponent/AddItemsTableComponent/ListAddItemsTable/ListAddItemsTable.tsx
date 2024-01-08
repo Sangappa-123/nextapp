@@ -39,7 +39,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
 
   const deleteAction = (rowData: any) => {
-    console.log("rrrrrrrrrrrrrr", rowData);
     const payload = {
       id: rowData.id,
       itemUID: rowData.itemUID,
