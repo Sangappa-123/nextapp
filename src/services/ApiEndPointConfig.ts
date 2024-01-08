@@ -54,6 +54,11 @@ enum apiEndPoints {
   updateContentItemApi = "web/claim/update/postlossitem",
   pushNoteApiUrl = "web/push/note",
   claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
+  detailedInventoryReport = "web/report/claim/items/statistics/?claimNum=",
+  coverageSummaryReport = "web/report/claim/category/statistics",
+  detailedInventoryReportPDF = "web/claim/settlement/PDF",
+  coverageSummaryReportPDF = "web/export/claim/category/statistics",
+  detailedInventoryReportExcel = "web/export/detailed/inventory",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

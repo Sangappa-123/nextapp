@@ -29,6 +29,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     editableRowId = null,
     editedData = null,
     handleEditChange = null,
+    showFooter = false,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -211,6 +212,25 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
               </>
             )}
           </tbody>
+          {showFooter && (
+            <tfoot>
+              {table.getFooterGroups() &&
+                table.getFooterGroups().map((footerGroup) => (
+                  <tr key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+            </tfoot>
+          )}
         </table>
         <div className="h-2" />
         {!tableDataErrorMsg && pageLimit && (
