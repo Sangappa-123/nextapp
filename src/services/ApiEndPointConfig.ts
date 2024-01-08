@@ -52,6 +52,8 @@ enum apiEndPoints {
   companyDetailsUrl = "web/company/details",
   addNewRoomApi = "customer/add/room",
   updateContentItemApi = "web/claim/update/postlossitem",
+  pushNoteApiUrl = "web/push/note",
+  claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
   detailedInventoryReport = "web/report/claim/items/statistics/?claimNum=",
   detailedInventoryReportSend = "web/report/send/mail/contentSummary",
   policyholderPayouts = "web/report/claim/itemcost/statistics",
@@ -62,8 +64,6 @@ enum apiEndPoints {
   detailedInventoryReportExcel = "web/export/detailed/inventory",
   newCustomComparable = "web/add/custom/item",
   deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
-  pushNoteApiUrl = "web/push/note",
-  claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

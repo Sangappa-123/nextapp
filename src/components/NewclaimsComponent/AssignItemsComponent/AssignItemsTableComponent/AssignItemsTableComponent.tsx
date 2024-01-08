@@ -17,7 +17,7 @@ interface AssignItemsTableComponentProps {
 
 const AssignItemsTableComponent: React.FC<
   AssignItemsTableComponentProps & connectorType
-> = () => {
+> = (selectedItems) => {
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
@@ -72,6 +72,7 @@ const AssignItemsTableComponent: React.FC<
   };
   return (
     <>
+      {console.log(selectedItems, "selectedItems in assign items file")}
       <Cards className="mt-2">
         <div className="row">
           <div className="col-md-3 col-sm-6 col-12">

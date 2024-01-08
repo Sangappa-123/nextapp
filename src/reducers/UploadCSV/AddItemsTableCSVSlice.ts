@@ -5,6 +5,9 @@ interface AddItemsTableState {
   selectedItems: any[];
   isAnyItemSelected: boolean;
   selectedRows: any[];
+  categoryRows: any[];
+  categories: any[];
+  selectedCategory: string;
 }
 
 const initialState: AddItemsTableState = {
@@ -12,6 +15,9 @@ const initialState: AddItemsTableState = {
   selectedItems: [],
   isAnyItemSelected: false,
   selectedRows: [],
+  categoryRows: [],
+  categories: [],
+  selectedCategory: "",
 };
 
 const AddItemsTableCSVSlice = createSlice({
@@ -26,11 +32,26 @@ const AddItemsTableCSVSlice = createSlice({
       state.isAnyItemSelected = action.payload.length > 0;
     },
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
-      state.selectedRows = action.payload;
+      state.selectedRows = [...state.selectedRows, ...action.payload];
+    },
+    setCategoryRows: (state, action: PayloadAction<any[]>) => {
+      state.categoryRows = [...action.payload];
+    },
+    setCategories: (state, action: PayloadAction<any[]>) => {
+      state.categories = action.payload;
+    },
+    setSelectedCategory: (state, action: PayloadAction<string>) => {
+      state.selectedCategory = action.payload;
     },
   },
 });
 
-export const { setAddItemsTableData, setSelectedItems, setSelectedRows } =
-  AddItemsTableCSVSlice.actions;
+export const {
+  setAddItemsTableData,
+  setSelectedItems,
+  setSelectedRows,
+  setCategoryRows,
+  setCategories,
+  setSelectedCategory,
+} = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;
