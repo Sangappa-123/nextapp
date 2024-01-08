@@ -242,6 +242,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         if (creatClaimRes?.status === 200) {
           sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
           sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
+          sessionStorage.setItem("redirectToNewClaimPage", "true");
           const nextSection = activeSection + 1;
           console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
@@ -278,8 +279,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     setShow(true);
   };
 
-  const handleSectionClick = (index: number) => {
-    dispatch(setActiveSection(index));
+  const handleSectionClick = (index: number, isArrowClick: boolean = false) => {
+    if (!isArrowClick) {
+      dispatch(setActiveSection(index));
+    }
   };
 
   const handleAssignItemsClick = () => {
@@ -306,7 +309,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       <div className="mb-3">
         <NewClaimWizardFormArrow
           activeSection={activeSection}
-          handleSectionClick={handleSectionClick}
+          handleSectionClick={() => handleSectionClick(activeSection)}
         />
       </div>
       {activeSection === 0 && (

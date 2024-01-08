@@ -1,29 +1,40 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import GenericSelect from "@/components/common/GenericSelect";
 import AddItemsDropdownStyle from "./selectBoxAddItems.module.scss";
+import { ConnectedProps, connect } from "react-redux";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import {
+  setCategories,
+  setSelectedCategory,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { RootState } from "@/store/store";
+import { getCategories } from "@/services/ClaimService";
 
-function SelectBoxAddItems(): React.ReactNode {
-  const options = [
-    { value: 1, label: "All" },
-    { value: 2, label: "Appliances" },
-    { value: 3, label: "Art" },
-    { value: 4, label: "Automative and Motorcycle Accessories" },
-  ];
+const SelectBoxAddItems: React.FC<connectorType> = ({
+  categories,
+  setSelectedCategory,
+  selectedCategory,
+}) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await getCategories();
+        console.log("Categories from API:", data);
+        dispatch(setCategories(data));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const customStyles = {
     control: (defaultStyles: any) => ({
       ...defaultStyles,
-      width: "180px",
-      minHeight: "25px",
-      maxHeight: "27px",
-      display: "flex",
-      alignItems: "center",
-      fontSize: "12px",
-      "@media only screen and (min-width: 2560px)": {
-        width: "340px",
-        height: "29px",
-        marginBottom: "0px",
-      },
     }),
     placeholder: (defaultStyles: any) => ({
       ...defaultStyles,
@@ -52,7 +63,26 @@ function SelectBoxAddItems(): React.ReactNode {
         backgroundColor: "#337ab7",
         color: "white",
       },
+      zIndex: 999,
     }),
+  };
+
+  const formattedCategories = [
+    { value: 0, label: "All" },
+    ...categories.map((category) => ({
+      value: category.categoryId,
+      label: category.categoryName,
+    })),
+  ];
+
+  console.log("Formatteddddddddddd", formattedCategories);
+
+  const defaultSelectedValue = formattedCategories.find(
+    (category) => category.label === "All"
+  );
+
+  const handleCategoryChange = (selectedCategory: string) => {
+    dispatch(setSelectedCategory(selectedCategory));
   };
   return (
     <>
@@ -60,13 +90,31 @@ function SelectBoxAddItems(): React.ReactNode {
         <p className={AddItemsDropdownStyle.textAddStyle}>View</p>
         <GenericSelect
           placeholder="Select"
-          options={options}
+          options={formattedCategories}
           customStyles={customStyles}
-          hideSelectedOptions={false}
+          onChange={handleCategoryChange}
+          isSearchable={true}
+          value={
+            selectedCategory && selectedCategory !== "All"
+              ? selectedCategory
+              : defaultSelectedValue
+          }
         />
       </div>
     </>
   );
-}
+};
 
-export default SelectBoxAddItems;
+const mapStateToProps = (state: RootState) => ({
+  categories: state.addItemsTable.categories,
+  selectedCategory: state.addItemsTable.selectedCategory,
+});
+
+const mapDispatchToProps = {
+  setCategories,
+  setSelectedCategory,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(SelectBoxAddItems);
