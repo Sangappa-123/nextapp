@@ -98,7 +98,6 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
     } else {
       setshowError(true);
     }
-    // Your custom logic for blur
   };
 
   const publishActivity = async () => {

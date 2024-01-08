@@ -98,6 +98,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   ];
 
   useEffect(() => {
+    sessionStorage.setItem("redirectToNewClaimPage", "false");
     const getCompanyDetailInit = async () => {
       if (companyId) {
         const companyDetailsRes: any = await getCompanyDetails(companyId);

@@ -102,6 +102,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
 const mapStateToProps = (state: RootState) => ({
   addItemsTableData: state.addItemsTable.addItemsTableData,
   selectedItems: state.addItemsTable.selectedItems,
+  selectedCategory: state.addItemsTable.selectedCategory,
 });
 
 const mapDispatchToProps = {};

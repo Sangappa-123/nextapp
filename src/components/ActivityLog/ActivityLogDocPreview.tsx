@@ -1,11 +1,8 @@
 "use-client";
-// import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import modalStyle from "./ActivityLogDocPreview.module.scss";
 import GenericButton from "@/components/common/GenericButton";
 import Image from "next/image";
-// import { ImPlus } from "react-icons/im";
-// import { ImMinus } from "react-icons/im";
 
 interface ActivityLogDocPreviewProps {
   handleOpenModal: () => void;
@@ -89,7 +86,6 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
     setimageSize(imageSize + 10);
   };
 
-  // disabled={disabledButton}
   return (
     <div className={modalStyle.modalCont}>
       <hr className={modalStyle.hrStyle}></hr>

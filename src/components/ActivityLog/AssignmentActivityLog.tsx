@@ -3,8 +3,6 @@ import styles from "./AssignmentActivityLog.module.scss";
 import clsx from "clsx";
 import { HiOutlineChevronDoubleDown } from "react-icons/hi";
 import { HiOutlineChevronDoubleUp } from "react-icons/hi";
-// import { RootState } from "@/store/store";
-// import { connect } from "react-redux";
 import profileImage from "@/assets/images/user-profile.png";
 import Image from "next/image";
 import excelImg from "@/assets/images/excel-img.png";
@@ -14,7 +12,6 @@ import unKnownImg from "@/assets/images/unknown.png";
 import ActivityLogDocPreview from "./ActivityLogDocPreview";
 import ModalWithoutHeaderPopups from "@/components/common/ModalWithoutHeaderPopups";
 
-// export default function AssignmentActivityLog() {
 interface AssignmentActivityLogProps {
   groupedObjData: any;
 }
@@ -70,10 +67,6 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
     setAttData(data);
     setIsModalOpen(true);
   };
-
-  // const closeModal = () => {
-  //     setIsModalOpen(false);
-  // };
 
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
@@ -324,13 +317,4 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   );
 };
 
-// const mapStateToProps = (state: RootState) => ({
-
-// });
-
-// const mapDispatchToProps = {
-// };
-// const connector = connect(mapStateToProps, mapDispatchToProps);
-// // type connectorType = ConnectedProps<typeof connector>;
-// export default connector(AssignmentActivityLog);
 export default AssignmentActivityLog;

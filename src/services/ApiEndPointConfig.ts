@@ -55,10 +55,18 @@ enum apiEndPoints {
   activityLogHistoryApi = "web/claim/assignment/history",
   downloadActivityLogApi = "web/export/claim_log/pdf",
   uploadActivityLogDataApi = "web/claim/add/custom/activitylog",
-  newCustomComparable = "web/add/custom/item",
-  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
   pushNoteApiUrl = "web/push/note",
   claimSettlementApiUrl = "web/calculate/claim/settlement?claim=",
+  detailedInventoryReport = "web/report/claim/items/statistics/?claimNum=",
+  detailedInventoryReportSend = "web/report/send/mail/contentSummary",
+  policyholderPayouts = "web/report/claim/itemcost/statistics",
+  paymentSummaryTable = "web/report/claim/item/payment/statistics",
+  coverageSummaryReport = "web/report/claim/category/statistics",
+  detailedInventoryReportPDF = "web/claim/settlement/PDF",
+  coverageSummaryReportPDF = "web/export/claim/category/statistics",
+  detailedInventoryReportExcel = "web/export/detailed/inventory",
+  newCustomComparable = "web/add/custom/item",
+  deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
