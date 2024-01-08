@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "@/components/common/ModalPopups";
 import { ConnectedProps, connect } from "react-redux";
 import clsx from "clsx";
-import { updateCliamCategoryFun } from "@/services/AdjusterPropertyClaimDetailService";
+import { updateCliamCategoryFun } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import changeCategoryStyle from "./changeCategoryStyle.module.scss";
 import GenericInput from "../common/GenericInput";

@@ -1,4 +1,4 @@
-import { getApiEndPoint } from "./ApiEndPointConfig";
+import { getApiEndPoint } from "../ApiEndPointConfig";
 import HttpService from "@/HttpService";
 
 export const getCategories = async () => {
@@ -58,9 +58,12 @@ export const getClaimParticipantsList = async (param: { claimId: string }) => {
 export const getclaimContents = async (param: { claimId: string }) => {
   const payload = { id: param?.claimId };
   try {
+    console.log("payload", payload);
+
     const http = new HttpService();
     const url = getApiEndPoint("claimContentsUrl");
     const resp = await http.post(url, payload);
+    console.log("resp", resp);
     return resp;
   } catch (err: any) {
     return err;
@@ -161,6 +164,21 @@ export const getClaimRoomTypeData = async () => {
   }
 };
 
+export const getClaimSettlement = async (claimId: string) => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("claimSettlementApiUrl") + claimId;
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    }
+    return error;
+  } catch (err: any) {
+    return err;
+  }
+};
+
 export const updateCliamCategoryFun = async (param: object) => {
   try {
     const url = getApiEndPoint("updateCliamCategory");
@@ -176,6 +194,7 @@ export const updateCliamCategoryFun = async (param: object) => {
     return err;
   }
 };
+
 export const updateCliamStatus = async (param: object) => {
   try {
     const url = getApiEndPoint("updateCliamStatus");
@@ -191,6 +210,3 @@ export const updateCliamStatus = async (param: object) => {
     return err;
   }
 };
-
-
-

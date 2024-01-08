@@ -13,8 +13,8 @@ import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailService";
 import { claimContentList } from "@/services/ClaimContentListService";
+import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 
 function ContentListComponent(props: any) {
   const {

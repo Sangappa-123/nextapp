@@ -21,9 +21,7 @@ import {
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 import { useEffect } from "react";
 import selectCompanyId from "@/reducers/Session/Selectors/selectCompanyId";
-import { getCompanyDetails } from "@/services/AdjusterPropertyClaimDetailService";
-// import PageTitleSectionComponent from "./PageTitleSectionComponent";
-// import useScroll from "@/hooks/useScrollHook";
+import { getCompanyDetails } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 
 type propsTypes = {
   claimId: string;
@@ -61,7 +59,6 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
 
-  console.log(claimRoomRes);
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
   }
@@ -116,15 +113,12 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
     return (
       <div className="row">
         <div className={claimDetailStyle.stickyContainer}>
-          {/* <PageTitleSectionComponent /> */}
           <GenericBreadcrumb dataList={pathList} />
-          {/* <div className={claimDetailStyle.headingContainer}> */}
           <GenericComponentHeading
             customHeadingClassname={claimDetailStyle.headingContainer}
             customTitleClassname={claimDetailStyle.headingTxt}
             title="Claim# 055CLM5122023Avi - Kumar, Avinash"
           />
-          {/* </div> */}
         </div>
         <div>
           <ClaimDetailTabsComponent

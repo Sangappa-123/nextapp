@@ -33,4 +33,10 @@ const getUSDCurrency = (value: number) => {
   return currency;
 };
 
-export { getClientCookie, getServerCookie, getUSDCurrency };
+const parseFloatWithFixedDecimal = function (number: string | number) {
+  number = Number(number);
+  if (!Number.isNaN(number)) return Math.round((number + Number.EPSILON) * 100) / 100;
+  else return 0;
+};
+
+export { getClientCookie, getServerCookie, getUSDCurrency, parseFloatWithFixedDecimal };

@@ -12,5 +12,6 @@ const translate = {
     }),
 };
 
+//for server side
 export const getTranslate = async (locale: Locale, path: translatePageType) =>
   translate[locale]?.(path) ?? translate[i18n.defaultLocale](path);
