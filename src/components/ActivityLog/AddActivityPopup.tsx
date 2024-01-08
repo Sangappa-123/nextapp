@@ -5,13 +5,14 @@ import { useState } from "react";
 import modalStyle from "./AddActivityPopup.module.scss";
 import GenericButton from "@/components/common/GenericButton";
 import noImg from "@/assets/images/no-image.png";
-import { toast } from "react-toastify";
 import { FaTimesCircle } from "react-icons/fa";
 import excelImg from "@/assets/images/excel-img.png";
 import pdfImg from "@/assets/images/pdf-img.png";
 import docImg from "@/assets/images/word-img.png";
 import unKnownImg from "@/assets/images/unknown.png";
 import { uploadActivityLogData } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 interface AddActivityPopupProps {
   handleOpenModal: () => void;
 }
@@ -24,7 +25,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
   const [description, setDescription] = useState<any>("");
   const [disabledButton, setDisabledButton] = useState<boolean>(true);
   const [file, setFile] = useState<any>(null);
-
+  const dispatch = useAppDispatch();
   const handleAnchorTagClick = () => {
     document.getElementById("FileUpload")?.click();
   };
@@ -63,10 +64,22 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
           setPrevImg(unKnownImg.src);
         }
       } else {
-        toast.error("file size exceeded . Please upload image below 20Mb");
+        dispatch(
+          addNotification({
+            message: "file size exceeded . Please upload image below 20Mb",
+            id: "file_size_error",
+            status: "error",
+          })
+        );
       }
     } else {
-      toast.error("File type jpg ,jpeg ,png ,word ,excel ,pdf  is supported");
+      dispatch(
+        addNotification({
+          message: "File type jpg ,jpeg ,png ,word ,excel ,pdf  is supported",
+          id: "file_type_error",
+          status: "error",
+        })
+      );
     }
   };
 
@@ -156,8 +169,22 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
 
     const result = await uploadActivityLogData(formData);
     if (result.status == 200) {
-      toast.success(result.message);
+      dispatch(
+        addNotification({
+          message: result.message,
+          id: "file_upload_success",
+          status: "success",
+        })
+      );
       handleOpenModal();
+    } else {
+      dispatch(
+        addNotification({
+          message: result.message ?? "Please try again",
+          id: "file_upload_error",
+          status: "error",
+        })
+      );
     }
   };
 
