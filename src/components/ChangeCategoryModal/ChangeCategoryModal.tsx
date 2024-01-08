@@ -7,7 +7,6 @@ import { updateCliamCategoryFun } from "@/services/AdjusterPropertyClaimDetailSe
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import changeCategoryStyle from "./changeCategoryStyle.module.scss";
 import GenericInput from "../common/GenericInput";
-import RadioButtons from "../common/RadioButtons";
 import { fetchContentList } from "@/services/ClaimContentListService";
 
 interface typeProps {
@@ -38,16 +37,17 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
     const updateItemRes = await updateCliamCategoryFun(payload);
     console.log('updateItemRes 200', updateItemRes)
     if (updateItemRes?.status === 200) {
-     const result = await fetchContentList()
+        const result = await fetchContentList()
+        console.log('updateItemRes 200', updateItemRes)
 
-     if(result){
-        props.addNotification({
-          message: "Category Updated Successfully",
-          id: "update_content_item_success",
-          status: "success",
-        });
-      closeModal()
-     }
+        if(result){
+           props.addNotification({
+             message: "Category Updated Successfully",
+             id: "update_content_item_success",
+             status: "success",
+           });
+         closeModal()
+        }
       
     } else {
       props.addNotification({
@@ -58,45 +58,48 @@ const ChangeCategoryModal: React.FC<connectorType & typeProps> = (props: any) =>
     }
   };
 
-  const modalData = category && category?.length > 0 && 
+  const modalData = (category && category?.length > 0 && 
   category.filter((item:any) => item.categoryName.toLowerCase().includes(categotyFilter.toLowerCase()))
   .map((item:any)=>{ 
     return { label: item?.categoryName, value: item?.categoryId } 
-  })
-
-  console.log('props.claimDetail', props.claimDetail)
-  console.log('props.claimContentdata', props.claimContentdata)
+  })) || []
   
   return (
-    <Modal
-      isOpen={isModalOpen}
-      onClose={closeModal}
-      childComp={(
-      <>   
-        <div className={changeCategoryStyle.addItemContainer}>
-          <div className={clsx("col-8 pb-3")}> 
-              <GenericInput
-                placeholder="Search...."
-                id="Search"
-                type="text"
-                value={categotyFilter}
-                onChange={(event:any) => setCategoryFilter(event.target.value)}
-              />
-          </div>
-            <div className={clsx(changeCategoryStyle.radioButtonWrapper, "col-12")}>
-              <RadioButtons 
-                formControlClassname={changeCategoryStyle.formControlClassname}
-                options={modalData} 
-                selectedOption={null} 
-                onChange={(e)=>{updateClaimCategoty(e)} }
-              />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        overlayClassName={changeCategoryStyle.modalContainer}
+        modalWidthClassName={changeCategoryStyle.modalContent}
+        childComp={(
+            <div className={changeCategoryStyle.addItemContainer}>
+              <div className={clsx("col-12 pb-3")}> 
+                  <GenericInput
+                    placeholder="Search...."
+                    id="Search"
+                    type="text"
+                    value={categotyFilter}
+                    onChange={(event:any) => setCategoryFilter(event.target.value)}
+                  />
+              </div>
+              { modalData && modalData.length > 0 && modalData.map((item:any)=>{
+                return(
+                  <GenericInput
+                    type="radio"
+                    formControlClassname={changeCategoryStyle.formControl}
+                    inputFieldWrapperClassName={changeCategoryStyle.wrapper}
+                    inputFieldClassname={changeCategoryStyle.inputField}
+                    value={item.value}
+                    label={item.label}
+                    labelClassname={changeCategoryStyle.labelClassname}
+                    onClick={(event:any)=>{updateClaimCategoty(event.target.value)} }
+                  />
+                )
+              })}
             </div>
-           </div>
-      </>)}
-      headingName="Change Category"
-      modalWidthClassName={changeCategoryStyle.modalWidth}
-    >
-    </Modal>
+        )}
+        headingName="Change Category"
+      >
+      </Modal>
   );
 };
 

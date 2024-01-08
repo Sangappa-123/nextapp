@@ -12,6 +12,9 @@ import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailService";
+import { fetchContentList } from "@/services/ClaimContentListService";
 
 function ContentListComponent(props: any) {
   const {
@@ -60,6 +63,41 @@ function ContentListComponent(props: any) {
   const closeModalChangeCat = () => {
     setIsModalOpenChangeCat(false);
   };
+
+  const handleStatus = async () => {
+    const selectedClaims = claimContentListDataFull && claimContentListDataFull.length>0 && claimContentListDataFull.filter(
+      (item: any) =>  item.selected === true
+    );
+    const selectedClaimsIds= selectedClaims && selectedClaims.map((item:any)=>+item.itemId)
+    
+    const param={
+      claimItems:selectedClaimsIds,
+      itemStatus: "VALUED"
+    }
+    const updateStatusresult = await updateCliamStatus(param);
+    console.log("updateStatusresult", updateStatusresult)
+    
+    if (updateStatusresult?.status === 200) {
+        const contentResult = await fetchContentList()
+        console.log('contentResult', contentResult)
+
+        if(contentResult){
+           props.addNotification({
+             message: "Category Updated Successfully",
+             id: "update_content_item_success",
+             status: "success",
+           });
+         closeModal()
+        }
+      
+    } else {
+      props.addNotification({
+        message:  "Something went wrong.",
+        id: "update_content_item_failure",
+        status: "error",
+      });
+    }
+  }
 
   React.useEffect(() => {
     if (claimContentListDataFull.length > 0) {
@@ -206,7 +244,9 @@ function ContentListComponent(props: any) {
                     clickable={true}
                   >
                     <div className="p-0">
-                      <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                      <div className={ContentListComponentStyle.dropDownInnerDiv}
+                      onClick={handleStatus}
+                      >
                         Mark Valued
                       </div>
 
@@ -284,5 +324,6 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 });
 const mapDispatchToProps = {
   addClaimContentListData,
+  addNotification
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ContentListComponent);
