@@ -4,6 +4,7 @@ enum translatePage {
   securityTranslate = "securityTranslate",
   securityQuestionTranslate = "securityQuestionTranslate",
   resetPasswordTranslate = "resetPasswordTranslate",
+  claimDocumentsTranslate = "claimDocumentsTranslate",
 }
 
 export type translatePageType = keyof typeof translatePage;

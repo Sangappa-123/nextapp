@@ -1,6 +1,7 @@
 import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
+import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 
 type propTypes = {
@@ -29,7 +30,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Documents",
-      content: "",
+      content: <Documents />,
     },
     {
       name: "Claim Participants",
