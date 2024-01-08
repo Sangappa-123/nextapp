@@ -9,6 +9,8 @@ import document from "./documents.module.scss";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
+import useTranslation from "@/hooks/useTranslation";
+import { claimDocumentsTranslateType } from "@/translations/claimDocumentsTranslate/en";
 
 interface MyObject {
   imgType: string;
@@ -116,13 +118,23 @@ export default function LineItemDocuments() {
     );
   };
 
+  const {
+    translate,
+    loading,
+  }: { translate: claimDocumentsTranslateType | undefined; loading: boolean } =
+    useTranslation("claimDocumentsTranslate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className={document.mainDiv}>
       <div className={"col-md-12 col-xs-12 mt-3 p-1"}>
         <div
           className={clsx("col-xs-12 caption font-gray-sharp", document.SubHeadingDiv)}
         >
-          <span>Line Item Documents (0)</span>
+          <span> {translate?.lineItemDocuments ?? ""}</span>
         </div>
         <div className={clsx("row")}>
           <div className={clsx("col-lg-10")}>
@@ -131,7 +143,10 @@ export default function LineItemDocuments() {
                 onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
               >
                 <MdAddCircle className={document.circleButton} />
-                <span className={document.newDocument}>Add a new document</span>{" "}
+                <span className={document.newDocument}>
+                  {" "}
+                  {translate?.addNewDocument ?? ""}
+                </span>{" "}
               </label>
 
               <input
@@ -227,12 +242,11 @@ export default function LineItemDocuments() {
                                 <ConfirmModal
                                   showConfirmation={true}
                                   closeHandler={handleClose}
-                                  submitBtnText="Yes"
-                                  closeBtnText="No"
-                                  childComp="Are you sure you want to delete ? Please Confirm!
-              "
+                                  submitBtnText={translate?.yes ?? ""}
+                                  closeBtnText={translate?.no ?? ""}
+                                  childComp={translate?.deleteMessage ?? ""}
                                   // descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
-                                  modalHeading="Delete"
+                                  modalHeading={translate?.delete ?? ""}
                                   submitHandler={() => handleGetData(index)}
                                 />
                               </div>
@@ -306,20 +320,20 @@ export default function LineItemDocuments() {
                         </div>
                         <div className={clsx("col-lg-4 ", document.uploadNewDocument)}>
                           <span className={document.uploadText}>
-                            upload 1 new document(s)
+                            {translate?.uploadNewDocuments ?? ""}{" "}
                           </span>
                           <div>
                             <button
                               className={document.save}
                               onClick={() => handleSave()}
                             >
-                              save
+                              {translate?.save ?? ""}{" "}
                             </button>
                             <button
                               className={document.cancel}
                               onClick={() => handleDeleteImage(index)}
                             >
-                              cancel
+                              {translate?.cancel ?? ""}
                             </button>
                           </div>
                         </div>
@@ -355,7 +369,7 @@ export default function LineItemDocuments() {
               <div className={document.noDocumentText}>
                 <CgDanger className={document.danger} />
                 <span className={document.documentAavailable}>
-                  No documents available
+                  {translate?.noDocumentAvailable ?? ""}{" "}
                 </span>
               </div>
             </div>

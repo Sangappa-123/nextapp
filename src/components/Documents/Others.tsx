@@ -9,6 +9,8 @@ import document from "./documents.module.scss";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
+import useTranslation from "@/hooks/useTranslation";
+import { claimDocumentsTranslateType } from "@/translations/claimDocumentsTranslate/en";
 
 interface MyObject {
   imgType: string;
@@ -115,6 +117,15 @@ export default function Others() {
     );
   };
 
+  const {
+    translate,
+    loading,
+  }: { translate: claimDocumentsTranslateType | undefined; loading: boolean } =
+    useTranslation("claimDocumentsTranslate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
   return (
     <div className={document.mainDiv}>
       <div className={"col-md-12 col-xs-12 mt-3 p-1"}>
@@ -130,7 +141,9 @@ export default function Others() {
                 onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
               >
                 <MdAddCircle className={document.circleButton} />
-                <span className={document.newDocument}>Add a new document</span>{" "}
+                <span className={document.newDocument}>
+                  {translate?.addNewDocument ?? ""}
+                </span>{" "}
               </label>
 
               <input
@@ -226,11 +239,10 @@ export default function Others() {
                                 <ConfirmModal
                                   showConfirmation={true}
                                   closeHandler={handleClose}
-                                  submitBtnText="Yes"
-                                  closeBtnText="No"
-                                  childComp="Are you sure you want to delete ? Please Confirm!
-                    "
-                                  modalHeading="Delete"
+                                  submitBtnText={translate?.yes ?? ""}
+                                  closeBtnText={translate?.no ?? ""}
+                                  childComp={translate?.deleteMessage ?? ""}
+                                  modalHeading={translate?.delete ?? ""}
                                   submitHandler={() => handleGetData(index)}
                                 />
                               </div>
@@ -304,20 +316,20 @@ export default function Others() {
                         </div>
                         <div className={clsx("col-lg-4 ", document.uploadNewDocument)}>
                           <span className={document.uploadText}>
-                            upload 1 new document(s)
+                            {translate?.uploadNewDocuments ?? ""}
                           </span>
                           <div>
                             <button
                               className={document.save}
                               onClick={() => handleSave()}
                             >
-                              save
+                              {translate?.save ?? ""}
                             </button>
                             <button
                               className={document.cancel}
                               onClick={() => handleDeleteImage(index)}
                             >
-                              cancel
+                              {translate?.cancel ?? ""}
                             </button>
                           </div>
                         </div>
@@ -353,7 +365,7 @@ export default function Others() {
               <div className={document.noDocumentText}>
                 <CgDanger className={document.danger} />
                 <span className={document.documentAavailable}>
-                  No documents available
+                  {translate?.noDocumentAvailable ?? ""}
                 </span>
               </div>
             </div>

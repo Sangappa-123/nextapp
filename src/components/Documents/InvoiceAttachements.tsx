@@ -8,6 +8,8 @@ import AttachementPreview from "../AddItemModal/AttachementPreview/index";
 import document from "./documents.module.scss";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import useTranslation from "@/hooks/useTranslation";
+import { claimDocumentsTranslateType } from "@/translations/claimDocumentsTranslate/en";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 
 interface MyObject {
@@ -22,6 +24,20 @@ export default function InvoiceAttachements() {
   const [imagePreviewType, setImagePreviewType] = useState("");
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [docs, setDocs] = useState<string[]>([]);
+
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    translate,
+    loading,
+  }: { translate: claimDocumentsTranslateType | undefined; loading: boolean } =
+    useTranslation("claimDocumentsTranslate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
 
   const handleUpload = (event: any) => {
     const imageUrl = URL.createObjectURL(event.target.files[0]);
@@ -43,9 +59,6 @@ export default function InvoiceAttachements() {
     event.target.value = null;
   };
 
-  const [docs, setDocs] = useState<string[]>([]);
-
-  const [zoomLevel, setZoomLevel] = useState(100);
   const handleClose = () => {
     setShowModal(false);
   };
@@ -84,7 +97,6 @@ export default function InvoiceAttachements() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = () => {
     setShow(true);
@@ -122,7 +134,7 @@ export default function InvoiceAttachements() {
         <div
           className={clsx("col-xs-12 caption font-gray-sharp", document.SubHeadingDiv)}
         >
-          <span>Invoices Attachments (0)</span>
+          <span>{translate?.invoicesAttachements ?? ""}</span>
         </div>
         <div className={clsx("row")}>
           <div className={clsx("col-lg-10")}>
@@ -131,7 +143,9 @@ export default function InvoiceAttachements() {
                 onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
               >
                 <MdAddCircle className={document.circleButton} />
-                <span className={document.newDocument}>Add a new document</span>{" "}
+                <span className={document.newDocument}>
+                  {translate?.addNewDocument ?? ""}
+                </span>{" "}
               </label>
 
               <input
@@ -227,12 +241,11 @@ export default function InvoiceAttachements() {
                                 <ConfirmModal
                                   showConfirmation={true}
                                   closeHandler={handleClose}
-                                  submitBtnText="Yes"
-                                  closeBtnText="No"
-                                  childComp="Are you sure you want to delete ? Please Confirm!
-                  "
+                                  submitBtnText={translate?.yes ?? ""}
+                                  closeBtnText={translate?.no ?? ""}
+                                  childComp={translate?.deleteMessage ?? ""}
                                   // descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
-                                  modalHeading="Delete"
+                                  modalHeading={translate?.delete ?? ""}
                                   submitHandler={() => handleGetData(index)}
                                 />
                               </div>
@@ -306,20 +319,20 @@ export default function InvoiceAttachements() {
                         </div>
                         <div className={clsx("col-lg-4 ", document.uploadNewDocument)}>
                           <span className={document.uploadText}>
-                            upload 1 new document(s)
+                            {translate?.uploadNewDocuments ?? ""}
                           </span>
                           <div>
                             <button
                               className={document.save}
                               onClick={() => handleSave()}
                             >
-                              save
+                              {translate?.save ?? ""}
                             </button>
                             <button
                               className={document.cancel}
                               onClick={() => handleDeleteImage(index)}
                             >
-                              cancel
+                              {translate?.cancel ?? ""}
                             </button>
                           </div>
                         </div>
@@ -355,7 +368,7 @@ export default function InvoiceAttachements() {
               <div className={document.noDocumentText}>
                 <CgDanger className={document.danger} />
                 <span className={document.documentAavailable}>
-                  No documents available
+                  {translate?.noDocumentAvailable ?? ""}
                 </span>
               </div>
             </div>
