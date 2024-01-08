@@ -15,9 +15,15 @@ import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 interface AddActivityPopupProps {
   handleOpenModal: () => void;
+  addLoader: () => void;
+  removeLoader: () => void;
 }
 
-const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) => {
+const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
+  handleOpenModal,
+  addLoader,
+  removeLoader,
+}) => {
   const [fileName, setFileName] = useState<string>("...");
   const [prevImg, setPrevImg] = useState<any>(noImg.src);
   const [showMe, setshowMe] = useState<boolean>(false);
@@ -114,6 +120,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
   };
 
   const publishActivity = async () => {
+    addLoader();
     const messageReceipient: any = [];
     // let internal: boolean = true;
     // let registration: any;
@@ -169,6 +176,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
 
     const result = await uploadActivityLogData(formData);
     if (result.status == 200) {
+      removeLoader();
       dispatch(
         addNotification({
           message: result.message,
@@ -178,6 +186,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({ handleOpenModal }) 
       );
       handleOpenModal();
     } else {
+      removeLoader();
       dispatch(
         addNotification({
           message: result.message ?? "Please try again",
