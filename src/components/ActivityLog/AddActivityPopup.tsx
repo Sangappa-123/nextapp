@@ -17,12 +17,14 @@ interface AddActivityPopupProps {
   handleOpenModal: () => void;
   addLoader: () => void;
   removeLoader: () => void;
+  translate: any;
 }
 
 const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
   handleOpenModal,
   addLoader,
   removeLoader,
+  translate,
 }) => {
   const [fileName, setFileName] = useState<string>("...");
   const [prevImg, setPrevImg] = useState<any>(noImg.src);
@@ -72,7 +74,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
       } else {
         dispatch(
           addNotification({
-            message: "file size exceeded . Please upload image below 20Mb",
+            message: translate?.addActivityPopup?.fileSizeError,
             id: "file_size_error",
             status: "error",
           })
@@ -81,7 +83,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
     } else {
       dispatch(
         addNotification({
-          message: "File type jpg ,jpeg ,png ,word ,excel ,pdf  is supported",
+          message: translate?.addActivityPopup?.fileSupportError,
           id: "file_type_error",
           status: "error",
         })
@@ -152,7 +154,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
           claimId: sessionStorage.getItem("claimId"),
         },
         participants: messageReceipient,
-        companyURL: sessionStorage.getItem("CRN"),
+        companyURL: localStorage.getItem("CRN"),
         activityEvent: 4,
       })
     );
@@ -189,7 +191,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
       removeLoader();
       dispatch(
         addNotification({
-          message: result.message ?? "Please try again",
+          message: result.message ?? translate?.addActivityPopup?.fileErrorUpload,
           id: "file_upload_error",
           status: "error",
         })
@@ -227,19 +229,17 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
               placeholder="upload Image"
             />
             <a className={modalStyle.uploadAnchor} onClick={handleAnchorTagClick}>
-              Click to add attachment
+              {translate?.addActivityPopup?.addAttachment}
             </a>
             &nbsp;
             <div className={modalStyle.infoTextbox}>
-              <span>
-                The file should be jpg, jpeg, png, word, excel and pdf format and can
-                upload to 20Mb file size.
-              </span>
+              <span>{translate?.addActivityPopup?.helpText}</span>
             </div>
           </div>
           <div className={clsx(modalStyle.descCont, "col-8")}>
             <label htmlFor="desc">
-              <span>*</span>Description
+              <span>*</span>
+              {translate?.addActivityPopup?.inputField?.title}
             </label>
             <textarea
               className={modalStyle.descField}
@@ -249,7 +249,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
               onBlur={handleBlur}
               onChange={handleChange}
               cols={20}
-              placeholder="Description"
+              placeholder={translate?.addActivityPopup?.inputField?.placeholder}
             />
             <div style={{ height: "22px" }}>
               <span
@@ -259,7 +259,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
                   fontSize: "12px",
                 }}
               >
-                Please enter Activity description
+                {translate?.addActivityPopup?.inputField?.error}
               </span>
             </div>
           </div>
@@ -269,14 +269,14 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
           <div className={modalStyle.buttonContStyle}>
             <GenericButton
               className={modalStyle.buttonStyle}
-              label="Cancel"
+              label={translate?.addActivityPopup?.cancelBtn}
               size="medium"
               onClick={handleOpenModal}
             />
             <GenericButton
               disabled={disabledButton}
               className={modalStyle.buttonStyle}
-              label="Publish Activity"
+              label={translate?.addActivityPopup?.submitBtn}
               size="medium"
               onClick={publishActivity}
             />
