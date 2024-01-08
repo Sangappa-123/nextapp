@@ -6,11 +6,13 @@ import GenericButton from "@/components/common/GenericButton";
 import Modal from "@/components/common/ModalPopups";
 import AddActivityPopup from "./AddActivityPopup";
 import AssignmentActivityLog from "./AssignmentActivityLog";
-
 import {
   getActivityLogData,
   downloadActivityLogData,
 } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import Image from "next/image";
+import scrollToTopImg from "@/assets/images/scrollToTop.png";
+import CustomLoader from "@/components/common/CustomLoader";
 
 interface propsTypes {}
 const ActivityLog: React.FC<propsTypes> = () => {
@@ -23,8 +25,10 @@ const ActivityLog: React.FC<propsTypes> = () => {
   };
   let res: any;
   const init = async () => {
+    setIsLoader(true);
     res = await getActivityLogData(payload);
     setAssignmentActivityLogData(res.data);
+    setIsLoader(false);
   };
   useEffect(() => {
     init();
@@ -32,6 +36,15 @@ const ActivityLog: React.FC<propsTypes> = () => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoader, setIsLoader] = useState<boolean>(false);
+
+  const addLoader = () => {
+    setIsModalOpen(true);
+  };
+
+  const removeLoader = () => {
+    setIsModalOpen(false);
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -59,7 +72,7 @@ const ActivityLog: React.FC<propsTypes> = () => {
     {}
   );
   const groupedArray = Object.entries(groupedData);
-  const Ui = groupedArray.map((obj: any, i: React.Key | null | undefined) => {
+  const ContentView = groupedArray.map((obj: any, i: React.Key | null | undefined) => {
     return (
       <div key={i}>
         <AssignmentActivityLog groupedObjData={obj} />
@@ -79,8 +92,16 @@ const ActivityLog: React.FC<propsTypes> = () => {
     document.body.removeChild(link);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className={styles.activityLog}>
+      {isLoader && <CustomLoader loaderType="spinner1" />}
       <div className={styles.heading}>
         <GenericComponentHeading title={"Assignment Activity Log"} />
         <div className={styles.buttonRowContainer}>
@@ -101,11 +122,26 @@ const ActivityLog: React.FC<propsTypes> = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        childComp={<AddActivityPopup handleOpenModal={handleOpenModal} />}
+        childComp={
+          <AddActivityPopup
+            handleOpenModal={handleOpenModal}
+            addLoader={addLoader}
+            removeLoader={removeLoader}
+          />
+        }
         headingName="New Activity"
         modalWidthClassName={styles.modalWidth}
       ></Modal>
-      <div className="row">{Ui}</div>
+      <div className="row">{ContentView}</div>
+      <span className={styles.scrollToTop}>
+        {/* <Image onClick={scrollToTop} style={{ height: "40px", width: "60px" }} alt="scrollTop" "> */}
+        <Image
+          onClick={scrollToTop}
+          src={scrollToTopImg}
+          alt="Go to top"
+          style={{ height: "40px", width: "60px" }}
+        />
+      </span>
     </div>
   );
 };
