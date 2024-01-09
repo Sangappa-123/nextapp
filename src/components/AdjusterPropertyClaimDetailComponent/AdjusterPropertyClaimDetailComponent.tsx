@@ -19,9 +19,15 @@ import {
   addPolicyInfo,
   addCompanyDetails,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import selectCompanyId from "@/reducers/Session/Selectors/selectCompanyId";
 import { getCompanyDetails } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { ConnectedProps, connect } from "react-redux";
+import selectClaimNumber from "@/reducers/ClaimDetail/Selectors/selectClaimNumber";
+import { RootState } from "@/store/store";
+import selectPolicyHolderFirstName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderFirstName";
+import selectPolicyHolderLastName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderLastName";
+import Loading from "@/app/[lang]/loading";
 
 type propsTypes = {
   claimId: string;
@@ -40,7 +46,7 @@ type propsTypes = {
   policyInfoRes: any;
 };
 
-const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
+const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes> = ({
   claimId,
   claimContentListRes,
   serviceRequestListRes,
@@ -55,6 +61,9 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimParticipantsRes,
   claimContentsRes,
   policyInfoRes,
+  claimNumber,
+  firstName,
+  lastName,
 }) => {
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
@@ -96,7 +105,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
       path: "/adjuster-dashboard",
     },
     {
-      name: "055CLM5122023Avi",
+      name: `${claimNumber}`,
       path: "/adjuster-property-claim-details",
       active: true,
     },
@@ -118,14 +127,16 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   if (claimContentListRes?.status === 200 && serviceRequestListRes?.status === 200) {
     return (
       <div className="row">
-        <div className={claimDetailStyle.stickyContainer}>
-          <GenericBreadcrumb dataList={pathList} />
-          <GenericComponentHeading
-            customHeadingClassname={claimDetailStyle.headingContainer}
-            customTitleClassname={claimDetailStyle.headingTxt}
-            title="Claim# 055CLM5122023Avi - Kumar, Avinash"
-          />
-        </div>
+        <Suspense fallback={<Loading />}>
+          <div className={claimDetailStyle.stickyContainer}>
+            <GenericBreadcrumb dataList={pathList} />
+            <GenericComponentHeading
+              customHeadingClassname={claimDetailStyle.headingContainer}
+              customTitleClassname={claimDetailStyle.headingTxt}
+              title={`Claim# ${claimNumber} - ${lastName}, ${firstName}`}
+            />
+          </div>
+        </Suspense>
         <div>
           <ClaimDetailTabsComponent
             serviceRequestListRes={serviceRequestListRes}
@@ -138,4 +149,13 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   }
   return <CustomLoader />;
 };
-export default AdjusterPropertyClaimDetailComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  claimNumber: selectClaimNumber(state),
+  firstName: selectPolicyHolderFirstName(state),
+  lastName: selectPolicyHolderLastName(state),
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AdjusterPropertyClaimDetailComponent);
