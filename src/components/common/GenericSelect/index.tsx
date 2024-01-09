@@ -74,7 +74,12 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
         ...customStyles.option,
       };
     },
-    input: (styles) => ({ ...styles, fontSize: "13px", ...customStyles.input }),
+    input: (styles) => ({
+      ...styles,
+      fontSize: "13px",
+      paddingTop: "0",
+      ...customStyles.input,
+    }),
     placeholder: (styles) => ({
       ...styles,
       fontSize: "13px",
