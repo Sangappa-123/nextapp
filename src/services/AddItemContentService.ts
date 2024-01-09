@@ -2,6 +2,7 @@ import store from "@/store/store";
 import { getApiEndPoint } from "./ApiEndPointConfig";
 import HttpService from "@/HttpService";
 import { addEditItemDetail } from "@/reducers/ClaimData/ClaimContentSlice";
+import { addEditItemDetails } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface objectType {
   [key: string | number]: any;
@@ -137,5 +138,49 @@ export const updateContentItem = async (param: object) => {
     }
   } catch (err) {
     return err;
+  }
+};
+
+export const fetchItemDetails = async (payload: { forEdit: boolean; itemId: number }) => {
+  try {
+    const url = getApiEndPoint("itemsDetails");
+    const http = new HttpService({ isClient: true });
+    const state = store.getState();
+
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      console.log("Successful response", res.data);
+      const addItemsTableData = state.addItemsTable.addItemsTableData;
+
+      const itemIndex = addItemsTableData.findIndex((item: objectType) => {
+        if (item.itemId === payload.itemId) {
+          return true;
+        }
+      });
+      let previousItem = false;
+      let nextItem = false;
+
+      if (itemIndex === 0) {
+        previousItem = false;
+        nextItem = true;
+      } else if (itemIndex === addItemsTableData.length - 1) {
+        nextItem === false;
+        previousItem = true;
+      } else {
+        previousItem = true;
+        nextItem = true;
+      }
+
+      console.log(res.data);
+      store.dispatch(
+        addEditItemDetails({ itemDetailData: res.data, previousItem, nextItem })
+      );
+    }
+
+    return res;
+  } catch (error) {
+    console.warn("Error::", error);
+    throw error;
   }
 };

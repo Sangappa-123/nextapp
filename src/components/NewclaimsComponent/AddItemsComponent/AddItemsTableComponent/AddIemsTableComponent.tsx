@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import AddItemsButton from "./AddItemsButton";
 import AddTableSTyle from "./addItemsTableComponent.module.scss";
 import AssignAddItemButton from "./AssignAddItemButton";
@@ -17,6 +17,7 @@ import {
   setSelectedRows,
   setCategoryRows,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { RootState } from "@/store/store";
 
 interface AddItemsTableComponentProps {
@@ -28,8 +29,12 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   onAssignItemsClick,
   isAnyItemSelected,
   selectedItems,
+  editItemDetail,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
+  // const [tableLoader, setTableLoader] = useState<boolean>(false);
+  const [tableLoader, setTableLoader] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
@@ -38,6 +43,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   };
 
   const closeModal = () => {
+    setEditItem(null);
     setIsModalOpen(false);
   };
 
@@ -57,7 +63,12 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
     <>
       <div className={AddTableSTyle.addItemsContainer}>
         <div className="col-12">
-          <AddItemModal closeModal={closeModal} isModalOpen={isModalOpen} />
+          <AddItemModal
+            closeModal={closeModal}
+            isModalOpen={isModalOpen}
+            editItem={editItem}
+            editItemDetail={editItemDetail}
+          />
         </div>
 
         <div className={`row gx-2 ${AddTableSTyle.addItemsContentContainer}`}>
@@ -93,7 +104,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
         </div>
       </div>
       <div className="row">
-        <ListAddItemsTable onCheckboxChange={handleCheckboxChange} />
+        <ListAddItemsTable
+          onCheckboxChange={handleCheckboxChange}
+          setIsModalOpen={setIsModalOpen}
+          setEditItem={setEditItem}
+          setTableLoader={setTableLoader}
+          tableLoader={tableLoader}
+        />
       </div>
     </>
   );
@@ -104,6 +121,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
   isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
   selectedCategory: state.addItemsTable.selectedCategory,
+  editItemDetail: state.addItemsTable.editItemDetail,
 });
 
 const mapDispatchToProps = {
@@ -112,6 +130,7 @@ const mapDispatchToProps = {
   setSelectedCategory,
   setSelectedRows,
   setCategoryRows,
+  addClaimContentListData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

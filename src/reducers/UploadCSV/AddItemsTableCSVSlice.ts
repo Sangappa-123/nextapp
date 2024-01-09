@@ -9,6 +9,9 @@ interface AddItemsTableState {
   selectedCategory: string;
   searchKeyword: string;
   categoryRows: any[];
+  editItemDetail: object;
+  previousItem: boolean;
+  nextItem: boolean;
 }
 
 const initialState: AddItemsTableState = {
@@ -20,6 +23,9 @@ const initialState: AddItemsTableState = {
   selectedCategory: "",
   searchKeyword: "",
   categoryRows: [],
+  editItemDetail: {},
+  previousItem: false,
+  nextItem: false,
 };
 
 const AddItemsTableCSVSlice = createSlice({
@@ -48,12 +54,80 @@ const AddItemsTableCSVSlice = createSlice({
     setSearchKeyword: (state, action: PayloadAction<string>) => {
       state.searchKeyword = action.payload;
     },
-    deleteClaimContentListItem: (state, action: PayloadAction<any>) => {
+    deleteCategoryListItem: (state, action: PayloadAction<any>) => {
       const itemIdToDelete = action.payload.id;
       state.addItemsTableData = state.addItemsTableData.filter(
         (item) => item.id !== itemIdToDelete
       );
     },
+    addEditItemDetails(state, action) {
+      const { payload } = action;
+      console.log("sssssssssssssssssss", payload);
+      const { itemDetailData, previousItem, nextItem } = payload;
+      const itemData = {
+        claimId: itemDetailData.claimId,
+        itemId: itemDetailData.id,
+        itemUID: itemDetailData.itemUID,
+        itemNumber: itemDetailData.itemNumber,
+        description: itemDetailData.description,
+        quantity: itemDetailData.quantity,
+        insuredPrice: itemDetailData.insuredPrice,
+        category: itemDetailData.category
+          ? {
+              categoryId: itemDetailData.category?.id,
+              categoryName: itemDetailData.category?.name,
+            }
+          : null,
+        subCategory: itemDetailData.subCategory,
+        ageYears: itemDetailData.ageYears,
+        ageMonths: itemDetailData.ageMonths,
+        applyTax: itemDetailData.applyTax,
+        room: itemDetailData.room,
+        condition: itemDetailData.condition,
+        originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
+        isScheduledItem: itemDetailData.isScheduledItem,
+        scheduleAmount: itemDetailData.scheduleAmount,
+        attachments: itemDetailData.attachments,
+      };
+      console.log("ssssssssssssssss", itemData);
+      state.editItemDetail = itemData;
+      state.previousItem = previousItem;
+      state.nextItem = nextItem;
+    },
+    // addEditItemDetaill(state, action) {
+    //   const { payload } = action;
+    //   const { itemDetailData, previousItem, nextItem } = payload;
+
+    //   const itemData = {
+    //     claimId: itemDetailData.claimId,
+    //     itemId: itemDetailData.id,
+    //     itemUID: itemDetailData.itemUID,
+    //     itemNumber: itemDetailData.itemNumber,
+    //     description: itemDetailData.description,
+    //     quantity: itemDetailData.quantity,
+    //     insuredPrice: itemDetailData.insuredPrice,
+    //     category: itemDetailData.category
+    //       ? {
+    //           categoryId: itemDetailData.category?.id,
+    //           categoryName: itemDetailData.category?.name,
+    //         }
+    //       : null,
+    //     subCategory: itemDetailData.subCategory,
+    //     ageYears: itemDetailData.ageYears,
+    //     ageMonths: itemDetailData.ageMonths,
+    //     applyTax: itemDetailData.applyTax,
+    //     room: itemDetailData.room,
+    //     condition: itemDetailData.condition,
+    //     originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
+    //     isScheduledItem: itemDetailData.isScheduledItem,
+    //     scheduleAmount: itemDetailData.scheduleAmount,
+    //     attachments: itemDetailData.attachments,
+    //     selected: false,
+    //   };
+    //   state.editItemDetail = itemData;
+    //   state.previousItem = previousItem;
+    //   state.nextItem = nextItem;
+    // },
   },
 });
 
@@ -62,9 +136,11 @@ export const {
   setSelectedItems,
   setSelectedRows,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
   setCategoryRows,
   setCategories,
   setSelectedCategory,
+  addEditItemDetails,
+  // addEditItemDetaill
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

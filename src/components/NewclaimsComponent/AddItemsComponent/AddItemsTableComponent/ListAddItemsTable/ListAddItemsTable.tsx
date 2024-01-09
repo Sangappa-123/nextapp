@@ -8,6 +8,8 @@ import {
 import CustomReactTable from "@/components/common/CustomReactTable";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import TableLisStyle from "./listAddItems.module.scss";
+import { fetchItemDetails } from "@/services/AddItemContentService";
+// import { fetchClaimContentActionnn } from "@/services/ClaimService";
 import { ConnectedProps, connect } from "react-redux";
 import {
   setAddItemsTableData,
@@ -15,11 +17,12 @@ import {
   setSelectedCategory,
   setCategories,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
+  // setEditItemDetail,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
-import { deleteClaimItem } from "@/services/ClaimContentListService";
+import { deleteCategoryItem } from "@/services/ClaimService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 interface ListAddItemsTableProps {
@@ -27,6 +30,10 @@ interface ListAddItemsTableProps {
   onCheckboxChange: (item: any) => void;
   selectedCategory: string;
   searchKeyword: string;
+  setEditItem: (rowData: any) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
+  setTableLoader: React.Dispatch<React.SetStateAction<boolean>>;
+  tableLoader: any;
 }
 
 const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
@@ -34,9 +41,23 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   onCheckboxChange,
   selectedCategory,
   searchKeyword,
+  setEditItem,
+  setIsModalOpen,
+  tableLoader,
+  setTableLoader,
 }) => {
   const dispatch = useDispatch();
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
+
+  const editAction = async (rowData: any) => {
+    const payload = {
+      forEdit: true,
+      itemId: rowData.id,
+    };
+    await fetchItemDetails(payload);
+    setEditItem(rowData);
+    setIsModalOpen(true);
+  };
 
   const deleteAction = (rowData: any) => {
     const payload = {
@@ -54,29 +75,49 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   const handleDelete = async () => {
     const id = deletePayload?.id;
     console.log("Deleting Item with ID", id);
-    const res = await deleteClaimItem(deletePayload);
-    console.log("Delete Response", res);
-    setDelete(null);
 
-    if (res) {
+    try {
+      setTableLoader(true);
+
+      const res = await deleteCategoryItem(deletePayload);
+      console.log("Delete Response", res);
+
+      if (res) {
+        dispatch(
+          addNotification({
+            message: res ?? "Successfully deleted item.",
+            id,
+            status: "success",
+          })
+        );
+
+        setTimeout(() => {
+          setTableLoader(false);
+        }, 6000);
+        dispatch(deleteCategoryListItem({ id }));
+      } else {
+        dispatch(
+          addNotification({
+            message: "Something went wrong.",
+            id,
+            status: "error",
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error while deleting item", error);
       dispatch(
         addNotification({
-          message: res ?? "Successfully deleted item.",
-          id,
-          status: "success",
-        })
-      );
-      dispatch(deleteClaimContentListItem({ id }));
-    } else {
-      dispatch(
-        addNotification({
-          message: "Something went wrong.",
+          message: "An error occurred while deleting the item.",
           id,
           status: "error",
         })
       );
+    } finally {
+      setDelete(null);
     }
   };
+
   const handleCheckboxChange = (item: any) => {
     console.log("Selected Item", item);
     onCheckboxChange(item);
@@ -173,7 +214,15 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       header: () => `Action`,
       cell: ({ row }) => (
         <div className={TableLisStyle.actionButtons}>
-          <button className={TableLisStyle.editButton}>Edit</button>
+          <button
+            className={TableLisStyle.editButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              editAction(row.original);
+            }}
+          >
+            Edit
+          </button>
           <button
             className={TableLisStyle.deleteButton}
             onClick={(e) => {
@@ -240,7 +289,12 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       )}
       <div className={TableLisStyle.addListTableContainer}>
         {filteredData.length > 0 ? (
-          <CustomReactTable table={table} filteredData={filteredData} />
+          <CustomReactTable
+            table={table}
+            filteredData={filteredData}
+            // loader={setTableLoader}
+            loader={tableLoader}
+          />
         ) : (
           <div className={TableLisStyle.noItemsStyle}>No items available</div>
         )}
@@ -256,6 +310,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedCategory: state.addItemsTable.selectedCategory,
   categories: state.addItemsTable.categories,
   searchKeyword: state.addItemsTable.searchKeyword,
+  // editItemDetail: state.claimContentdata.editItemDetail,
 });
 
 const mapDispatchToProps = {
@@ -264,7 +319,9 @@ const mapDispatchToProps = {
   setSelectedCategory,
   setCategories,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
+  // setEditItemDetail,
+  // fetchAddItemsTableCSVData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
