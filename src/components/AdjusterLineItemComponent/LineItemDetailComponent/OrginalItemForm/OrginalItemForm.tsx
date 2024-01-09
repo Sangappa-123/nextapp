@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
@@ -7,15 +7,30 @@ import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { Controller } from "react-hook-form";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+import { fetchSubCategory } from "@/reducers/LineItemDetail/LineItemThunkService";
+import {
+  updateLineItem,
+  updateOnCategoryChange,
+  updateOnSubCategoryChange,
+} from "@/reducers/LineItemDetail/LineItemDetailSlice";
+import useDebounce from "@/hooks/useDebounce";
 
-interface originalItemTyped {
+interface propType {
   register: any;
   control: any;
   getValues: any;
   setValue: any;
 }
 
-const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => {
+export interface OriginalItemRefType {
+  onRapidCategoryChange: (e: any) => void;
+  onRapidSubCategoryChange: (e: any) => void;
+}
+
+const OrginalItemForm = forwardRef<
+  OriginalItemRefType,
+  React.PropsWithChildren<propType & connectorType>
+>((props, ref) => {
   const {
     lineItem,
     category,
@@ -28,7 +43,16 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
     control,
     getValues,
     setValue,
+    fetchSubCategory,
+    updateOnCategoryChange,
+    updateOnSubCategoryChange,
+    updateLineItem,
   } = props;
+  useImperativeHandle(ref, () => ({
+    onRapidCategoryChange: (e) => setValue("category", e),
+    onRapidSubCategoryChange: (e) => setValue("subCategory", e),
+  }));
+  const debounce = useDebounce(updateLineItem, 500);
 
   const { onChange: quantityOnChange, ...quantityRegister } = register("quantity");
   const { onChange: insuredPriceOnChange, ...insuredPriceRegister } =
@@ -51,8 +75,10 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             id="itemDesc"
             className={orginalItemFormStyle.textarea}
             placeholder="Description"
-            // value={lineItem?.description}
             {...register("description")}
+            onChange={(e: React.FocusEvent<HTMLInputElement>) =>
+              debounce({ description: e.target.value ?? "" })
+            }
           />
         </div>
         <div
@@ -70,28 +96,35 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               <Controller
                 name="category"
                 control={control}
-                render={({ field }: any) => (
+                render={({ field: { onChange: categoryOnChange, ...rest } }: any) => (
                   <GenericSelect
+                    menuPortalTarget={
+                      typeof window !== "undefined" ? document.body : null
+                    }
                     id="category"
                     options={category}
                     getOptionLabel={(option: { categoryName: any }) =>
                       option.categoryName
                     }
                     getOptionValue={(option: { categoryId: any }) => option.categoryId}
-                    {...field}
+                    {...rest}
+                    onChange={(
+                      e: {
+                        categoryId: number;
+                        categoryName: string;
+                        noOfItems: number;
+                      } | null
+                    ) => {
+                      if (e !== null) {
+                        fetchSubCategory(e.categoryId);
+                      }
+                      updateOnCategoryChange(e);
+                      setValue("subCategory", null);
+                      categoryOnChange(e);
+                    }}
                   />
                 )}
               />
-              {/* <GenericSelect
-                id="subCategory"
-                options={category}
-                getOptionLabel={(option: { categoryName: any }) => option.categoryName}
-                getOptionValue={(option: { categoryId: any }) => option.categoryId}
-                selected={{
-                  categoryId: lineItem?.category?.id,
-                  categoryName: lineItem?.category?.name,
-                }}
-              /> */}
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
@@ -100,26 +133,28 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               <Controller
                 name="subCategory"
                 control={control}
-                render={({ field }: any) => (
+                render={({ field: { onChange: subCategoryOnChange, ...rest } }: any) => (
                   <GenericSelect
+                    menuPortalTarget={
+                      typeof window !== "undefined" ? document.body : null
+                    }
                     id="subCategory"
                     options={subCategory}
                     getOptionLabel={(option: { name: string }) => option.name}
                     getOptionValue={(option: { id: number }) => option.id}
-                    {...field}
+                    {...rest}
+                    onChange={(
+                      e: {
+                        id: number;
+                        name: string;
+                      } | null
+                    ) => {
+                      subCategoryOnChange(e);
+                      updateOnSubCategoryChange(e);
+                    }}
                   />
                 )}
               />
-              {/* <GenericSelect
-                id="subCategory"
-                options={subCategory}
-                getOptionLabel={(option: { name: string }) => option.name}
-                getOptionValue={(option: { id: number }) => option.id}
-                selected={{
-                  id: lineItem?.subCategory?.id,
-                  name: lineItem?.subCategory?.name,
-                }}
-              /> */}
             </div>
           </div>
           <div className={orginalItemFormStyle.standardReplacement}>
@@ -135,11 +170,10 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             id="cost_per_unit"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Stated Value(per unit)"
-            // value={lineItem?.insuredPrice}
-            // {...register("insuredPrice")}
             onChange={(e: any) => {
               insuredPriceOnChange(e);
               updateTotalStatedAmount();
+              debounce({ insuredPrice: +(e.target.value ?? 0) });
             }}
             {...insuredPriceRegister}
           />
@@ -152,7 +186,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             id="qty_lost"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Quantity"
-            // {...register("quantity")}
             onChange={(e: React.FocusEvent<HTMLInputElement>) => {
               quantityOnChange(e);
               updateTotalStatedAmount();
@@ -167,8 +200,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
           <GenericInput
             id="total_lost"
             labelClassname={orginalItemFormStyle.label}
-            // value={lineItem?.totalStatedAmount}
-
             disabled={true}
             {...register("totalStatedAmount")}
           />
@@ -180,15 +211,21 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               label="(Years)"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
-              // value={lineItem?.ageYears}
               {...register("ageYears")}
+              onChange={(e: React.FocusEvent<HTMLInputElement>) =>
+                debounce({ ageYears: +(e.target.value ?? 0) })
+              }
             />
             <GenericInput
               label="(Months)"
+              type="number"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
-              // value={lineItem?.ageMonths}
               {...register("ageMonths")}
+              onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+                const month = e.target.value;
+                debounce({ ageMonths: +(month ?? 0) });
+              }}
             />
           </div>
         </div>
@@ -222,7 +259,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             label="Brand / Manufacturer"
             placeholder="Brand"
             labelClassname={orginalItemFormStyle.label}
-            // value={lineItem?.brand}
             {...register("brand")}
           />
         </div>
@@ -231,7 +267,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             label="Model"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Model"
-            // value={lineItem?.model}
             {...register("model")}
           />
         </div>
@@ -241,10 +276,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             orginalItemFormStyle.startFromCol1
           )}
         >
-          {/* <GenericInput
-            label="Purchased From"
-            labelClassname={orginalItemFormStyle.label}
-          /> */}
           <label htmlFor="purchasedFrom" className={orginalItemFormStyle.label}>
             Purchased From
           </label>
@@ -253,6 +284,7 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             control={control}
             render={({ field }: any) => (
               <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
                 id="originallyPurchasedFrom"
                 options={retailer}
                 getOptionLabel={(option: { name: string }) => option.name}
@@ -261,18 +293,8 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               />
             )}
           />
-          {/* <GenericSelect
-            id="purchasedFrom"
-            options={retailer}
-            getOptionLabel={(option: { name: any }) => option.name}
-            getOptionValue={(option: { id: any }) => option.id}
-          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          {/* <GenericInput
-            label="Purchase Method"
-            labelClassname={orginalItemFormStyle.label}
-          /> */}
           <label htmlFor="purchasedMethod" className={orginalItemFormStyle.label}>
             Purchased Method
           </label>
@@ -280,10 +302,14 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             name="purchaseMethod"
             control={control}
             render={({ field }: any) => (
-              <GenericSelect id="purchaseMethod" options={paymentTypes} {...field} />
+              <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                id="purchaseMethod"
+                options={paymentTypes}
+                {...field}
+              />
             )}
           />
-          {/* <GenericSelect id="purchasedMethod" options={paymentTypes} /> */}
         </div>
         <div
           className={clsx(
@@ -291,7 +317,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             orginalItemFormStyle.startFromCol1
           )}
         >
-          {/* <GenericInput label="Condition" labelClassname={orginalItemFormStyle.label} /> */}
           <label htmlFor="condition" className={orginalItemFormStyle.label}>
             Condition
           </label>
@@ -300,6 +325,7 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             control={control}
             render={({ field }: any) => (
               <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
                 id="condition"
                 options={condition}
                 getOptionLabel={(option: { conditionName: any }) => option.conditionName}
@@ -308,19 +334,8 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               />
             )}
           />
-          {/* <GenericSelect
-            id="condition"
-            options={condition}
-            getOptionLabel={(option: { conditionName: any }) => option.conditionName}
-            getOptionValue={(option: { conditionId: any }) => option.conditionId}
-            selected={{
-              conditionId: lineItem?.condition?.conditionId,
-              conditionName: lineItem?.condition?.conditionName,
-            }}
-          /> */}
         </div>
         <div className={orginalItemFormStyle.formGroup}>
-          {/* <GenericInput label="Room" labelClassname={orginalItemFormStyle.label} /> */}
           <label htmlFor="room" className={orginalItemFormStyle.label}>
             Room
           </label>
@@ -329,6 +344,7 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
             control={control}
             render={({ field }: any) => (
               <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
                 id="room"
                 options={room}
                 getOptionLabel={(option: { roomName: any }) => option.roomName}
@@ -337,21 +353,6 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
               />
             )}
           />
-          {/* <GenericSelect
-            id="room"
-            placeholder="Select"
-            options={room}
-            getOptionLabel={(option: { roomName: any }) => option.roomName}
-            getOptionValue={(option: { id: any }) => option.id}
-            selected={
-              lineItem?.room
-                ? {
-                    id: lineItem?.room?.id,
-                    roomName: lineItem?.room?.roomName,
-                  }
-                : null
-            }
-          /> */}
         </div>
         <div
           className={clsx(
@@ -393,7 +394,7 @@ const OrginalItemForm: React.FC<connectorType & originalItemTyped> = (props) => 
       </div>
     </div>
   );
-};
+});
 
 const mapStateToProps = (state: RootState) => ({
   lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem,
@@ -405,6 +406,16 @@ const mapStateToProps = (state: RootState) => ({
   paymentTypes: state[EnumStoreSlice.LINE_ITEM_DETAIL].paymentTypes,
 });
 
-const connector = connect(mapStateToProps, null);
+const mapDispatchToProps = {
+  fetchSubCategory,
+  updateOnCategoryChange,
+  updateLineItem,
+  updateOnSubCategoryChange,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true,
+});
+OrginalItemForm.displayName = "OrginalItemForm";
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(OrginalItemForm);

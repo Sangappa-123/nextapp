@@ -91,13 +91,16 @@ export const getCompanyDetails = async (companyId: string) => {
   }
 };
 
-export const getClaimDetailMessageList = async (param: {
-  pageNo: number;
-  recordPerPage: number;
-  claimId: string;
-}) => {
+export const getClaimDetailMessageList = async (
+  param: {
+    pageNo: number;
+    recordPerPage: number;
+    claimId: string;
+  },
+  isClient?: boolean
+) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     let url = getApiEndPoint("claimDetailMessageList");
     url = `${url}?page=${param?.pageNo}&limit=${param?.recordPerPage}&claim_id=${param?.claimId}`;
     const resp = await http.get(url);

@@ -20,7 +20,9 @@ const PendingVendorCards: React.FC = async () => {
   } catch (error) {
     console.log("getImmediateClaims API error::", error);
   }
-  const pendingInvoices = resp?.filter((inv: any) => inv.invoiceType !== "PolicyHolder");
+  const pendingInvoices = resp?.invoiceBaseDTOS?.filter(
+    (inv: any) => inv.invoiceType !== "PolicyHolder"
+  );
   return (
     <>
       <GenericComponentHeading
