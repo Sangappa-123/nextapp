@@ -20,6 +20,7 @@ import AddNewMsgModalComponent from "@/components/common/AddNewMessageModalCompo
 import { getClaimDetailMessageList } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { PAGINATION_LIMIT_10 } from "@/constants/constants";
 import { addMessageList } from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import { capitalize } from "@/utils/helper";
 
 type messagesComponentType = {
   participants: [];
@@ -40,6 +41,21 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
     setIsOpen(!isOpen);
   };
   const dispatch = useAppDispatch();
+
+  const optionsArray: any = [];
+
+  participants.map((participant: any) => {
+    const companyName = participant?.companyDTO?.companyName
+      ? `${participant?.companyDTO?.companyName} - `
+      : "";
+    optionsArray.push({
+      label: `${participant?.firstName} ${participant?.lastName} (${companyName}${capitalize(
+        participant?.role
+      )})`,
+      value: JSON.stringify({ participant }),
+    });
+  });
+
   const constructFormData = (data: any) => {
     const participantsArray: any = [];
     let internal = true;
@@ -171,7 +187,7 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
           <AddNewMsgModalComponent
             handleOpenModal={handleOpenModal}
             claimId={props.claimId}
-            participants={participants}
+            participants={optionsArray}
             handleMessageSubmit={handleMessageSubmit}
           />
         }
