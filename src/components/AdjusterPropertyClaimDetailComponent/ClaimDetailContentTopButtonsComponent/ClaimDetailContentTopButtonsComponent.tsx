@@ -49,7 +49,7 @@ const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propT
     <div>
       <div className={topButtonStyle.buttonRowContainer}>{buttons}</div>
       <div className="row">
-        <ClaimDetailsCardsComponent />
+        <ClaimDetailsCardsComponent claimId={props.claimId} />
       </div>
       {process.env.NEXT_PUBLIC_SERVICE_REQUESTS === "true" && (
         <div className="row">

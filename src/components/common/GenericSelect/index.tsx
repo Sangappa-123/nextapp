@@ -62,7 +62,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       "&:focus, &:active": {
         border: "1px solid #4169e1",
       },
-      height: "30px",
+      height: !isMulti ? "30px" : "auto",
       minHeight: "30px",
       ...customStyles.control,
     }),
