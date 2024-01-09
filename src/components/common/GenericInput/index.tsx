@@ -74,6 +74,7 @@ function GenericInput(props: propsType, ref: any) {
             // [inputStyle["error-field"]]: showError,
             [inputStyle[inputTheme[theme]]]: true,
             [inputStyle[inputSize[size]]]: true,
+            hideInputArrow: rest?.type === "number",
           })}
           {...rest}
         />

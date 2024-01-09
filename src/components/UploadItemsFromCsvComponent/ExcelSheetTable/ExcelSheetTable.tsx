@@ -35,9 +35,12 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     props;
   console.log("postLossItemDetails", postLossItemDetails);
 
-  const data = React.useMemo(() => postLossItemDetails, [postLossItemDetails]);
+  const data: ExcelTableData[] = React.useMemo(
+    () => postLossItemDetails,
+    [postLossItemDetails]
+  );
   const [editableRowId, setEditableRowId] = useState<number | null>(null);
-  const [editedData, setEditedData] = useState({ ...data });
+  const [editedData, setEditedData] = useState<ExcelTableData>({ ...data[0] });
 
   type ExcelTableData = {
     id: number;
@@ -45,18 +48,20 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     model: string | null;
     description: string;
     ageInYear: number | null;
-    ageInMonth: number | null;
+    ageInMonth: number;
     condition: string | null;
     purchasedFrom: string | null;
     purchasedMethod: string | null;
-    quantity: string | null;
+    quantity: number;
     replacementCost: number;
     roomType: string | null;
     roomName: string | null;
     totalCost: number;
-    category: string | null;
+    category: string;
     subCategory: string | null;
     action: () => void;
+    isValidItem: any;
+    isValidQuantity: any;
   };
 
   const handleSaveRow = async () => {
@@ -72,7 +77,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   };
 
   const handleCancelEdit = async () => {
-    await setEditedData({ ...postLossItemDetails });
+    await setEditedData({ ...postLossItemDetails[0] });
     await setEditableRowId(null);
   };
 
@@ -80,15 +85,57 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     e: React.ChangeEvent<HTMLInputElement>,
     columnName: string
   ) => {
-    await setEditedData({
+    const { value } = e.target;
+    let updatedData: ExcelTableData = {
       ...editedData,
-      [columnName]: e.target.value,
-    });
+      [columnName]: value,
+    } as ExcelTableData;
+    const updateTotalCost = () => {
+      const updatedQuantity =
+        columnName === "quantity" ? parseFloat(value) : editedData?.quantity || 0;
+      const updatedReplacementCost =
+        columnName === "replacementCost"
+          ? parseFloat(value)
+          : editedData?.replacementCost || 0;
+
+      const updatedTotalCost =
+        isNaN(updatedQuantity) || isNaN(updatedReplacementCost)
+          ? 0
+          : updatedQuantity * updatedReplacementCost;
+
+      const isValidItem =
+        updatedData.ageInMonth !== null && updatedData.replacementCost !== null;
+      const isValidQuantity = updatedData.quantity !== null && updatedData.quantity !== 0;
+
+      updatedData = {
+        ...updatedData,
+        totalCost: updatedTotalCost,
+        isValidItem,
+        isValidQuantity,
+      };
+    };
+
+    if (
+      columnName === "quantity" ||
+      columnName === "replacementCost" ||
+      columnName === "ageInMonth"
+    ) {
+      updateTotalCost();
+    }
+
+    await setEditedData(updatedData);
+
+    if (columnName === "quantity" || columnName === "replacementCost") {
+      updateTotalCost();
+      await updateData(updatedData);
+    }
   };
+
   const updateData = async (updatedRow: any) => {
     const updatedPostLossItemDetails = postLossItemDetails.map((row: any) =>
       row.id === updatedRow.id ? updatedRow : row
     );
+
     await setExcelCsvUploadData({
       postLossItemDetails: updatedPostLossItemDetails,
       rowsProcessed: rowsProcessed,
@@ -184,7 +231,7 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
     columnHelper.accessor("totalCost", {
       header: "Total Cost",
       meta: {
-        editableField: true,
+        editableField: false,
       },
     }),
     columnHelper.accessor("category", {

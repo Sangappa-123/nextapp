@@ -8,8 +8,16 @@ import ItemsAssignListTable from "./ItemsAssignListTable";
 import SearchBoxAssignItems from "./SearchBoxAssignItems";
 import VendorSearchBoxAssignItems from "./VendorSearchBoxAssignItems";
 import VendorAssignListTable from "./VendorAssignListTable";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
 
-const AssignItemsTableComponent: React.FC = () => {
+interface AssignItemsTableComponentProps {
+  onNewClaimsClick: () => void;
+}
+
+const AssignItemsTableComponent: React.FC<
+  AssignItemsTableComponentProps & connectorType
+> = (selectedItems) => {
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
@@ -64,6 +72,7 @@ const AssignItemsTableComponent: React.FC = () => {
   };
   return (
     <>
+      {console.log(selectedItems, "selectedItems in assign items file")}
       <Cards className="mt-2">
         <div className="row">
           <div className="col-md-3 col-sm-6 col-12">
@@ -99,7 +108,9 @@ const AssignItemsTableComponent: React.FC = () => {
         </div>
         {/* </div> */}
         <div className={AssignTableSTyle.styleTable}>
-          <ItemsAssignListTable />
+          <ItemsAssignListTable
+          // selectedRowsData={selectedRowsData}
+          />
         </div>
       </Cards>
       <Cards className="mt-2">
@@ -146,8 +157,6 @@ const AssignItemsTableComponent: React.FC = () => {
         </div>
         <div className={`row mt-3 ${AssignTableSTyle.textAreaSyle}`}>
           <textarea
-            // value={text}
-            // onChange={handleChange}
             rows={4}
             cols={50}
             maxLength={1000}
@@ -159,4 +168,14 @@ const AssignItemsTableComponent: React.FC = () => {
     </>
   );
 };
-export default AssignItemsTableComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AssignItemsTableComponent);

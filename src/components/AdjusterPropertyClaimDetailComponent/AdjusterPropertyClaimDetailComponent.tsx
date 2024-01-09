@@ -4,7 +4,7 @@ import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import claimDetailStyle from "./adjuster-property-claim-detail.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import ClaimDetailTabsComponent from "./ClaimDetailTabsComponent";
-import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import {
   addCategories,
   addMessageList,
@@ -12,9 +12,22 @@ import {
   addSubcategories,
   addCondition,
   addRetailer,
+  addRoom,
+  addRoomType,
+  addParticipants,
+  addContents,
+  addPolicyInfo,
+  addCompanyDetails,
 } from "@/reducers/ClaimDetail/ClaimDetailSlice";
-// import PageTitleSectionComponent from "./PageTitleSectionComponent";
-// import useScroll from "@/hooks/useScrollHook";
+import { Suspense, useEffect } from "react";
+import selectCompanyId from "@/reducers/Session/Selectors/selectCompanyId";
+import { getCompanyDetails } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { ConnectedProps, connect } from "react-redux";
+import selectClaimNumber from "@/reducers/ClaimDetail/Selectors/selectClaimNumber";
+import { RootState } from "@/store/store";
+import selectPolicyHolderFirstName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderFirstName";
+import selectPolicyHolderLastName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderLastName";
+import Loading from "@/app/[lang]/loading";
 
 type propsTypes = {
   claimId: string;
@@ -26,9 +39,14 @@ type propsTypes = {
   claimDetailMessageListRes: any;
   claimContitionRes: any;
   claimRetailerRes: any;
+  claimRoomRes: any;
+  claimRoomTypeRes: any;
+  claimParticipantsRes: any;
+  claimContentsRes: any;
+  policyInfoRes: any;
 };
 
-const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
+const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes> = ({
   claimId,
   claimContentListRes,
   serviceRequestListRes,
@@ -38,9 +56,17 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   claimDetailMessageListRes,
   claimContitionRes,
   claimRetailerRes,
+  claimRoomRes,
+  claimRoomTypeRes,
+  claimParticipantsRes,
+  claimContentsRes,
+  policyInfoRes,
+  claimNumber,
+  firstName,
+  lastName,
 }) => {
   const dispatch = useAppDispatch();
-
+  const companyId = useAppSelector(selectCompanyId);
   if (Array.isArray(categoryListRes?.data)) {
     dispatch(addCategories(categoryListRes?.data));
   }
@@ -49,40 +75,68 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   }
   if (Array.isArray(pendingTaskListRes?.data)) {
     dispatch(addPendingTasks(pendingTaskListRes?.data));
+  } else {
+    dispatch(addPendingTasks([]));
   }
   if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
     dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+  } else {
+    dispatch(addMessageList([]));
+  }
+  if (Array.isArray(claimParticipantsRes?.data)) {
+    dispatch(addParticipants(claimParticipantsRes?.data));
+  } else {
+    dispatch(addParticipants([]));
+  }
+  if (claimContentsRes?.data) {
+    dispatch(addContents(claimContentsRes?.data));
+  }
+  if (policyInfoRes?.data) {
+    dispatch(addPolicyInfo(policyInfoRes?.data));
   }
   dispatch(addCondition(claimContitionRes?.data));
-  dispatch(addRetailer(claimRetailerRes?.data));
+  dispatch(addRetailer(claimRetailerRes?.data?.retailers));
+  dispatch(addRoom(claimRoomRes?.data));
+  dispatch(addRoomType(claimRoomTypeRes));
 
   const pathList = [
     {
       name: "Home",
       path: "/adjuster-dashboard",
-      // active: true,
     },
     {
-      name: "055CLM5122023Avi",
+      name: `${claimNumber}`,
       path: "/adjuster-property-claim-details",
       active: true,
     },
   ];
 
+  useEffect(() => {
+    sessionStorage.setItem("redirectToNewClaimPage", "false");
+    const getCompanyDetailInit = async () => {
+      if (companyId) {
+        const companyDetailsRes: any = await getCompanyDetails(companyId);
+        if (companyDetailsRes?.data) {
+          dispatch(addCompanyDetails(companyDetailsRes));
+        }
+      }
+    };
+    getCompanyDetailInit();
+  }, [companyId, dispatch]);
+
   if (claimContentListRes?.status === 200 && serviceRequestListRes?.status === 200) {
     return (
       <div className="row">
-        <div className={claimDetailStyle.stickyContainer}>
-          {/* <PageTitleSectionComponent /> */}
-          <GenericBreadcrumb dataList={pathList} />
-          {/* <div className={claimDetailStyle.headingContainer}> */}
-          <GenericComponentHeading
-            customHeadingClassname={claimDetailStyle.headingContainer}
-            customTitleClassname={claimDetailStyle.headingTxt}
-            title="Claim# 055CLM5122023Avi - Kumar, Avinash"
-          />
-          {/* </div> */}
-        </div>
+        <Suspense fallback={<Loading />}>
+          <div className={claimDetailStyle.stickyContainer}>
+            <GenericBreadcrumb dataList={pathList} />
+            <GenericComponentHeading
+              customHeadingClassname={claimDetailStyle.headingContainer}
+              customTitleClassname={claimDetailStyle.headingTxt}
+              title={`Claim# ${claimNumber} - ${lastName}, ${firstName}`}
+            />
+          </div>
+        </Suspense>
         <div>
           <ClaimDetailTabsComponent
             serviceRequestListRes={serviceRequestListRes}
@@ -95,4 +149,13 @@ const AdjusterPropertyClaimDetailComponent: React.FC<propsTypes> = ({
   }
   return <CustomLoader />;
 };
-export default AdjusterPropertyClaimDetailComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  claimNumber: selectClaimNumber(state),
+  firstName: selectPolicyHolderFirstName(state),
+  lastName: selectPolicyHolderLastName(state),
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(AdjusterPropertyClaimDetailComponent);

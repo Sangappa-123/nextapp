@@ -1,24 +1,24 @@
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
 import { unknownObjectType } from "@/constants/customTypes";
+
+import { createSlice } from "@reduxjs/toolkit";
+import EnumStoreSlice from "../EnumStoreSlice";
 import {
-  getLineItemCategory,
-  getLineItemCondition,
-  getLineItemRetailers,
-  getLineItemRoom,
-  getLineItemSubCategory,
-} from "@/services/AdjusterMyClaimServices/LineItemDetailService";
-import {
-  fetchClaimItemDetails,
-  fetchComparable,
-  searchComparableReq,
-} from "@/services/AdjusterMyClaimServices/LineItemDetailService";
-import { RootState } from "@/store/store";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+  fetchCondition,
+  fetchLineItemCatergory,
+  fetchLineItemDetail,
+  fetchRetailersDetails,
+  fetchRoom,
+  fetchSubCategory,
+  searchComparable,
+} from "./LineItemThunkService";
 
 const initialState: unknownObjectType = {
   isLoading: true,
   isFetching: false,
   lineItem: null,
+  comparableItems: null,
+  replacementItem: null,
   subCategory: [],
   category: [],
   condition: [],
@@ -38,168 +38,15 @@ const initialState: unknownObjectType = {
   },
 };
 
-export const fetchRetailersDetails = createAsyncThunk(
-  "lineItem/retailer",
-  async (_, api) => {
-    const rejectWithValue = api.rejectWithValue;
-    try {
-      const res = await getLineItemRetailers();
-      return res;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchRoom = createAsyncThunk("lineItem/room", async (claim: string, api) => {
-  const rejectWithValue = api.rejectWithValue;
-  try {
-    const res = await getLineItemRoom(claim);
-    return res;
-  } catch (error) {
-    return rejectWithValue(error);
-  }
-});
-
-export const fetchCondition = createAsyncThunk("lineItem/condition", async (_, api) => {
-  const rejectWithValue = api.rejectWithValue;
-  try {
-    const res = await getLineItemCondition();
-    return res;
-  } catch (error) {
-    return rejectWithValue(error);
-  }
-});
-
-export const fetchLineItemCatergory = createAsyncThunk(
-  "lineItem/category",
-  async (_, api) => {
-    const rejectWithValue = api.rejectWithValue;
-    try {
-      const res = await getLineItemCategory();
-      return res;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchSubCategory = createAsyncThunk(
-  "lineItem/subCategory",
-  async (categoryId: number, api) => {
-    const rejectWithValue = api.rejectWithValue;
-    try {
-      const res = await getLineItemSubCategory({ categoryId });
-      return res;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const fetchLineItemDetail = createAsyncThunk(
-  "lineItem/fetchLineItem",
-  async ({ itemId }: { itemId: number }, api) => {
-    const rejectWithValue = api.rejectWithValue;
-    const dispatch = api.dispatch;
-    const state = api.getState() as RootState;
-    try {
-      const res = await fetchClaimItemDetails({ itemId }, true);
-      if (res.status === 200) {
-        const insuredPrice = res.data.insuredPrice;
-        const searchKey = res.data.description;
-        const pincode = res.data.policyHolderPinCode;
-        if (!state.lineItemDetail?.webSearch?.isSearching)
-          dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
-        if (res?.data?.category?.id) {
-          dispatch(fetchSubCategory(res?.data?.category?.id));
-        }
-        if (res?.data?.claimNumber) {
-          dispatch(fetchRoom(res?.data?.claimNumber));
-        }
-      }
-      return res;
-    } catch (err) {
-      return rejectWithValue(err);
-    }
-  }
-);
-
-const getPriceRange = (insuredPrice: number) => {
-  const range = +insuredPrice * 0.2;
-  const priceFrom = +insuredPrice - range;
-  const priceTo = +insuredPrice + range;
-  return { priceFrom, priceTo };
-};
-
-export const searchComparable = createAsyncThunk(
-  "comparable/search",
-  async (
-    payload: {
-      insuredPrice?: number;
-      searchKey?: string;
-      pincode?: number;
-      startPrice?: number;
-      endPrice?: number;
-      isInit?: boolean;
-      selectedEngine?: typeof WEB_SEARCH_ENGINES;
-    },
-    api
-  ) => {
-    const rejectWithValue = api.rejectWithValue;
-    const state = api.getState() as RootState;
-    const dispatch = api.dispatch;
-    try {
-      let { startPrice: priceFrom, endPrice: priceTo } = payload;
-      const selectedEngine =
-        payload.selectedEngine ?? state.lineItemDetail.webSearch?.selectedEngine;
-      const { isInit = false } = payload;
-      const pageNo = 1; // initially pageno is 1
-      if (isInit) {
-        if (!priceFrom && !priceTo) {
-          const calculatedPrice = getPriceRange(payload.insuredPrice ?? 0);
-          priceFrom = +calculatedPrice.priceFrom.toFixed(2);
-          priceTo = +calculatedPrice.priceTo.toFixed(2);
-        }
-      }
-      dispatch(
-        updateWebsearch({
-          ...payload,
-          priceFrom,
-          priceTo,
-          pageNo,
-          isSearching: true,
-          searchList: [],
-          selectedEngine,
-        })
-      );
-      const api_payload: searchComparableReq = {
-        item: payload.searchKey ?? state.lineItemDetail?.webSearch?.searchKey,
-        id: selectedEngine.id,
-        numberOfCounts: 10,
-        priceFrom: priceFrom ?? 0,
-        pincode: payload.pincode ?? state.lineItemDetail?.webSearch?.pincode,
-        pageNo: pageNo ?? state.lineItemDetail?.webSearch?.pageNo,
-        serfWowSearch: true,
-        ids: [1],
-      };
-      if (priceTo) {
-        api_payload.priceTo = priceTo ?? 0;
-      }
-      const res = await fetchComparable(api_payload, true);
-      return res;
-    } catch (err) {
-      return rejectWithValue(err);
-    }
-  }
-);
-
 const LineItemDetailSlice = createSlice({
   initialState,
-  name: "lineItemDetail",
+  name: EnumStoreSlice.LINE_ITEM_DETAIL,
   reducers: {
     resetLineItemDetail() {
       return initialState;
+    },
+    updateLineItem(state, action) {
+      state.lineItem = { ...state.lineItem, ...action.payload };
     },
     updateWebsearch(state, action) {
       const payload = action.payload;
@@ -220,6 +67,28 @@ const LineItemDetailSlice = createSlice({
         ...payload,
       };
     },
+    updateOnCategoryChange(state, action) {
+      const { payload } = action;
+      if (payload) {
+        state.lineItem.category = {
+          ...state.lineItem.category,
+          id: payload.categoryId,
+          name: payload.categoryName,
+          description: payload.description,
+        };
+      }
+      state.lineItem.subCategory = null;
+    },
+    updateOnSubCategoryChange(state, action) {
+      const { payload } = action;
+      if (payload)
+        state.lineItem.subCategory = {
+          ...state.lineItem.subCategory,
+          id: payload.id,
+          name: payload.name,
+        };
+      else state.lineItem.subCategory = null;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchLineItemDetail.pending, (state) => {
@@ -230,6 +99,22 @@ const LineItemDetailSlice = createSlice({
       state.isFetching = false;
       state.isLoading = false;
       if (payload.status === 200) {
+        let tempComparable = null;
+        let tempReplacement = null;
+        if (payload?.data?.comparableItems) {
+          tempComparable = [];
+          for (const item of payload.data.comparableItems) {
+            if (item?.isReplacementItem) {
+              tempReplacement = item;
+            } else {
+              tempComparable.push(item);
+            }
+          }
+        }
+        // state.comparableItems = payload.data?.comparableItems?.filter();
+        state.comparableItems = tempComparable;
+        state.replacementItem = tempReplacement;
+        delete payload?.data?.comparableItems;
         state.lineItem = payload.data;
       }
     });
@@ -311,4 +196,10 @@ const LineItemDetailSlice = createSlice({
 });
 
 export default LineItemDetailSlice;
-export const { resetLineItemDetail, updateWebsearch } = LineItemDetailSlice.actions;
+export const {
+  resetLineItemDetail,
+  updateWebsearch,
+  updateOnCategoryChange,
+  updateLineItem,
+  updateOnSubCategoryChange,
+} = LineItemDetailSlice.actions;

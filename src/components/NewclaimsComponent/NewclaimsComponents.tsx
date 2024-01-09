@@ -1,42 +1,42 @@
 "use client";
-
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import Cards from "../common/Cards/index";
 import { object, email, string, minLength, number, any } from "valibot";
-// import { useRouter } from "next/navigation";
 import useCustomForm from "@/hooks/useCustomForm";
 import NewClaimsStyle from "./newClaimStyle.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
 import PolicyInformation from "../PolicyInformation/PolicyInformation";
 import ClaimInformation from "../ClaimInformation/ClaimInformation";
 import AddItemsComponent from "./AddItemsComponent";
-import AssignItemsComponent from "./AssignItemsComponent";
+import dynamic from "next/dynamic";
 import clsx from "clsx";
-// import { fetchPolicyType, fetchState, validateEmail } from "@/services/ClaimService";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import GenericButton from "../common/GenericButton/index";
 import NewClaimWizardFormArrow from "./NewClaimWizardFormArrow/NewClaimWizardFormArrow";
 import { creatClaim, postClaim } from "@/services/ClaimService";
-import { insuranceSelector } from "@/reducers/Session/SessionSlice";
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
 import { RootState } from "@/store/store";
 import dayjs from "dayjs";
-// import NotifyMessage from "../common/NotifyMessage/NotifyMessage";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-// import { useDispatch } from "react-redux";
 import { ConnectedProps, connect } from "react-redux";
+import { Suspense } from "react";
 import {
   selectActiveSection,
   setActiveSection,
 } from "@/reducers/UploadCSV/navigationSlice";
 import Loading from "@/app/[lang]/loading";
+import selectInsuranceCompanyName from "@/reducers/Session/Selectors/selectInsuranceCompanyName";
+
+const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
+  loading: () => <Loading />,
+});
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
-  // const [activeSection, setActiveSection] = useState(0);
   const dispatch = useAppDispatch();
+  // const router = useRouter();
   const activeSection = useAppSelector(selectActiveSection);
-  const insuranceCompany = useAppSelector(insuranceSelector);
+  const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
 
   console.log("insurancecompany", insuranceCompany);
   const schema = object({
@@ -46,35 +46,18 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     ]),
     lastname: string("lastname", [minLength(1, "Last name can contain only alphabets.")]),
     zipcode: string("zipcode.", [minLength(1, "Enter zip code.")]),
-    // email: string(translate?.errorMsg?.email?.required, [
-    //   minLength(1, translate?.errorMsg?.email?.required),
-    //   email(translate?.errorMsg?.email?.invalid),
-    // ]),
     email: string("email", [email("Please enter valid email.")]),
-    mobilenumber: string(
-      "mobile number"
-      // {
-      //   pattern: {
-      //     value: /^([0-9-,()\s+]{15})$/,
-      // },
-      // }
-    ),
+    mobilenumber: string("mobile number"),
     secondaryPhonenumber: string("secondary phone number"),
     address: string("Address"),
     address1: string("Address one"),
     address2: string("Address two"),
-    // state: object({
-    //   label: string("Select Question", [minLength(1, "Select Question")]),
-    //   value: string("Select Question"),
-    // }),
     state: object({
       state: string("state"),
       id: number("id"),
     }),
     // claim schema
     claim: string("Claim", [minLength(1, "Please enter the claim number.")]),
-    // claimDate: string("claimDate"),
-    // claimDate: object({ date: date("MM-DD-YYYY") }),
 
     claimDate: any(),
     insuranceCompany: string("insurance company"),
@@ -91,10 +74,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       id: number("id"),
       typeName: string("typeName"),
     }),
-    // Category: string("Category"),
-    // indivudualItemLimit: number("indivudualItemLimit"),
-    // aggregateCoverage: number("aggregateCoverage"),
-    // applyTax: string("yes"),
   });
 
   const {
@@ -114,6 +93,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
+  // const [claimNumberr, setClaimNumber] = useState<string | null>(null);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -129,7 +109,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       let PolicyNumber = " ";
       let CustAccNumber = " ";
       const CurrentDate = dayjs().format("MMDDYYYYHHmm");
-      // var CurrentTime = dayjs(new Date()).format("HHmm");
       if (data.firstname !== null && data.lastname !== null) {
         PolicyInitials = data.firstname.charAt(0) + "" + data.lastname.charAt(0);
       }
@@ -150,7 +129,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               "" +
               PolicyInitials.toUpperCase() +
               "" +
-              CurrentDate; // CurrentTime.toString();
+              CurrentDate;
             CustAccNumber =
               "CA" +
               "" +
@@ -164,10 +143,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       }
       console.log("namesss", PolicyNumber);
       console.log("CustAccNumber", CustAccNumber);
-      // getPolicyInfo(e)
-      // .then((res) => {
-      //   console.log('policy', res)
-      // })
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -251,10 +226,8 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         },
       };
       const formData = new FormData();
+      console.log(formData);
       formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
-      // const bodyData = this.isFormData ? payload : JSON.stringify(payload);
-
-      console.log("formData", formData);
       const postlCaimRes = await postClaim(payload);
       if (postlCaimRes?.status === 200) {
         dispatch(
@@ -265,7 +238,11 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           })
         );
         const creatClaimRes = await creatClaim(formData);
+        console.log("ccccccccc", creatClaimRes);
         if (creatClaimRes?.status === 200) {
+          sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
+          sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
+          sessionStorage.setItem("redirectToNewClaimPage", "true");
           const nextSection = activeSection + 1;
           console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
@@ -298,22 +275,19 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       console.error("Error submitting", error);
     }
   };
-
-  // const handleClick = () => {
-  //   console.log("hwlllo");
-  //   router.replace("/adjuster-dashboard");
-  // };
-
   const showConfirmation = () => {
     setShow(true);
   };
 
-  const handleSectionClick = (index: number) => {
-    dispatch(setActiveSection(index));
+  const handleSectionClick = (index: number, isArrowClick: boolean = false) => {
+    if (!isArrowClick) {
+      dispatch(setActiveSection(index));
+    }
   };
 
   const handleAssignItemsClick = () => {
     dispatch(setActiveSection(2));
+    // router.push("/new-claim");
   };
 
   const handlePreviousClick = () => {
@@ -330,18 +304,12 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     reset();
     handleClose();
   };
-
-  // var PolicyInitials = "";
-  // if (getValues("firstname") !== null && getValues("lastname") !== null) {
-  //   PolicyInitials = getValues("firstName");
-  // }
-
   return (
     <div>
       <div className="mb-3">
         <NewClaimWizardFormArrow
           activeSection={activeSection}
-          handleSectionClick={handleSectionClick}
+          handleSectionClick={() => handleSectionClick(activeSection)}
         />
       </div>
       {activeSection === 0 && (
@@ -361,7 +329,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   label="Cancel"
                   theme="normal"
                   size="medium"
-                  // btnClassname={NewClaimsStyle.cancelButton}
                   onClick={showConfirmation}
                 />
               </div>
@@ -370,7 +337,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   label="Reset"
                   theme="normal"
                   size="medium"
-                  // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
                 />
               </div>
@@ -380,7 +346,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   theme="normal"
                   type="submit"
                   size="medium"
-                  // btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
             </div>{" "}
@@ -421,14 +386,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             </div>
             <div className={clsx("row justify-content-end", NewClaimsStyle.downButtons)}>
               <div className="col-auto mt-2">
-                {/* <button className={NewClaimsStyle.cancelButton} onClick={handleClick}>
-                  Cancel
-                </button> */}
                 <GenericButton
                   label="Cancel"
                   theme="normal"
                   size="medium"
-                  // btnClassname={NewClaimsStyle.cancelButton}
                   onClick={showConfirmation}
                 />
               </div>
@@ -437,8 +398,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   label="Reset"
                   theme="normal"
                   size="medium"
-                  // type="submit"
-                  // btnClassname={NewClaimsStyle.resetBtn}
                   onClick={showConfirmation}
                 />
                 {show && (
@@ -461,7 +420,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   theme="normal"
                   type="submit"
                   size="medium"
-                  // btnClassname={NewClaimsStyle.resetBtn}
                 />
               </div>
             </div>
@@ -473,21 +431,23 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           <AddItemsComponent
             onAssignItemsClick={handleAssignItemsClick}
             onNewClaimsClick={handlePreviousClick}
+            // claimNumber={claimNumberr || ""}
           />
         </Cards>
       )}
       {activeSection === 2 && (
         <Suspense fallback={<Loading />}>
           <Cards>
-            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
+            <AssignItemsComponent
+              onNewClaimsClick={handlePreviousClick}
+              // selectedRowsData={[]}
+            />
           </Cards>
         </Suspense>
       )}
     </div>
   );
 };
-
-// export default NewclaimsComponent;
 
 const mapStateToProps = (state: RootState) => ({
   activeSection: state.navigation.activeSection,

@@ -8,9 +8,10 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "@/store/store";
 import SearchedItem from "./ComparableSearchBox/SearchedItem";
 import { unknownObjectType } from "@/constants/customTypes";
-import { searchComparable } from "@/reducers/LineItemDetail/LineItemDetailSlice";
+import { searchComparable } from "@/reducers/LineItemDetail/LineItemThunkService";
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
 import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
+import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 
 export interface searchInputType {
   endPrice: number;
@@ -89,6 +90,7 @@ const WebComparables: React.FC<connectorType> = (props) => {
             <LoadingSkelton />
             <LoadingSkelton />
             <LoadingSkelton />
+            <LoadingSkelton />
           </>
         )}
       </div>
@@ -97,12 +99,12 @@ const WebComparables: React.FC<connectorType> = (props) => {
 };
 
 const mapStateToProps = (state: RootState) => ({
-  isSearching: state.lineItemDetail.webSearch.isSearching,
-  searchList: state.lineItemDetail.webSearch.searchList,
-  priceFrom: state.lineItemDetail.webSearch.priceFrom,
-  priceTo: state.lineItemDetail.webSearch.priceTo,
-  searchKey: state.lineItemDetail.webSearch.searchKey,
-  selectedEngine: state.lineItemDetail.webSearch.selectedEngine,
+  isSearching: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.isSearching,
+  searchList: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.searchList,
+  priceFrom: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.priceFrom,
+  priceTo: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.priceTo,
+  searchKey: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.searchKey,
+  selectedEngine: state[EnumStoreSlice.LINE_ITEM_DETAIL].webSearch.selectedEngine,
 });
 
 const mapDispatchToProps = {

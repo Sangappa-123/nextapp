@@ -7,10 +7,13 @@ import {
 
 import HttpService from "@/HttpService";
 
-export const claimContentList = async (payload: { claimId: string | any }) => {
+export const claimContentList = async (
+  payload: { claimId: string | any },
+  isClient = false
+) => {
   try {
     const url = getApiEndPoint("claimContentList");
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     const res = await http.post(url, payload);
     return res;
   } catch (error) {

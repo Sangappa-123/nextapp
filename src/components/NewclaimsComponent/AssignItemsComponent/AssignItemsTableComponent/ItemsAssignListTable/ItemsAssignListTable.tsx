@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -7,106 +8,119 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableListStyle from "./itemsAssignListTable.module.scss";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "@/store/store";
+import clsx from "clsx";
+import Modal from "@/components/common/ModalPopups";
+import ItemsToAssignTable from "@/components/ItemsToAssignTable";
 
-const ItemsAssignListTable: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  type AddItemsData = {
-    item: string;
+interface ItemsAssignListTableProps {
+  selectedItems: any[];
+  selectedRows: any[];
+}
+const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = (
+  selectedRows
+) => {
+  type AssignItemsData = {
+    itemNumber: string;
     description: string;
-    status: string;
+    status: { status: string };
     qty: string;
     category: string;
-    age: number;
+    ageMonths: number;
     select: boolean;
-    quantity: number;
-    statedValue: string;
-    individualLimit: string;
+    quantity: string;
+    totalStatedAmount: string;
+    individualLimitAmount: string;
     scheduledItem: string;
   };
 
-  const columnHelper = createColumnHelper<AddItemsData>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  console.log(selectedRows, "selectedItems inside assign list table");
+
+  const columnHelper = createColumnHelper<AssignItemsData>();
+  const checkboxAccessor = (data: AssignItemsData) => data.select;
 
   const columns = [
-    columnHelper.accessor("select", {
-      id: "checkbox",
-      header: () => <input type="checkbox" />,
+    columnHelper.accessor(checkboxAccessor, {
+      header: () => (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        </div>
+      ),
+      meta: {},
+      id: "check",
+      enableColumnFilter: false,
       cell: () => (
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-          //   className={TableLisStyle.checkboxInput}
-        />
+        <div
+          className="d-flex justify-content-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            type="checkbox"
+            onChange={() => {
+              // handleCheckboxChange(row.original);
+            }}
+          />
+        </div>
       ),
     }),
-    columnHelper.accessor("item", {
+    columnHelper.accessor("itemNumber", {
       header: () => `Item #`,
     }),
-
     columnHelper.accessor("description", {
       header: () => `Description`,
     }),
     columnHelper.accessor("quantity", {
       header: () => `Quantity`,
     }),
-
-    columnHelper.accessor("statedValue", {
+    columnHelper.accessor("totalStatedAmount", {
       header: () => `Stated Value`,
     }),
-    columnHelper.accessor("age", {
+    columnHelper.accessor("ageMonths", {
       header: () => `Age`,
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-
-    columnHelper.accessor("category", {
+    columnHelper.accessor((data) => data?.category?.name, {
       header: () => `Category`,
+      id: "category",
     }),
-    columnHelper.accessor("individualLimit", {
+    columnHelper.accessor("individualLimitAmount", {
       header: () => `Individual Limit`,
     }),
     columnHelper.accessor("scheduledItem", {
       header: () => `Scheduled Item`,
     }),
-    columnHelper.accessor("status", {
+    columnHelper.accessor((data) => data.status.status, {
       header: () => `Status`,
+      id: "status",
     }),
   ];
 
-  const data: AddItemsData[] = [
-    {
-      item: "Item 1",
-      description: "Description 1",
-      status: "Status1",
-      qty: "qty",
-      category: "category1",
-      age: 1,
-      select: false,
-      quantity: 10,
-      statedValue: "$50",
-      individualLimit: "Yes",
-      scheduledItem: "No",
-    },
-    {
-      item: "Item 1",
-      description: "Description 1",
-      status: "Status1",
-      qty: "qty",
-      category: "category1",
-      age: 1,
-      select: false,
-      quantity: 10,
-      statedValue: "$50",
-      individualLimit: "Yes",
-      scheduledItem: "No",
-    },
-  ];
+  const handleClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const table = useReactTable({
     columns,
-    data,
-    getCoreRowModel: getCoreRowModel<AddItemsData>(),
+    data: selectedRows?.selectedRows,
+    getCoreRowModel: getCoreRowModel(),
     enableSorting: true,
     enableColumnFilters: false,
   });
@@ -114,15 +128,25 @@ const ItemsAssignListTable: React.FC = () => {
   return (
     <>
       <div className={TableListStyle.addListTableContainer}>
-        <CustomReactTable
-          table={table}
-          // totalClaims={props.totalClaims}
-          // pageLimit={pageLimit}
-          // showStatusColor={true}
-          // loader={loader}
-          // tableDataErrorMsg={props.claimErrorMsg}
-        />
+        <div className="col-12">
+          <Modal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            childComp={<ItemsToAssignTable closeModal={closeModal} />}
+            headingName="Items to Assign"
+            overlayClassName={TableListStyle.modalContainer}
+            modalWidthClassName={TableListStyle.modalWidth}
+          ></Modal>
+        </div>
+
+        <CustomReactTable table={table} />
+        {selectedRows?.selectedRows?.length > 10 && (
+          <div className={clsx(TableListStyle.textAlignCenter, "row")}>
+            <a onClick={handleClick}>view all items</a>
+          </div>
+        )}
       </div>
+
       <div className="row">
         <label className={TableListStyle.labelStyles}>Item(s) Summary</label>
       </div>
@@ -141,4 +165,14 @@ const ItemsAssignListTable: React.FC = () => {
   );
 };
 
-export default ItemsAssignListTable;
+const mapStateToProps = (state: RootState) => ({
+  addItemsTableData: state.addItemsTable.addItemsTableData,
+  selectedItems: state.addItemsTable.selectedItems,
+  selectedRows: state.addItemsTable.selectedRows,
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ItemsAssignListTable);

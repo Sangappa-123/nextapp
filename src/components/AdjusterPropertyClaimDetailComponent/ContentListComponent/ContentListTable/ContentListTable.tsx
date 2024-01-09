@@ -22,6 +22,7 @@ import CustomReactTable from "@/components/common/CustomReactTable/index";
 import {
   updateClaimContentListData,
   clearFilter,
+  updateClaimContentListFullData,
 } from "@/reducers/ClaimData/ClaimContentSlice";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import Modal from "@/components/common/ModalPopups";
@@ -29,7 +30,7 @@ import ConversationModal from "../ConversationModal";
 import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
-
+import { sortBy } from "lodash";
 interface typeProps {
   [key: string | number]: any;
 }
@@ -45,6 +46,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     setIsModalOpen,
     setEditItem,
     claimContentListDataFull,
+    updateClaimContentListFullData,
   } = props;
   const { claimId } = useParams();
   const router = useRouter();
@@ -94,8 +96,10 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
               <input
                 type="checkbox"
                 className={ContentListTableStyle.checkbox}
+                checked={claimContentListData.every((item: any) => item.selected)}
                 onChange={(e) => {
                   e.stopPropagation();
+                  handleSelectAll(e);
                 }}
               />
             </div>
@@ -105,7 +109,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           },
           id: "check",
           enableColumnFilter: false,
-          cell: () => (
+          cell: ({ row }) => (
             <div
               className="d-flex justify-content-center"
               onClick={(e) => {
@@ -115,9 +119,12 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
               <input
                 type="checkbox"
                 className={ContentListTableStyle.checkbox}
+                checked={row.original.selected}
                 onChange={(e) => {
                   e.stopPropagation();
+                  handleRowSelect(row.original.itemId);
                 }}
+                disabled={row.original.statusName === "SETTLED"}
               />
             </div>
           ),
@@ -127,13 +134,13 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           id: "item",
           enableColumnFilter: false,
         }),
-        columnHelper.accessor("status", {
+        columnHelper.accessor("statusName", {
           header: () => "Status", // filter option true should have same id as value
-          id: "status",
+          id: "statusName",
         }),
-        columnHelper.accessor("category", {
+        columnHelper.accessor("categoryName", {
           header: () => "Catogory", // filter option true should have same id as value
-          id: "category",
+          id: "categoryName",
         }),
       ],
     }),
@@ -229,7 +236,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
                   <RiFileEditFill color="grey" size="20px" />
                 </div>
 
-                {row.original.status === "CREATED" && (
+                {row.original.statusName === "CREATED" && (
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
@@ -247,6 +254,45 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       ],
     }),
   ];
+
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedClaimList = claimContentListData.map((item: any) => ({
+      ...item,
+      selected: event.target.checked,
+    }));
+    updateClaimContentListData({ claimContentList: updatedClaimList });
+    const mergedArray = [
+      ...updatedClaimList,
+      ...claimContentListDataFull.filter(
+        (item: any) =>
+          !updatedClaimList.some((newItem: any) => newItem.itemId === item.itemId)
+      ),
+    ];
+    const sorted_array = sortBy(mergedArray, ["itemNumber"]);
+
+    updateClaimContentListFullData({ claimContentListFull: sorted_array });
+
+    setClaimResult([...updatedClaimList.slice(0, fetchSize)]);
+  };
+
+  const handleRowSelect = (itemId: any) => {
+    const updatedClaimList = claimResult.map((item: any) =>
+      item.itemId === itemId ? { ...item, selected: !item.selected } : item
+    );
+    setClaimResult(updatedClaimList);
+
+    const updatedclaimContentListData = claimContentListData.map((item: any) =>
+      item.itemId === itemId ? { ...item, selected: !item.selected } : item
+    );
+    updateClaimContentListData({ claimContentList: updatedclaimContentListData });
+
+    const updatedclaimContentListDataFull = claimContentListDataFull.map((item: any) =>
+      item.itemId === itemId ? { ...item, selected: !item.selected } : item
+    );
+    updateClaimContentListFullData({
+      claimContentListFull: updatedclaimContentListDataFull,
+    });
+  };
 
   const editAction = async (rowData: any) => {
     const payload = {
@@ -440,6 +486,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           table={table}
           totalDataCount={claimContentListData.length}
           pageLimit={claimContentListData.length}
+          showPaginationButtons={false}
           loader={tableLoader}
           tableDataErrorMsg={claimResult.length === 0 ? "No Record Found" : claimErrorMsg}
           fetchNextPage={fetchNextPage}
@@ -447,7 +494,6 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDBRowCount={claimContentListData.length}
           filterFn={filterFn}
           handleRowClick={handleRowClick}
-          showPaginationButtons={false}
         />
       </div>
     </>
@@ -463,6 +509,7 @@ const mapDispatchToProps = {
   updateClaimContentListData,
   clearFilter,
   addNotification,
+  updateClaimContentListFullData,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

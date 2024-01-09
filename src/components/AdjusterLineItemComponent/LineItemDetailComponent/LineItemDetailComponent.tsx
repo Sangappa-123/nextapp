@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import lineItemDetailComponentStyle from "./lineItemDetailComponent.module.scss";
 import GroupedActionButtons from "./GroupedActionButtons";
 import OrginalItemForm from "./OrginalItemForm";
@@ -8,14 +8,26 @@ import AddedComparables from "./AddedComparables";
 import useCustomForm from "@/hooks/useCustomForm";
 import { Output, any, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
+import EnumStoreSlice from "@/reducers/EnumStoreSlice";
+// import Modal from "@/components/common/ModalPopups";
+// import GenericButton from "@/components/common/GenericButton";
+import CustomComparable from "./CustomComparable";
+import useBodyScrollbar from "@/hooks/useBodyScrollbar";
 
-function LineItemDetailComponentForm() {
-  const lineItem = useAppSelector((state) => state.lineItemDetail?.lineItem);
+function LineItemDetailComponentForm({
+  rapidDivRef,
+  originalItemRef,
+}: {
+  rapidDivRef: any;
+  originalItemRef: any;
+}) {
+  const { hideScroll, showScroll } = useBodyScrollbar();
+  const lineItem = useAppSelector(
+    (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
+  );
   const CRN = useAppSelector((state) => state.session?.CRN);
-  // const roomSchema = object({
-  //   id: number("Room id"),
-  //   roomName: string("Room Name"),
-  // });
+
+  const [openCustomComparableModal, setOpenCustomComparableModal] = useState(false);
   const schema = object({
     description: string("Item description"),
     category: object({
@@ -48,6 +60,14 @@ function LineItemDetailComponentForm() {
     condition: any(),
     room: any(),
   });
+
+  useEffect(() => {
+    if (openCustomComparableModal) {
+      hideScroll();
+    } else {
+      showScroll();
+    }
+  }, [openCustomComparableModal, hideScroll, showScroll]);
 
   const defaultValue = {
     description: lineItem?.description,
@@ -145,25 +165,57 @@ function LineItemDetailComponentForm() {
             lineItem.depreciationAmount > 0 ? lineItem.depreciationAmount : 0,
         },
       };
-      console.log("============", payload);
+      console.log("payload:::", payload);
     } catch (error) {
-      console.log();
+      console.log("error>>>>", error);
     }
   };
+
+  const closeCustomComparable = () => {
+    setOpenCustomComparableModal(false);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       className={lineItemDetailComponentStyle.root}
     >
+      <CustomComparable
+        closeCustomComparable={closeCustomComparable}
+        openCustomComparableModal={openCustomComparableModal}
+      />
+      {/* <Modal
+        isOpen={openCustomComparableModal}
+        onClose={closeCustomComparable}
+        modalWidthClassName={lineItemDetailComponentStyle.modal}
+        overlayClassName={lineItemDetailComponentStyle.modalOverlay}
+        headingName="New Custom Comparable"
+        footerContent={
+          <div className={lineItemDetailComponentStyle.customComparableModalButton}>
+            <GenericButton label="Mark Replacement" size="medium" />
+            <GenericButton label="Add Comparable" size="medium" />
+            <GenericButton
+              label="Cancel"
+              size="medium"
+              onClickHandler={closeCustomComparable}
+            />
+          </div>
+        }
+        childComp={<CustomComparable />}
+      /> */}
       <GroupedActionButtons />
       <div className={lineItemDetailComponentStyle.topItemSection}>
+        <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
         <OrginalItemForm
           register={register}
           control={control}
           getValues={getValues}
           setValue={setValue}
+          ref={originalItemRef}
         />
-        <ReplacementItemSection />
+        <ReplacementItemSection
+          showCustomComparableModal={() => setOpenCustomComparableModal(true)}
+        />
       </div>
       <div className={lineItemDetailComponentStyle.bottomItemSection}>
         <WebComparables />

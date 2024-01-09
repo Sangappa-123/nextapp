@@ -48,7 +48,6 @@ function PaginationButtons({
     };
   }, [totalPages, pageIndex]);
 
-  console.log("llllll", pager);
   return (
     <div className={lineItemPaginationStyle.root}>
       <ul className={lineItemPaginationStyle.btnList}>
@@ -102,7 +101,7 @@ function PaginationButtons({
         <PageButton>
           <button
             className={clsx(lineItemPaginationStyle.btn, {
-              [lineItemPaginationStyle.active]: pageIndex === 10,
+              [lineItemPaginationStyle.active]: pageIndex === totalPages,
             })}
           >
             {totalPages}

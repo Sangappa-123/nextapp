@@ -63,7 +63,10 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps> = ({
         />
       </div>
       <div>
-        <AssignItemsTableComponent />
+        <AssignItemsTableComponent
+          // selectedRowsData={selectedRowsData}
+          onNewClaimsClick={handlePreviousClick}
+        />
       </div>
       <div className="row mt-3 justify-content-end">
         <div className="col-auto">
