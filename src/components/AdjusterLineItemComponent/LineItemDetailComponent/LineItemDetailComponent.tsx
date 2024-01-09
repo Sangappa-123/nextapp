@@ -14,13 +14,7 @@ import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import CustomComparable from "./CustomComparable";
 import useBodyScrollbar from "@/hooks/useBodyScrollbar";
 
-function LineItemDetailComponentForm({
-  rapidDivRef,
-  originalItemRef,
-}: {
-  rapidDivRef: any;
-  originalItemRef: any;
-}) {
+function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
   const { hideScroll, showScroll } = useBodyScrollbar();
   const lineItem = useAppSelector(
     (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
@@ -30,14 +24,6 @@ function LineItemDetailComponentForm({
   const [openCustomComparableModal, setOpenCustomComparableModal] = useState(false);
   const schema = object({
     description: string("Item description"),
-    category: object({
-      categoryId: any(),
-      categoryName: string(),
-    }),
-    subCategory: object({
-      id: any(),
-      name: string(),
-    }),
     insuredPrice: any(),
     quantity: any(),
     totalStatedAmount: any(),
@@ -53,11 +39,6 @@ function LineItemDetailComponentForm({
       label: string(),
       value: string(),
     }),
-    // condition: object({
-    //   conditionId: number(),
-    //   conditionName: string(),
-    // }),
-    condition: any(),
     room: any(),
   });
 
@@ -71,14 +52,7 @@ function LineItemDetailComponentForm({
 
   const defaultValue = {
     description: lineItem?.description,
-    category: {
-      categoryId: lineItem?.category?.id,
-      categoryName: lineItem?.category?.name,
-    },
-    subCategory: {
-      id: lineItem?.subCategory?.id,
-      name: lineItem?.subCategory?.name,
-    },
+
     insuredPrice: lineItem?.insuredPrice,
     quantity: lineItem?.quantity,
     totalStatedAmount: lineItem?.totalStatedAmount,
@@ -94,16 +68,6 @@ function LineItemDetailComponentForm({
       label: lineItem?.purchaseMethod,
       value: lineItem?.purchaseMethod,
     },
-    condition: {
-      conditionId: lineItem?.condition?.conditionId,
-      conditionName: lineItem?.condition?.conditionName,
-    },
-    room: lineItem?.room
-      ? {
-          id: lineItem?.room?.id,
-          roomName: lineItem?.room?.roomName,
-        }
-      : null,
   };
 
   const { register, handleSubmit, control, formState, getValues, setValue } =
@@ -211,7 +175,6 @@ function LineItemDetailComponentForm({
           control={control}
           getValues={getValues}
           setValue={setValue}
-          ref={originalItemRef}
         />
         <ReplacementItemSection
           showCustomComparableModal={() => setOpenCustomComparableModal(true)}

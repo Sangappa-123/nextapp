@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React from "react";
 import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
@@ -14,6 +14,7 @@ import {
   updateOnSubCategoryChange,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import useDebounce from "@/hooks/useDebounce";
+import { unknownObjectType } from "@/constants/customTypes";
 
 interface propType {
   register: any;
@@ -22,15 +23,7 @@ interface propType {
   setValue: any;
 }
 
-export interface OriginalItemRefType {
-  onRapidCategoryChange: (e: any) => void;
-  onRapidSubCategoryChange: (e: any) => void;
-}
-
-const OrginalItemForm = forwardRef<
-  OriginalItemRefType,
-  React.PropsWithChildren<propType & connectorType>
->((props, ref) => {
+const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
   const {
     lineItem,
     category,
@@ -48,10 +41,7 @@ const OrginalItemForm = forwardRef<
     updateOnSubCategoryChange,
     updateLineItem,
   } = props;
-  useImperativeHandle(ref, () => ({
-    onRapidCategoryChange: (e) => setValue("category", e),
-    onRapidSubCategoryChange: (e) => setValue("subCategory", e),
-  }));
+
   const debounce = useDebounce(updateLineItem, 500);
 
   const { onChange: quantityOnChange, ...quantityRegister } = register("quantity");
@@ -93,67 +83,51 @@ const OrginalItemForm = forwardRef<
               <label htmlFor="category" className={orginalItemFormStyle.label}>
                 Category
               </label>
-              <Controller
-                name="category"
-                control={control}
-                render={({ field: { onChange: categoryOnChange, ...rest } }: any) => (
-                  <GenericSelect
-                    menuPortalTarget={
-                      typeof window !== "undefined" ? document.body : null
-                    }
-                    id="category"
-                    options={category}
-                    getOptionLabel={(option: { categoryName: any }) =>
-                      option.categoryName
-                    }
-                    getOptionValue={(option: { categoryId: any }) => option.categoryId}
-                    {...rest}
-                    onChange={(
-                      e: {
-                        categoryId: number;
-                        categoryName: string;
-                        noOfItems: number;
-                      } | null
-                    ) => {
-                      if (e !== null) {
-                        fetchSubCategory(e.categoryId);
+              <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                id="category"
+                value={
+                  lineItem?.category
+                    ? {
+                        categoryId: lineItem?.category?.id,
+                        categoryName: lineItem?.category?.name,
                       }
-                      updateOnCategoryChange(e);
-                      setValue("subCategory", null);
-                      categoryOnChange(e);
-                    }}
-                  />
-                )}
+                    : null
+                }
+                options={category}
+                getOptionLabel={(option: { categoryName: any }) => option.categoryName}
+                getOptionValue={(option: { categoryId: any }) => option.categoryId}
+                onChange={(e: {
+                  categoryId: number;
+                  categoryName: string;
+                  noOfItems: number;
+                }) => {
+                  if (e !== null) {
+                    fetchSubCategory(e.categoryId);
+                  }
+                  updateOnCategoryChange(e);
+                }}
               />
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
                 Sub-Category
               </label>
-              <Controller
-                name="subCategory"
-                control={control}
-                render={({ field: { onChange: subCategoryOnChange, ...rest } }: any) => (
-                  <GenericSelect
-                    menuPortalTarget={
-                      typeof window !== "undefined" ? document.body : null
-                    }
-                    id="subCategory"
-                    options={subCategory}
-                    getOptionLabel={(option: { name: string }) => option.name}
-                    getOptionValue={(option: { id: number }) => option.id}
-                    {...rest}
-                    onChange={(
-                      e: {
-                        id: number;
-                        name: string;
-                      } | null
-                    ) => {
-                      subCategoryOnChange(e);
-                      updateOnSubCategoryChange(e);
-                    }}
-                  />
-                )}
+              <GenericSelect
+                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                id="subCategory"
+                value={lineItem.subCategory}
+                options={subCategory}
+                getOptionLabel={(option: { name: string }) => option.name}
+                getOptionValue={(option: { id: number }) => option.id}
+                onChange={(
+                  e: {
+                    id: number;
+                    name: string;
+                  } | null
+                ) => {
+                  updateOnSubCategoryChange(e);
+                }}
               />
             </div>
           </div>
@@ -320,19 +294,16 @@ const OrginalItemForm = forwardRef<
           <label htmlFor="condition" className={orginalItemFormStyle.label}>
             Condition
           </label>
-          <Controller
-            name="condition"
-            control={control}
-            render={({ field }: any) => (
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="condition"
-                options={condition}
-                getOptionLabel={(option: { conditionName: any }) => option.conditionName}
-                getOptionValue={(option: { conditionId: any }) => option.conditionId}
-                {...field}
-              />
-            )}
+          <GenericSelect
+            menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+            id="condition"
+            value={lineItem?.condition}
+            options={condition}
+            getOptionLabel={(option: { conditionName: any }) => option.conditionName}
+            getOptionValue={(option: { conditionId: any }) => option.conditionId}
+            onChange={(e: unknownObjectType) => {
+              updateLineItem({ condition: e });
+            }}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -394,7 +365,7 @@ const OrginalItemForm = forwardRef<
       </div>
     </div>
   );
-});
+};
 
 const mapStateToProps = (state: RootState) => ({
   lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem,
@@ -413,9 +384,6 @@ const mapDispatchToProps = {
   updateOnSubCategoryChange,
 };
 
-const connector = connect(mapStateToProps, mapDispatchToProps, null, {
-  forwardRef: true,
-});
-OrginalItemForm.displayName = "OrginalItemForm";
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(OrginalItemForm);

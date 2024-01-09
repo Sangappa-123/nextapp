@@ -76,8 +76,11 @@ const LineItemDetailSlice = createSlice({
           name: payload.categoryName,
           description: payload.description,
         };
+      } else {
+        state.lineItem.category = null;
       }
       state.lineItem.subCategory = null;
+      state.subCategory = [];
     },
     updateOnSubCategoryChange(state, action) {
       const { payload } = action;
