@@ -45,6 +45,9 @@ const LineItemDetailSlice = createSlice({
     resetLineItemDetail() {
       return initialState;
     },
+    updateLineItem(state, action) {
+      state.lineItem = { ...state.lineItem, ...action.payload };
+    },
     updateWebsearch(state, action) {
       const payload = action.payload;
       // const {
@@ -63,6 +66,28 @@ const LineItemDetailSlice = createSlice({
         ...state.webSearch,
         ...payload,
       };
+    },
+    updateOnCategoryChange(state, action) {
+      const { payload } = action;
+      if (payload) {
+        state.lineItem.category = {
+          ...state.lineItem.category,
+          id: payload.categoryId,
+          name: payload.categoryName,
+          description: payload.description,
+        };
+      }
+      state.lineItem.subCategory = null;
+    },
+    updateOnSubCategoryChange(state, action) {
+      const { payload } = action;
+      if (payload)
+        state.lineItem.subCategory = {
+          ...state.lineItem.subCategory,
+          id: payload.id,
+          name: payload.name,
+        };
+      else state.lineItem.subCategory = null;
     },
   },
   extraReducers(builder) {
@@ -171,4 +196,10 @@ const LineItemDetailSlice = createSlice({
 });
 
 export default LineItemDetailSlice;
-export const { resetLineItemDetail, updateWebsearch } = LineItemDetailSlice.actions;
+export const {
+  resetLineItemDetail,
+  updateWebsearch,
+  updateOnCategoryChange,
+  updateLineItem,
+  updateOnSubCategoryChange,
+} = LineItemDetailSlice.actions;

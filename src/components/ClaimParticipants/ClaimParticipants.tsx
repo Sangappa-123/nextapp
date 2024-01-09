@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import Cards from "@/components/common/Cards";
 import { FaUserCircle } from "react-icons/fa";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
-// import { CiMail } from "react-icons/ci";
 import { SlEnvolope } from "react-icons/sl";
 import Modal from "@/components/common/ModalPopups";
 import styles from "./ClaimParticipants.module.scss";
 import { IconContext } from "react-icons";
+import AddNewMsgModalComponent from "../common/AddNewMessageModalComponent/AddNewMessageModalComponent";
 
-import AddNewMsgModalComponent from "../AdjusterPropertyClaimDetailComponent/ClaimDetailsCardsComponent/MessagesComponent/AddNewMsgModalComponent/AddNewMsgModalComponent";
+interface type {
+  claimId: string;
+}
 
-export default function ClaimParticipants() {
+const ClaimParticipants: React.FC<type> = (props) => {
+  const { claimId } = props;
   const [isOpen, setIsOpen] = useState(false);
   const data = [1, 2, 3];
 
@@ -28,6 +31,8 @@ export default function ClaimParticipants() {
     setIsOpen(!isOpen);
   };
 
+  const handleMessageSubmit = () => {};
+
   return (
     <div className={styles.claimParticipants}>
       <div className={styles.heading}>
@@ -36,7 +41,14 @@ export default function ClaimParticipants() {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        childComp={<AddNewMsgModalComponent handleOpenModal={handleOpenModal} />}
+        childComp={
+          <AddNewMsgModalComponent
+            handleOpenModal={handleOpenModal}
+            handleMessageSubmit={handleMessageSubmit}
+            claimId={claimId}
+            participants={[]}
+          />
+        }
         headingName="Add new message"
         modalWidthClassName={styles.modalWidth}
       ></Modal>
@@ -68,4 +80,5 @@ export default function ClaimParticipants() {
       </div>
     </div>
   );
-}
+};
+export default ClaimParticipants;
