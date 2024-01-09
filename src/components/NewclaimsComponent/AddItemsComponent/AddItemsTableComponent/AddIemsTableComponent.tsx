@@ -23,6 +23,7 @@ import { RootState } from "@/store/store";
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
   isAnyItemSelected: boolean;
+  // selectedItems: any;
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
@@ -47,7 +48,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (item: any) => {
+  const handleCheckboxChange = async (item: any) => {
     console.log(item, "handle checkbox running on addItem main file");
 
     const updatedSelectedItems = selectedItems.includes(item)
@@ -55,7 +56,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
       : [...selectedItems, item];
     console.log(updatedSelectedItems, "updatedSelectedItems checking");
 
-    dispatch(setSelectedItems(updatedSelectedItems));
+    await dispatch(setSelectedItems(updatedSelectedItems));
     dispatch(setSelectedRows(updatedSelectedItems));
   };
 
@@ -110,6 +111,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
           setEditItem={setEditItem}
           setTableLoader={setTableLoader}
           tableLoader={tableLoader}
+          selectedItems={selectedItems}
         />
       </div>
     </>

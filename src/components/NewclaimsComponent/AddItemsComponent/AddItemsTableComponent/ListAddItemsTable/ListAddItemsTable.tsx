@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -18,6 +18,7 @@ import {
   setCategories,
   setSearchKeyword,
   deleteCategoryListItem,
+  setPreviousSelectedItems,
   // setEditItemDetail,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
@@ -34,6 +35,7 @@ interface ListAddItemsTableProps {
   setIsModalOpen: (isOpen: boolean) => void;
   setTableLoader: React.Dispatch<React.SetStateAction<boolean>>;
   tableLoader: any;
+  selectedItems: any[];
 }
 
 const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
@@ -45,9 +47,12 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   setIsModalOpen,
   tableLoader,
   setTableLoader,
+  selectedItems,
+  previousSelectedItems,
 }) => {
   const dispatch = useDispatch();
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
+  const [checkedItems, setCheckedItems] = useState<any[]>(selectedItems);
 
   const editAction = async (rowData: any) => {
     const payload = {
@@ -118,13 +123,65 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     }
   };
 
+  // const handleCheckboxChange = (item: any) => {
+  //   console.log("Selected Item", item);
+  //   onCheckboxChange(item);
+  // };
+
+  // const handleCheckboxChange = (item: any) => {
+  //   const updatedCheckedItems = [...checkedItems];
+  //   if (updatedCheckedItems.includes(item)) {
+  //     updatedCheckedItems.splice(updatedCheckedItems.indexOf(item), 1);
+  //   } else {
+  //     updatedCheckedItems.push(item);
+  //   }
+
+  //   setCheckedItems(updatedCheckedItems);
+  //   onCheckboxChange(item);
+  // };
+
+  // const handleCheckboxChange = (item: any) => {
+  //   const updatedCheckedItems = [...checkedItems];
+  //   const isChecked = selectedItems.some((selectedItem) => selectedItem.id === item.id);
+  //   if (isChecked) {
+  //     if (!updatedCheckedItems.includes(item)) {
+  //       updatedCheckedItems.push(item);
+  //     }
+  //   } else {
+  //     if (updatedCheckedItems.includes(item)) {
+  //       updatedCheckedItems.splice(updatedCheckedItems.indexOf(item), 1);
+  //     } else {
+  //       updatedCheckedItems.push(item);
+  //     }
+  //   }
+
+  //   setCheckedItems(updatedCheckedItems);
+  //   onCheckboxChange(item);
+  // };
+  // useEffect(() => {
+  //   setCheckedItems(previousSelectedItems);
+  // }, [previousSelectedItems]);
+
   const handleCheckboxChange = (item: any) => {
-    console.log("Selected Item", item);
-    onCheckboxChange(item);
+    const updatedCheckedItems = [...checkedItems];
+    const isChecked = checkedItems.some((checkedItem) => checkedItem.id === item.id);
+
+    if (isChecked) {
+      return;
+    }
+    updatedCheckedItems.push(item);
+    setCheckedItems(updatedCheckedItems);
+
+    onCheckboxChange(updatedCheckedItems);
   };
+
+  useEffect(() => {
+    setCheckedItems(previousSelectedItems);
+  }, [previousSelectedItems]);
 
   const pageLimit = 100;
   type AddItemsData = {
+    id: any;
     itemNumber: number;
     description: string;
     status: { status: string };
@@ -150,9 +207,11 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
           <input
             type="checkbox"
             className={TableLisStyle.checkbox}
-            onChange={(e) => {
-              e.stopPropagation();
-            }}
+            // onChange={(e) => {
+            //   e.stopPropagation();
+            //   handleCheckboxChange(row.original);
+            // }}
+            // checked={checkedItems.some((item) => item.id === row.original)}
           />
         </div>
       ),
@@ -171,9 +230,10 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
           <input
             type="checkbox"
             className={TableLisStyle.checkbox}
-            onChange={() => {
-              handleCheckboxChange(row.original);
-            }}
+            checked={checkedItems.some(
+              (checkedItem) => checkedItem.id === row.original.id
+            )}
+            onChange={() => handleCheckboxChange(row.original)}
           />
         </div>
       ),
@@ -310,6 +370,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedCategory: state.addItemsTable.selectedCategory,
   categories: state.addItemsTable.categories,
   searchKeyword: state.addItemsTable.searchKeyword,
+  previousSelectedItems: state.addItemsTable.previousSelectedItems,
   // editItemDetail: state.claimContentdata.editItemDetail,
 });
 
@@ -320,6 +381,7 @@ const mapDispatchToProps = {
   setCategories,
   setSearchKeyword,
   deleteCategoryListItem,
+  setPreviousSelectedItems,
   // setEditItemDetail,
   // fetchAddItemsTableCSVData,
 };

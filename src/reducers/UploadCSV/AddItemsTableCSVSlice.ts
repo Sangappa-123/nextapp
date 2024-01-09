@@ -12,6 +12,7 @@ interface AddItemsTableState {
   editItemDetail: object;
   previousItem: boolean;
   nextItem: boolean;
+  previousSelectedItems: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -26,6 +27,7 @@ const initialState: AddItemsTableState = {
   editItemDetail: {},
   previousItem: false,
   nextItem: false,
+  previousSelectedItems: [],
 };
 
 const AddItemsTableCSVSlice = createSlice({
@@ -41,6 +43,11 @@ const AddItemsTableCSVSlice = createSlice({
     },
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
       state.selectedRows = [...state.selectedRows, ...action.payload];
+      // state.selectedItems = state.selectedRows;
+      // state.isAnyItemSelected = state.selectedItems.length > 0;
+    },
+    setPreviousSelectedItems: (state, action: PayloadAction<any[]>) => {
+      state.previousSelectedItems = action.payload;
     },
     setCategoryRows: (state, action: PayloadAction<any[]>) => {
       state.categoryRows = [...action.payload];
@@ -128,6 +135,10 @@ const AddItemsTableCSVSlice = createSlice({
     //   state.previousItem = previousItem;
     //   state.nextItem = nextItem;
     // },
+    // updateSelectedItems: (state, action: PayloadAction<any[]>) => {
+    //   state.selectedItems = action.payload;
+    //   state.isAnyItemSelected = action.payload.length > 0;
+    // },
   },
 });
 
@@ -141,6 +152,9 @@ export const {
   setCategories,
   setSelectedCategory,
   addEditItemDetails,
+  // toggleSelectedItem
+  // updateSelectedItems
   // addEditItemDetaill
+  setPreviousSelectedItems,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;
