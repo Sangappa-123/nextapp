@@ -9,7 +9,7 @@ interface ModalProps {
   childComp?: ReactNode;
   iconComp?: ReactNode;
   footerContent?: ReactNode | null;
-  headingName: string;
+  headingName: any;
   overlayClassName?: string;
   modalClassName?: string;
   modalWidthClassName?: string;
