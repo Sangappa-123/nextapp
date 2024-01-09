@@ -3,7 +3,7 @@ import headingStyle from "./genericComponentHeading.module.scss";
 import clsx from "clsx";
 
 type TypedHeading = {
-  title: string;
+  title: string | any;
   children?: React.ReactNode;
   customHeadingClassname?: string;
   customTitleClassname?: string;

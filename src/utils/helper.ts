@@ -65,3 +65,10 @@ export const getRoleBasedUrlList = (role: string) => {
   }
   return null;
 };
+
+// this function capitalize first character on each word in a string
+export const capitalize = (str: string) => {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+  });
+};

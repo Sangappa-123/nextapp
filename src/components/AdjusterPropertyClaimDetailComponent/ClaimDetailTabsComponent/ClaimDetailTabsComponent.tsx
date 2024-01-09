@@ -1,8 +1,10 @@
 import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants";
+import ActivityLog from "@/components/ActivityLog/ActivityLog";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
 import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
+import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
 
 type propTypes = {
   serviceRequestListRes: any;
@@ -25,6 +27,10 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
       // className: TabsStyle.tab1,
     },
     {
+      name: "Contents Evaluation",
+      content: <ContentsEvaluationContentTopButtonsComponent />,
+    },
+    {
       name: "Vendor Assignments",
       content: "",
     },
@@ -34,11 +40,11 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Claim Participants",
-      content: <ClaimParticipants />,
+      content: <ClaimParticipants claimId={props.claimId} />,
     },
     {
       name: "Activity Log",
-      content: "",
+      content: <ActivityLog />,
     },
     {
       name: "Policy and Coverage Details",

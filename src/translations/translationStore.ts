@@ -5,6 +5,9 @@ enum translatePage {
   securityQuestionTranslate = "securityQuestionTranslate",
   resetPasswordTranslate = "resetPasswordTranslate",
   claimDocumentsTranslate = "claimDocumentsTranslate",
+  adjusterPropertyClaimActivityLog = "adjusterPropertyClaimActivityLog",
+  addItemModalTranslate = "addItemModalTranslate",
+  claimDetailsTranslate = "claimDetailsTranslate",
 }
 
 export type translatePageType = keyof typeof translatePage;

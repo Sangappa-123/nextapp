@@ -1,4 +1,4 @@
-import { getApiEndPoint } from "./ApiEndPointConfig";
+import { getApiEndPoint } from "../ApiEndPointConfig";
 import HttpService from "@/HttpService";
 
 export const getCategories = async () => {
@@ -58,9 +58,12 @@ export const getClaimParticipantsList = async (param: { claimId: string }) => {
 export const getclaimContents = async (param: { claimId: string }) => {
   const payload = { id: param?.claimId };
   try {
+    console.log("payload", payload);
+
     const http = new HttpService();
     const url = getApiEndPoint("claimContentsUrl");
     const resp = await http.post(url, payload);
+    console.log("resp", resp);
     return resp;
   } catch (err: any) {
     return err;
@@ -88,13 +91,16 @@ export const getCompanyDetails = async (companyId: string) => {
   }
 };
 
-export const getClaimDetailMessageList = async (param: {
-  pageNo: number;
-  recordPerPage: number;
-  claimId: string;
-}) => {
+export const getClaimDetailMessageList = async (
+  param: {
+    pageNo: number;
+    recordPerPage: number;
+    claimId: string;
+  },
+  isClient?: boolean
+) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     let url = getApiEndPoint("claimDetailMessageList");
     url = `${url}?page=${param?.pageNo}&limit=${param?.recordPerPage}&claim_id=${param?.claimId}`;
     const resp = await http.get(url);
@@ -158,5 +164,53 @@ export const getClaimRoomTypeData = async () => {
     return resp?.data ?? [];
   } catch (err: any) {
     return [];
+  }
+};
+
+export const getActivityLogData = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("activityLogHistoryApi");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const downloadActivityLogData = async (param: { claimId: string }) => {
+  try {
+    const http = new HttpService({ isClient: true, isArrayBuffer: true });
+    const url = getApiEndPoint("downloadActivityLogApi");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const uploadActivityLogData = async (formData: any) => {
+  try {
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const url = getApiEndPoint("uploadActivityLogDataApi");
+    const resp = await http.post(url, formData);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const getClaimSettlement = async (claimId: string) => {
+  try {
+    const http = new HttpService();
+    const url = getApiEndPoint("claimSettlementApiUrl") + claimId;
+    const resp = await http.get(url);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    }
+    return error;
+  } catch (err: any) {
+    return err;
   }
 };

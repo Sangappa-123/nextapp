@@ -16,7 +16,8 @@ import { ConnectedProps, connect } from "react-redux";
 import { setActiveSection } from "@/reducers/UploadCSV/navigationSlice";
 import { fetchAddItemsTableCSVData, fetchImportCsvData } from "@/services/ClaimService";
 import { setAddItemsTableData } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   const { rowsProcessed, postLossItemDetails } = props;
@@ -139,9 +140,11 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
   }, [selectedFile]);
 
   const claimId = searchParams.get("claimDetail");
+  const newclaimRedirectFlag = sessionStorage.getItem("redirectToNewClaimPage");
   console.log("claimIdsssssssssssss", claimId);
 
   const handleRouteChange = () => {
+    // const newclaimRedirectFlag = sessionStorage.getItem("redirectToNewClaimPage");
     if (claimId) {
       console.log("Navi to /adjustr", claimId);
       router.push(`/adjuster-property-claim-details/${claimId}`);
@@ -154,10 +157,16 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
 
   const handleFinishUpload = async () => {
     let shouldNavigate = false;
+
     if (isFileUploaded && excelData) {
+      setIsUploadFinished(false);
+      setUploadProgress(0);
+      setIsLoading(false);
+      setShouldRenderContent(false);
+
       const claimId = sessionStorage.getItem("claimId") || "";
       const claimNumber = sessionStorage.getItem("claimNumber") || "";
-      const payload = { claimNumber, postlossItems: excelData };
+      const payload = { claimNumber, postlossItems: postLossItemDetails };
 
       try {
         const importCsvResponse = await fetchImportCsvData(payload);
@@ -169,68 +178,109 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
           if (addItemsTableResponse.status === 200) {
             dispatch(setAddItemsTableData(addItemsTableResponse.data));
 
-            const { failedItems } = addItemsTableResponse.data;
+            const { failedItems } = addItemsTableResponse.data || {};
+            const invalidItems = postLossItemDetails.filter((item) => !item.isValidItem);
 
             if (failedItems && failedItems.length > 0) {
               setIsUploadFinished(true);
               setUploadProgress(60);
               shouldNavigate = false;
               setShouldRenderContent(true);
-            } else {
-              const invalidItems = excelData.filter((item) => !item.isValidItem);
+            } else if (invalidItems.length > 0) {
+              setIsUploadFinished(true);
+              setUploadProgress(0);
+              setIsLoading(false);
 
-              if (invalidItems.length > 0) {
-                setIsUploadFinished(true);
+              const totalSteps = 6;
+              const interval = 1000;
 
-                setUploadProgress(0);
-                setIsLoading(false);
-
-                const totalSteps = 6;
-                const interval = 1000;
-
-                for (let i = 0; i <= totalSteps; i++) {
-                  await new Promise((resolve) => setTimeout(resolve, interval));
-                  const percentage = ((i / totalSteps) * 60).toFixed(0);
-                  setUploadProgress(Number(percentage));
-                }
-                shouldNavigate = false;
-                setShouldRenderContent(true);
-                toast.error(
-                  "Error: Some items failed to import. Please check the details."
-                );
-              } else {
-                setIsUploadFinished(true);
-                setUploadProgress(0);
-                setIsLoading(false);
-
-                const totalSteps = 10;
-                const interval = 500;
-                toast.success("Success: All items imported successfully!");
-                for (let i = 0; i <= totalSteps; i++) {
-                  await new Promise((resolve) => setTimeout(resolve, interval));
-                  const percentage = ((i / totalSteps) * 100).toFixed(0);
-                  setUploadProgress(Number(percentage));
-                }
-                shouldNavigate = true;
+              for (let i = 0; i <= totalSteps; i++) {
+                await new Promise((resolve) => setTimeout(resolve, interval));
+                const percentage = ((i / totalSteps) * 60).toFixed(0);
+                setUploadProgress(Number(percentage));
               }
+              shouldNavigate = false;
+              setShouldRenderContent(true);
+              dispatch(
+                addNotification({
+                  message: "Some items failed to import. Please check the details.",
+                  id: "failed_csv",
+                  status: "warning",
+                })
+              );
+            } else {
+              setIsUploadFinished(true);
+              setUploadProgress(0);
+              setIsLoading(false);
+
+              const totalSteps = 10;
+              const interval = 500;
+              dispatch(
+                addNotification({
+                  message: "Success: All items imported successfully!",
+                  id: "success_csv",
+                  status: "success",
+                })
+              );
+              for (let i = 0; i <= totalSteps; i++) {
+                await new Promise((resolve) => setTimeout(resolve, interval));
+                const percentage = ((i / totalSteps) * 100).toFixed(0);
+                setUploadProgress(Number(percentage));
+              }
+              shouldNavigate = true;
             }
           } else {
             console.error("Error fetching addItemsTable data", addItemsTableResponse);
-            toast.error("Error: Failed to fetch addItemsTable data.");
+            dispatch(
+              addNotification({
+                message: "Error: Failed to fetch addItemsTable data.",
+                id: "error_csv",
+                status: "error",
+              })
+            );
           }
         } else {
           console.error("Error importing CSV data", importCsvResponse);
-          toast.error("Error: Failed to import CSV data.");
+          dispatch(
+            addNotification({
+              message: "Error: Failed to import CSV data.",
+              id: "error_csv_file",
+              status: "error",
+            })
+          );
         }
       } catch (error) {
         console.error("Error handling finish upload", error);
-        toast.error("Error: An unexpected error occurred.");
+        dispatch(
+          addNotification({
+            message: "Error: An unexpected error occurred.",
+            id: "error_csv_file_unexpected",
+            status: "error",
+          })
+        );
       } finally {
         setUploadProgress(0);
-        if (shouldNavigate) {
-          dispatch(setActiveSection(1));
-          router.push("/new-claim");
-          setShouldRenderContent(false);
+        try {
+          if (shouldNavigate) {
+            if (claimId && newclaimRedirectFlag === "false") {
+              console.log("Navi to /adjustr", claimId);
+              router.push(`/adjuster-property-claim-details/${claimId}`);
+            } else {
+              console.log("NavAddItemsComponent");
+              dispatch(setActiveSection(1));
+              router.push("/new-claim");
+              setShouldRenderContent(true);
+            }
+          }
+        } catch (navigationError) {
+          console.error("Error during navigation", navigationError);
+          dispatch(
+            addNotification({
+              message: "Error: An error occurred during navigation.",
+              id: "error_csv_file_navigation",
+              status: "error",
+            })
+          );
         }
       }
     }

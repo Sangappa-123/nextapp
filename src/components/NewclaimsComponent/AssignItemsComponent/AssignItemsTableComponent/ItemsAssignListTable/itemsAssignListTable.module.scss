@@ -3,6 +3,17 @@
   padding-right: 0;
   position: relative;
 }
+.textAlignCenter {
+  text-align: center;
+  cursor: pointer;
+}
+
+.modalWidth {
+  width: 100%;
+}
+.modalContainer {
+  align-items: start;
+}
 
 .labelStyles {
   font-size: 13.5px;
