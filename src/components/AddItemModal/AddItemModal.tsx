@@ -290,32 +290,31 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
       <>
         {editItem ? (
           <div className={addClaimFormStyle.modalWidth}>
-            <div className="row m-2 flex-row-reverse">
-              <div className="row col-12 m-2 flex-row-reverse">
-                <div className="row col-2">
-                  <GenericButton
-                    label="Cancel"
-                    onClick={async () => {
-                      await closeModal();
-                    }}
-                    size="medium"
-                  />
-                </div>
-                <div className="row col-2">
-                  <GenericButton
-                    label="Update Item"
-                    type="submit"
-                    onClick={handleSubmit(handleUpdate)}
-                    size="medium"
-                  />
-                </div>
+            <div className={clsx(addClaimFormStyle.addItemButton, "m-4")}>
+              <div className={addClaimFormStyle.centerAlign}>
+                <a
+                  className={addClaimFormStyle.pointerCursor}
+                  onClick={async () => {
+                    await closeModal();
+                  }}
+                >
+                  Cancel
+                </a>
+              </div>
+              <div className={addClaimFormStyle.centerAlign}>
+                <GenericButton
+                  label="Update Item"
+                  type="submit"
+                  onClick={handleSubmit(handleUpdate)}
+                  size="medium"
+                />
               </div>
             </div>
           </div>
         ) : (
           <div className={addClaimFormStyle.modalWidth}>
-            <div className={clsx(addClaimFormStyle.centerAlign, "row m-4")}>
-              <div className="col-8 " style={{ textAlign: "right" }}>
+            <div className={clsx(addClaimFormStyle.addItemButton, "m-4")}>
+              <div className={addClaimFormStyle.centerAlign}>
                 <a
                   type="submit"
                   className={addClaimFormStyle.pointerCursor}
@@ -325,19 +324,17 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
                 </a>
               </div>
 
-              <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
+              <div className={addClaimFormStyle.centerAlign}>
+                <a className={addClaimFormStyle.pointerCursor} onClick={() => reset()}>
+                  Reset
+                </a>
+              </div>
+              <div className={addClaimFormStyle.centerAlign}>
                 <GenericButton
                   label={translate?.inputFields?.addItemBtn ?? ""}
                   type="submit"
                   size="medium"
                   onClick={handleSubmit(formSubmit)}
-                />
-              </div>
-              <div className="row col-2">
-                <GenericButton
-                  label={translate?.inputFields?.resetBtn ?? ""}
-                  size="medium"
-                  onClick={() => reset()}
                 />
               </div>
             </div>
