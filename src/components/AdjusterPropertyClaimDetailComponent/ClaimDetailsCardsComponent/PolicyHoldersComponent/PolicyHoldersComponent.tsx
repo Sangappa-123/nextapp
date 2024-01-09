@@ -13,12 +13,16 @@ import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
 
-const PolicyHoldersComponent: React.FC<connectorType> = (props: {
-  pendingTaskList: any;
-}) => {
+interface PolicyHoldersComponentType {
+  claimId: string;
+}
+
+const PolicyHoldersComponent: React.FC<
+  connectorType & PolicyHoldersComponentType
+> = (props: { pendingTaskList: any; claimId: string }) => {
+  const { pendingTaskList, claimId } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [openTaskModal, setOpenTaskModal] = useState(false);
-  const { pendingTaskList } = props;
 
   const handleOpenTaskModal = () => {
     setOpenTaskModal(!openTaskModal);
@@ -33,7 +37,12 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
         isOpen={isOpen}
         onClose={handleOpenModal}
         headingName="Create Task"
-        childComp={<PolicyCreateTaskModalComponent handleOpenModal={handleOpenModal} />}
+        childComp={
+          <PolicyCreateTaskModalComponent
+            handleOpenModal={handleOpenModal}
+            claimId={claimId}
+          />
+        }
         overlayClassName={PolicyHolderCradStyle.modalContainer}
         modalWidthClassName={PolicyHolderCradStyle.modalContent}
       />
