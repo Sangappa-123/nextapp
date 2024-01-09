@@ -13,6 +13,8 @@ import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice"
 import { object, string, number, minLength, Output, nullish } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { addItemModalTranslateType } from "@/translations/addItemModalTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 interface typeProps {
   [key: string | number]: any;
@@ -27,6 +29,9 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     addNotification,
     addClaimContentListData,
   } = props;
+
+  const { translate }: { translate: addItemModalTranslateType | undefined } =
+    useTranslation("addItemModalTranslate");
 
   const { claimId }: { claimId: string } = useParams();
   let claimNumber: string;
@@ -45,7 +50,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
 
   const schema = object({
     description: string(" Description must be a string.", [
-      minLength(1, "Description field is required."),
+      minLength(1, translate?.inputErrors?.decriptionRequired),
     ]),
     quantity: nullish(string("Quantity must be a number")),
     insuredPrice: nullish(string("Price must be a number")),
@@ -332,20 +337,24 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
                   className={addClaimFormStyle.pointerCursor}
                   onClick={handleSubmit(handleSaveAndNext)}
                 >
-                  Save and Add Another Item
+                  {translate?.inputFields?.saveAndAddAnotherItemLink}
                 </a>
               </div>
 
               <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
                 <GenericButton
-                  label="Add Item"
+                  label={translate?.inputFields?.addItemBtn ?? ""}
                   type="submit"
                   size="medium"
                   onClick={handleSubmit(formSubmit)}
                 />
               </div>
               <div className="row col-2">
-                <GenericButton label="Reset" size="medium" onClick={() => reset()} />
+                <GenericButton
+                  label={translate?.inputFields?.resetBtn ?? ""}
+                  size="medium"
+                  onClick={() => reset()}
+                />
               </div>
             </div>
           </div>
@@ -377,7 +386,9 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
           handleSubmit={handleSubmit}
         />
       }
-      headingName={editItem ? "Item# " + editItemDetail.itemNumber : "Add Item"}
+      headingName={
+        editItem ? "Item# " + editItemDetail.itemNumber : translate?.modalHeading
+      }
       modalWidthClassName={addClaimFormStyle.modalWidth}
       footerContent={<FooterComp />}
     ></Modal>
