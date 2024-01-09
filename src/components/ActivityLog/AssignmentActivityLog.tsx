@@ -22,8 +22,6 @@ interface ExpandableTextProps {
 }
 
 const ExpandableText: React.FC<ExpandableTextProps> = ({ text, translate }) => {
-  console.log("Translate====>11", translate);
-
   const [isExpanded, setIsExpanded] = useState(false);
   const limit: number = 200;
   const toggleExpansion = () => {
@@ -54,8 +52,6 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   groupedObjData,
   translate,
 }) => {
-  console.log("Translate====>", translate);
-
   const options: any = {
     day: "2-digit",
     month: "short",
