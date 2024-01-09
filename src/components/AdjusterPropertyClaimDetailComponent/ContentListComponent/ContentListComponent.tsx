@@ -16,6 +16,10 @@ import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { claimContentList } from "@/services/ClaimContentListService";
 import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import clsx from "clsx";
+import Modal from "@/components/common/ModalPopups";
+import GenericInput from "@/components/common/GenericInput";
+import useCustomForm from "@/hooks/useCustomForm";
+import { Output, minLength, object, string } from "valibot";
 
 function ContentListComponent(props: any) {
   const {
@@ -34,6 +38,9 @@ function ContentListComponent(props: any) {
   const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
   const [openMore, setOpenMore] = useState(false);
+  const [isModalOpenAcceptMinVal, setIsModalOpenAcceptMinVal] = useState(false);
+  const [isModalOpenPaid, setIsModalOpenPaid] = useState(false);
+
   const [checkedValues, setcheckStatus] = useState(false);
   const [isCreatedItemvAilable, setIsCreatedItemAvailable] = useState(false);
   const [getNumberSelected, setNumberSelected] = useState(0);
@@ -64,7 +71,43 @@ function ContentListComponent(props: any) {
   const closeModalChangeCat = () => {
     setIsModalOpenChangeCat(false);
   };
-  console.log("claimContentListDataFull", claimContentListDataFull);
+
+  const isCreatedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName === "CREATED" && item.selected === true
+  );
+  const isNotCreatedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName !== "CREATED" && item.selected === true
+  );
+  const isValuedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName === "VALUED" && item.selected === true
+  );
+  const isPaidSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName === "PAID" && item.selected === true
+  );
+  const cashExposureTotalPrice = isValuedSelected
+    .map((item: any) => item.cashPayoutExposure)
+    .reduce((a: any, b: any) => a + b, 0);
+
+  const acceptMinVaues = props?.claimDetail?.minimumThreshold;
+  const claimListOfMinValues = claimContentListDataFull.filter(
+    (item: any) =>
+      item?.statusName === "CREATED" && item?.totalStatedAmount <= acceptMinVaues
+  );
+  const costMinValues = claimListOfMinValues
+    .map((item: any) => item.totalStatedAmount)
+    .reduce((a: any, b: any) => a + b, 0);
+
+  const handleAcceptMinValues = async () => {
+    if (claimListOfMinValues && claimListOfMinValues.length > 0) {
+      changeStatus(claimListOfMinValues, "accept_min_val");
+    } else {
+      props.addNotification({
+        message: `There are no items which are less then minimum $${acceptMinVaues} to price`,
+        id: "update_status_valued_success",
+        status: "error",
+      });
+    }
+  };
 
   const handleCreatedStatus = async () => {
     const selectedClaims =
@@ -73,7 +116,10 @@ function ContentListComponent(props: any) {
       claimContentListDataFull.filter(
         (item: any) => item.selected === true && item.statusName === "CREATED"
       );
+    changeStatus(selectedClaims, "mark_as_value");
+  };
 
+  const changeStatus = async (selectedClaims: any, state: any) => {
     const param = {
       claimItems: selectedClaims,
       itemStatus: "VALUED",
@@ -82,36 +128,99 @@ function ContentListComponent(props: any) {
 
     if (updateStatusresult?.status === 200) {
       const payload = { claimId };
+      let message = "";
+      if (state === "mark_as_value") {
+        message = "Status Updated Successfully";
+      } else if (state === "accept_min_val") {
+        message = `<${
+          claimListOfMinValues && claimListOfMinValues.length
+        }> Items have been valued at their original cost for total 0f <${costMinValues.toFixed(
+          2
+        )}>`;
+      }
       const claimContentListRes = await claimContentList(payload, true);
 
       if (claimContentListRes) {
         props.addClaimContentListData({ claimContentData: claimContentListRes, claimId });
-
         props.addNotification({
-          message: "Status Updated Successfully",
-          id: "update_status_valued_success",
+          message: message,
+          id: "mark_status_valued_success",
           status: "success",
         });
         closeModal();
+        setIsModalOpenAcceptMinVal(false);
       }
     } else {
       props.addNotification({
         message: "Something went wrong.",
-        id: "update_status_valued_failure",
+        id: "mark_status_valued_failure",
         status: "error",
       });
     }
   };
 
-  const isCreatedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName === "CREATED" && item.selected === true
-  );
-  const isNotCreatedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName !== "CREATED" && item.selected === true
-  );
-  const isNotValuedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName !== "VALUED" && item.selected === true
-  );
+  const FooterComp = () => {
+    return (
+      <>
+        <div className={ContentListComponentStyle.modalWidth}>
+          <div className="row m-1">
+            <div className="row col-12 flex-row-reverse">
+              <div className="row col-2">
+                <GenericButton
+                  label="Yes"
+                  type="submit"
+                  onClick={() => handleAcceptMinValues()}
+                  size="small"
+                />
+              </div>
+              <div className="row col-2">
+                <GenericButton
+                  label="No"
+                  onClick={() => setIsModalOpenAcceptMinVal(false)}
+                  size="small"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+  const schema = object({
+    checkNo: string([minLength(1, "Please Enter Check number")]),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useCustomForm(schema);
+
+  const FooterCompPaid = () => {
+    return (
+      <>
+        <div className={ContentListComponentStyle.modalWidth}>
+          <div className="row m-1">
+            <div className="row col-12 flex-row-reverse">
+              <div className="row col-4">
+                <GenericButton label="Submit" type="submit" size="small" />
+              </div>
+              <div className="row col-4">
+                <GenericButton
+                  label="Cancel"
+                  onClick={() => setIsModalOpenPaid(false)}
+                  size="small"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const onSubmit = async (data: Output<typeof schema>) => {
+    console.log("DATA", data);
+  };
 
   React.useEffect(() => {
     if (isCreatedSelected.length > 0) {
@@ -262,11 +371,20 @@ function ContentListComponent(props: any) {
                       </div>
                       <div
                         className={clsx(
-                          { "d-none": !(isNotValuedSelected.length > 0) },
+                          { "d-none": !(isValuedSelected.length > 0) },
+                          ContentListComponentStyle.dropDownInnerDiv
+                        )}
+                        onClick={() => setIsModalOpenPaid(true)}
+                      >
+                        Mark Paid
+                      </div>
+                      <div
+                        className={clsx(
+                          { "d-none": !(isPaidSelected.length > 0) },
                           ContentListComponentStyle.dropDownInnerDiv
                         )}
                       >
-                        Mark Paid
+                        Mark Settled
                       </div>
 
                       <div
@@ -295,6 +413,7 @@ function ContentListComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
+                onClickHandler={() => setIsModalOpenAcceptMinVal(true)}
               />
               <GenericButton
                 label="Accept Standerd Cost"
@@ -317,6 +436,53 @@ function ContentListComponent(props: any) {
             editItemDetail={editItemDetail}
           />
         </div>
+        <Modal
+          headingName="Accept Min. Values"
+          isOpen={isModalOpenAcceptMinVal}
+          onClose={() => setIsModalOpenAcceptMinVal(false)}
+          modalWidthClassName={ContentListComponentStyle.modalContent}
+          childComp={
+            <div className={ContentListComponentStyle.addItemContainer}>
+              <div className={ContentListComponentStyle.modalLabel}>
+                A total of &lt;{claimListOfMinValues && claimListOfMinValues.length}&gt;
+                items will be accepted at replacement cost of &lt;$
+                {costMinValues.toFixed(2)}&gt;.Would you like to accept the original costs
+                as replacement costs of these items?
+              </div>
+            </div>
+          }
+          footerContent={<FooterComp />}
+        ></Modal>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Modal
+            headingName="Payment Details"
+            isOpen={isModalOpenPaid}
+            onClose={() => setIsModalOpenPaid(false)}
+            modalWidthClassName={ContentListComponentStyle.modalPaidContent}
+            childComp={
+              <div className={ContentListComponentStyle.addItemContainer}>
+                <div className={ContentListComponentStyle.modalLabel}>
+                  Paying a sum of ${cashExposureTotalPrice.toFixed(2)} (Cash Payout
+                  Exposure) for {isValuedSelected && isValuedSelected.length} item
+                </div>
+                <div>
+                  <GenericInput
+                    formControlClassname={ContentListComponentStyle.inputBox}
+                    labelClassname={ContentListComponentStyle.modalLabel}
+                    showError={errors["checkNo"]}
+                    errorMsg={errors?.checkNo?.message}
+                    label="Check #*"
+                    id="checkNo"
+                    autoComplete="off"
+                    {...register("checkNo")}
+                  />
+                </div>
+              </div>
+            }
+            footerContent={<FooterCompPaid />}
+          ></Modal>
+        </form>
+
         <div className="col-12">
           <ChangeCategoryModal
             closeModal={closeModalChangeCat}
@@ -336,10 +502,11 @@ function ContentListComponent(props: any) {
   );
 }
 
-const mapStateToProps = ({ claimContentdata }: any) => ({
+const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
   editItemDetail: claimContentdata.editItemDetail,
   claimContentListData: claimContentdata.claimContentListData,
   claimContentListDataFull: claimContentdata.claimContentListDataFull,
+  claimDetail: claimDetail && claimDetail?.contents,
 });
 const mapDispatchToProps = {
   addClaimContentListData,
