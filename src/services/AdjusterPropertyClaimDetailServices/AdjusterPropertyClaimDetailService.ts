@@ -1,9 +1,9 @@
 import { getApiEndPoint } from "../ApiEndPointConfig";
 import HttpService from "@/HttpService";
 
-export const getCategories = async () => {
+export const getCategories = async (isClient?: boolean) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient: isClient ? true : false });
     const url = getApiEndPoint("categoriesRequest");
     const resp = await http.get(url);
     const { error } = resp;
@@ -17,7 +17,7 @@ export const getCategories = async () => {
 };
 
 export const getSubCategories = async (
-  param?: { categoryId: number },
+  param?: { categoryId: number | null },
   isClient?: boolean
 ) => {
   let payload = null;
@@ -110,9 +110,9 @@ export const getClaimDetailMessageList = async (
   }
 };
 
-export const getClaimItemCondition = async () => {
+export const getClaimItemCondition = async (isClient?: boolean) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient: isClient ? true : false });
     const url = getApiEndPoint("lineItemCondition");
     const resp = await http.get(url);
     const { error } = resp;
@@ -141,9 +141,9 @@ export const getClaimItemRoom = async (claim: string, isClient = false) => {
   }
 };
 
-export const getClaimItemRetailers = async () => {
+export const getClaimItemRetailers = async (isClient?: boolean) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient: isClient ? true : false });
     const url = getApiEndPoint("lineItemRetailer");
     const resp = await http.get(url);
     const { error } = resp;
@@ -156,9 +156,9 @@ export const getClaimItemRetailers = async () => {
   }
 };
 
-export const getClaimRoomTypeData = async () => {
+export const getClaimRoomTypeData = async (isClient?: boolean) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient: isClient ? true : false });
     const url = getApiEndPoint("roomTypeApi");
     const resp = await http.get(url);
     return resp?.data ?? [];

@@ -8,8 +8,6 @@ import clsx from "clsx";
 import GenericButton from "@/components/common/GenericButton";
 import { addContentItem, updateContentItem } from "@/services/AddItemContentService";
 import { useParams } from "next/navigation";
-import { claimContentList } from "@/services/ClaimContentListService";
-import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { object, string, number, minLength, Output, nullish } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
@@ -25,9 +23,8 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     closeModal,
     editItem,
     editItemDetail = null,
-
+    contentData = null,
     addNotification,
-    addClaimContentListData,
   } = props;
 
   const { translate }: { translate: addItemModalTranslateType | undefined } =
@@ -184,16 +181,6 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     }
   }, [editItem, editItemDetail, setValue]);
 
-  const itemListApi = async () => {
-    const payload = {
-      claimId,
-    };
-    const claimContentListRes: any = await claimContentList(payload, true);
-    if (claimContentListRes) {
-      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
-    }
-  };
-
   const submitFormData = async (data: Output<typeof schema>) => {
     const payload = {
       id: editItem && editItemDetail ? editItemDetail?.itemId : null,
@@ -262,8 +249,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     const addItemRes = await addContentItem(formData);
 
     if (addItemRes?.status === 200) {
-      closeModal();
-      await itemListApi();
+      await closeModal();
       addNotification({
         message: "Item Added Successfully",
         id: "add_content_item_success",
@@ -283,8 +269,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     const updateItemRes = await updateContentItem(formData);
 
     if (updateItemRes?.status === 200) {
-      closeModal();
-      await itemListApi();
+      await closeModal();
 
       addNotification({
         message: "Item Updated Successfully",
@@ -311,8 +296,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
                   <GenericButton
                     label="Cancel"
                     onClick={async () => {
-                      closeModal();
-                      await itemListApi();
+                      await closeModal();
                     }}
                     size="medium"
                   />
@@ -384,6 +368,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
           isScheduledItemState={isScheduledItemState}
           applyTaxState={applyTaxState}
           handleSubmit={handleSubmit}
+          contentData={contentData}
         />
       }
       headingName={
@@ -400,7 +385,6 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 });
 const mapDispatchToProps = {
   addNotification,
-  addClaimContentListData,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

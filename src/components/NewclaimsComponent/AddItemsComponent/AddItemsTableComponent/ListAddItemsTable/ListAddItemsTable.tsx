@@ -8,7 +8,7 @@ import {
 import CustomReactTable from "@/components/common/CustomReactTable";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import TableLisStyle from "./listAddItems.module.scss";
-import { fetchItemDetails } from "@/services/AddItemContentService";
+import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
 // import { fetchClaimContentActionnn } from "@/services/ClaimService";
 import { ConnectedProps, connect } from "react-redux";
 import {
@@ -54,7 +54,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       forEdit: true,
       itemId: rowData.id,
     };
-    await fetchItemDetails(payload);
+    await fetchClaimContentItemDetails(payload, addItemsTableData);
     setEditItem(rowData);
     setIsModalOpen(true);
   };

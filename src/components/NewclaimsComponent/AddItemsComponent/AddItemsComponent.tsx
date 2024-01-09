@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import GenericButton from "@/components/common/GenericButton";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import AddStyle from "./addItemsComponent.module.scss";
@@ -8,6 +8,22 @@ import { useRouter } from "next/navigation";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 
+import {
+  addCategories,
+  addSubcategories,
+  addCondition,
+  addRetailer,
+  addRoom,
+  addRoomType,
+} from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import {
+  getCategories,
+  getClaimItemCondition,
+  getClaimItemRetailers,
+  getClaimItemRoom,
+  getClaimRoomTypeData,
+  getSubCategories,
+} from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
   onNewClaimsClick: () => void;
@@ -16,12 +32,46 @@ interface AddItemsComponentProps {
 const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
   onAssignItemsClick,
   onNewClaimsClick,
+  addCategories,
+  addSubcategories,
+  addCondition,
+  addRetailer,
+  addRoom,
+  addRoomType,
 }) => {
   const router = useRouter();
 
   const handlePreviousClick = () => {
     onNewClaimsClick();
   };
+
+  useEffect(() => {
+    const claimId = sessionStorage.getItem("claimId") ?? "";
+
+    const fetchDetails = async () => {
+      const categoryListRes: any = await getCategories(true);
+      const subcategoryListRes: any = await getSubCategories({ categoryId: null }, true);
+
+      const claimContitionRes: any = await getClaimItemCondition(true);
+
+      const claimRetailerRes: any = await getClaimItemRetailers(true);
+
+      const claimRoomRes: any = await getClaimItemRoom(claimId, true);
+      const claimRoomTypeRes: any = await getClaimRoomTypeData(true);
+
+      if (Array.isArray(categoryListRes?.data)) {
+        addCategories(categoryListRes?.data);
+      }
+      if (Array.isArray(subcategoryListRes?.data)) {
+        addSubcategories(subcategoryListRes?.data);
+      }
+      addCondition(claimContitionRes?.data);
+      addRetailer(claimRetailerRes?.data?.retailers);
+      addRoom(claimRoomRes?.data);
+      addRoomType(claimRoomTypeRes);
+    };
+    fetchDetails();
+  }, []);
   return (
     <div>
       <div>
@@ -105,7 +155,14 @@ const mapStateToProps = (state: RootState) => ({
   selectedCategory: state.addItemsTable.selectedCategory,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  addCategories,
+  addSubcategories,
+  addCondition,
+  addRetailer,
+  addRoom,
+  addRoomType,
+};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

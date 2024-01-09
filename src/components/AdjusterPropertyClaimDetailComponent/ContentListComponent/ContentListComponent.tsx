@@ -11,6 +11,7 @@ import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
+import { claimContentList } from "@/services/ClaimContentListService";
 
 function ContentListComponent(props: any) {
   const {
@@ -44,8 +45,17 @@ function ContentListComponent(props: any) {
   const openModal = () => {
     setIsModalOpen(true);
   };
-
-  const closeModal = () => {
+  const itemListApi = async () => {
+    const payload = {
+      claimId,
+    };
+    const claimContentListRes: any = await claimContentList(payload, true);
+    if (claimContentListRes) {
+      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+    }
+  };
+  const closeModal = async () => {
+    await itemListApi();
     setEditItem(null);
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);
@@ -243,6 +253,7 @@ function ContentListComponent(props: any) {
             isModalOpen={isModalOpen}
             editItem={editItem}
             editItemDetail={editItemDetail}
+            contentData={claimContentListData}
           />
         </div>
       </div>

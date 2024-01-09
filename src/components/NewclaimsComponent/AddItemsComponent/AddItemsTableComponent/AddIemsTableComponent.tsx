@@ -19,6 +19,7 @@ import {
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { RootState } from "@/store/store";
+import { fetchAddItemsTableCSVData } from "@/services/ClaimService";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
@@ -30,6 +31,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   isAnyItemSelected,
   selectedItems,
   editItemDetail,
+  addItemsTableData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
@@ -41,8 +43,19 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   const openModal = () => {
     setIsModalOpen(true);
   };
+  const itemListApi = async () => {
+    const claimId = sessionStorage.getItem("claimId") || "";
+    const claimNumber = sessionStorage.getItem("claimNumber") || "";
+    const addItemsPayload = { claimId, claimNumber };
 
-  const closeModal = () => {
+    const addItemsTableResponse = await fetchAddItemsTableCSVData(addItemsPayload);
+
+    if (addItemsTableResponse.status === 200) {
+      dispatch(setAddItemsTableData(addItemsTableResponse.data));
+    }
+  };
+  const closeModal = async () => {
+    await itemListApi();
     setEditItem(null);
     setIsModalOpen(false);
   };
@@ -68,6 +81,7 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
             isModalOpen={isModalOpen}
             editItem={editItem}
             editItemDetail={editItemDetail}
+            contentData={addItemsTableData}
           />
         </div>
 
@@ -121,7 +135,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
   isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
   selectedCategory: state.addItemsTable.selectedCategory,
-  editItemDetail: state.addItemsTable.editItemDetail,
+  editItemDetail: state.claimContentdata.editItemDetail,
 });
 
 const mapDispatchToProps = {
