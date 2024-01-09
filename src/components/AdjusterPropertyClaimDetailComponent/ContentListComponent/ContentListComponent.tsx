@@ -14,7 +14,10 @@ import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { claimContentList } from "@/services/ClaimContentListService";
-import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import {
+  updateCliamStatus,
+  updatePaidStatus,
+} from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import clsx from "clsx";
 import Modal from "@/components/common/ModalPopups";
 import GenericInput from "@/components/common/GenericInput";
@@ -85,7 +88,7 @@ function ContentListComponent(props: any) {
     (item: any) => item.statusName === "PAID" && item.selected === true
   );
   const cashExposureTotalPrice = isValuedSelected
-    .map((item: any) => item.cashPayoutExposure)
+    .map((item: any) => +item.cashPayoutExposure)
     .reduce((a: any, b: any) => a + b, 0);
 
   const acceptMinVaues = props?.claimDetail?.minimumThreshold;
@@ -187,7 +190,7 @@ function ContentListComponent(props: any) {
     );
   };
   const schema = object({
-    checkNo: string([minLength(1, "Please Enter Check number")]),
+    checkNumber: string([minLength(1, "Please Enter Check number")]),
   });
   const {
     register,
@@ -219,7 +222,37 @@ function ContentListComponent(props: any) {
   };
 
   const onSubmit = async (data: Output<typeof schema>) => {
-    console.log("DATA", data);
+    const userId = props?.policyInfo?.insuraceAccountDetails?.adjuster?.userId;
+    const payload = {
+      ammount: cashExposureTotalPrice,
+      checkNumber: data?.checkNumber,
+      claimLineItemDetails: isValuedSelected,
+      claimNumber: claimId && String(claimId),
+      paidBy: userId && String(userId),
+      registrationNumber: "ARTGM", // temprary hardcoded due to did't get this data
+    };
+
+    const updateStatusresult = await updatePaidStatus(payload);
+
+    if (updateStatusresult?.status === 200) {
+      const payload = { claimId };
+      const claimContentListRes = await claimContentList(payload, true);
+      if (claimContentListRes) {
+        props.addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+        props.addNotification({
+          message: "Updated succesfully ",
+          id: "mark_status_paid_success",
+          status: "success",
+        });
+        setIsModalOpenPaid(false);
+      }
+    } else {
+      props.addNotification({
+        message: "Something went wrong.",
+        id: "mark_status_paid_failure",
+        status: "error",
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -469,12 +502,12 @@ function ContentListComponent(props: any) {
                   <GenericInput
                     formControlClassname={ContentListComponentStyle.inputBox}
                     labelClassname={ContentListComponentStyle.modalLabel}
-                    showError={errors["checkNo"]}
-                    errorMsg={errors?.checkNo?.message}
+                    showError={errors["checkNumber"]}
+                    errorMsg={errors?.checkNumber?.message}
                     label="Check #*"
-                    id="checkNo"
+                    id="checkNumber"
                     autoComplete="off"
-                    {...register("checkNo")}
+                    {...register("checkNumber")}
                   />
                 </div>
               </div>
@@ -507,6 +540,7 @@ const mapStateToProps = ({ claimContentdata, claimDetail }: any) => ({
   claimContentListData: claimContentdata.claimContentListData,
   claimContentListDataFull: claimContentdata.claimContentListDataFull,
   claimDetail: claimDetail && claimDetail?.contents,
+  policyInfo: claimDetail && claimDetail?.policyInfo,
 });
 const mapDispatchToProps = {
   addClaimContentListData,
