@@ -14,7 +14,13 @@ import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import CustomComparable from "./CustomComparable";
 import useBodyScrollbar from "@/hooks/useBodyScrollbar";
 
-function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
+function LineItemDetailComponentForm({
+  rapidDivRef,
+  originalItemRef,
+}: {
+  rapidDivRef: any;
+  originalItemRef: any;
+}) {
   const { hideScroll, showScroll } = useBodyScrollbar();
   const lineItem = useAppSelector(
     (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
@@ -205,6 +211,7 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
           control={control}
           getValues={getValues}
           setValue={setValue}
+          ref={originalItemRef}
         />
         <ReplacementItemSection
           showCustomComparableModal={() => setOpenCustomComparableModal(true)}

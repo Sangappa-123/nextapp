@@ -1,4 +1,5 @@
 import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants";
+import ActivityLog from "@/components/ActivityLog/ActivityLog";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
@@ -42,7 +43,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Activity Log",
-      content: "",
+      content: <ActivityLog />,
     },
     {
       name: "Policy and Coverage Details",
