@@ -288,9 +288,9 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   return (
     <div className={clsx(styles.container, "p-2 row")}>
       <div className="row">
-        <h6 className={styles.headerCont}>
+        <h6 className={styles.headerCont} onClick={toggle}>
           <span>{groupedObjData && groupedObjData[0]}</span>
-          <span className={styles.headArrowActionBtn} onClick={toggle}>
+          <span className={styles.headArrowActionBtn}>
             <HiOutlineChevronDoubleUp
               style={{
                 display: !showMe ? "block" : "none",
