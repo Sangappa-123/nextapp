@@ -6,6 +6,8 @@ import { useState } from "react";
 import RightActionsComponent from "./RightActionsButton";
 import ClaimInfoComponent from "./ClaimInfoComponent";
 import UpdateClaimInfoForm from "./UpdateClaimInfoForm";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 // type actionsType = {
 //   showFormHandler: any;
@@ -13,6 +15,8 @@ import UpdateClaimInfoForm from "./UpdateClaimInfoForm";
 
 const ClaimSnapShotComponent: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
 
   // const RightActionsComponent: React.FC<actionsType> = (props: any) => {
   //   const [showActionBtn, setShowActionBtn] = useState(false);
@@ -54,7 +58,7 @@ const ClaimSnapShotComponent: React.FC = () => {
   return (
     <>
       <Cards className={claimSnapShotStyle.snapShotcardContainer}>
-        <GenericComponentHeading title="Claim snapshot">
+        <GenericComponentHeading title={translate?.claimSnapshot?.claimSnapshotHeading}>
           <RightActionsComponent setShowForm={setShowForm} />
         </GenericComponentHeading>
         <div className={claimSnapShotStyle.contentContainer}>
@@ -145,14 +149,20 @@ const ClaimSnapShotComponent: React.FC = () => {
             <div className="mt-2">
               <Cards className={claimSnapShotStyle.snapShotContentCard}>
                 <div className={claimSnapShotStyle.cardItemContainer}>
-                  <div className={claimSnapShotStyle.itemTitle}>Items</div>
+                  <div className={claimSnapShotStyle.itemTitle}>
+                    {translate?.claimSnapshot?.items}
+                  </div>
                   <div>
                     <span className={claimSnapShotStyle.numericContent}>100</span>
-                    <span className={claimSnapShotStyle.textContent}>claimed</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.claimed}
+                    </span>
                   </div>
                   <div>
                     <span className={claimSnapShotStyle.numericContent}>0</span>
-                    <span className={claimSnapShotStyle.textContent}>processed</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.processed}
+                    </span>
                   </div>
                 </div>
               </Cards>
@@ -160,14 +170,20 @@ const ClaimSnapShotComponent: React.FC = () => {
             <div className="mt-2">
               <Cards className={claimSnapShotStyle.snapShotContentCard}>
                 <div className={claimSnapShotStyle.cardItemContainer}>
-                  <div className={claimSnapShotStyle.itemTitle}>Exposure</div>
-                  <div>
-                    <span className={claimSnapShotStyle.numericContent}>$0.00</span>
-                    <span className={claimSnapShotStyle.textContent}>Repl</span>
+                  <div className={claimSnapShotStyle.itemTitle}>
+                    {translate?.claimSnapshot?.exposure}
                   </div>
                   <div>
                     <span className={claimSnapShotStyle.numericContent}>$0.00</span>
-                    <span className={claimSnapShotStyle.textContent}>Cash</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.repl}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={claimSnapShotStyle.numericContent}>$0.00</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.cash}
+                    </span>
                   </div>
                 </div>
               </Cards>
@@ -175,14 +191,20 @@ const ClaimSnapShotComponent: React.FC = () => {
             <div className="mt-2">
               <Cards className={claimSnapShotStyle.snapShotContentCard}>
                 <div className={claimSnapShotStyle.cardItemContainer}>
-                  <div className={claimSnapShotStyle.itemTitle}>Paid</div>
-                  <div>
-                    <span className={claimSnapShotStyle.numericContent}>$0.00</span>
-                    <span className={claimSnapShotStyle.textContent}>Cash</span>
+                  <div className={claimSnapShotStyle.itemTitle}>
+                    {translate?.claimSnapshot?.paid}
                   </div>
                   <div>
                     <span className={claimSnapShotStyle.numericContent}>$0.00</span>
-                    <span className={claimSnapShotStyle.textContent}>Holdover</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.paidCash}
+                    </span>
+                  </div>
+                  <div>
+                    <span className={claimSnapShotStyle.numericContent}>$0.00</span>
+                    <span className={claimSnapShotStyle.textContent}>
+                      {translate?.claimSnapshot?.holdover}
+                    </span>
                   </div>
                 </div>
               </Cards>
