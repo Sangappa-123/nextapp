@@ -13,11 +13,14 @@ import unKnownImg from "@/assets/images/unknown.png";
 import { uploadActivityLogData } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { connect } from "react-redux";
+
 interface AddActivityPopupProps {
   handleOpenModal: () => void;
   addLoader: () => void;
   removeLoader: () => void;
   translate: any;
+  participantsList: any;
 }
 
 const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
@@ -25,6 +28,7 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
   addLoader,
   removeLoader,
   translate,
+  participantsList,
 }) => {
   const [fileName, setFileName] = useState<string>("...");
   const [prevImg, setPrevImg] = useState<any>(noImg.src);
@@ -124,25 +128,32 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
   const publishActivity = async () => {
     addLoader();
     const messageReceipient: any = [];
-    // let internal: boolean = true;
-    // let registration: any;
-    //checking needed
-    // if (item.participantType.participantType.toUpperCase() == 'EXTERNAL' ||
-    //   item.participantType.participantType.toUpperCase() == 'EXISTING VENDOR' ||
-    //   item.participantType.participantType.toUpperCase() == 'NEW VENDOR'
-    // ) {
-    //   internal = false;
-    //   registration = item.vendorRegistration;
-    //   messageReceipient.push({
-    //     "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }, "vendorRegistration": item ? item.vendorRegistration : null
-    //   });
-    // }
-    // else {
-    //   messageReceipient.push({
-    //     "participantId": item.participantId, "email": item.emailId, "participantType": { "id": item.participantType.id, "participantType": item.participantType.participantType }
-    //   });
-    // }
-    //checking needed end
+    participantsList.forEach((item: any) => {
+      if (
+        item.participantType.participantType.toUpperCase() == "EXTERNAL" ||
+        item.participantType.participantType.toUpperCase() == "EXISTING VENDOR" ||
+        item.participantType.participantType.toUpperCase() == "NEW VENDOR"
+      ) {
+        messageReceipient.push({
+          participantId: item.participantId,
+          email: item.emailId,
+          participantType: {
+            id: item.participantType.id,
+            participantType: item.participantType.participantType,
+          },
+          vendorRegistration: item ? item.vendorRegistration : null,
+        });
+      } else {
+        messageReceipient.push({
+          participantId: item.participantId,
+          email: item.emailId,
+          participantType: {
+            id: item.participantType.id,
+            participantType: item.participantType.participantType,
+          },
+        });
+      }
+    });
 
     const formData = new FormData();
     formData.append(
@@ -287,4 +298,9 @@ const AddActivityPopup: React.FC<AddActivityPopupProps> = ({
   );
 };
 
-export default AddActivityPopup;
+const mapStateToProps = ({ claimDetail }: any) => ({
+  participantsList: claimDetail.participants,
+});
+const connector = connect(mapStateToProps, {});
+
+export default connector(AddActivityPopup);
