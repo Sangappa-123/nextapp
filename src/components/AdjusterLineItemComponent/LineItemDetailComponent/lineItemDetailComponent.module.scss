@@ -14,28 +14,4 @@
     grid-template-rows: auto;
     gap: 16px;
   }
-  .modalOverlay {
-    align-items: flex-start;
-    padding-top: 48px;
-    .modal {
-      animation-name: modal;
-      animation-duration: 0.8s;
-      animation-direction: linear;
-      transform: translateY(0);
-    }
-  }
-  .customComparableModalButton {
-    display: flex;
-    column-gap: 8px;
-    margin-left: auto;
-  }
-}
-
-@keyframes modal {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
 }

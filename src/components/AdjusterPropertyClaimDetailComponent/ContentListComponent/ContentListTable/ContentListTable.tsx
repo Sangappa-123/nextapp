@@ -485,6 +485,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           table={table}
           totalDataCount={claimContentListData.length}
           pageLimit={claimContentListData.length}
+          showPaginationButtons={false}
           loader={tableLoader}
           tableDataErrorMsg={claimResult.length === 0 ? "No Record Found" : claimErrorMsg}
           fetchNextPage={fetchNextPage}
@@ -492,7 +493,6 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           totalDBRowCount={claimContentListData.length}
           filterFn={filterFn}
           handleRowClick={handleRowClick}
-          showPaginationButtons={false}
         />
       </div>
     </>
