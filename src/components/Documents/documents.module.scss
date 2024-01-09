@@ -161,3 +161,46 @@
   padding-left: 30%;
   margin-top: 20px;
 }
+.closeIcon {
+  position: relative;
+  left: 534px;
+  bottom: 15px;
+  border-radius: 25px;
+  border: 0mm;
+  width: 20px;
+  height: 20px;
+  background-color: #f20707;
+}
+.image {
+  display: inline-block;
+  object-fit: cover;
+  height: 100px;
+  aspect-ratio: 400 / 400;
+}
+.inputFile {
+  display: none;
+}
+.ioClose {
+  color: #ffff;
+  width: 20px;
+  height: 20px;
+}
+.frame {
+  position: relative;
+  left: 100px;
+}
+
+.closeButton {
+  color: #f20707;
+}
+.closeIcons {
+  position: relative;
+  left: 104px;
+  bottom: 15px;
+  border-radius: 25px;
+  border: 0mm;
+  width: 20px;
+  height: 20px;
+  top: 10px;
+  background-color: #f20707;
+}

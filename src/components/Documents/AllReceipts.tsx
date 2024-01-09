@@ -8,6 +8,7 @@ import AttachementPreview from "../AddItemModal/AttachementPreview/index";
 import document from "./documents.module.scss";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { IconContext } from "react-icons";
 import useTranslation from "@/hooks/useTranslation";
 import { claimDocumentsTranslateType } from "@/translations/claimDocumentsTranslate/en";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
@@ -151,7 +152,7 @@ export default function AllReceipts() {
                 id="inp"
                 multiple
                 ref={fileInputRef}
-                style={{ display: "none" }}
+                className={document.inputFile}
                 accept=".png,.jpg,.jpeg,.pdf"
                 onChange={handleUpload}
               ></input>
@@ -167,22 +168,20 @@ export default function AllReceipts() {
                   <>
                     <div className="col-2 m-2" key={index}>
                       <div
-                        style={{ position: "relative", left: "100px" }}
+                        className={document.frame}
                         onClick={() => handleDeleteImage(index)}
                       >
                         {" "}
-                        <IoClose style={{ color: "#f20707" }} />
+                        <IconContext.Provider value={{ className: document.closeButton }}>
+                          <IoClose />
+                        </IconContext.Provider>
+                        {/* <IoClose className={document.closeButton} /> */}
                       </div>
                       <div>
                         <iframe
                           key={index} // Add a unique key for each element
                           src={elem.url}
-                          style={{
-                            display: "inline-block",
-                            objectFit: "cover",
-                            height: "100px",
-                            aspectRatio: 400 / 400,
-                          }}
+                          className={document.image}
                         />
                       </div>
 
@@ -203,22 +202,13 @@ export default function AllReceipts() {
                       <>
                         <div key={index}>
                           <button
-                            style={{
-                              position: "relative",
-                              top: "10px",
-                              left: "100px",
-                              borderRadius: "25px",
-                              border: "0mm",
-                              width: "20px",
-                              height: "20px",
-                              backgroundColor: "#f20707",
-                            }}
+                            className={document.closeIcons}
                             onClick={() => handleDeleteImages()}
                           >
                             {" "}
-                            <IoClose
-                              style={{ color: "#ffff", width: "20px", height: "20px" }}
-                            />
+                            <IconContext.Provider value={{ className: document.ioClose }}>
+                              <IoClose />
+                            </IconContext.Provider>
                           </button>
                           <div>
                             <div>
@@ -226,12 +216,7 @@ export default function AllReceipts() {
                                 key={index} // Add a unique key for each element
                                 src={elem.url}
                                 alt={`Image ${index}`} // Add alt text for accessibility
-                                style={{
-                                  display: "inline-block",
-                                  objectFit: "cover",
-                                  height: "100px",
-                                  aspectRatio: 400 / 400,
-                                }}
+                                className={document.image}
                               />
                             </div>
                             {showModal ? (
@@ -269,22 +254,13 @@ export default function AllReceipts() {
                           key={index}
                         >
                           <button
-                            style={{
-                              position: "relative",
-                              left: "534px",
-                              bottom: "15px",
-                              borderRadius: "25px",
-                              border: "0mm",
-                              width: "20px",
-                              height: "20px",
-                              backgroundColor: "#f20707",
-                            }}
+                            className={document.closeIcon}
                             onClick={() => handleDeleteImage(index)}
                           >
                             {" "}
-                            <IoClose
-                              style={{ color: "#ffff", width: "20px", height: "20px" }}
-                            />
+                            <IconContext.Provider value={{ className: document.ioClose }}>
+                              <IoClose />
+                            </IconContext.Provider>{" "}
                           </button>
                           <div className="row">
                             <div className="col-lg-2">
@@ -292,12 +268,7 @@ export default function AllReceipts() {
                                 key={index} // Add a unique key for each element
                                 src={elem.url}
                                 alt={`Image ${index}`} // Add alt text for accessibility
-                                style={{
-                                  display: "inline-block",
-                                  objectFit: "cover",
-                                  height: "100px",
-                                  aspectRatio: 400 / 400,
-                                }}
+                                className={document.image}
                               />
                             </div>
                             <div className={clsx("col-lg-8", document.text)}>
