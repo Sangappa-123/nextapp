@@ -132,8 +132,8 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
             });
 
             return (
-              <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+              <div className={clsx(styles.itemDetailMsgCont)} key={i}>
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -161,7 +161,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
           } else {
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -227,7 +227,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
             });
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -255,7 +255,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
           } else {
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
