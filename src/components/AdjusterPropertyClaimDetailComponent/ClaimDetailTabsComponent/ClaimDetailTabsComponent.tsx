@@ -39,7 +39,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Claim Participants",
-      content: <ClaimParticipants />,
+      content: <ClaimParticipants claimId={props.claimId} />,
     },
     {
       name: "Activity Log",
