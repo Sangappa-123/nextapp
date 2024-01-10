@@ -179,9 +179,6 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
         onClose={closeDeleteModal}
         headingName="Delete Lost/Damaged Item"
         overlayClassName={lineItemDetailComponentStyle.deleteModalOverlay}
-        animate={true}
-        positionTop={true}
-        roundedBorder={true}
         footerContent={
           <div className={lineItemDetailComponentStyle.deleteModalBtn}>
             <GenericButton
@@ -203,6 +200,9 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
             Are you sure you want to delete this item? <strong>Please Confirm!</strong>
           </p>
         }
+        animate
+        positionTop
+        roundedBorder
       />
 
       <GroupedActionButtons onDeleteClick={showDeleteModal} />
