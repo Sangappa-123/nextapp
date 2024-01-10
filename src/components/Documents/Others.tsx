@@ -13,6 +13,7 @@ import { IconContext } from "react-icons";
 
 import useTranslation from "@/hooks/useTranslation";
 import { claimDocumentsTranslateType } from "@/translations/claimDocumentsTranslate/en";
+import GenericButton from "../common/GenericButton/index";
 
 interface MyObject {
   imgType: string;
@@ -289,19 +290,23 @@ export default function Others() {
                           <span className={document.uploadText}>
                             {translate?.uploadNewDocuments ?? ""}
                           </span>
-                          <div>
-                            <button
-                              className={document.save}
-                              onClick={() => handleSave()}
-                            >
-                              {translate?.save ?? ""}
-                            </button>
-                            <button
-                              className={document.cancel}
-                              onClick={() => handleDeleteImage(index)}
-                            >
-                              {translate?.cancel ?? ""}
-                            </button>
+                          <div className="row">
+                            <div className="col-lg-2">
+                              <GenericButton
+                                // className={document.save}
+                                onClick={() => handleSave()}
+                                label={translate?.save ?? ""}
+                                theme="linkBtn"
+                              />
+                            </div>
+                            <div className="col-lg-2">
+                              <GenericButton
+                                // className={document.cancel}
+                                onClick={() => handleDeleteImage(index)}
+                                label={translate?.cancel ?? ""}
+                                theme="linkBtn"
+                              ></GenericButton>
+                            </div>
                           </div>
                         </div>
                       </>
