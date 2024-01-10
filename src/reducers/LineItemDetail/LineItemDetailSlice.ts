@@ -92,6 +92,10 @@ const LineItemDetailSlice = createSlice({
         };
       else state.lineItem.subCategory = null;
     },
+    updateReplacementItem(state, action) {
+      const { payload } = action;
+      state.replacementItem = { ...state.replacementItem, ...payload };
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchLineItemDetail.pending, (state) => {
@@ -205,4 +209,5 @@ export const {
   updateOnCategoryChange,
   updateLineItem,
   updateOnSubCategoryChange,
+  updateReplacementItem,
 } = LineItemDetailSlice.actions;

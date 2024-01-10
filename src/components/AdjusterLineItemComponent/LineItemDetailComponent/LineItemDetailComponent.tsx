@@ -6,7 +6,7 @@ import ReplacementItemSection from "./ReplacementItemSection";
 import WebComparables from "./WebComparables";
 import AddedComparables from "./AddedComparables";
 import useCustomForm from "@/hooks/useCustomForm";
-import { Output, any, object, string } from "valibot";
+import { Output, any, minLength, object, string } from "valibot";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 // import Modal from "@/components/common/ModalPopups";
@@ -23,23 +23,15 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
 
   const [openCustomComparableModal, setOpenCustomComparableModal] = useState(false);
   const schema = object({
-    description: string("Item description"),
+    description: string("Item description", [minLength(0)]),
     insuredPrice: any(),
     quantity: any(),
+    scheduleAmount: any(),
     totalStatedAmount: any(),
     ageYears: any(),
     ageMonths: any(),
-    brand: string(),
-    model: string(),
-    originallyPurchasedFrom: object({
-      id: any(),
-      name: string(),
-    }),
-    purchaseMethod: object({
-      label: string(),
-      value: string(),
-    }),
-    room: any(),
+    brand: any(),
+    model: any(),
   });
 
   useEffect(() => {
@@ -52,22 +44,14 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
 
   const defaultValue = {
     description: lineItem?.description,
-
     insuredPrice: lineItem?.insuredPrice,
     quantity: lineItem?.quantity,
+    scheduleAmount: lineItem?.scheduleAmount,
     totalStatedAmount: lineItem?.totalStatedAmount,
     ageYears: lineItem?.ageYears,
     ageMonths: lineItem?.ageMonths,
     brand: lineItem?.brand,
     model: lineItem?.model,
-    originallyPurchasedFrom: {
-      id: lineItem?.originallyPurchasedFrom?.id,
-      name: lineItem?.originallyPurchasedFrom?.name,
-    },
-    purchaseMethod: {
-      label: lineItem?.purchaseMethod,
-      value: lineItem?.purchaseMethod,
-    },
   };
 
   const { register, handleSubmit, control, formState, getValues, setValue } =

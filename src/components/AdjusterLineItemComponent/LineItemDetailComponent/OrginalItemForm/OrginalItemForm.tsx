@@ -5,7 +5,6 @@ import GenericInput from "@/components/common/GenericInput";
 import GenericSelect from "@/components/common/GenericSelect";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { Controller } from "react-hook-form";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import { fetchSubCategory } from "@/reducers/LineItemDetail/LineItemThunkService";
 import {
@@ -33,7 +32,6 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
     retailer,
     paymentTypes,
     register,
-    control,
     getValues,
     setValue,
     fetchSubCategory,
@@ -42,7 +40,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
     updateLineItem,
   } = props;
 
-  const debounce = useDebounce(updateLineItem, 500);
+  const debounce = useDebounce(updateLineItem, 100);
 
   const { onChange: quantityOnChange, ...quantityRegister } = register("quantity");
   const { onChange: insuredPriceOnChange, ...insuredPriceRegister } =
@@ -51,6 +49,14 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
   const updateTotalStatedAmount = () => {
     const [insuredPrice, quantity] = getValues(["insuredPrice", "quantity"]);
     setValue("totalStatedAmount", (insuredPrice ?? 0) * (quantity ?? 0));
+  };
+
+  const handleApplyTax = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateLineItem({ applyTax: e.target.value === "no" ? false : true });
+  };
+
+  const handleScheduleItem = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateLineItem({ isScheduledItem: e.target.value === "no" ? false : true });
   };
 
   return (
@@ -142,6 +148,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           </label>
           <GenericInput
             id="cost_per_unit"
+            type="number"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Stated Value(per unit)"
             onChange={(e: any) => {
@@ -158,11 +165,13 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           </label>
           <GenericInput
             id="qty_lost"
+            type="number"
             labelClassname={orginalItemFormStyle.label}
             placeholder="Quantity"
             onChange={(e: React.FocusEvent<HTMLInputElement>) => {
               quantityOnChange(e);
               updateTotalStatedAmount();
+              debounce({ quantity: +(e.target.value ?? 0) });
             }}
             {...quantityRegister}
           />
@@ -183,6 +192,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           <div className={orginalItemFormStyle.itemAgeFormGroup}>
             <GenericInput
               label="(Years)"
+              type="number"
               formControlClassname={orginalItemFormStyle.itemAgeFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputFieldWrapper}
               {...register("ageYears")}
@@ -216,6 +226,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
               checked={lineItem?.applyTax}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
+              onChange={handleApplyTax}
             />
             <GenericInput
               type="radio"
@@ -225,6 +236,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
               checked={!lineItem?.applyTax}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
+              onChange={handleApplyTax}
             />
           </div>
         </div>
@@ -234,6 +246,9 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
             placeholder="Brand"
             labelClassname={orginalItemFormStyle.label}
             {...register("brand")}
+            onChange={(e: React.FocusEvent<HTMLInputElement>) =>
+              debounce({ brand: e.target.value ? e.target.value : null })
+            }
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
@@ -242,6 +257,9 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
             labelClassname={orginalItemFormStyle.label}
             placeholder="Model"
             {...register("model")}
+            onChange={(e: React.FocusEvent<HTMLInputElement>) =>
+              debounce({ model: e.target.value ? e.target.value : null })
+            }
           />
         </div>
         <div
@@ -253,36 +271,30 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           <label htmlFor="purchasedFrom" className={orginalItemFormStyle.label}>
             Purchased From
           </label>
-          <Controller
-            name="originallyPurchasedFrom"
-            control={control}
-            render={({ field }: any) => (
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="originallyPurchasedFrom"
-                options={retailer}
-                getOptionLabel={(option: { name: string }) => option.name}
-                getOptionValue={(option: { id: number }) => option.id}
-                {...field}
-              />
-            )}
+          <GenericSelect
+            menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+            id="originallyPurchasedFrom"
+            options={retailer}
+            value={lineItem?.originallyPurchasedFrom}
+            getOptionLabel={(option: { name: string }) => option.name}
+            getOptionValue={(option: { id: number }) => option.id}
+            onChange={(e: unknownObjectType) => {
+              updateLineItem({ originallyPurchasedFrom: e });
+            }}
           />
         </div>
         <div className={orginalItemFormStyle.formGroup}>
           <label htmlFor="purchasedMethod" className={orginalItemFormStyle.label}>
             Purchased Method
           </label>
-          <Controller
-            name="purchaseMethod"
-            control={control}
-            render={({ field }: any) => (
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="purchaseMethod"
-                options={paymentTypes}
-                {...field}
-              />
-            )}
+          <GenericSelect
+            menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+            id="purchaseMethod"
+            value={lineItem?.purchaseMethod}
+            options={paymentTypes}
+            onChange={(e: unknownObjectType) => {
+              updateLineItem({ purchaseMethod: e });
+            }}
           />
         </div>
         <div
@@ -310,19 +322,22 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           <label htmlFor="room" className={orginalItemFormStyle.label}>
             Room
           </label>
-          <Controller
-            name="room"
-            control={control}
-            render={({ field }: any) => (
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="room"
-                options={room}
-                getOptionLabel={(option: { roomName: any }) => option.roomName}
-                getOptionValue={(option: { id: any }) => option.id}
-                {...field}
-              />
-            )}
+          <GenericSelect
+            menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+            id="room"
+            options={room}
+            value={lineItem.room}
+            getOptionLabel={(option: { roomName: any }) => option.roomName}
+            getOptionValue={(option: { id: any }) => option.id}
+            onChange={(e: unknownObjectType) => {
+              const payload = e
+                ? {
+                    id: e.id,
+                    roomName: e.roomName,
+                  }
+                : null;
+              updateLineItem({ room: payload });
+            }}
           />
         </div>
         <div
@@ -331,7 +346,9 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
             orginalItemFormStyle.scheduledItem
           )}
         >
-          <label className={orginalItemFormStyle.label}>Scheduled Item</label>
+          <label className={orginalItemFormStyle.label}>
+            <span className="text-danger">*</span>Scheduled Item
+          </label>
           <div className={orginalItemFormStyle.scheduledItemFormGroup}>
             <GenericInput
               type="radio"
@@ -341,6 +358,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
               checked={lineItem?.isScheduledItem}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
+              onChange={handleScheduleItem}
             />
             <GenericInput
               type="radio"
@@ -350,9 +368,28 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
               checked={!lineItem?.isScheduledItem}
               formControlClassname={orginalItemFormStyle.radioFormControl}
               inputFieldWrapperClassName={orginalItemFormStyle.inputWrapper}
+              onChange={handleScheduleItem}
             />
           </div>
         </div>
+        {lineItem?.isScheduledItem && (
+          <div className={orginalItemFormStyle.formGroup}>
+            <GenericInput
+              label={
+                <span>
+                  <span className="text-danger">*</span> Scheduled Amount
+                </span>
+              }
+              type="number"
+              labelClassname={orginalItemFormStyle.label}
+              placeholder="scheduledAmount"
+              {...register("scheduleAmount")}
+              onChange={(e: React.FocusEvent<HTMLInputElement>) =>
+                debounce({ scheduleAmount: e.target.value ? e.target.value : null })
+              }
+            />
+          </div>
+        )}
         <div
           className={clsx(
             orginalItemFormStyle.formGroup,
