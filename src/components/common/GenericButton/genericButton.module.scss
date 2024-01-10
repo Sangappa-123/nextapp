@@ -72,3 +72,15 @@
     background-color: #b64343;
   }
 }
+
+.linkButton {
+  color: $astral;
+  height: fit-content;
+  border: none;
+  font-weight: 600;
+  font-family: inherit;
+  &:hover {
+    text-decoration: underline;
+    color: $blueJay;
+  }
+}
