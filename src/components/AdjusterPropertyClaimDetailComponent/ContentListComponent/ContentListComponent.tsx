@@ -11,6 +11,11 @@ import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
+import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { claimContentList } from "@/services/ClaimContentListService";
+import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import clsx from "clsx";
 
 function ContentListComponent(props: any) {
   const {
@@ -20,15 +25,17 @@ function ContentListComponent(props: any) {
     editItemDetail,
     claimContentListData,
     claimContentListDataFull,
+    categoryListRes,
   } = props;
-  console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
   const [openMore, setOpenMore] = useState(false);
   const [checkedValues, setcheckStatus] = useState(false);
+  const [isCreatedItemvAilable, setIsCreatedItemAvailable] = useState(false);
   const [getNumberSelected, setNumberSelected] = useState(0);
   const [openStatus, setOpenStatus] = useState(false);
 
@@ -51,27 +58,75 @@ function ContentListComponent(props: any) {
     router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
-  React.useEffect(() => {
-    if (claimContentListDataFull.length > 0) {
-      const isCreatedSelected = claimContentListDataFull.filter(
-        (item: any) => item.status === "CREATED" && item.selected === true
-      );
-      const isNotCreatedSelected = claimContentListDataFull.filter(
-        (item: any) => item.status !== "CREATED" && item.selected === true
+  const openModalChangeCat = () => {
+    setIsModalOpenChangeCat(true);
+  };
+  const closeModalChangeCat = () => {
+    setIsModalOpenChangeCat(false);
+  };
+  console.log("claimContentListDataFull", claimContentListDataFull);
+
+  const handleCreatedStatus = async () => {
+    const selectedClaims =
+      claimContentListDataFull &&
+      claimContentListDataFull.length > 0 &&
+      claimContentListDataFull.filter(
+        (item: any) => item.selected === true && item.statusName === "CREATED"
       );
 
-      if (isNotCreatedSelected.length > 0) {
-        setcheckStatus(false);
-        setOpenMore(false);
-        setNumberSelected(0);
-      } else if (isCreatedSelected.length > 0) {
-        setcheckStatus(true);
-        setNumberSelected(isCreatedSelected.length);
-      } else {
-        setcheckStatus(false);
-        setOpenMore(false);
-        setNumberSelected(0);
+    const param = {
+      claimItems: selectedClaims,
+      itemStatus: "VALUED",
+    };
+    const updateStatusresult = await updateCliamStatus(param);
+
+    if (updateStatusresult?.status === 200) {
+      const payload = { claimId };
+      const claimContentListRes = await claimContentList(payload, true);
+
+      if (claimContentListRes) {
+        props.addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+
+        props.addNotification({
+          message: "Status Updated Successfully",
+          id: "update_status_valued_success",
+          status: "success",
+        });
+        closeModal();
       }
+    } else {
+      props.addNotification({
+        message: "Something went wrong.",
+        id: "update_status_valued_failure",
+        status: "error",
+      });
+    }
+  };
+
+  const isCreatedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName === "CREATED" && item.selected === true
+  );
+  const isNotCreatedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName !== "CREATED" && item.selected === true
+  );
+  const isNotValuedSelected = claimContentListDataFull.filter(
+    (item: any) => item.statusName !== "VALUED" && item.selected === true
+  );
+
+  React.useEffect(() => {
+    if (isCreatedSelected.length > 0) {
+      setIsCreatedItemAvailable(true);
+      setcheckStatus(true);
+      setNumberSelected(isCreatedSelected.length);
+    } else if (isNotCreatedSelected.length > 0) {
+      setIsCreatedItemAvailable(false);
+      setcheckStatus(true);
+      setNumberSelected(isCreatedSelected.length);
+    } else {
+      setIsCreatedItemAvailable(false);
+      setOpenMore(false);
+      setcheckStatus(false);
+      setNumberSelected(0);
     }
   }, [claimContentListDataFull]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -138,7 +193,7 @@ function ContentListComponent(props: any) {
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={!checkedValues}
+                disabled={!isCreatedItemvAilable}
               />
               <GenericButton
                 label="Map Receipts"
@@ -162,10 +217,13 @@ function ContentListComponent(props: any) {
                 clickable={true}
               >
                 <div className="p-0">
-                  <div className={ContentListComponentStyle.selectedItemsLine}>
+                  <span className={ContentListComponentStyle.selectedItemsLine}>
                     ({getNumberSelected}) items selected
-                  </div>
-                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                  </span>
+                  <div
+                    className={ContentListComponentStyle.dropDownInnerDiv}
+                    onClick={openModalChangeCat}
+                  >
                     Change Category
                   </div>
 
@@ -193,8 +251,22 @@ function ContentListComponent(props: any) {
                     clickable={true}
                   >
                     <div className="p-0">
-                      <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                      <div
+                        className={clsx(
+                          { "d-none": !(isCreatedSelected.length > 0) },
+                          ContentListComponentStyle.dropDownInnerDiv
+                        )}
+                        onClick={handleCreatedStatus}
+                      >
                         Mark Valued
+                      </div>
+                      <div
+                        className={clsx(
+                          { "d-none": !(isNotValuedSelected.length > 0) },
+                          ContentListComponentStyle.dropDownInnerDiv
+                        )}
+                      >
+                        Mark Paid
                       </div>
 
                       <div
@@ -245,6 +317,14 @@ function ContentListComponent(props: any) {
             editItemDetail={editItemDetail}
           />
         </div>
+        <div className="col-12">
+          <ChangeCategoryModal
+            closeModal={closeModalChangeCat}
+            isModalOpen={isModalOpenChangeCat}
+            categoryListRes={categoryListRes}
+            claimContentListDataFull={claimContentListDataFull}
+          />
+        </div>
       </div>
       <ContentListTable
         setTableLoader={setTableLoader}
@@ -263,5 +343,6 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 });
 const mapDispatchToProps = {
   addClaimContentListData,
+  addNotification,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ContentListComponent);

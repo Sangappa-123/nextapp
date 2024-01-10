@@ -6,7 +6,6 @@ import modalStyle from "./AddNewMessageModalComponent.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
 import GenericButton from "@/components/common/GenericButton";
 import { IoClose } from "react-icons/io5";
-import { capitalize } from "@/utils/helper";
 import useCustomForm from "@/hooks/useCustomForm";
 import GenericTextArea from "@/components/common/GenericTextArea";
 import { object, string, minLength, Output, array } from "valibot";
@@ -35,17 +34,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
   });
 
   const { register, handleSubmit, formState, control } = useCustomForm(schema);
-
   const { errors } = formState;
-  const optionsArray: any = [];
-
-  participants.map((participant: any) => {
-    optionsArray.push({
-      label: `${participant?.firstName} ${participant?.lastName} (${participant
-        ?.companyDTO?.companyName} - ${capitalize(participant?.role)})`,
-      value: JSON.stringify({ participant }),
-    });
-  });
   const handleAnchorTagClick = () => {
     document.getElementById("inp")?.click();
   };
@@ -87,7 +76,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                 render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
                   <GenericSelect
                     placeholder={"Select Participants"}
-                    options={optionsArray}
+                    options={participants}
                     isMulti={true}
                     showError={errors["participants"]}
                     errorMsg={errors?.participants?.message}
