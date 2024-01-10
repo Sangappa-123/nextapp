@@ -7,11 +7,13 @@ import Image from "next/image";
 interface ActivityLogDocPreviewProps {
   handleOpenModal: () => void;
   data: any;
+  translate: any;
 }
 
 const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
   handleOpenModal,
   data,
+  translate,
 }) => {
   // 0 - unsuported
   // 1 - image
@@ -91,13 +93,13 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
       <hr className={modalStyle.hrStyle}></hr>
       <GenericButton
         className={modalStyle.buttonStyle}
-        label="Download"
+        label={translate?.activityLogView?.docPreview?.downloadText}
         size="medium"
         onClick={downloadDoc}
       />
       <GenericButton
         className={modalStyle.buttonStyle}
-        label="Close Preview"
+        label={translate?.activityLogView?.docPreview?.closeText}
         size="medium"
         onClick={handleOpenModal}
       />
@@ -126,7 +128,7 @@ const ActivityLogDocPreview: React.FC<ActivityLogDocPreviewProps> = ({
         className={modalStyle.unSupportedTextCont}
       >
         <span className={modalStyle.unSupportedText}>
-          File type does not support preview option. File will start downloading..
+          {translate?.activityLogView?.docPreview?.fileTypeNotSupported}
         </span>
       </div>
       <div

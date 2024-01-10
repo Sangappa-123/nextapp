@@ -4,28 +4,43 @@ import cvStyle from "./content-evaluation.module.scss";
 import CoverageSummaryList from "./CoverageSummaryList/CoverageSummaryList";
 import DetailedInventoryList from "./DetailedInventoryList/DetailedInventoryList";
 import PolicyholderPayouts from "./PolicyholderPayouts/PolicyholderPayouts";
+import useTranslation from "@/hooks/useTranslation";
+import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
+import CustomLoader from "@/components/common/CustomLoader/index";
 
-const ContentsEvaluationContentTopButtonsComponent: React.FC<propTypes> = () => {
+function ContentsEvaluationContentTopButtonsComponent() {
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
+    useTranslation("contentsEvaluationTranslate");
+
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
   const tabsArray = [
     {
-      name: "Detailed Inventory",
+      name: translate?.detailedTabTitle || "",
       content: <DetailedInventoryList />,
     },
     {
-      name: "Coverage Summary",
+      name: translate?.coverageTabTitle || "",
       content: <CoverageSummaryList />,
     },
     {
-      name: "Policyholder Payouts",
+      name: translate?.policyTabTitle || "",
       content: <PolicyholderPayouts />,
     },
   ];
-
   return (
     <div className={cvStyle.TabContainer}>
       <TabsButtonComponent tabData={tabsArray} />
     </div>
   );
-};
+}
 
 export default ContentsEvaluationContentTopButtonsComponent;

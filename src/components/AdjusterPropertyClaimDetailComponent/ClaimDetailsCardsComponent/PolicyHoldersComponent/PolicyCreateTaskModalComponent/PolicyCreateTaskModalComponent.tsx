@@ -22,6 +22,8 @@ import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { getPendingTaskList } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
 import { addPendingTasks } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 import CustomLoader from "@/components/common/CustomLoader";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 interface PolicyCreateTaskModalComponentProps {
   handleOpenModal: () => void;
@@ -109,6 +111,9 @@ const PolicyCreateTaskModalComponent: React.FC<
     }
   };
 
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
+
   return (
     <>
       {showLoader && <CustomLoader />}
@@ -116,7 +121,9 @@ const PolicyCreateTaskModalComponent: React.FC<
         <div className={clsx(modalStyle.upperContainer, "p-2")}>
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-3")}>
-              <label className={modalStyle.labelStyle}>Assigned To</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.policyHolderTaskCard?.createTaskModal?.assignedTo}
+              </label>
             </div>
             <div className={clsx(modalStyle.labelStyle, "col-7 mx-3")}>
               {policyHolderUser?.lastName}, {policyHolderUser?.firstName}
@@ -125,9 +132,11 @@ const PolicyCreateTaskModalComponent: React.FC<
 
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-3")}>
-              <label className={modalStyle.labelStyle}>Form Name</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.policyHolderTaskCard?.createTaskModal?.formName}
+              </label>
             </div>
-            <div className={clsx("col-7 mx-3")}>
+            <div className="col-7 mx-3">
               <Controller
                 control={control}
                 name="task"
@@ -149,9 +158,11 @@ const PolicyCreateTaskModalComponent: React.FC<
 
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-3")}>
-              <label className={modalStyle.labelStyle}>Description</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.policyHolderTaskCard?.createTaskModal?.description}
+              </label>
             </div>
-            <div className={clsx("col-7 mx-3")}>
+            <div className="col-7 mx-3">
               <GenericTextArea
                 showError={errors["description"]}
                 errorMsg={errors?.description?.message}
@@ -166,10 +177,18 @@ const PolicyCreateTaskModalComponent: React.FC<
         <div className={clsx(modalStyle.alignRight, "row col-12 mt-2")}>
           <div className={"row col-7"}>
             <div className={clsx("row col-6", modalStyle.centerAlign)}>
-              <GenericButton label="Cancel" size="medium" onClick={handleOpenModal} />
+              <GenericButton
+                label={translate?.policyHolderTaskCard?.createTaskModal?.cancelBtn}
+                size="medium"
+                onClick={handleOpenModal}
+              />
             </div>
             <div className="row col-6">
-              <GenericButton label="Add Form" size="medium" type="submit" />
+              <GenericButton
+                label={translate?.policyHolderTaskCard?.createTaskModal?.addformBtn}
+                size="medium"
+                type="submit"
+              />
             </div>
           </div>
         </div>
