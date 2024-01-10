@@ -20,6 +20,54 @@ const translate = {
     paidCash: "cash",
     holdover: "holdover",
   },
+
+  addMessageCard: {
+    messages: "Messages",
+    addNewMessage: "Add New Messages",
+    noNewMessage: "No New Message",
+    viewAllMessges: "viewAllMessges",
+
+    addNewMessageModal: {
+      to: {
+        label: "To",
+        placeholder: "Select Participants",
+      },
+      message: {
+        label: "Message",
+        placeholder: "Message",
+      },
+      attachment: {
+        label: "Attachment",
+        linkName: "Click to add attachment",
+      },
+      errorMessages: {
+        receipentErr: "Please select recipient",
+        messageFieldsErr: "Message field is required.",
+      },
+
+      cancelBtn: "Cancel",
+      addMsgBtn: "Add Message",
+    },
+  },
+
+  policyHolderTaskCard: {
+    modalHeading: "Create Task",
+    policyHolderTask: "Policyholder's Task",
+    createNewTask: "Create New Task",
+    formName: "Form Name",
+    status: "Status",
+    assignedDate: "Assigned Date",
+    noTask: "No task available",
+    viewAll: "View all",
+
+    createTaskModal: {
+      assignedTo: "Assigned To",
+      formName: "Form Name",
+      description: "Description",
+      cancelBtn: "Cancel",
+      addformBtn: "Add Form",
+    },
+  },
 };
 
 export { translate };

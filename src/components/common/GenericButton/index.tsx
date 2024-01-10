@@ -17,7 +17,7 @@ enum btnSize {
 }
 
 type genericButtonType = {
-  label: string;
+  label: string | any;
   theme?: keyof typeof btnThemes;
   size?: keyof typeof btnSize;
   btnClassname?: string;
