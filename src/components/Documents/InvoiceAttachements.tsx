@@ -132,14 +132,14 @@ export default function InvoiceAttachements() {
 
   return (
     <div className={document.mainDiv}>
-      <div className={"col-md-12 col-xs-12 mt-3 p-1"}>
+      <div className="col-md-12 col-xs-12 mt-3 p-1">
         <div
           className={clsx("col-xs-12 caption font-gray-sharp", document.SubHeadingDiv)}
         >
           <span>{translate?.invoicesAttachements ?? ""}</span>
         </div>
-        <div className={clsx("row")}>
-          <div className={clsx("col-lg-10")}>
+        <div className="row">
+          <div className="col-lg-10">
             <button className={document.button}>
               <label
                 onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
