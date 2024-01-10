@@ -8,18 +8,31 @@ import {
 
 const initialState = {
   detailedInventoryListDataFull: [],
-  detailedInventoryfetching: true,
   detailedInventoryListAPIData: [],
-  coverageSummaryListDataFull: [],
-  policyHolderListDataFull: {},
   detailedInventorySummaryData: [],
+  detailedInventoryfetching: true,
+  coverageSummaryListDataFull: [],
+  claimCategoryDetails: [],
+  coverageSummaryfetching: true,
+  policyHolderListDataFull: {},
+  policyHolderfetching: true,
+  policyHolderTablefetching: true,
   policySummaryListDataFull: [],
   searchKeyword: "",
 };
 
 export const fetchDetailedInventoryAction = createAsyncThunk(
   "detailedInventory/fetchData",
-  async (param: { pageNo: number; recordPerPage: number; claimNum: string }, api) => {
+  async (
+    param: {
+      pageNo: number;
+      recordPerPage: number;
+      claimNum: string;
+      sortBy: string;
+      orderBy: string;
+    },
+    api
+  ) => {
     const rejectWithValue = api.rejectWithValue;
     try {
       const res = await getDetailedInventory(param, true);
@@ -107,38 +120,48 @@ const DetailedInventorySlice = createSlice({
     });
     builder.addCase(fetchCoverageSummaryAction.pending, (state) => {
       state.coverageSummaryListDataFull = [];
+      state.coverageSummaryfetching = true;
     });
     builder.addCase(fetchCoverageSummaryAction.fulfilled, (state, action) => {
       const payload = action.payload;
+      state.coverageSummaryfetching = false;
       if (payload?.status === 200) {
         state.coverageSummaryListDataFull = payload?.data;
+        state.claimCategoryDetails = payload?.data?.claimCategoryDetails;
       }
     });
     builder.addCase(fetchCoverageSummaryAction.rejected, (state) => {
+      state.coverageSummaryfetching = false;
       state.coverageSummaryListDataFull = initialState.coverageSummaryListDataFull;
     });
     builder.addCase(fetchPolicyHolderTableAction.pending, (state) => {
+      state.policyHolderfetching = true;
       state.policyHolderListDataFull = {};
     });
     builder.addCase(fetchPolicyHolderTableAction.fulfilled, (state, action) => {
+      state.policyHolderfetching = false;
       const payload = action.payload;
       if (payload?.status === 200) {
         state.policyHolderListDataFull = payload?.data;
       }
     });
     builder.addCase(fetchPolicyHolderTableAction.rejected, (state) => {
+      state.policyHolderfetching = false;
       state.policyHolderListDataFull = initialState.policyHolderListDataFull;
     });
     builder.addCase(fetchPolicySummaryTableAction.pending, (state) => {
+      state.policyHolderTablefetching = true;
       state.policySummaryListDataFull = [];
     });
     builder.addCase(fetchPolicySummaryTableAction.fulfilled, (state, action) => {
+      state.policyHolderTablefetching = false;
       const payload = action.payload;
       if (payload?.status === 200) {
         state.policySummaryListDataFull = payload?.data;
       }
     });
     builder.addCase(fetchPolicySummaryTableAction.rejected, (state) => {
+      state.policyHolderTablefetching = false;
       state.policySummaryListDataFull = initialState.policySummaryListDataFull;
     });
   },
