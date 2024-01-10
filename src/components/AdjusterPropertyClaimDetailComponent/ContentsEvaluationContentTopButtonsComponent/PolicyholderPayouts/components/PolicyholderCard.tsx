@@ -2,7 +2,7 @@ import React from "react";
 import style from "./policyholderCard.module.scss";
 import Cards from "@/components/common/Cards";
 
-function PolicyholderCard({ heading, value }) {
+function PolicyholderCard({ heading, value }: { heading: string; value: string }) {
   return (
     <Cards className={style.card}>
       <div className={style.bold}>{heading}</div>
