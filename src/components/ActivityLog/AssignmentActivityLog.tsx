@@ -14,12 +14,14 @@ import ModalWithoutHeaderPopups from "@/components/common/ModalWithoutHeaderPopu
 
 interface AssignmentActivityLogProps {
   groupedObjData: any;
+  translate: any;
 }
 interface ExpandableTextProps {
   text: any;
+  translate: any;
 }
 
-const ExpandableText: React.FC<ExpandableTextProps> = ({ text }) => {
+const ExpandableText: React.FC<ExpandableTextProps> = ({ text, translate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const limit: number = 200;
   const toggleExpansion = () => {
@@ -36,7 +38,9 @@ const ExpandableText: React.FC<ExpandableTextProps> = ({ text }) => {
         {displayedText}{" "}
         {text.length > limit && (
           <button className={styles.showMoreLessBtn} onClick={toggleExpansion}>
-            {isExpanded ? "Less" : "More"}
+            {isExpanded
+              ? translate?.activityLogView?.lessText
+              : translate?.activityLogView?.moreText}
           </button>
         )}
       </p>
@@ -46,6 +50,7 @@ const ExpandableText: React.FC<ExpandableTextProps> = ({ text }) => {
 
 const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   groupedObjData,
+  translate,
 }) => {
   const options: any = {
     day: "2-digit",
@@ -127,8 +132,8 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
             });
 
             return (
-              <div className={clsx("", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+              <div className={clsx(styles.itemDetailMsgCont)} key={i}>
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -136,7 +141,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                         : styles.itemDetailMsgSent
                     }
                   >
-                    <ExpandableText text={obj.message} />
+                    <ExpandableText translate={translate} text={obj.message} />
                   </h6>
                   <div className={clsx("", styles.itemDetailProfile)}>
                     <Image
@@ -156,7 +161,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
           } else {
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -164,7 +169,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                         : styles.itemDetailMsgSent
                     }
                   >
-                    <ExpandableText text={obj.message} />
+                    <ExpandableText translate={translate} text={obj.message} />
                   </h6>
                   <div className={clsx("", styles.itemDetailProfile)}>
                     <Image
@@ -222,7 +227,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
             });
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -230,7 +235,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                         : styles.itemDetailMsgReceived
                     }
                   >
-                    <ExpandableText text={obj.message} />
+                    <ExpandableText translate={translate} text={obj.message} />
                   </h6>
                   <div className={clsx("", styles.itemDetailProfile)}>
                     <Image
@@ -250,7 +255,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
           } else {
             return (
               <div className={clsx("row", styles.itemDetailMsgCont)} key={i}>
-                <div className="">
+                <div style={{ padding: "0px" }}>
                   <h6
                     className={
                       obj.activityEventName != null
@@ -258,7 +263,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
                         : styles.itemDetailMsgReceived
                     }
                   >
-                    <ExpandableText text={obj.message} />
+                    <ExpandableText translate={translate} text={obj.message} />
                   </h6>
                   <div className={clsx("", styles.itemDetailProfile)}>
                     <Image
@@ -283,14 +288,14 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
   return (
     <div className={clsx(styles.container, "p-2 row")}>
       <div className="row">
-        <h6 className={styles.headerCont}>
+        <h6 className={styles.headerCont} onClick={toggle}>
           <span>{groupedObjData && groupedObjData[0]}</span>
-          <span className={styles.headArrowActionBtn} onClick={toggle}>
+          <span className={styles.headArrowActionBtn}>
             <HiOutlineChevronDoubleUp
               style={{
                 display: !showMe ? "block" : "none",
               }}
-            />{" "}
+            />
             <HiOutlineChevronDoubleDown
               style={{
                 display: showMe ? "block" : "none",
@@ -309,7 +314,11 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
       <ModalWithoutHeaderPopups
         isOpen={isModalOpen}
         childComp={
-          <ActivityLogDocPreview handleOpenModal={handleOpenModal} data={AttData} />
+          <ActivityLogDocPreview
+            translate={translate}
+            handleOpenModal={handleOpenModal}
+            data={AttData}
+          />
         }
         modalWidthClassName={styles.modalWidth}
       ></ModalWithoutHeaderPopups>
