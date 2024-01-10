@@ -9,6 +9,7 @@ const selectRapidOriginalData = createSelector([selectLineItemDetailState], (sta
     insuredPrice: state?.lineItem?.insuredPrice ?? 0,
     selectedCategory: state?.lineItem?.category,
     selectedSubCategory: state?.lineItem?.subCategory,
+    selectedCondition: state?.lineItem?.condition,
   };
   return rapidOriginalData;
 });
