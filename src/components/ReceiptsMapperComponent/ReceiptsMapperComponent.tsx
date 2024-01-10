@@ -1,27 +1,25 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import receiptMapperStyle from "./receiptMapperComponent.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import TabsButtonComponent from "../common/TabsButtonComponent";
 import { useParams } from "next/navigation";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
-import { ConnectedProps, connect } from "react-redux";
-import { RootState } from "@/store/store";
 
-import clsx from "clsx";
+import ClaimedItemsTable from "./ClaimedItemsTable/ClaimedItemsTable";
 
-const ReceiptsMapperComponent: React.FC<connectorType> = (props) => {
+const ReceiptsMapperComponent: React.FC = () => {
  
   const {  claimId } = useParams();
  
+  const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
   const tabData = [
     {
       name: "Claimed Items",
-      // content: <LineItemDetailComponent rapidDivRef={ref} />,
+      content: <ClaimedItemsTable />
     },
     {
       name: "Summary",
-      // content: <LineItemDetailComponent rapidDivRef={ref} />,
     },
   ];
   const pathList = [
@@ -30,7 +28,7 @@ const ReceiptsMapperComponent: React.FC<connectorType> = (props) => {
       path: "/adjuster-dashboard",
     },
     {
-      name: "CLAIM NUMBER",
+      name: `${claimNumber}`,
       path: `/adjuster-property-claim-details/${claimId}`,
     },
     {
@@ -64,13 +62,4 @@ const ReceiptsMapperComponent: React.FC<connectorType> = (props) => {
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  
-});
-
-const mapDispatchToProps = {
- 
-};
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type connectorType = ConnectedProps<typeof connector>;
-export default connector(ReceiptsMapperComponent);
+export default ReceiptsMapperComponent;
