@@ -254,7 +254,7 @@ export default function PolicyAndCoverageDetails() {
                             onChange={(e: {
                               target: { value: React.SetStateAction<string> };
                             }) => setCoverageValue(e.target.value)}
-                            maxlength="10"
+                            maxLength="10"
                           />
                         </span>
                       </div>
@@ -355,7 +355,7 @@ export default function PolicyAndCoverageDetails() {
                             onChange={(e: any) =>
                               setAddress((prev) => ({ ...prev, zipcode: e.target.value }))
                             }
-                            maxlength="5"
+                            maxLength="5"
                           />{" "}
                         </span>
                       </div>
@@ -433,7 +433,7 @@ export default function PolicyAndCoverageDetails() {
                           <GenericInput
                             placeholder="Zip Code"
                             // type="number"
-                            maxlength="5"
+                            maxLength="5"
                             value={secondaryAddress.zipcode}
                             onChange={(e: any) =>
                               setSecondaryAddress((prev) => ({
