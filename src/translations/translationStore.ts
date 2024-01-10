@@ -7,6 +7,8 @@ enum translatePage {
   adjusterPropertyClaimActivityLog = "adjusterPropertyClaimActivityLog",
   addItemModalTranslate = "addItemModalTranslate",
   claimDetailsTranslate = "claimDetailsTranslate",
+  serviceRequestComponent = "serviceRequestComponent",
+  contentListComponent = "contentListComponent",
 }
 
 export type translatePageType = keyof typeof translatePage;
