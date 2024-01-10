@@ -295,7 +295,7 @@ const AssignmentActivityLog: React.FC<AssignmentActivityLogProps> = ({
               style={{
                 display: !showMe ? "block" : "none",
               }}
-            />{" "}
+            />
             <HiOutlineChevronDoubleDown
               style={{
                 display: showMe ? "block" : "none",

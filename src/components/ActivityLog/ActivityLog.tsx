@@ -14,34 +14,29 @@ import { adjusterPropertyClaimActivityLogType } from "@/translations/adjusterPro
 import Image from "next/image";
 import scrollToTopImg from "@/assets/images/scrollToTop.png";
 import CustomLoader from "@/components/common/CustomLoader";
-import { Locale } from "@/i18n.config";
-import { getTranslate } from "@/translations";
+import useTranslation from "@/hooks/useTranslation";
 
-function ActivityLog({ lang }: { lang: Locale; heading: string }) {
+function ActivityLog() {
   const [AssignmentActivityLogData, setAssignmentActivityLogData] = useState([]);
-  const [translate, setTranslate] = useState<any>({});
   const claimId = sessionStorage.getItem("claimId") || "";
-
+  const { translate }: { translate: adjusterPropertyClaimActivityLogType | any } =
+    useTranslation("adjusterPropertyClaimActivityLog");
   const payload = {
     claimId: claimId,
   };
   let res: any;
-  useEffect(() => {
-    init();
-  }, []);
 
   const init = async () => {
-    const translateData: adjusterPropertyClaimActivityLogType = await getTranslate(
-      lang,
-      "adjusterPropertyClaimActivityLog"
-    );
-    setTranslate(translateData);
     setIsLoader(true);
     res = await getActivityLogData(payload);
     setAssignmentActivityLogData(res.data);
     setAssignmentActivityLogData(res.data);
     setIsLoader(false);
   };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
