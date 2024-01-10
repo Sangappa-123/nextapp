@@ -7,10 +7,13 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import PolicyHolderTableListStyle from "./policyholderpayouts.module.scss";
-import { ConnectedProps, connect } from "react-redux";
+import { connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchPolicySummaryTableAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading/index";
+import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
+import CustomLoader from "@/components/common/CustomLoader/index";
 
 type PolicyHolderTableProps = {
   listData: any;
@@ -21,12 +24,16 @@ interface policyHolderData {
   [key: string | number]: any;
 }
 
-function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorType> {
+function PolicyHolderTable(props: PolicyHolderTableProps) {
   const columnHelper = createColumnHelper<policyHolderData>();
   const { listData, fetchPolicySummaryTableAction } = props;
 
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
-
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
+    useTranslation("contentsEvaluationTranslate");
   useEffect(() => {
     fetchPolicySummaryTableAction({
       claimNumber: claimNumber,
@@ -34,31 +41,35 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
   }, [claimNumber, fetchPolicySummaryTableAction]);
 
   const columns = [
-    columnHelper.accessor("Payment Id	", {
-      cell: (info) => info.getValue(),
-      header: () => "Payment Id	",
-      footer: () => <span>Total Paid </span>,
+    columnHelper.accessor("paymentID", {
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.policyholderPayouts?.columns.paymentId,
+      footer: () => <span>{translate?.policyholderPayouts?.columns.totalPaid} </span>,
     }),
-    columnHelper.accessor("Payment Amount	", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Payment Amount	",
+    columnHelper.accessor("amountPaid", {
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.policyholderPayouts?.columns.paymentAmount,
       footer: () => <span>$0.00</span>,
     }),
-    columnHelper.accessor("Payment Date	", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Payment Date	",
+    columnHelper.accessor("paymentDate", {
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.policyholderPayouts?.columns.paymentDate,
     }),
-    columnHelper.accessor("Payment Mode	", {
-      cell: (info) => info.getValue(),
-      header: () => "Payment Mode	",
+    columnHelper.accessor("paymentMode", {
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.policyholderPayouts?.columns.paymentMode,
     }),
-    columnHelper.accessor("Reference / Check #	", {
-      cell: (info) => info.getValue(),
-      header: () => "Reference / Check #	",
+    columnHelper.accessor("referenceNumber", {
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.policyholderPayouts?.columns.referenceCheck,
     }),
-    columnHelper.accessor("Note", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Note",
+    columnHelper.accessor("note", {
+      cell: (info: any) => <span>{info.getValue()}</span>,
+      header: () => translate?.policyholderPayouts?.columns.note,
     }),
   ];
   const table = useReactTable({
@@ -72,11 +83,17 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
     enableSorting: true,
     enableColumnFilters: false,
   });
-
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
   return (
     <div>
       <GenericComponentHeading
-        title="Payment Summary"
+        title={translate?.policyholderPayouts?.title}
         customHeadingClassname={PolicyHolderTableListStyle.policyHolderListHeader}
       />
       <div className={PolicyHolderTableListStyle.detailListContainer}>
@@ -86,7 +103,14 @@ function PolicyHolderTable(props: PolicyHolderTableProps): React.FC<connectorTyp
       </div>
       {listData?.paymentSummaryDetails && (
         <div>
-          <CustomReactTable showFooter={true} table={table} />
+          <CustomReactTable
+            showFooter={true}
+            tableDataErrorMsg={
+              listData?.paymentSummaryDetails.length === 0 &&
+              translate?.detailedInventory?.noRecords
+            }
+            table={table}
+          />
         </div>
       )}
     </div>
@@ -102,6 +126,5 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type connectorType = ConnectedProps<typeof connector>;
 
 export default connector(PolicyHolderTable);
