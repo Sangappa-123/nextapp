@@ -28,6 +28,8 @@ import {
   getNextItem,
   updateContentItem,
 } from "@/services/AddItemContentService";
+import { addItemModalTranslateType } from "@/translations/addItemModalTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 interface typeProps {
   [key: string | number]: any;
 }
@@ -61,6 +63,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     editItemDetail,
     submitFormData,
   } = props;
+
+  const { translate }: { translate: addItemModalTranslateType | undefined } =
+    useTranslation("addItemModalTranslate");
 
   const { claimId }: { claimId: string } = useParams();
   const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
@@ -257,7 +262,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <span style={{ color: "red" }}>*</span>
-              <label className={addClaimFormStyle.labelStyle}> Item Description:</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.ItemDescription?.label}
+              </label>
             </div>
             <div className="col-8">
               <GenericTextArea
@@ -271,7 +278,10 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           </div>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Quantity</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {" "}
+                {translate?.inputFields?.quantity?.label}
+              </label>
             </div>
             <div className="row col-8 p-0">
               <div className="row col-4 p-0">
@@ -279,7 +289,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   formControlClassname={addClaimFormStyle.inputBox}
                   showError={errors["quantity"]}
                   errorMsg={errors?.quantity?.message}
-                  placeholder="Quantity"
+                  placeholder={translate?.inputFields?.quantity?.placeholder}
                   id="quantity"
                   autoComplete="off"
                   {...register("quantity")}
@@ -288,7 +298,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 />
               </div>
               <div className={clsx("row col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
-                <label className={addClaimFormStyle.labelStyle}>Price</label>
+                <label className={addClaimFormStyle.labelStyle}>
+                  {translate?.inputFields?.price?.label}
+                </label>
               </div>
               <div className="row col-4 p-0">
                 <GenericInput
@@ -296,7 +308,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   showError={errors["insuredPrice"]}
                   errorMsg={errors?.insuredPrice?.message}
                   autoComplete="off"
-                  placeholder="$0.00"
+                  placeholder={translate?.inputFields?.price?.placeholder}
                   id="insuredPrice"
                   {...register("insuredPrice")}
                   type={"number"}
@@ -307,7 +319,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           </div>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Category</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.category?.label}
+              </label>
             </div>
             <div className={clsx("row col-8 p-0", addClaimFormStyle.centerAlign)}>
               <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
@@ -339,7 +353,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 </div>
               </div>
               <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
-                <label className={addClaimFormStyle.labelStyle}>SubCategory</label>
+                <label className={addClaimFormStyle.labelStyle}>
+                  {translate?.inputFields?.subCategory?.label}
+                </label>
               </div>
               <div className={clsx("row col-4 p-0", addClaimFormStyle.centerAlign)}>
                 <div className="col-10">
@@ -368,7 +384,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Age</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.age?.label}
+              </label>
             </div>
             <div className="row col-6">
               <div className="col-3 p-0">
@@ -376,7 +394,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   formControlClassname={addClaimFormStyle.inputBox}
                   showError={errors["ageYears"]}
                   errorMsg={errors?.ageYears?.message}
-                  placeholder="Years"
+                  placeholder={translate?.inputFields?.years?.placeholder}
                   id="ageYears"
                   type="number"
                   inputFieldClassname="hideInputArrow"
@@ -384,14 +402,16 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 />
               </div>
               <div className="col-2">
-                <span className={addClaimFormStyle.labelStyle}>(Years)</span>
+                <span className={addClaimFormStyle.labelStyle}>
+                  {translate?.inputFields?.years?.label}
+                </span>
               </div>
               <div className="col-3 p-0">
                 <GenericInput
                   formControlClassname={addClaimFormStyle.inputBox}
                   showError={errors["ageMonths"]}
                   errorMsg={errors?.ageMonths?.message}
-                  placeholder="Months"
+                  placeholder={translate?.inputFields?.months?.placeholder}
                   id="ageMonths"
                   type="number"
                   inputFieldClassname="hideInputArrow"
@@ -399,13 +419,17 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 />
               </div>
               <div className="col-2">
-                <span className={addClaimFormStyle.labelStyle}>(Months)</span>
+                <span className={addClaimFormStyle.labelStyle}>
+                  {translate?.inputFields?.months?.label}
+                </span>
               </div>
             </div>
           </div>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Room</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.room?.label}
+              </label>
             </div>
             <div className="row col-8 p-0">
               <div className="col-4">
@@ -428,7 +452,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
               {newRoomInputField && (
                 <div className="col-4">
-                  <a onClick={addRoom}>Click to add new Room</a>
+                  <a onClick={addRoom}>{translate?.inputFields?.room?.newRoom}</a>
                 </div>
               )}
               {!newRoomInputField && (
@@ -437,7 +461,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     <div className="col-10">
                       <GenericInput
                         formControlClassname={addClaimFormStyle.inputBox}
-                        placeholder="Room Name"
+                        placeholder={translate?.inputFields?.room?.roomNameLabel}
                         id="roomName"
                         type="text"
                         value={roomName}
@@ -450,7 +474,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     </div>
                     <div className={clsx("col-2")}>
                       <a className={addClaimFormStyle.cancelLink} onClick={addRoom}>
-                        Cancel
+                        {translate?.inputFields?.room?.cancelBtn}
                       </a>
                     </div>
                   </div>
@@ -463,7 +487,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                           field: { onChange: fieldOnChange, ...rest },
                         }: any) => (
                           <GenericSelect
-                            placeholder={"RoomType"}
+                            placeholder={translate?.inputFields?.room?.roomTypeLabel}
                             options={roomType}
                             getOptionLabel={(option: { name: string }) => option.name}
                             getOptionValue={(option: { id: number }) => option.id}
@@ -483,7 +507,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                         className={addClaimFormStyle.pointerCursor}
                         onClick={handleNewRoomCreation}
                       >
-                        Create
+                        {translate?.inputFields?.room?.createBtn}
                       </a>
                     </div>
                   </div>
@@ -493,7 +517,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           </div>
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Apply Taxes(%)</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.applyTaxes?.label}
+              </label>
             </div>
             <div className="row col-8">
               <div className={clsx(addClaimFormStyle.radioButtonWrapper, "col-4")}>
@@ -503,7 +529,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   inputFieldWrapperClassName={addClaimFormStyle.wrapper}
                   inputFieldClassname={addClaimFormStyle.inputField}
                   value="yes"
-                  label="Yes"
+                  label={translate?.inputFields?.applyTaxes?.yesBtn}
                   name="applyTax"
                   labelClassname={addClaimFormStyle.labelClassname}
                   checked={applyTaxState === "yes"}
@@ -515,7 +541,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   inputFieldWrapperClassName={addClaimFormStyle.wrapper1}
                   inputFieldClassname={addClaimFormStyle.inputField1}
                   value="no"
-                  label="No"
+                  label={translate?.inputFields?.applyTaxes?.noBtn}
                   labelClassname={addClaimFormStyle.labelClassname}
                   checked={applyTaxState === "no"}
                   name="applyTax"
@@ -524,7 +550,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
               </div>
 
               <div className={clsx("col-4", addClaimFormStyle.inputBoxAlign)}>
-                <label className={addClaimFormStyle.labelStyle}>Condition</label>
+                <label className={addClaimFormStyle.labelStyle}>
+                  {translate?.inputFields?.condition?.label}
+                </label>
               </div>
               <div className="col-4">
                 <Controller
@@ -532,7 +560,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   name={"condition"}
                   render={({ field: { ...rest } }: any) => (
                     <GenericSelect
-                      placeholder={"Average"}
+                      placeholder={translate?.inputFields?.condition?.placeholder}
                       options={condition}
                       name={"condition"}
                       getOptionLabel={(option: { conditionName: any }) =>
@@ -553,7 +581,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           <div className="row m-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
               <label className={addClaimFormStyle.labelStyle}>
-                Originally Purchased From
+                {translate?.inputFields?.purchasedFrom?.label}
               </label>
             </div>
             <div className={clsx("row col-9", addClaimFormStyle.centerAlign)}>
@@ -581,7 +609,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     className={addClaimFormStyle.pointerCursor}
                     onClick={openRetailerInputBox}
                   >
-                    Not found? click to add new retailer
+                    {translate?.inputFields?.purchasedFrom?.newRetailerLink}
                   </a>
                 )}
                 {newRetailerInputField && (
@@ -589,7 +617,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                     <div className="col-10 p-0">
                       <GenericInput
                         formControlClassname={addClaimFormStyle.inputBox}
-                        placeholder="Add Retailer"
+                        placeholder={
+                          translate?.inputFields?.purchasedFrom?.addRetailerPlaceholder
+                        }
                         id="addRetailer"
                         {...register("addRetailer")}
                       />
@@ -608,7 +638,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
           <div className="row mt-2">
             <div className={clsx("col-3", addClaimFormStyle.inputBoxAlign)}>
-              <label className={addClaimFormStyle.labelStyle}>Scheduled Item</label>
+              <label className={addClaimFormStyle.labelStyle}>
+                {translate?.inputFields?.scheduledItem?.label}
+              </label>
             </div>
             <div className={clsx(addClaimFormStyle.centerAlign, "row col-8")}>
               <div className={clsx(addClaimFormStyle.radioButtonWrapper, "col-4")}>
@@ -620,7 +652,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   value="yes"
                   name="isScheduledItem"
                   id="isScheduledItem-yes"
-                  label="Yes"
+                  label={translate?.inputFields?.scheduledItem?.yesBtn}
                   labelClassname={addClaimFormStyle.labelClassname}
                   checked={isScheduledItemState === "yes"}
                   onChange={onScheduleItemChange}
@@ -633,7 +665,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   value="no"
                   name="isScheduledItem"
                   id="isScheduledItem-no"
-                  label="No"
+                  label={translate?.inputFields?.scheduledItem?.noBtn}
                   labelClassname={addClaimFormStyle.labelClassname}
                   checked={isScheduledItemState === "no"}
                   onChange={onScheduleItemChange}
@@ -645,7 +677,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                   <div className={clsx("col-4 p-0", addClaimFormStyle.inputBoxAlign)}>
                     <span style={{ color: "red" }}>*</span>
                     <label className={addClaimFormStyle.labelStyle}>
-                      Scheduled Amount
+                      {translate?.inputFields?.scheduledItem?.amount}
                     </label>
                   </div>
 
@@ -655,7 +687,9 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                       showError={errors["scheduleAmount"]}
                       errorMsg={errors?.scheduleAmount?.message}
                       autoComplete="off"
-                      placeholder="Scheduled Amount"
+                      placeholder={
+                        translate?.inputFields?.scheduledItem?.amountPlaceholder
+                      }
                       id="scheduleAmount"
                       // label="Price"
                       {...register("scheduleAmount")}
@@ -687,7 +721,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
                 width: "auto",
               }}
             >
-              Add attachements
+              {translate?.inputFields?.addAttachmentBtn}
             </label>
             <input
               type="file"
@@ -702,7 +736,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
           <div className={clsx(addClaimFormStyle.attachmentBox, "row")}>
             {docs?.length === 0 && (
               <div className={clsx(addClaimFormStyle.contentCenter, "row p-3")}>
-                No attachments available for this item
+                {translate?.inputFields?.saveAndAddAnotherItemLink}
               </div>
             )}
             {docs?.map((elem: any, index: number) =>
