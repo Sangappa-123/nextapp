@@ -21,6 +21,8 @@ import { getClaimDetailMessageList } from "@/services/AdjusterPropertyClaimDetai
 import { PAGINATION_LIMIT_10 } from "@/constants/constants";
 import { addMessageList } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 import { capitalize } from "@/utils/helper";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type messagesComponentType = {
   participants: [];
@@ -36,6 +38,9 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
   const { participants, messageList, claimId, claimNumber, CRN } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
 
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
@@ -182,7 +187,7 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
       <Modal
         isOpen={isOpen}
         onClose={handleOpenModal}
-        headingName="Add new message"
+        headingName={translate?.addMessageCard?.addNewMessage}
         childComp={
           <AddNewMsgModalComponent
             handleOpenModal={handleOpenModal}
@@ -196,7 +201,7 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
       />
 
       <Cards className={MessageCardStyle.messageCradContainer}>
-        <GenericComponentHeading title="Messages">
+        <GenericComponentHeading title={translate?.addMessageCard?.messages}>
           <div className="text-right">
             <Link href="#" onClick={handleOpenModal}>
               Add New Messages
@@ -211,11 +216,11 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
                 <NewMsgListComponent message={message} key={index} />
               ))
           ) : (
-            <NoRecordComponent message="No New Message" />
+            <NoRecordComponent message={translate?.addMessageCard?.noNewMessage} />
           )}
         </div>
         <div className="text-right">
-          <Link href="/all-notes">View all messages</Link>
+          <Link href="/all-notes">{translate?.addMessageCard?.viewAllMessges}</Link>
         </div>
       </Cards>
     </>

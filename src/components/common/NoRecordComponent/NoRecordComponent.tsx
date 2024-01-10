@@ -1,7 +1,7 @@
 import NoRecordStyle from "./no-record.module.scss";
 
 type NoRecordType = {
-  message: string;
+  message: string | any;
 };
 
 const NoRecordComponent: React.FC<NoRecordType> = (props) => {
