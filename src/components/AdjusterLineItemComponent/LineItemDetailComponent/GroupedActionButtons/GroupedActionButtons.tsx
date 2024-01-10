@@ -4,8 +4,13 @@ import groupedActionButtonsStyle from "./groupedActionButtons.module.scss";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import selectScheduledItem from "@/reducers/LineItemDetail/Selectors/selectScheduledItem";
 
-function GroupedActionButtons() {
+interface propType {
+  onDeleteClick?: () => void;
+}
+
+function GroupedActionButtons(props: propType) {
   const { isScheduledItem, scheduleAmount } = useAppSelector(selectScheduledItem);
+  const { onDeleteClick } = props;
   return (
     <div className={groupedActionButtonsStyle.root}>
       <GenericButton
@@ -22,7 +27,12 @@ function GroupedActionButtons() {
         theme="normal"
         disabled={isScheduledItem && scheduleAmount < 1}
       />
-      <GenericButton label="Delete" size="medium" theme="normal" />
+      <GenericButton
+        onClickHandler={onDeleteClick}
+        label="Delete"
+        size="medium"
+        theme="normal"
+      />
     </div>
   );
 }
