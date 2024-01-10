@@ -6,6 +6,8 @@ import { fetchServiceRequestList } from "@/services/ClaimServiceRequestListServi
 import { addServiceSearchKeyWord } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import { ConnectedProps, connect } from "react-redux";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
+import useTranslation from "@/hooks/useTranslation";
+import { serviceRequestComponentType } from "@/translations/serviceRequestComponent/en";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
@@ -45,13 +47,22 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
       }
     }
   };
+  const {
+    translate,
+    loading,
+  }: { translate: serviceRequestComponentType | undefined; loading: boolean } =
+    useTranslation("serviceRequestComponent");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className={ServiceRequestSearchStyle.searchBox}>
       <RiSearch2Line className={ServiceRequestSearchStyle.searchIcon} />
       <input
         type="text"
-        placeholder="Search..."
+        placeholder={translate?.search ?? ""}
         value={searchValue}
         onChange={handleSearch}
         onKeyDown={searchKey}

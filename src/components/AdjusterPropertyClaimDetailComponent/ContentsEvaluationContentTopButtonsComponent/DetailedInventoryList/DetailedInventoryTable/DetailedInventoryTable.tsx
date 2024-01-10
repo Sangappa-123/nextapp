@@ -4,6 +4,8 @@ import {
   getCoreRowModel,
   useReactTable,
   createColumnHelper,
+  getSortedRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
@@ -21,6 +23,8 @@ import {
 import CustomLoader from "@/components/common/CustomLoader";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type DetailedInventoryProps = {
   listData: Array<object>;
@@ -33,14 +37,14 @@ interface detailedInventoryData {
   [key: string | number]: any;
 }
 
-function convertToDollar(value) {
+function convertToDollar(value: any) {
   if (value) return `$${Number.parseFloat(value).toFixed(2)}`;
   else {
     return "$0.00";
   }
 }
 
-function convertToPercent(value) {
+function convertToPercent(value: any) {
   if (value) return `${Number.parseFloat(value).toFixed(2)}`;
   else {
     return "0.00";
@@ -62,23 +66,61 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     detailedInventorySummaryData,
     isfetching,
   } = props;
-  const [newData, setData] = useState();
+  const [newData, setData] = useState<Array<typeof listData>>();
+  const [openStatus, setOpenStatus] = useState(false);
+  const [isExportfetching, setIsExportfetching] = useState(false);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const pageLimit = 20;
   const fetchSize = 20;
   const dispatch = useAppDispatch();
-
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
+    useTranslation("contentsEvaluationTranslate");
   useEffect(() => {
     fetchDetailedInventoryAction({
       pageNo: 1,
       recordPerPage: 10,
       claimNum: claimNumber,
+      sortBy: "",
+      orderBy: "",
     });
   }, [claimNumber, fetchDetailedInventoryAction]);
+
+  const handleSorting = async (sortingUpdater: any) => {
+    setTableLoader(true);
+
+    const newSortVal = sortingUpdater(sorting);
+    setSorting(newSortVal);
+
+    if (newSortVal.length > 0) {
+      const orderBy = newSortVal[0].desc ? "desc" : "asc";
+      const sortBy = newSortVal[0].id;
+      console.log("orderBy, sortBy", orderBy, sortBy);
+      const result = await fetchDetailedInventoryAction({
+        pageNo: 1,
+        recordPerPage: 10,
+        claimNum: claimNumber,
+        sortBy: sortBy,
+        orderBy: orderBy,
+      });
+      if (result) {
+        setTableLoader(false);
+      }
+    } else if (newSortVal.length === 0 && listData.length > 0) {
+      const result = await fetchDetailedInventoryAction();
+      if (result) {
+        setTableLoader(false);
+      }
+    }
+  };
 
   React.useEffect(() => {
     if (listData) {
       const defaultData: listData[] = [...listData];
-      const recvData = [...defaultData.slice(0, fetchSize)];
+      const recvData: any = [...defaultData.slice(0, fetchSize)];
       setData(recvData);
     }
   }, [listData]);
@@ -86,7 +128,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
   const fetchNextPage = () => {
     if (newData) {
       const nextPageData = listData.slice(newData?.length, newData?.length + fetchSize);
-      const recvData = [...newData, ...nextPageData];
+      const recvData: any = [...newData, ...nextPageData];
       setData(recvData);
     }
     return true;
@@ -94,19 +136,22 @@ const DetailedInventoryTable: React.FC<connectorType> = (
 
   const columns = [
     columnHelper.accessor("itemNumber", {
-      header: () => "Item #",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory?.column?.item,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("room.roomName", {
-      header: () => "Room",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.room,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("originalItemDescription", {
-      header: () => "Original Description",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.originalDescription,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("ageInYears", {
-      header: () => "Age",
+      header: () => translate?.detailedInventory.column.age,
       cell: (props) => (
         <span>{`${
           props.row.original?.ageInYears ? `${props.row.original?.ageInYears}yr` : `0yr`
@@ -114,131 +159,151 @@ const DetailedInventoryTable: React.FC<connectorType> = (
           props.row.original?.ageInMonths ? `${props.row.original?.ageInMonths}m` : `0m`
         }`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("quantity", {
-      header: () => "Quantity",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.quantity,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("totalPrice", {
-      header: () => "Total Price",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.totalPrice,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(detailedInventorySummaryData.totalPrice)}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("categoryDetails.name", {
-      header: () => "Category",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.category,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("status.status", {
-      header: () => "Status",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.status,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("itemLimit", {
-      header: () => "Individual Limit",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.individualLimit,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      enableSorting: true,
     }),
     columnHelper.accessor("replacementItemDescription", {
-      header: () => "Replacement Description",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.replacementDescription,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("webSource", {
-      header: () => "Source",
-      cell: (info) => <a href={info.getValue()}>{info.getValue()}</a>,
+      header: () => translate?.detailedInventory.column.source,
+      cell: (info: any) => <a href={info.getValue()}>{info.getValue()}</a>,
+      enableSorting: true,
     }),
     columnHelper.accessor("replacementTotalCost", {
-      header: () => "Replacement Cost",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.replacementCost,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalReplacementCost
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("replacementExposure", {
-      header: () => "Replacement Exposure",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.replacementExposure,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalReplacementExposure
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("depreciationPercent", {
-      header: () => "Annual Dep%",
-      cell: (info) =>
+      header: () => translate?.detailedInventory.column.annualDep,
+      cell: (info: any) =>
         info.getValue() && <span>{`${convertToPercent(info.getValue())}%`}</span>,
+      enableSorting: true,
     }),
     columnHelper.accessor("depreciationAmount", {
-      header: () => "Depreciation $",
-      cell: (info) =>
+      header: () => translate?.detailedInventory.column.depreciation$,
+      cell: (info: any) =>
         info.getValue() && <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalDepreciationAmount
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("cashPayoutExposure", {
-      header: () => "Cash Exposure",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.cashExposure,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalCashPayoutExposure
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("maxHoldover", {
-      header: () => "Max. Recoverable Depreciation",
-      cell: (info) => <span> {`${convertToDollar(info.getValue())}`} </span>,
+      header: () => translate?.detailedInventory.column.maxRecoverableDepreciation,
+      cell: (info: any) => <span> {`${convertToDollar(info.getValue())}`} </span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalMaxRecoverableDepreciation
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("itemOverage", {
-      header: () => "Item Overage",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.itemOverage,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(detailedInventorySummaryData.totalItemOverage)}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("settlementExposure", {
-      header: () => "Settlement Exposure",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.settlementExposure,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(
           detailedInventorySummaryData.totalSettlementExposure
         )}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("settlementComment", {
-      header: () => "Comment(s)",
-      cell: (info) => info.getValue(),
+      header: () => translate?.detailedInventory.column.comments,
+      cell: (info: any) => info.getValue(),
+      enableSorting: true,
     }),
     columnHelper.accessor("holdOverPaid", {
-      header: () => "Holdover Paid",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.holdoverPaid,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>
           {`${convertToDollar(detailedInventorySummaryData.totalHoldOverPaid)}`}
         </span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("settlementValue", {
-      header: () => "Amount Paid",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.amountPaid,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(detailedInventorySummaryData.paidToInsured)}`}</span>
       ),
+      enableSorting: true,
     }),
     columnHelper.accessor("holdOverDue", {
-      header: () => "Holdover Due",
-      cell: (info) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      header: () => translate?.detailedInventory.column.holdoverDue,
+      cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
       footer: () => (
         <span>{`${convertToDollar(detailedInventorySummaryData.totalHoldOverDue)}`}</span>
       ),
+      enableSorting: true,
     }),
   ];
 
@@ -246,9 +311,13 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     data: newData || [],
     columns,
     pageCount: Math.ceil(listData?.length / pageLimit),
-    state: {},
+    state: {
+      sorting,
+    },
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
+    onSortingChange: handleSorting,
+    getSortedRowModel: getSortedRowModel(),
     manualSorting: true,
     manualPagination: true,
     enableSorting: true,
@@ -256,6 +325,13 @@ const DetailedInventoryTable: React.FC<connectorType> = (
   });
 
   const [tableLoader, setTableLoader] = React.useState<boolean>(false);
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
   return (
     <div>
       <div className={DetailListComponentStyle.detailListContainer}>
@@ -276,6 +352,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                   zIndex: "999",
                   boxShadow: "2px 2px 2px 2px #888888",
                 }}
+                hidden={!openStatus}
                 openOnClick={true}
                 clickable={true}
               >
@@ -283,8 +360,10 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                   <div
                     className={DetailListComponentStyle.dropDownInnerDiv}
                     onClick={async () => {
+                      setIsExportfetching(true);
                       const status = await exportDetailedInventory(claimNumber, "excel");
                       if (status === "success") {
+                        setIsExportfetching(false);
                         dispatch(
                           addNotification({
                             message: "Successfully download the excel!",
@@ -293,23 +372,26 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                           })
                         );
                       } else if (status === "error") {
+                        setIsExportfetching(false);
                         dispatch(
                           addNotification({
                             message: "Failed to export the details. Please try again..",
-                            id: "good",
+                            id: "error",
                             status: "error",
                           })
                         );
                       }
                     }}
                   >
-                    Excel
+                    {translate?.detailedInventory?.excelText}
                   </div>
                   <div
                     className={DetailListComponentStyle.dropDownInnerDiv}
                     onClick={async () => {
+                      setIsExportfetching(true);
                       const status = await exportDetailedInventoryToPDF(claimNumber);
                       if (status === "success") {
+                        setIsExportfetching(false);
                         dispatch(
                           addNotification({
                             message: "Successfully download the PDF!",
@@ -318,36 +400,41 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                           })
                         );
                       } else if (status === "error") {
+                        setIsExportfetching(false);
                         dispatch(
                           addNotification({
                             message: "Failed to export the details. Please try again..",
-                            id: "good",
+                            id: "error",
                             status: "error",
                           })
                         );
                       }
                     }}
                   >
-                    PDF
+                    {translate?.detailedInventory?.pdfText}
                   </div>
                 </div>
               </Tooltip>
+              {isExportfetching && <CustomLoader />}
               <GenericButton
-                label="Export as"
+                label={translate?.detailedInventory?.exportAs || ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={DetailListComponentStyle.contentListBtn}
                 id="export-as"
+                onClick={() => {
+                  setOpenStatus(!openStatus);
+                }}
               />
               <GenericButton
-                label="Email Policyholder"
+                label={translate?.detailedInventory?.emailPolicyholder || ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 onClick={async () => {
-                  const data = await sendDetailedInventory(claimNumber);
-                  if (data.status === 200) {
+                  const data: any = await sendDetailedInventory(claimNumber);
+                  if (data && data.status === 200) {
                     dispatch(
                       addNotification({
                         message: data.message,
@@ -382,7 +469,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
             table={table}
             totalDataCount={listData?.length}
             loader={tableLoader}
-            tableDataErrorMsg={!listData && "No Record Found"}
+            tableDataErrorMsg={!listData && translate?.detailedInventory?.noRecords}
             fetchNextPage={fetchNextPage}
             totalFetched={newData?.length}
             totalDBRowCount={listData?.length}

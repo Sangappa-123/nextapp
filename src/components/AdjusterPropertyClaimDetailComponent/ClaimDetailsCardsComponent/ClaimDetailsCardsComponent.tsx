@@ -21,7 +21,7 @@ const ClaimDetailsCardsComponent: React.FC<claimDetailsCardType> = ({ claimId })
             <MessagesComponent claimId={claimId} />
           </div>
           <div className="col-md-6 col-sm-6 col-12">
-            <PolicyHoldersComponent />
+            <PolicyHoldersComponent claimId={claimId} />
           </div>
         </div>
       </div>

@@ -76,8 +76,11 @@ const LineItemDetailSlice = createSlice({
           name: payload.categoryName,
           description: payload.description,
         };
+      } else {
+        state.lineItem.category = null;
       }
       state.lineItem.subCategory = null;
+      state.subCategory = [];
     },
     updateOnSubCategoryChange(state, action) {
       const { payload } = action;
@@ -88,6 +91,10 @@ const LineItemDetailSlice = createSlice({
           name: payload.name,
         };
       else state.lineItem.subCategory = null;
+    },
+    updateReplacementItem(state, action) {
+      const { payload } = action;
+      state.replacementItem = { ...state.replacementItem, ...payload };
     },
   },
   extraReducers(builder) {
@@ -202,4 +209,5 @@ export const {
   updateOnCategoryChange,
   updateLineItem,
   updateOnSubCategoryChange,
+  updateReplacementItem,
 } = LineItemDetailSlice.actions;

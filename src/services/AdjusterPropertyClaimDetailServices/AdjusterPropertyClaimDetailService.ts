@@ -35,9 +35,12 @@ export const getSubCategories = async (
     return err;
   }
 };
-export const getPendingTaskList = async (param: { claimId: string }) => {
+export const getPendingTaskList = async (
+  param: { claimId: string },
+  isClient?: boolean
+) => {
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     const url = getApiEndPoint("pendingTaskList");
     const resp = await http.post(url, param);
     return resp;
@@ -58,12 +61,9 @@ export const getClaimParticipantsList = async (param: { claimId: string }) => {
 export const getclaimContents = async (param: { claimId: string }) => {
   const payload = { id: param?.claimId };
   try {
-    console.log("payload", payload);
-
     const http = new HttpService();
     const url = getApiEndPoint("claimContentsUrl");
     const resp = await http.post(url, payload);
-    console.log("resp", resp);
     return resp;
   } catch (err: any) {
     return err;
@@ -211,6 +211,38 @@ export const getClaimSettlement = async (claimId: string) => {
     }
     return error;
   } catch (err: any) {
+    return err;
+  }
+};
+
+export const updateCliamCategoryFun = async (param: object) => {
+  try {
+    const url = getApiEndPoint("updateCliamCategory");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateCliamStatus = async (param: object) => {
+  try {
+    const url = getApiEndPoint("updateCliamStatus");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
     return err;
   }
 };
