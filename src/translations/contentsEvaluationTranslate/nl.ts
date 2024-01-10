@@ -1,8 +1,14 @@
 const translate = {
+  detailedTabTitle: "Gedetailleerde inventaris",
+  coverageTabTitle: "Dekkingsoverzicht",
+  policyTabTitle: "Uitbetalingen aan polishouders",
   detailedInventory: {
     exportAs: "Exporteren als",
+    excelText: "Excel",
+    pdfText: "PDF",
     emailPolicyholder: "E-mail verzekeringnemer",
     searchPlaceHolder: "Artikelbeschrijving, Kamer, Categorie",
+    noRecords: "Geen record gevonden",
     column: {
       item: "Artikel #",
       room: "Kamer",
@@ -31,6 +37,7 @@ const translate = {
   },
   coverageSummary: {
     title: "Dekkingsoverzicht",
+    noRecords: "Geen record gevonden",
     exportText: "Exporteren naar PDF",
     columns: {
       category: "Categorie",
@@ -53,6 +60,7 @@ const translate = {
     totalitemspaidcashfor: "Totaal aantal artikelen waarvoor contant is betaald",
     totalitemsreplaced: "Totaal # items vervangen",
     total$paid: "Totaal $ betaald",
+    noRecords: "Geen record gevonden",
     columns: {
       paymentId: "Betalings-ID",
       paymentAmount: "Te betalen bedrag",
@@ -63,6 +71,7 @@ const translate = {
       totalPaid: "Totaal betaald",
     },
     replacementCostTitle: "Vervangingskosten afrekening",
+    itemsReplaced: "#Artikelen vervangen",
     totalReplacementCost: "Totale vervangingskosten (inclusief belastingen)",
     totalReceiptValue: "Totale ontvangstwaarde (inclusief belastingen)",
     totalHoldoverPaid: "Totaal betaalde restant (inclusief belastingen)",

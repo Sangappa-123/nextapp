@@ -21,7 +21,6 @@ import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice"
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import { useInView } from "react-intersection-observer";
 import RapidItemSection from "./RapidItemSection";
-import { OriginalItemRefType } from "./LineItemDetailComponent/OrginalItemForm/OrginalItemForm";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
@@ -41,14 +40,10 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     // rootMargin: "200px",
   });
 
-  const originalItemRef = useRef<OriginalItemRefType>(null);
-
   const tabData = [
     {
       name: "Item Details",
-      content: (
-        <LineItemDetailComponent rapidDivRef={ref} originalItemRef={originalItemRef} />
-      ),
+      content: <LineItemDetailComponent rapidDivRef={ref} />,
     },
   ];
   const pathList = [
@@ -121,9 +116,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
             [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
           })}
         />
-        {!inView && isInit.current && (
-          <RapidItemSection originalItemRef={originalItemRef.current} />
-        )}
+        {!inView && isInit.current && <RapidItemSection />}
       </div>
       <div>
         <TabsButtonComponent showBorders={true} tabData={tabData} />

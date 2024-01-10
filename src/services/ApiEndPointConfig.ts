@@ -68,6 +68,10 @@ enum apiEndPoints {
   newCustomComparable = "web/add/custom/item",
   deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
   mapperClaimedItems = "web/claim/line/items",
+  updateCliamCategory = "web/bulk/update/item/category",
+  updateCliamStatus = "web/bulk/update/item/status",
+  taskListApiUrl = "web/claim/tasklist/home",
+  createTaskApiUrl = "web/claim/create/task",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

@@ -5,11 +5,42 @@ import { updateDetailedInventoryListData } from "@/reducers/ContentsEvaluation/D
 // interface objectType {
 //     [key: string | number]: any;
 //   }
+
+type param = {
+  claimNumber: string;
+};
+
+type claimDetails = {
+  claimNumber: string;
+  format: string;
+};
+
+type PDFParamType = {
+  claimNumber: string;
+  reqForReceiptMapper: boolean;
+  reqForPdfExport: boolean;
+  reqForPayoutSummary: boolean;
+  reqForRoomWiseItems: boolean;
+  reqForCoverageSummary: boolean;
+  showThirdPartyInsDetails: boolean;
+};
+
+type params = {
+  claimNumber: string;
+  reqForCoverageSummary: boolean;
+  reqForPayoutSummary: boolean;
+  reqForPdfExport: boolean;
+  reqForReceiptMapper: boolean;
+  reqForRoomWiseItems: boolean;
+};
+
 export const getDetailedInventory = async (
   param: {
     pageNo: number;
     recordPerPage: number;
     claimNum: string;
+    sortBy: string;
+    orderBy: string;
   },
   isClient?: boolean
 ) => {
@@ -17,7 +48,7 @@ export const getDetailedInventory = async (
     const http = new HttpService({ isClient });
 
     let url = getApiEndPoint("detailedInventoryReport");
-    url = `${url}${param?.claimNum}&page=${param?.pageNo}&limit=${param?.recordPerPage}&sort_by=&order_by=asc`;
+    url = `${url}${param?.claimNum}&page=${param?.pageNo}&limit=${param?.recordPerPage}&sort_by=${param?.sortBy}&order_by=${param?.orderBy}`;
     const resp = await http.get(url);
     return resp;
   } catch (err: any) {
@@ -91,7 +122,7 @@ export const searchDetailedInventory = async (searchKeyword = "") => {
   }
 };
 
-export const getDetailInventoryPDF = async function (param) {
+export const getDetailInventoryPDF = async function (param: PDFParamType) {
   try {
     const http = new HttpService({ isClient: true });
     let url = getApiEndPoint("detailedInventoryReportPDF");
@@ -103,7 +134,7 @@ export const getDetailInventoryPDF = async function (param) {
   }
 };
 
-export const getCoverageSummaryPDF = async function (param) {
+export const getCoverageSummaryPDF = async function (param: params | param) {
   try {
     const http = new HttpService({ isClient: true });
     let url = getApiEndPoint("coverageSummaryReportPDF");
@@ -115,7 +146,7 @@ export const getCoverageSummaryPDF = async function (param) {
   }
 };
 
-export const getDetailInventoryExcel = async function (param) {
+export const getDetailInventoryExcel = async function (param: claimDetails) {
   try {
     const http = new HttpService({ isClient: true });
     let url =
@@ -132,7 +163,7 @@ export const getDetailInventoryExcel = async function (param) {
   }
 };
 
-export const getSendDetailedInventory = async function (param) {
+export const getSendDetailedInventory = async function (param: param) {
   try {
     const http = new HttpService({ isClient: true });
     let url =

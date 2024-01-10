@@ -11,6 +11,8 @@ import { Tooltip } from "react-tooltip";
 import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
+import useTranslation from "@/hooks/useTranslation";
+import { contentListComponentType } from "@/translations/contentListComponent/en";
 
 function ContentListComponent(props: any) {
   const {
@@ -75,11 +77,22 @@ function ContentListComponent(props: any) {
     }
   }, [claimContentListDataFull]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const {
+    translate,
+    loading,
+  }: { translate: contentListComponentType | undefined; loading: boolean } =
+    useTranslation("contentListComponent");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className="row mb-4">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title={`Content List (${claimContentListData.length})`}
+          title={` ${translate?.contentList ?? ""}
+          (${claimContentListData.length})`}
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
         />
       </div>
@@ -110,7 +123,7 @@ function ContentListComponent(props: any) {
                     className={ContentListComponentStyle.dropDownInnerDiv}
                     onClick={openModal}
                   >
-                    Add Items
+                    {translate?.addItems ?? ""}
                   </div>
 
                   <div
@@ -119,12 +132,12 @@ function ContentListComponent(props: any) {
                       router.push(`/upload-items-from-csv?claimDetail=${claimId}`)
                     }
                   >
-                    Load from file
+                    {translate?.loadFromFile ?? ""}
                   </div>
                 </div>
               </Tooltip>
               <GenericButton
-                label="Add Item"
+                label={translate?.addItem ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -133,7 +146,7 @@ function ContentListComponent(props: any) {
                 onClick={handleDropDown}
               />
               <GenericButton
-                label="Create Assignment"
+                label={translate?.createAssignment ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -141,14 +154,12 @@ function ContentListComponent(props: any) {
                 disabled={!checkedValues}
               />
               <GenericButton
-                label="Map Receipts"
+                label={translate?.mapReceipts ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                onClick={() =>
-                  router.push(`/receipts-mapper/${claimId}`)
-                }
+                onClick={() => router.push(`/receipts-mapper/${claimId}`)}
               />
               <Tooltip
                 anchorSelect="#more-btn-element"
@@ -166,10 +177,10 @@ function ContentListComponent(props: any) {
               >
                 <div className="p-0">
                   <div className={ContentListComponentStyle.selectedItemsLine}>
-                    ({getNumberSelected}) items selected
+                    ({getNumberSelected}) {translate?.itemSelected ?? ""}
                   </div>
                   <div className={ContentListComponentStyle.dropDownInnerDiv}>
-                    Change Category
+                    {translate?.changeCategory ?? ""}
                   </div>
 
                   <div
@@ -179,7 +190,7 @@ function ContentListComponent(props: any) {
                     }}
                     className={ContentListComponentStyle.dropDownInnerDiv}
                   >
-                    Change Status
+                    {translate?.changeStatus ?? ""}
                   </div>
                   <Tooltip
                     anchorSelect="#more-status-btn-element"
@@ -197,21 +208,21 @@ function ContentListComponent(props: any) {
                   >
                     <div className="p-0">
                       <div className={ContentListComponentStyle.dropDownInnerDiv}>
-                        Mark Valued
+                        {translate?.markValued ?? ""}
                       </div>
 
                       <div
                         id="more-status-btn-element"
                         className={ContentListComponentStyle.dropDownInnerDiv}
                       >
-                        Supervisor Review
+                        {translate?.supervisorReview ?? ""}
                       </div>
                     </div>
                   </Tooltip>
                 </div>
               </Tooltip>
               <GenericButton
-                label="More"
+                label={translate?.more ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -221,14 +232,14 @@ function ContentListComponent(props: any) {
                 onClickHandler={() => setOpenMore(!openMore)}
               />
               <GenericButton
-                label="Accept Min. Values"
+                label={translate?.acceptMinValues ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
               <GenericButton
-                label="Accept Standerd Cost"
+                label={translate?.acceptStandardCost ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"

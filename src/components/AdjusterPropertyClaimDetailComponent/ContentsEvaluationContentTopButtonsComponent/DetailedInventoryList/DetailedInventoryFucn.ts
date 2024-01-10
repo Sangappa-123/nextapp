@@ -17,7 +17,7 @@ export async function exportDetailedInventoryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getDetailInventoryPDF(param);
-  if (fileDetails.status === 200) {
+  if (fileDetails && fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
       const newBlob = new Blob([blob]);
@@ -47,7 +47,7 @@ export async function exportPaymentSummaryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getCoverageSummaryPDF(param);
-  if (fileDetails.status === 200) {
+  if (fileDetails && fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
       const newBlob = new Blob([blob]);
@@ -71,7 +71,7 @@ export async function exportCoverageSummaryToPDF(ClaimNumber: string) {
   };
 
   const fileDetails = await getCoverageSummaryPDF(param);
-  if (fileDetails.status === 200) {
+  if (fileDetails && fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
       const newBlob = new Blob([blob]);
@@ -112,7 +112,7 @@ export const exportDetailedInventory = async function (
     format: type,
   };
   const fileDetails = await getDetailInventoryExcel(claimDetails);
-  if (fileDetails.status === 200) {
+  if (fileDetails && fileDetails.status === 200) {
     try {
       const blob = await fileDetails.blob();
       const newBlob = new Blob([blob]);
@@ -123,8 +123,8 @@ export const exportDetailedInventory = async function (
       document.body.appendChild(link);
       link.click();
       return "success";
-    } catch (ex) {
-      return "error";
+    } catch (error) {
+      return error;
     }
   } else {
     return "error";

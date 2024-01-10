@@ -10,26 +10,30 @@ import {
   getActivityLogData,
   downloadActivityLogData,
 } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { adjusterPropertyClaimActivityLogType } from "@/translations/adjusterPropertyClaimActivityLog/en";
 import Image from "next/image";
 import scrollToTopImg from "@/assets/images/scrollToTop.png";
 import CustomLoader from "@/components/common/CustomLoader";
+import useTranslation from "@/hooks/useTranslation";
 
-interface propsTypes {}
-const ActivityLog: React.FC<propsTypes> = () => {
+function ActivityLog() {
   const [AssignmentActivityLogData, setAssignmentActivityLogData] = useState([]);
-
   const claimId = sessionStorage.getItem("claimId") || "";
-
+  const { translate }: { translate: adjusterPropertyClaimActivityLogType | any } =
+    useTranslation("adjusterPropertyClaimActivityLog");
   const payload = {
     claimId: claimId,
   };
   let res: any;
+
   const init = async () => {
     setIsLoader(true);
     res = await getActivityLogData(payload);
     setAssignmentActivityLogData(res.data);
+    setAssignmentActivityLogData(res.data);
     setIsLoader(false);
   };
+
   useEffect(() => {
     init();
   }, []);
@@ -75,7 +79,7 @@ const ActivityLog: React.FC<propsTypes> = () => {
   const ContentView = groupedArray.map((obj: any, i: React.Key | null | undefined) => {
     return (
       <div key={i}>
-        <AssignmentActivityLog groupedObjData={obj} />
+        <AssignmentActivityLog translate={translate} groupedObjData={obj} />
       </div>
     );
   });
@@ -103,18 +107,18 @@ const ActivityLog: React.FC<propsTypes> = () => {
     <div className={styles.activityLog}>
       {isLoader && <CustomLoader loaderType="spinner1" />}
       <div className={styles.heading}>
-        <GenericComponentHeading title={"Assignment Activity Log"} />
+        <GenericComponentHeading title={translate?.heading} />
         <div className={styles.buttonRowContainer}>
           <GenericButton
             className={styles.buttonCss}
-            label="Add Activity"
+            label={translate?.buttons?.addActivity}
             onClick={openModal}
             size="small"
           />
           <GenericButton
             onClick={handleGeneratePdf}
             className={styles.buttonCss}
-            label="Download as PDF"
+            label={translate?.buttons?.downloadAsPdf}
             size="small"
           />
         </div>
@@ -124,12 +128,13 @@ const ActivityLog: React.FC<propsTypes> = () => {
         onClose={closeModal}
         childComp={
           <AddActivityPopup
+            translate={translate}
             handleOpenModal={handleOpenModal}
             addLoader={addLoader}
             removeLoader={removeLoader}
           />
         }
-        headingName="New Activity"
+        headingName={translate?.addActivityPopup?.heading}
         modalWidthClassName={styles.modalWidth}
       ></Modal>
       <div className="row">{ContentView}</div>
@@ -144,6 +149,6 @@ const ActivityLog: React.FC<propsTypes> = () => {
       </span>
     </div>
   );
-};
+}
 
 export default ActivityLog;

@@ -6,11 +6,12 @@ import modalStyle from "./AddNewMessageModalComponent.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
 import GenericButton from "@/components/common/GenericButton";
 import { IoClose } from "react-icons/io5";
-import { capitalize } from "@/utils/helper";
 import useCustomForm from "@/hooks/useCustomForm";
 import GenericTextArea from "@/components/common/GenericTextArea";
 import { object, string, minLength, Output, array } from "valibot";
 import { Controller } from "react-hook-form";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 interface AddNewMsgModalComponentProps {
   handleOpenModal: () => void;
@@ -22,6 +23,9 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
   const { handleOpenModal, participants } = props;
   const [files, setFiles] = useState<any[]>([]);
 
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
+
   const schema = object({
     participants: array(
       object({
@@ -29,23 +33,23 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
         value: string(),
       }),
       "Please select recipient",
-      [minLength(1, "Please select recipient")]
+      [
+        minLength(
+          1,
+          translate?.addMessageCard?.addNewMessageModal?.errorMessages?.receipentErr
+        ),
+      ]
     ),
-    message: string([minLength(1, "Message field is required.")]),
+    message: string([
+      minLength(
+        1,
+        translate?.addMessageCard?.addNewMessageModal?.errorMessages?.messageFieldsErr
+      ),
+    ]),
   });
 
   const { register, handleSubmit, formState, control } = useCustomForm(schema);
-
   const { errors } = formState;
-  const optionsArray: any = [];
-
-  participants.map((participant: any) => {
-    optionsArray.push({
-      label: `${participant?.firstName} ${participant?.lastName} (${participant
-        ?.companyDTO?.companyName} - ${capitalize(participant?.role)})`,
-      value: JSON.stringify({ participant }),
-    });
-  });
   const handleAnchorTagClick = () => {
     document.getElementById("inp")?.click();
   };
@@ -78,16 +82,20 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
         <div className={clsx(modalStyle.upperContainer, "p-2")}>
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-              <label className={modalStyle.labelStyle}>To</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.addMessageCard?.addNewMessageModal?.to?.label}
+              </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <Controller
                 control={control}
                 name="participants"
                 render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
                   <GenericSelect
-                    placeholder={"Select Participants"}
-                    options={optionsArray}
+                    options={participants}
+                    placeholder={
+                      translate?.addMessageCard?.addNewMessageModal?.to?.placeholder
+                    }
                     isMulti={true}
                     showError={errors["participants"]}
                     errorMsg={errors?.participants?.message}
@@ -103,14 +111,18 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
 
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-              <label className={modalStyle.labelStyle}>Message</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.addMessageCard?.addNewMessageModal?.message?.label}
+              </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <GenericTextArea
                 showError={errors["message"]}
                 errorMsg={errors?.message?.message}
                 id="message"
-                placeholder="Message"
+                placeholder={
+                  translate?.addMessageCard?.addNewMessageModal?.message?.placeholder
+                }
                 {...register("message")}
               />
             </div>
@@ -118,11 +130,15 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
 
           <div className="row col-12 m-2">
             <div className={clsx(modalStyle.inputBoxAlign, "col-2")}>
-              <label className={modalStyle.labelStyle}>Attachments</label>
+              <label className={modalStyle.labelStyle}>
+                {translate?.addMessageCard?.addNewMessageModal?.attachment?.label}
+              </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <span>
-                <a onClick={handleAnchorTagClick}>click to add attachment</a>
+                <a onClick={handleAnchorTagClick}>
+                  {translate?.addMessageCard?.addNewMessageModal?.attachment?.linkName}
+                </a>
               </span>
               <input
                 type="file"
@@ -152,10 +168,18 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
         <div className={clsx(modalStyle.alignRight, "row col-12 mt-2")}>
           <div className={"row col-7"}>
             <div className={clsx("row col-6", modalStyle.centerAlign)}>
-              <GenericButton label="Cancel" size="medium" onClick={handleOpenModal} />
+              <GenericButton
+                label={translate?.addMessageCard?.addNewMessageModal?.cancelBtn}
+                size="medium"
+                onClick={handleOpenModal}
+              />
             </div>
             <div className="row col-6">
-              <GenericButton label="Add Messages" type="submit" size="medium" />
+              <GenericButton
+                label={translate?.addMessageCard?.addNewMessageModal?.addMsgBtn}
+                type="submit"
+                size="medium"
+              />
             </div>
           </div>
         </div>
