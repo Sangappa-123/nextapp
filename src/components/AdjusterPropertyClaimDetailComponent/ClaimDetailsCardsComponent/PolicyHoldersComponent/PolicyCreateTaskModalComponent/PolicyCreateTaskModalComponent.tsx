@@ -136,7 +136,7 @@ const PolicyCreateTaskModalComponent: React.FC<
                 {translate?.policyHolderTaskCard?.createTaskModal?.formName}
               </label>
             </div>
-            <div className={clsx("col-7 mx-3")}>
+            <div className="col-7 mx-3">
               <Controller
                 control={control}
                 name="task"
@@ -162,7 +162,7 @@ const PolicyCreateTaskModalComponent: React.FC<
                 {translate?.policyHolderTaskCard?.createTaskModal?.description}
               </label>
             </div>
-            <div className={clsx("col-7 mx-3")}>
+            <div className="col-7 mx-3">
               <GenericTextArea
                 showError={errors["description"]}
                 errorMsg={errors?.description?.message}

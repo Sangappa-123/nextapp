@@ -86,7 +86,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                 {translate?.addMessageCard?.addNewMessageModal?.to?.label}
               </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <Controller
                 control={control}
                 name="participants"
@@ -115,7 +115,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                 {translate?.addMessageCard?.addNewMessageModal?.message?.label}
               </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <GenericTextArea
                 showError={errors["message"]}
                 errorMsg={errors?.message?.message}
@@ -134,7 +134,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                 {translate?.addMessageCard?.addNewMessageModal?.attachment?.label}
               </label>
             </div>
-            <div className={clsx("col-10")}>
+            <div className="col-10">
               <span>
                 <a onClick={handleAnchorTagClick}>
                   {translate?.addMessageCard?.addNewMessageModal?.attachment?.linkName}
