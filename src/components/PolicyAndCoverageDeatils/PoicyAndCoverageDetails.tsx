@@ -148,10 +148,10 @@ export default function PolicyAndCoverageDetails() {
         <div className={clsx("row", styles.policyAndCoverageDetails)}>
           <div className={styles.card1}>
             <Cards className={styles.cardPolicy}>
-              <GenericComponentHeading title={"Policy Coverage Details"} />
+              <GenericComponentHeading title="Policy Coverage Details" />
               <div className={styles.policyCoverageDetails}>
                 <div className={clsx("row align-items-center", styles.policyNumber)}>
-                  <div className={"col-lg-6 col-md-2 col-sm-12 mt-2 text-right"}>
+                  <div className="col-lg-6 col-md-2 col-sm-12 mt-2 text-right">
                     <label className={styles.policyNo}>Policy No :</label>
                   </div>
                   <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
@@ -159,7 +159,7 @@ export default function PolicyAndCoverageDetails() {
                   </div>
                 </div>
                 <div className={clsx("row align-items-center", styles.policyNumber)}>
-                  <div className={"col-lg-6 col-md-2 col-sm-12 mt-2 text-right"}>
+                  <div className="col-lg-6 col-md-2 col-sm-12 mt-2 text-right">
                     <label className={styles.policyNo}>Homeowners Policy Type:</label>
                   </div>
                   <div className={clsx("col-lg-4 col-md-3 col-sm-12 mt-2")}>
@@ -167,15 +167,15 @@ export default function PolicyAndCoverageDetails() {
                   </div>
                 </div>
                 <div className={clsx("row align-items-center", styles.policyNumber)}>
-                  <div className={"col-lg-6 col-md-2 col-sm-12 mt-2 text-right"}>
+                  <div className="col-lg-6 col-md-2 col-sm-12 mt-2 text-right">
                     <label className={styles.policyNo}>Total Coverage :</label>
                   </div>
-                  <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                  <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                     <span className={styles.number}>$300,000.00</span>
                   </div>
                 </div>
                 <div className={clsx("row align-items-center", styles.policyNumber)}>
-                  <div className={"col-lg-6 col-md-2 col-sm-12 mt-2 text-right"}>
+                  <div className="col-lg-6 col-md-2 col-sm-12 mt-2 text-right">
                     <label className={styles.policyNo}>Special Limit :</label>
                   </div>
                   <div className={clsx("col-lg-4 col-md-3 col-sm-12 mt-2")}>
@@ -183,7 +183,7 @@ export default function PolicyAndCoverageDetails() {
                   </div>
                 </div>
                 <div className={clsx("row align-items-center", styles.policyNumber)}>
-                  <div className={"col-lg-6 col-md-2 col-sm-12 mt-2 text-right"}>
+                  <div className="col-lg-6 col-md-2 col-sm-12 mt-2 text-right">
                     <label className={styles.policyNo}>Deductible Amount :</label>
                   </div>
                   <div className={clsx("col-lg-4 col-md-3 col-sm-12 mt-2")}>
@@ -200,19 +200,19 @@ export default function PolicyAndCoverageDetails() {
                 <>
                   <div className={styles.editableDiv}>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Name</label>
                       </div>
 
-                      <div className={"col-lg-4 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-4 col-md-3 col-sm-12 ">
                         <span className={styles.graceSmith}>Grace Smith</span>
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Email</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           {" "}
                           <GenericInput
@@ -227,7 +227,7 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Secondary Email</label>
                       </div>
                       <div className={"col-lg-8 col-md-3 col-sm-12 "}>
@@ -244,10 +244,10 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Cell Phone</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           <GenericInput
                             value={coverageValue}
@@ -260,7 +260,7 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Day Phone</label>
                       </div>
                       <div className={clsx("col-lg-8 col-md-3 col-sm-12 ")}>
@@ -274,7 +274,7 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>Evening Phone</label>
                       </div>
                       <div className={"col-lg-8 col-md-3 col-sm-12 "}>
@@ -288,10 +288,10 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12 mb-5 text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12 mb-5 text-right">
                         <label className={styles.address}>Address</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           <GenericInput
                             placeholder="Street Address 1"
@@ -324,10 +324,10 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>State</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           <GenericSelect
                             name="state"
@@ -340,12 +340,12 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>
                           <span style={{ color: "red" }}>*</span>Zip Code
                         </label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           <GenericInput
                             placeholder="Zip Code"
@@ -359,10 +359,10 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12 mb-5 text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12 mb-5 text-right">
                         <label className={styles.policyNo}>Secondary Address</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <div className={styles.number}>
                           <GenericInput
                             placeholder="Street Address 1"
@@ -398,10 +398,10 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>State</label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <div className={styles.number}>
                           <GenericSelect
                             name="state"
@@ -419,12 +419,12 @@ export default function PolicyAndCoverageDetails() {
                       </div>
                     </div>
                     <div className={clsx("row align-items-center", styles.policyNumber)}>
-                      <div className={"col-lg-4 col-md-2 col-sm-12  text-right"}>
+                      <div className="col-lg-4 col-md-2 col-sm-12  text-right">
                         <label className={styles.policyNo}>
                           <span style={{ color: "red" }}>*</span>Zip Code
                         </label>
                       </div>
-                      <div className={"col-lg-8 col-md-3 col-sm-12 "}>
+                      <div className="col-lg-8 col-md-3 col-sm-12 ">
                         <span className={styles.number}>
                           <GenericInput
                             placeholder="Zip Code"
@@ -441,7 +441,7 @@ export default function PolicyAndCoverageDetails() {
                         </span>
                       </div>
                     </div>
-                    <div className={"row align-items-right"}>
+                    <div className="row align-items-right">
                       <div
                         className={clsx(
                           "col-lg-10 col-md-4 col-sm-12 mt-2 d-flex justify-content-right ",
@@ -455,7 +455,7 @@ export default function PolicyAndCoverageDetails() {
                           onClick={() => handleCancel()}
                         ></GenericButton>
                       </div>
-                      <div className={"col-lg-2 col-md-2 col-sm-12 mt-2"}>
+                      <div className="col-lg-2 col-md-2 col-sm-12 mt-2">
                         <GenericButton
                           label={"update"}
                           theme="normal"
@@ -469,50 +469,50 @@ export default function PolicyAndCoverageDetails() {
               ) : (
                 <>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Name</label>
                     </div>
 
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>Grace Smith</span>
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Email</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>{email} </span>
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Secondary Email</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>{secondaryEmail} </span>
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Cell Phone</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>
                         {coverageValue ?? "(324) -878-7853"}
                       </span>
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Day Phone</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>{dayPhone ?? "$200.00"}</span>
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Evening Phone</label>
                     </div>
                     <div className={clsx("col-lg-4 col-md-3 col-sm-12 mt-2")}>
@@ -520,10 +520,10 @@ export default function PolicyAndCoverageDetails() {
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Address</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>
                         {address.addressOne ? `${address.addressOne},` : ""}
                         {address.addressTwo ? `${address.addressTwo},` : ""}
@@ -534,10 +534,10 @@ export default function PolicyAndCoverageDetails() {
                     </div>
                   </div>
                   <div className={clsx("row align-items-center", styles.policyNumber)}>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-2 text-right"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-2 text-right">
                       <label className={styles.policyNo}>Secondary Address</label>
                     </div>
-                    <div className={"col-lg-4 col-md-3 col-sm-12 mt-2"}>
+                    <div className="col-lg-4 col-md-3 col-sm-12 mt-2">
                       <span className={styles.number}>
                         {secondaryAddress.addressOne
                           ? `${secondaryAddress.addressOne},`
@@ -553,13 +553,13 @@ export default function PolicyAndCoverageDetails() {
                   </div>
 
                   <div className={clsx("row align-items-center")}>
-                    <div className={"col-lg-8 col-md-2 col-sm-12 mt-3 text-right"}>
+                    <div className="col-lg-8 col-md-2 col-sm-12 mt-3 text-right">
                       <button className={styles.edit} onClick={() => handleClick()}>
                         <FaRegEdit className={styles.editIcon} />
                         Edit
                       </button>
                     </div>
-                    <div className={"col-lg-4 col-md-2 col-sm-12 mt-3"}>
+                    <div className="col-lg-4 col-md-2 col-sm-12 mt-3">
                       <button
                         className={styles.resetPassword}
                         onClick={() => handleReset()}
