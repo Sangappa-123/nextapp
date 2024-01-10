@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 import lineItemPaginationStyle from "./lineItemPagination.module.scss";
 import clsx from "clsx";
-import { DOTS, usePagination } from "./usePagination";
+import { usePagination, DOTS } from "@/hooks/usePagination";
 
 function PaginationButtons({
   pageId,
