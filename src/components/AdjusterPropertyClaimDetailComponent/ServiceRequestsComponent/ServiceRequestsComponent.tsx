@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import ServiceRequestSearchBox from "./ServiceRequestSearchBox/ServiceRequestSearchBox";
 import { useParams, useRouter } from "next/navigation";
+import useTranslation from "@/hooks/useTranslation";
+import { serviceRequestComponentType } from "@/translations/serviceRequestComponent/en";
 
 function ServiceRequestsComponent(props: any) {
   const { serviceRequestListRes, addserviceRequestData } = props;
@@ -23,11 +25,20 @@ function ServiceRequestsComponent(props: any) {
   const handleNewServiceRequest = () => {
     router.push(`/adjuster-service-request/${claimId}`);
   };
+  const {
+    translate,
+    loading,
+  }: { translate: serviceRequestComponentType | undefined; loading: boolean } =
+    useTranslation("serviceRequestComponent");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
   return (
     <div className="row">
       <div className={`${ServiceRequestComponentStyle.serviceHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title="Service Requests"
+          title={translate?.serviceRequestHeading ?? ""}
           customHeadingClassname={ServiceRequestComponentStyle.serviceHeader}
         />
       </div>
@@ -38,7 +49,7 @@ function ServiceRequestsComponent(props: any) {
           <div className="col-lg-6 col-md-6 col-sm-12 col-12 d-flex ps-0 align-items-center">
             <div className={ServiceRequestComponentStyle.newClaimButton}>
               <GenericButton
-                label="New Service Request"
+                label={translate?.newServiceRequest ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
