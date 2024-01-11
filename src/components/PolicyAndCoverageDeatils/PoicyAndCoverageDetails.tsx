@@ -25,7 +25,7 @@ import GenericSelect from "../common/GenericSelect/index";
 export default function PolicyAndCoverageDetails() {
   const [show, setShow] = useState(false);
   const [coverageValue, setCoverageValue] = useState("(324) -878-7853");
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState<any>(null);
   const [secondaryEmail, setSecondaryEmail] = useState(null);
   const [dayPhone, setDayPhone] = useState(null);
   const [eveningPhone, setEveningPhone] = useState(null);
