@@ -181,18 +181,8 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
         overlayClassName={lineItemDetailComponentStyle.deleteModalOverlay}
         footerContent={
           <div className={lineItemDetailComponentStyle.deleteModalBtn}>
-            <GenericButton
-              label="No"
-              theme="deleteBtn"
-              size="medium"
-              onClickHandler={closeDeleteModal}
-            />
-            <GenericButton
-              label="Yes"
-              theme="lightBlue"
-              size="medium"
-              onClickHandler={handleDeleteItem}
-            />
+            <GenericButton label="No" theme="linkBtn" onClickHandler={closeDeleteModal} />
+            <GenericButton label="Yes" size="small" onClickHandler={handleDeleteItem} />
           </div>
         }
         childComp={

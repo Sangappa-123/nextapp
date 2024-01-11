@@ -122,6 +122,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
               handlePageChange={(itemId: number) => {
                 router.replace(`/adjuster-line-item-detail/${claimId}/${itemId}`);
               }}
+              showArrowBtn={!inView && isInit.current}
             />
           </div>
         )}

@@ -14,6 +14,7 @@ import {
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import useDebounce from "@/hooks/useDebounce";
 import { unknownObjectType } from "@/constants/customTypes";
+import Tooltip from "@/components/common/ToolTip";
 
 interface propType {
   register: any;
@@ -89,52 +90,72 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
               <label htmlFor="category" className={orginalItemFormStyle.label}>
                 Category
               </label>
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="category"
-                value={
-                  lineItem?.category
-                    ? {
-                        categoryId: lineItem?.category?.id,
-                        categoryName: lineItem?.category?.name,
-                      }
-                    : null
-                }
-                options={category}
-                getOptionLabel={(option: { categoryName: any }) => option.categoryName}
-                getOptionValue={(option: { categoryId: any }) => option.categoryId}
-                onChange={(e: {
-                  categoryId: number;
-                  categoryName: string;
-                  noOfItems: number;
-                }) => {
-                  if (e !== null) {
-                    fetchSubCategory(e.categoryId);
+              <div className={orginalItemFormStyle.formFieldTooltip}>
+                <GenericSelect
+                  menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                  id="category"
+                  value={
+                    lineItem?.category
+                      ? {
+                          categoryId: lineItem?.category?.id,
+                          categoryName: lineItem?.category?.name,
+                        }
+                      : null
                   }
-                  updateOnCategoryChange(e);
-                }}
-              />
+                  options={category}
+                  getOptionLabel={(option: { categoryName: any }) => option.categoryName}
+                  getOptionValue={(option: { categoryId: any }) => option.categoryId}
+                  onChange={(e: {
+                    categoryId: number;
+                    categoryName: string;
+                    noOfItems: number;
+                  }) => {
+                    if (e !== null) {
+                      fetchSubCategory(e.categoryId);
+                    }
+                    updateOnCategoryChange(e);
+                  }}
+                />
+                <Tooltip
+                  className={orginalItemFormStyle.infoIconContainer}
+                  text={
+                    lineItem?.category?.name
+                      ? lineItem?.category?.name
+                      : "Select Category"
+                  }
+                />
+              </div>
             </div>
             <div className={orginalItemFormStyle.formControl}>
               <label htmlFor="subCategory" className={orginalItemFormStyle.label}>
                 Sub-Category
               </label>
-              <GenericSelect
-                menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-                id="subCategory"
-                value={lineItem.subCategory}
-                options={subCategory}
-                getOptionLabel={(option: { name: string }) => option.name}
-                getOptionValue={(option: { id: number }) => option.id}
-                onChange={(
-                  e: {
-                    id: number;
-                    name: string;
-                  } | null
-                ) => {
-                  updateOnSubCategoryChange(e);
-                }}
-              />
+              <div className={orginalItemFormStyle.formFieldTooltip}>
+                <GenericSelect
+                  menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                  id="subCategory"
+                  value={lineItem.subCategory}
+                  options={subCategory}
+                  getOptionLabel={(option: { name: string }) => option.name}
+                  getOptionValue={(option: { id: number }) => option.id}
+                  onChange={(
+                    e: {
+                      id: number;
+                      name: string;
+                    } | null
+                  ) => {
+                    updateOnSubCategoryChange(e);
+                  }}
+                />
+                <Tooltip
+                  className={orginalItemFormStyle.infoIconContainer}
+                  text={
+                    lineItem?.subCategory?.name
+                      ? lineItem?.subCategory?.name
+                      : "Select SubCategory"
+                  }
+                />
+              </div>
             </div>
           </div>
           <div className={orginalItemFormStyle.standardReplacement}>
