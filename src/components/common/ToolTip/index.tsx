@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import styles from "./Tooltip.module.scss";
 import { FaInfoCircle } from "react-icons/fa";
+import clsx from "clsx";
 
 interface TooltipProps {
   text: any;
+  className?: string;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ text }) => {
+const Tooltip: React.FC<TooltipProps> = ({ text, className }) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
 
   const handleMouseEnter = () => {
@@ -18,13 +20,13 @@ const Tooltip: React.FC<TooltipProps> = ({ text }) => {
   };
 
   return (
-    <div className={styles.tooltipContainer}>
+    <div className={clsx(styles.tooltipContainer, className)}>
       <div
         className={styles.tooltipTrigger}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <FaInfoCircle />
+        <FaInfoCircle className={styles.infoIcon} />
       </div>
       {isTooltipVisible && <div className={styles.tooltip}>{text}</div>}
     </div>
