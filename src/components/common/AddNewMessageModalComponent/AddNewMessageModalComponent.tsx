@@ -1,6 +1,6 @@
 "use-client";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import modalStyle from "./AddNewMessageModalComponent.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
@@ -16,9 +16,10 @@ interface AddNewMsgModalComponentProps {
   handleMessageSubmit: (data: any) => void;
   claimId: string;
   participants: [];
+  defaultValue?: [];
 }
 const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: any) => {
-  const { handleOpenModal, participants } = props;
+  const { handleOpenModal, participants, defaultValue } = props;
   const [files, setFiles] = useState<any[]>([]);
 
   const schema = object({
@@ -33,7 +34,13 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
     message: string([minLength(1, "Message field is required.")]),
   });
 
-  const { register, handleSubmit, formState, control } = useCustomForm(schema);
+  const { register, handleSubmit, formState, control, setValue } = useCustomForm(schema);
+
+  useEffect(() => {
+    if (defaultValue) setValue("participants", defaultValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { errors } = formState;
   const handleAnchorTagClick = () => {
     document.getElementById("inp")?.click();
@@ -83,6 +90,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                     onChange={(e: any) => {
                       fieldOnChange(e);
                     }}
+                    defaultValue={defaultValue}
                     {...rest}
                   />
                 )}

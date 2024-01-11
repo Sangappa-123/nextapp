@@ -17,6 +17,7 @@ interface TypedProps<T> {
   customStyles?: StylesConfig;
   isSearchable?: boolean;
   [rest: string]: any;
+  defaultValue?: T[];
 }
 
 function GenericSelect<T extends object>(props: TypedProps<T>) {
@@ -40,6 +41,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     handleClear,
     disabled = false,
     isSearchable = true,
+    defaultValue = [],
     ...rest
   } = props;
 
@@ -155,6 +157,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
           // menuPortalTarget={typeof window !== "undefined" ? document.body : null}
           maxMenuHeight={200}
           menuShouldScrollIntoView={false}
+          defaultValue={defaultValue}
           {...rest}
         />
         <div
