@@ -1,11 +1,17 @@
+"use client";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import AllTasksStyle from "./AllTasks.module.scss";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 const AllTasksComponent: React.FC = () => {
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
       // active: true,
     },
@@ -15,7 +21,7 @@ const AllTasksComponent: React.FC = () => {
       active: true,
     },
     {
-      name: "Tasks",
+      name: translate?.breadCrumbsHeading?.tasks,
       path: "",
       active: true,
     },
@@ -28,7 +34,7 @@ const AllTasksComponent: React.FC = () => {
         <GenericComponentHeading
           customHeadingClassname={AllTasksStyle.headingContainer}
           customTitleClassname={AllTasksStyle.headingTxt}
-          title="All Claim Tasks"
+          title={translate?.breadCrumbsHeading?.allClaimTasks}
         />
       </div>
     </div>

@@ -10,7 +10,7 @@ interface dataType {
 }
 
 type breadcrumbPropType = {
-  dataList: dataType[];
+  dataList: dataType[] | any;
   customClassname?: string;
   customNavClassname?: string;
 };
