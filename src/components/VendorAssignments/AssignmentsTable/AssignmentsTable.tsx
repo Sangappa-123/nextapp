@@ -1,6 +1,7 @@
 import React from "react";
 import AssignmentsTableCss from "./AssignmentsTable.module.scss";
 import clsx from "clsx";
+import NoRecordComponent from "@/components/common/NoRecordComponent/index";
 
 interface CommonTableProps {
   columns: string[];
@@ -65,7 +66,7 @@ const AssignmentsTable: React.FC<CommonTableProps> = ({ columns, data }) => {
                 AssignmentsTableCss["no-data"]
               )}
             >
-              No Data found
+              <NoRecordComponent message={"No Data found"} />
             </td>
           </tr>
         )}

@@ -8,6 +8,7 @@ import {
 
 import CustomLoader from "@/components/common/CustomLoader";
 import AssignmentsTable from "@/components/VendorAssignments/AssignmentsTable/AssignmentsTable";
+import { convertToCurrentTimezone } from "@/utils/helper";
 
 function Assignments() {
   const [AssignmentData, setAssignmentData] = useState<any>({});
@@ -34,8 +35,6 @@ function Assignments() {
   const init = async () => {
     setIsLoader(true);
     const ListRes = await getVendorAssignments(payload);
-    // console.log("ListRes====>", ListRes);
-
     setAssignmentData(ListRes);
     const Res = await getVendorAssignmentsCont(payload);
     setAssignmentContData(Res);
@@ -46,33 +45,6 @@ function Assignments() {
     init();
   }, []);
 
-  const formatMyDateTime = (date: any) => {
-    const dateComponents = date.split(/[^0-9]/).map(Number);
-    const myDate = new Date(
-      Date.UTC(
-        dateComponents[2],
-        dateComponents[0] - 1,
-        dateComponents[1],
-        dateComponents[3],
-        dateComponents[4],
-        dateComponents[5]
-      )
-    );
-    const formattedDate = myDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    const formattedTime = myDate.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const finalFormattedDate = `${formattedDate} ${formattedTime}`;
-
-    return finalFormattedDate;
-  };
-
   tableData = AssignmentData?.data?.claimAssignmentVendors.map((data: any) => ({
     "Assignment Id": data?.assignmentNumber ? data?.assignmentNumber : "",
     "Vendor Name": data?.vendorDetails?.vendorName ? data?.vendorDetails?.vendorName : "",
@@ -81,8 +53,8 @@ function Assignments() {
       ? data?.requestedServices[0]?.name
       : "",
     Status: data?.assignmentStatus?.name ? data?.assignmentStatus?.name : "",
-    "Start Date": data?.startDate ? formatMyDateTime(data?.startDate) : "",
-    "First Touch": data?.firstTouch ? formatMyDateTime(data?.firstTouch) : "",
+    "Start Date": data?.startDate ? convertToCurrentTimezone(data?.startDate) : "",
+    "First Touch": data?.firstTouch ? convertToCurrentTimezone(data?.firstTouch) : "",
     "Max. Claim Time Agreed": "",
     "Time Taken so far": data?.timeTaken ? data?.timeTaken : "",
   }));
