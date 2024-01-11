@@ -124,6 +124,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
                   e.stopPropagation();
                   handleRowSelect(row.original.itemId);
                 }}
+                disabled={row.original.statusName === "SETTLED"}
               />
             </div>
           ),
@@ -133,13 +134,13 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           id: "item",
           enableColumnFilter: false,
         }),
-        columnHelper.accessor("status", {
+        columnHelper.accessor("statusName", {
           header: () => "Status", // filter option true should have same id as value
-          id: "status",
+          id: "statusName",
         }),
-        columnHelper.accessor("category", {
+        columnHelper.accessor("categoryName", {
           header: () => "Catogory", // filter option true should have same id as value
-          id: "category",
+          id: "categoryName",
         }),
       ],
     }),
@@ -235,7 +236,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
                   <RiFileEditFill color="grey" size="20px" />
                 </div>
 
-                {row.original.status === "CREATED" && (
+                {row.original.statusName === "CREATED" && (
                   <div
                     onClick={(e) => {
                       e.stopPropagation();

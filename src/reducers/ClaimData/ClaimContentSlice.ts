@@ -29,29 +29,18 @@ const ClaimContentSlice = createSlice({
   reducers: {
     addClaimContentListData(state, action) {
       const { payload } = action;
-      const { claimContentData, claimId } = payload;
+      const { claimContentData } = payload;
 
       let newArr = {};
       const claimRes: any = [];
       if (claimContentData.data) {
-        console.log("claimContentData", claimContentData);
         claimContentData.data.map((item: any) => {
           newArr = {
-            description: item.description,
-            status: item.status?.status ?? null,
-            category: item.category?.name ?? null,
-            quantity: item.quantity,
-            rcvTotal: item.rcvTotal,
-            totalStatedAmount: item.totalStatedAmount,
-            vendorName: item.vendorName,
-            adjusterDescription: item.adjusterDescription,
-            itemTag: item.itemTag ?? null,
-            cashPayoutExposure: item.cashPayoutExposure,
-            claimId: claimId,
-            itemId: item.id,
-            itemUID: item.itemUID,
-            itemNumber: item.itemNumber,
+            ...item,
+            statusName: item.status?.status ?? null,
+            categoryName: item.category?.name ?? null,
             selected: false,
+            itemId: item.id,
           };
           claimRes.push(newArr);
         });
@@ -146,20 +135,11 @@ const ClaimContentSlice = createSlice({
 
         payload.data.map((item: any) => {
           newArr = {
-            description: item.description,
-            status: item.status?.status ?? null,
-            category: item.category?.name ?? null,
-            quantity: item.quantity,
-            rcvTotal: item.rcvTotal,
-            totalStatedAmount: item.totalStatedAmount,
-            vendorName: item.vendorName,
-            adjusterDescription: item.adjusterDescription,
-            itemTag: item.itemTag ?? null,
-            cashPayoutExposure: item.cashPayoutExposure,
-            claimId: item.claimId,
+            ...item,
+            statusName: item.status?.status ?? null,
+            categoryName: item.category?.name ?? null,
+            selected: false,
             itemId: item.id,
-            itemUID: item.itemUID,
-            itemNumber: item.itemNumber,
           };
           claimRes.push(newArr);
         });
