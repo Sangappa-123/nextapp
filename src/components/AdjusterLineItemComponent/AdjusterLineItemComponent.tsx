@@ -21,6 +21,8 @@ import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice"
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import { useInView } from "react-intersection-observer";
 import RapidItemSection from "./RapidItemSection";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 import selectClaimContentItemIdList from "@/reducers/ClaimData/Selectors/selectClaimContentItemIdList";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
@@ -43,6 +45,9 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     // rootMargin: "200px",
   });
 
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const tabData = [
     {
       name: "Item Details",
@@ -51,7 +56,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   ];
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
     },
     {

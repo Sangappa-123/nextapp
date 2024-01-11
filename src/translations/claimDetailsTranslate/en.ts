@@ -1,4 +1,12 @@
 const translate = {
+  topOptionButtons: {
+    calculateSettlement: "Calculate Settlement",
+    calculateDepreciation: "Re-Calculate Depreciation",
+    reAssignClaim: "Re-Assign Claim",
+    supervisorReview: "Supervisor Review",
+    closeClaim: "Close Claim",
+    deleteClaim: "Delete Claim",
+  },
   claimSnapshot: {
     claimSnapshotHeading: "Claim snapshot",
     claim: "Claim #",

@@ -433,8 +433,10 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                 size="small"
                 type="submit"
                 onClick={async () => {
+                  setIsExportfetching(true);
                   const data: any = await sendDetailedInventory(claimNumber);
                   if (data && data.status === 200) {
+                    setIsExportfetching(false);
                     dispatch(
                       addNotification({
                         message: data.message,
@@ -443,6 +445,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
                       })
                     );
                   } else {
+                    setIsExportfetching(false);
                     dispatch(
                       addNotification({
                         message: "Failed to send the PDF!",

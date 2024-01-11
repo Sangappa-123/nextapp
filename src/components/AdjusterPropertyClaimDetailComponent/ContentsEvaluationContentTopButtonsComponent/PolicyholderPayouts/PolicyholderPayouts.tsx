@@ -20,9 +20,10 @@ type PolicyHolderPayouts = {
   policyholderPayoutsData: any;
   fetchPolicyHolderTableAction: any;
   isfetching: boolean;
+  listData: any;
 };
 
-function reStructure(value: any) {
+function convertToFloatCurrency(value: any) {
   if (value) return Number.parseFloat(value).toFixed(2);
   else {
     return "0.00";
@@ -31,9 +32,11 @@ function reStructure(value: any) {
 
 function PolicyholderPayouts(props: PolicyHolderPayouts) {
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
-  const { policyholderPayoutsData, fetchPolicyHolderTableAction, isfetching } = props;
+  const { policyholderPayoutsData, fetchPolicyHolderTableAction, isfetching, listData } =
+    props;
   const dispatch = useAppDispatch();
   const [isExportfetching, setIsExportfetching] = useState(false);
+  const [totalAmountPaid, setTotalAmountPaid] = useState(0);
 
   useEffect(() => {
     fetchPolicyHolderTableAction({
@@ -45,6 +48,21 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
     translate,
   }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
     useTranslation("contentsEvaluationTranslate");
+
+  useEffect(() => {
+    getTotalPaidAmount();
+  }, [listData.length]);
+
+  function getTotalPaidAmount() {
+    let totalAmountPaid = 0;
+    if (listData) {
+      listData.paymentSummaryDetails?.map(function (item: any) {
+        totalAmountPaid += item.amountPaid;
+      });
+      setTotalAmountPaid(totalAmountPaid);
+    }
+  }
+
   if (loading) {
     return (
       <div className="col-12 d-flex flex-column position-relative">
@@ -108,7 +126,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
             />
             <PolicyholderCard
               heading={translate?.policyholderPayouts.total$paid || ""}
-              value={policyholderPayoutsData?.TotalAmountPaid}
+              value={`$${convertToFloatCurrency(totalAmountPaid)}`}
             />
           </div>
           <div className="d-flex justify-content-center">
@@ -121,7 +139,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.itemsReplaced}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.noOfItemsReplaced
                     )}
@@ -131,7 +149,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.totalReplacementCost}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.totalReplacementCostIncludeTax
                     )}
@@ -141,7 +159,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.totalReceiptValue}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.totalReceiptValue
                     )}
@@ -151,7 +169,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.totalHoldoverPaid}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.totalHoldoverPaidIncludeTax
                     )}
@@ -161,7 +179,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.lessPolicyDeductible}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.lessPolicyDeductible
                     )}
@@ -172,7 +190,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                   <b>{translate?.policyholderPayouts.netReplacementCost}</b>
                   <span className={style.value}>
                     $
-                    {reStructure(
+                    {convertToFloatCurrency(
                       policyholderPayoutsData?.replacementCostSettlement
                         ?.netReplacementCost
                     )}
@@ -190,7 +208,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.itemsCashed}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.noOfItemsCashed
                       )}
@@ -200,7 +218,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.actualTotalReplacementCost}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.totalReplacementCost
                       )}
@@ -210,7 +228,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.lessDepreciationCost}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.lessDepreciationCost
                       )}
@@ -220,7 +238,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.lessAmountOverLimit}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.lessAmountOverLimits
                       )}
@@ -230,7 +248,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.actualLessPolicyDeductible}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.lessPolicyDeductible
                       )}
@@ -241,7 +259,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
                     <b>{translate?.policyholderPayouts.netClaimCost}</b>
                     <span className={style.value}>
                       $
-                      {reStructure(
+                      {convertToFloatCurrency(
                         policyholderPayoutsData?.actualCashValueSettlementDTO
                           ?.netClaimCost
                       )}
@@ -262,6 +280,7 @@ function PolicyholderPayouts(props: PolicyHolderPayouts) {
 const mapStateToProps = (state: RootState) => ({
   policyholderPayoutsData: state.detailedInventorydata?.policyHolderListDataFull,
   isfetching: state.detailedInventorydata?.policyHolderfetching,
+  listData: state.detailedInventorydata?.policySummaryListDataFull,
 });
 
 const mapDispatchToProps = {
