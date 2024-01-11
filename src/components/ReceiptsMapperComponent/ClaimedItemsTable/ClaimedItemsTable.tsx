@@ -1,50 +1,51 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import receiptMapperStyle from "../receiptMapperComponent.module.scss";
 import { ConnectedProps, connect } from "react-redux";
-import { RootState } from "@/store/store";
 import {
   createColumnHelper,
   getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
   getFilteredRowModel,
   ColumnFiltersState,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFacetedMinMaxValues,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
-import receiptMapperStyle from "../receiptMapperComponent.module.scss";
 
+interface typeProps {
+  [key: string | number]: any;
+}
 function convertToDollar(value: any) {
   if (value) return `$${Number.parseFloat(value).toFixed(2)}`;
   else {
     return "$0.00";
   }
 }
-interface claimedItemData {
-  [key: string | number]: any;
-}
-const ClaimedItemsTable: React.FC<connectorType> = ({
-  claimedItemsList,
-  claimedItemsErrorMsg,
-  tableLoader,
-  // setTableLoader
-}) => {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
+  const {
+    claimedItemsList,
+    tableLoader,
+    claimedItemsErrorMsg,
+    // setTableLoader,
+  } = props;
+  const [claimResult, setClaimResult] = React.useState(claimedItemsList);
 
-  const [claimedItemArray, setClaimedItems] = useState<any>(claimedItemsList);
-
-  useEffect(() => {
-    if (claimedItemsList) {
-      const defaultData: claimedItemData[] = [...claimedItemsList];
-      setClaimedItems([...defaultData]);
-    }
+  interface ClaimData {
+    [key: string | number]: any;
+  }
+  React.useEffect(() => {
+    const defaultData: ClaimData[] = [...claimedItemsList];
+    setClaimResult([...defaultData]);
   }, [claimedItemsList]);
 
-  const columnHelper = createColumnHelper<claimedItemData>();
+  const columnHelper = createColumnHelper<ClaimData>();
 
   const columns = [
     columnHelper.accessor("itemNumber", {
+      id: "item_number",
       header: () => "Item #",
       cell: (info) => info.getValue(),
       enableColumnFilter: false,
@@ -62,6 +63,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
 
       enableSorting: false,
     }),
+
     columnHelper.accessor("statusFilter", {
       header: () => "Status",
       cell: (info) => info.getValue(),
@@ -74,7 +76,6 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
       },
       enableSorting: false,
     }),
-
     columnHelper.accessor("receiptValue", {
       header: () => "Receipt Value",
       cell: (info: any) => (
@@ -83,7 +84,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         )}`}</div>
       ),
       footer: () => {
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.receiptValue,
           0
         );
@@ -103,11 +104,11 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         })`}</div>
       ),
       footer: () => {
-        const Replacedsum = claimedItemArray.reduce(
+        const Replacedsum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.totalQuantityReplaced,
           0
         );
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.quantity,
           0
         );
@@ -127,7 +128,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         )}`}</div>
       ),
       footer: () => {
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.totalStatedAmount,
           0
         );
@@ -147,7 +148,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         )}`}</div>
       ),
       footer: () => {
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.cashPaid,
           0
         );
@@ -167,7 +168,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         )}`}</div>
       ),
       footer: () => {
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.holdOverDue,
           0
         );
@@ -187,7 +188,7 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
         )}`}</div>
       ),
       footer: () => {
-        const sum = claimedItemArray.reduce(
+        const sum = claimResult.reduce(
           (acc: number, dataItem: any) => acc + dataItem.holdOverPaymentPaidAmount,
           0
         );
@@ -213,44 +214,78 @@ const ClaimedItemsTable: React.FC<connectorType> = ({
     }),
   ];
 
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+
+  // const handleSorting = async (sortingUpdater: any) => {
+  //   setTableLoader(true);
+
+  //   const newSortVal = sortingUpdater(sorting);
+  //   setSorting(newSortVal);
+
+  //   if (newSortVal.length > 0) {
+  //     const sortById = newSortVal[0].id;
+  //     let sortedData : any = []
+  //     if(newSortVal[0].desc){
+  //       sortedData = sortBy(claimedItemsList, sortById).reverse();
+  //     }else{
+  //       sortedData= sortBy(claimedItemsList, sortById);
+  //     }
+
+  //     setClaimResult([...sortedData]);
+  //       setTableLoader(false);
+  //   } else if (newSortVal.length === 0 && claimedItemsList.length > 0) {
+  //     setClaimResult([...claimedItemsList]);
+  //     setTableLoader(false);
+
+  //   }
+  // };
+
+  const handleRowClick = async (rowData: any) => {
+    console.log(rowData);
+  };
+
   const table = useReactTable({
-    data: claimedItemArray,
+    data: claimResult,
     columns,
     state: {
+      sorting,
       columnFilters,
     },
-
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-    manualSorting: true,
-    manualPagination: true,
+    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    enableSorting: false,
-    manualFiltering: true,
+    debugTable: true,
+    // manualSorting: true,
+    enableSorting: true,
   });
 
   return (
-    <div className={receiptMapperStyle.claimedTable}>
+    <div>
       <CustomReactTable
         table={table}
-        tableDataErrorMsg={claimedItemsList.length === 0 ? claimedItemsErrorMsg : null}
+        totalDataCount={claimedItemsList.length}
+        // pageLimit={pageLimit}
+        // showStatusColor={true}
         loader={tableLoader}
-        totalFetched={claimedItemArray.length}
-        totalDBRowCount={claimedItemsList.length}
-        showFooter={true}
-        fetchNextPage={true}
+        tableDataErrorMsg={claimedItemsErrorMsg}
+        handleRowClick={handleRowClick}
+        // filterFn={filterFn}
+        // customFilterValues={customFilterValues}
       />
     </div>
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  claimedItemsList: state.claimedItems.claimedItemsList,
-  claimedItemsErrorMsg: state.claimedItems.claimedItemsErrorMsg,
+const mapStateToProps = ({ claimedItems }: any) => ({
+  claimedItemsList: claimedItems.claimedItemsList,
+
+  claimedItemsErrorMsg: claimedItems.claimedItemsErrorMsg,
 });
 
 const connector = connect(mapStateToProps, null);

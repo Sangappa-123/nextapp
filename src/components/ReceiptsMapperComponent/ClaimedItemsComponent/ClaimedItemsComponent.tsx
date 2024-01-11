@@ -28,9 +28,11 @@ const ClaimedItemsComponent: React.FC = ({ claimNumber }: { claimNumber: string 
       <div className="col-8 pr-0">
         <div className={receiptMapperStyle.claimedItemListContainer}>
           <div className="col8">
-            <a href="" className={receiptMapperStyle.clearAll}>
-              Clear All Filter
-            </a>
+            <GenericButton
+              btnClassname={receiptMapperStyle.clearAll}
+              label="Clear All Filter"
+              theme="linkBtn"
+            />
           </div>
           <div className="col-4">
             <ContentListSearchBox setTableLoader={setTableLoader} />
