@@ -12,6 +12,7 @@ import {
   updateOnSubCategoryChange,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
 import { fetchSubCategory } from "@/reducers/LineItemDetail/LineItemThunkService";
+import Tooltip from "@/components/common/ToolTip";
 
 interface CategoryType {
   categoryId: number;
@@ -83,6 +84,14 @@ const OriginalItemRapidSection: React.FC<connectorType> = (props) => {
               getOptionValue={(option: { categoryId: any }) => option.categoryId}
               onChange={handleCategorySelect}
             />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedCategory?.name
+                  ? rapidData?.selectedCategory?.name
+                  : "Select Category"
+              }
+            />
           </div>
           <div className={originalItemRapidSectionStyle.selectBox}>
             <label htmlFor="subCategory">Sub-Category</label>
@@ -94,6 +103,14 @@ const OriginalItemRapidSection: React.FC<connectorType> = (props) => {
               getOptionValue={(option: { id: number }) => option.id}
               onChange={handleSubCategorySelect}
             />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedSubCategory?.name
+                  ? rapidData?.selectedSubCategory?.name
+                  : "Select SubCategory"
+              }
+            />
           </div>
           <div className={originalItemRapidSectionStyle.selectBox}>
             <label htmlFor="condition">Condition</label>
@@ -104,6 +121,14 @@ const OriginalItemRapidSection: React.FC<connectorType> = (props) => {
               getOptionLabel={(option: { conditionName: any }) => option.conditionName}
               getOptionValue={(option: { conditionId: any }) => option.conditionId}
               onChange={handleConditionSelect}
+            />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedCondition?.name
+                  ? rapidData?.selectedCondition?.name
+                  : "Select Condition"
+              }
             />
           </div>
         </div>
