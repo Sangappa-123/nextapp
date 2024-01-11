@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -18,27 +18,48 @@ import CustomLoader from "@/components/common/CustomLoader/index";
 type PolicyHolderTableProps = {
   listData: any;
   fetchPolicySummaryTableAction: any;
+  policyHolderTablefetching: boolean;
 };
 
 interface policyHolderData {
   [key: string | number]: any;
 }
 
+function convertToFloatCurrency(value: any) {
+  if (value) return `$${Number.parseFloat(value).toFixed(2)}`;
+  else {
+    return "$0.00";
+  }
+}
+
 function PolicyHolderTable(props: PolicyHolderTableProps) {
   const columnHelper = createColumnHelper<policyHolderData>();
-  const { listData, fetchPolicySummaryTableAction } = props;
-
+  const { listData, fetchPolicySummaryTableAction, policyHolderTablefetching } = props;
+  const [totalAmountPaid, setTotalAmountPaid] = useState();
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
   const {
     loading,
     translate,
   }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
     useTranslation("contentsEvaluationTranslate");
+
   useEffect(() => {
     fetchPolicySummaryTableAction({
       claimNumber: claimNumber,
     });
   }, [claimNumber, fetchPolicySummaryTableAction]);
+
+  useMemo(() => {
+    if (!policyHolderTablefetching) {
+      const value = listData.paymentSummaryDetails?.reduce(function (
+        prev: any,
+        curr: any
+      ) {
+        return prev + curr.amountPaid;
+      }, 0);
+      setTotalAmountPaid(value);
+    }
+  }, [policyHolderTablefetching, listData.paymentSummaryDetails]);
 
   const columns = [
     columnHelper.accessor("paymentID", {
@@ -47,16 +68,12 @@ function PolicyHolderTable(props: PolicyHolderTableProps) {
       footer: () => <span>{translate?.policyholderPayouts?.columns.totalPaid} </span>,
     }),
     columnHelper.accessor("amountPaid", {
-      cell: (info: any) => (
-        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
-      ),
+      cell: (info: any) => <span>{convertToFloatCurrency(info.getValue())}</span>,
       header: () => translate?.policyholderPayouts?.columns.paymentAmount,
-      footer: () => <span>$0.00</span>,
+      footer: () => <span>{convertToFloatCurrency(totalAmountPaid)}</span>,
     }),
     columnHelper.accessor("paymentDate", {
-      cell: (info: any) => (
-        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
-      ),
+      cell: (info: any) => <span>{convertToFloatCurrency(info.getValue())}</span>,
       header: () => translate?.policyholderPayouts?.columns.paymentDate,
     }),
     columnHelper.accessor("paymentMode", {
@@ -72,6 +89,7 @@ function PolicyHolderTable(props: PolicyHolderTableProps) {
       header: () => translate?.policyholderPayouts?.columns.note,
     }),
   ];
+
   const table = useReactTable({
     data: listData?.paymentSummaryDetails,
     columns,
@@ -101,12 +119,12 @@ function PolicyHolderTable(props: PolicyHolderTableProps) {
           className={`row col-12 ${PolicyHolderTableListStyle.detailListContentContainer}`}
         ></div>
       </div>
-      {listData?.paymentSummaryDetails && (
+      {!policyHolderTablefetching && (
         <div>
           <CustomReactTable
             showFooter={true}
             tableDataErrorMsg={
-              listData?.paymentSummaryDetails.length === 0 &&
+              listData?.paymentSummaryDetails?.length === 0 &&
               translate?.detailedInventory?.noRecords
             }
             table={table}
@@ -119,6 +137,7 @@ function PolicyHolderTable(props: PolicyHolderTableProps) {
 
 const mapStateToProps = (state: RootState) => ({
   listData: state.detailedInventorydata?.policySummaryListDataFull,
+  policyHolderTablefetching: state.detailedInventorydata?.policyHolderTablefetching,
 });
 
 const mapDispatchToProps = {

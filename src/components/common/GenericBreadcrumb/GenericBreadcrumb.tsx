@@ -10,7 +10,7 @@ interface dataType {
 }
 
 type breadcrumbPropType = {
-  dataList: dataType[];
+  dataList: dataType[] | any;
   customClassname?: string;
   customNavClassname?: string;
 };
@@ -32,7 +32,7 @@ function GenericBreadcrumb({
           [customClassname]: customClassname,
         })}
       >
-        {dataList.map((path) => (
+        {dataList.map((path: any) => (
           <li
             key={path.name}
             className={clsx({

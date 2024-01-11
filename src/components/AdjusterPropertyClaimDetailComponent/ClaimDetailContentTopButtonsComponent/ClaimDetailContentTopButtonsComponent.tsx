@@ -3,6 +3,8 @@ import topButtonStyle from "./top-button.module.scss";
 import ClaimDetailsCardsComponent from "../ClaimDetailsCardsComponent";
 import ServiceRequestsComponent from "../ServiceRequestsComponent";
 import ContentListComponent from "../ContentListComponent";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type propTypes = {
   serviceRequestListRes: any;
@@ -11,29 +13,32 @@ type propTypes = {
 };
 
 const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propTypes) => {
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
+
   const buttonsArray = [
     {
-      label: "Calculate Settlement",
+      label: translate?.topOptionButtons?.calculateSettlement,
       clickHandler: "",
     },
     {
-      label: "Re-Calculate Depreciation",
+      label: translate?.topOptionButtons?.calculateDepreciation,
       clickHandler: "",
     },
     {
-      label: "Re-Assign Claim",
+      label: translate?.topOptionButtons?.reAssignClaim,
       clickHandler: "",
     },
     {
-      label: "Supervisor Review",
+      label: translate?.topOptionButtons?.supervisorReview,
       clickHandler: "",
     },
     {
-      label: "Close Claim",
+      label: translate?.topOptionButtons?.closeClaim,
       clickHandler: "",
     },
     {
-      label: "Delete Claim",
+      label: translate?.topOptionButtons?.deleteClaim,
       clickHandler: "",
     },
   ];

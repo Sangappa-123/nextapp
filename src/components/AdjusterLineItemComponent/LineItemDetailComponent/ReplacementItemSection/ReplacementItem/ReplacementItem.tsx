@@ -151,7 +151,7 @@ function ReplacementItem(props: replaceItemInterface) {
         <div>
           <div className={replacementItemStyle.formControl}>
             <label htmlFor="totalReplaceCost">Total Replacement Cost</label>
-            <div id="totalReplaceCost">${calculatedTax.rcvTotal}</div>
+            <div id="totalReplaceCost">${calculatedTax.rcvTotal.toFixed(2)}</div>
           </div>
         </div>
       </div>

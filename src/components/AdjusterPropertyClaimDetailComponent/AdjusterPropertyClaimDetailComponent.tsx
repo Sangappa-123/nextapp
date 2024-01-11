@@ -28,6 +28,8 @@ import { RootState } from "@/store/store";
 import selectPolicyHolderFirstName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderFirstName";
 import selectPolicyHolderLastName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderLastName";
 import Loading from "@/app/[lang]/loading";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type propsTypes = {
   claimId: string;
@@ -99,9 +101,12 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
   dispatch(addRoom(claimRoomRes?.data));
   dispatch(addRoomType(claimRoomTypeRes));
 
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
     },
     {
@@ -133,7 +138,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
             <GenericComponentHeading
               customHeadingClassname={claimDetailStyle.headingContainer}
               customTitleClassname={claimDetailStyle.headingTxt}
-              title={`Claim# ${claimNumber} - ${lastName}, ${firstName}`}
+              title={`${translate?.breadCrumbsHeading?.claim} ${claimNumber} - ${lastName}, ${firstName}`}
             />
           </div>
         </Suspense>

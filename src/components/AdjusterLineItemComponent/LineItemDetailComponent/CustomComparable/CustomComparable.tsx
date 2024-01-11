@@ -200,9 +200,11 @@ function CustomComparable({
       <Modal
         isOpen={openCustomComparableModal}
         onClose={closeCustomComparable}
-        modalWidthClassName={customComparableStyle.modal}
         overlayClassName={customComparableStyle.modalOverlay}
         headingName="New Custom Comparable"
+        positionTop
+        animate
+        roundedBorder
         footerContent={
           <div className={customComparableStyle.customComparableModalButton}>
             <GenericButton
