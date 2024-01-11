@@ -1,11 +1,17 @@
+"use client";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import AllNotesStyle from "./AllNotes.module.scss";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 const AllNotesComponent: React.FC = () => {
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
       // active: true,
     },
@@ -15,7 +21,7 @@ const AllNotesComponent: React.FC = () => {
       active: true,
     },
     {
-      name: "Message",
+      name: translate?.breadCrumbsHeading?.message,
       path: "",
       active: true,
     },
@@ -28,7 +34,7 @@ const AllNotesComponent: React.FC = () => {
         <GenericComponentHeading
           customHeadingClassname={AllNotesStyle.headingContainer}
           customTitleClassname={AllNotesStyle.headingTxt}
-          title="All Claim Messages"
+          title={translate?.breadCrumbsHeading?.allClaimMessages}
         />
       </div>
     </div>

@@ -2,6 +2,8 @@
 // import CustomLoader from "../common/CustomLoader/index";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type propsTypes = {
   serviceRequestId: string;
@@ -11,9 +13,12 @@ const AdjusterServiceRequestEdit: React.FC<propsTypes> = ({ serviceRequestId }) 
   const claimId = sessionStorage.getItem("claimId") || "";
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
 
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
       // active: true,
     },
@@ -35,7 +40,7 @@ const AdjusterServiceRequestEdit: React.FC<propsTypes> = ({ serviceRequestId }) 
       <div className="p-3">
         <GenericComponentHeading
           customTitleClassname="mt-2"
-          title="New Construction - Residential Inspection"
+          title={translate?.breadCrumbsHeading?.newConstructionInspection}
         />
       </div>
     </div>

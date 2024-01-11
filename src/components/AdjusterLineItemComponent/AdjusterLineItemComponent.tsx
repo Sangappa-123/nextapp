@@ -5,7 +5,7 @@ import lineItemComponentStyle from "./adjusterLineItemComponent.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import TabsButtonComponent from "../common/TabsButtonComponent";
 import LineItemDetailComponent from "./LineItemDetailComponent";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Loading from "@/app/[lang]/loading";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import { ConnectedProps, connect } from "react-redux";
@@ -21,6 +21,9 @@ import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice"
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import { useInView } from "react-intersection-observer";
 import RapidItemSection from "./RapidItemSection";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
+import selectClaimContentItemIdList from "@/reducers/ClaimData/Selectors/selectClaimContentItemIdList";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
@@ -33,12 +36,17 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchCondition,
     fetchRetailersDetails,
     isFetching = false,
+    pageDetail,
   } = props;
+  const router = useRouter();
   const { itemId, claimId } = useParams();
   const { ref, inView } = useInView({
     threshold: 0,
     // rootMargin: "200px",
   });
+
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
 
   const tabData = [
     {
@@ -48,7 +56,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   ];
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
     },
     {
@@ -62,12 +70,16 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     },
   ];
 
+  // const [currentPage, setCurrentPage] = useState(lineItem?.itemNumber);
+
   const isInit = useRef(false);
 
   useEffect(() => {
     if (!isInit.current) {
       fetchLineItemDetail({ itemId: +itemId });
-      fetchClaimContentAction({ claimId: claimId.toString() });
+      if (!pageDetail.length) {
+        fetchClaimContentAction({ claimId: claimId.toString() });
+      }
       fetchLineItemCatergory();
       fetchCondition();
       fetchRetailersDetails();
@@ -86,6 +98,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     fetchLineItemCatergory,
     fetchCondition,
     fetchRetailersDetails,
+    pageDetail,
   ]);
 
   if (isLoading && !(claimData.length > 0)) {
@@ -101,11 +114,14 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
           customClassname={lineItemComponentStyle.breadcrumb}
           customNavClassname={lineItemComponentStyle.customNav}
         />
-        {claimData.length > 0 && (
+        {claimData?.length > 1 && (
           <div className={lineItemComponentStyle.paginationButtonsContainer}>
             <PaginationButtons
-              pageNumber={+lineItem?.itemNumber}
-              totalPages={claimData.length > 0 ? claimData.length : 1}
+              pageId={lineItem?.id}
+              totalPage={pageDetail}
+              handlePageChange={(itemId: number) => {
+                router.replace(`/adjuster-line-item-detail/${claimId}/${itemId}`);
+              }}
             />
           </div>
         )}
@@ -113,7 +129,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
           customTitleClassname={lineItemComponentStyle.headingTitle}
           title="Item# 6 - Smith, Gracie"
           customHeadingClassname={clsx(lineItemComponentStyle.heading, {
-            [lineItemComponentStyle.noPageHeading]: claimData.length === 0,
+            [lineItemComponentStyle.noPageHeading]: claimData.length < 2,
           })}
         />
         {!inView && isInit.current && <RapidItemSection />}
@@ -130,6 +146,7 @@ const mapStateToProps = (state: RootState) => ({
   isFetching: state[EnumStoreSlice.LINE_ITEM_DETAIL]?.isFetching,
   lineItem: state[EnumStoreSlice.LINE_ITEM_DETAIL].lineItem,
   claimData: state.claimContentdata?.claimContentListData,
+  pageDetail: selectClaimContentItemIdList(state),
 });
 
 const mapDispatchToProps = {

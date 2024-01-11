@@ -11,6 +11,7 @@ enum translatePage {
   serviceRequestComponent = "serviceRequestComponent",
   contentListComponent = "contentListComponent",
   contentsEvaluationTranslate = "contentsEvaluationTranslate",
+  claimDetailsTabTranslate = "claimDetailsTabTranslate",
 }
 
 export type translatePageType = keyof typeof translatePage;

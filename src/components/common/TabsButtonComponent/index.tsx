@@ -4,7 +4,7 @@ import TabsButtonStyle from "./TabsButtonComponent.module.scss";
 import clsx from "clsx";
 
 type Tab = {
-  name: string;
+  name: string | any;
   content: React.ReactNode;
   className?: string;
   [key: string]: any;
