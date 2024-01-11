@@ -5,18 +5,21 @@ import GenericComponentHeading from "../common/GenericComponentHeading";
 import TabsButtonComponent from "../common/TabsButtonComponent";
 import { useParams } from "next/navigation";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
-
-import ClaimedItemsTable from "./ClaimedItemsTable/ClaimedItemsTable";
+import ClaimedItemsComponent from "./ClaimedItemsComponent/ClaimedItemsComponent";
 
 const ReceiptsMapperComponent: React.FC = () => {
- 
-  const {  claimId } = useParams();
- 
-  const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
+  const { claimId } = useParams();
+
+  let claimNumber: string;
+  try {
+    claimNumber = sessionStorage.getItem("claimNumber") ?? "";
+  } catch (error) {
+    claimNumber = "";
+  }
   const tabData = [
     {
       name: "Claimed Items",
-      content: <ClaimedItemsTable />
+      content: <ClaimedItemsComponent claimNumber={claimNumber} />,
     },
     {
       name: "Summary",
@@ -28,7 +31,7 @@ const ReceiptsMapperComponent: React.FC = () => {
       path: "/adjuster-dashboard",
     },
     {
-      name: `${claimNumber}`,
+      name: claimNumber,
       path: `/adjuster-property-claim-details/${claimId}`,
     },
     {
@@ -38,8 +41,6 @@ const ReceiptsMapperComponent: React.FC = () => {
     },
   ];
 
-
-
   return (
     <div className="row">
       <div className={receiptMapperStyle.stickyContainer}>
@@ -48,11 +49,10 @@ const ReceiptsMapperComponent: React.FC = () => {
           customClassname={receiptMapperStyle.breadcrumb}
           customNavClassname={receiptMapperStyle.customNav}
         />
-       
+
         <GenericComponentHeading
           customTitleClassname={receiptMapperStyle.headingTitle}
           title="Receipt Mapper"
-       
         />
       </div>
       <div>

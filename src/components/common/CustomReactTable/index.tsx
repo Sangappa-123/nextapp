@@ -212,21 +212,29 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
               </>
             )}
           </tbody>
-          {showFooter && (
+          {!tableDataErrorMsg && showFooter && (
             <tfoot>
               {table.getFooterGroups() &&
-                table.getFooterGroups().map((footerGroup) => (
+                table.getFooterGroups().map((footerGroup: any) => (
                   <tr key={footerGroup.id}>
-                    {footerGroup.headers.map((header) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.footer,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
+                    {footerGroup.headers.map((header: any) => {
+                      if (header.column.columnDef.footer) {
+                        return (
+                          <th
+                            key={header.id}
+                            colSpan={header.column.columnDef.colSpan || 1}
+                            className={header.column.columnDef.meta?.footerClass ?? null}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.footer,
+                                  header.getContext()
+                                )}
+                          </th>
+                        );
+                      }
+                    })}
                   </tr>
                 ))}
             </tfoot>

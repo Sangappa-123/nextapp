@@ -1,36 +1,71 @@
 @use "@/scss/colors.scss" as *;
 
-
-    .heading {
-      position: sticky;
-      top: 94px;
-      z-index: 999;
-      background: #fff;
-      padding-left: 0;
-    }
-    .headingTitle {
-      color: #666;
-      padding: 1px;
-      font-size: 18px;
-      font-weight: 500;
-      margin-top: 10px;
-    }
-    .customNav {
-      position: sticky;
-      top: 40px;
-      min-height: 20px;
-      background-color: $white;
-      z-index: 999;
-      .breadcrumb {
-        margin-top: 10px;
-      }
-    }
-  
-  
-  .stickyContainer {
-    position: sticky;
-    top: 35px;
-    z-index: 9;
-    background-color: $white;
-  
+.heading {
+  position: sticky;
+  top: 94px;
+  z-index: 999;
+  background: #fff;
+  padding-left: 0;
+}
+.headingTitle {
+  color: #666;
+  padding: 1px;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+.customNav {
+  position: sticky;
+  top: 40px;
+  min-height: 20px;
+  background-color: $white;
+  z-index: 999;
+  .breadcrumb {
+    margin-top: 10px;
   }
+}
+
+.stickyContainer {
+  position: sticky;
+  top: 35px;
+  z-index: 9;
+  background-color: $white;
+}
+.footerStyles {
+  background-color: $astral !important;
+  color: $white;
+  text-align: right;
+}
+.alignRight {
+  text-align: right;
+}
+.claimedItemListContainer {
+  background-color: $astral;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  .clearAll {
+    color: $white;
+    text-decoration: underline;
+  }
+}
+
+.receiptMapperContainer {
+  margin-left: 5px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-radius: 5px;
+  height: 700px;
+  .receiptMapperListContainer {
+    background-color: $astral;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+  }
+}
