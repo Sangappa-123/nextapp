@@ -125,8 +125,8 @@ const OriginalItemRapidSection: React.FC<connectorType> = (props) => {
             <Tooltip
               // className={orginalItemFormStyle.infoIconContainer}
               text={
-                rapidData?.selectedCondition?.name
-                  ? rapidData?.selectedCondition?.name
+                rapidData?.selectedCondition?.conditionName
+                  ? rapidData?.selectedCondition?.conditionName
                   : "Select Condition"
               }
             />
