@@ -59,13 +59,7 @@ const AssignmentsTable: React.FC<CommonTableProps> = ({ columns, data }) => {
           ))
         ) : (
           <tr>
-            <td
-              colSpan={columns.length + 1}
-              className={clsx(
-                AssignmentsTableCss.tdStyle,
-                AssignmentsTableCss["no-data"]
-              )}
-            >
+            <td colSpan={columns.length + 1}>
               <NoRecordComponent message={"No Data found"} />
             </td>
           </tr>
