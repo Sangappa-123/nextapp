@@ -25,7 +25,7 @@ import { addNotification } from "@/reducers/Notification/NotificationSlice";
 interface ListAddItemsTableProps {
   addItemsTableData: any[];
   onCheckboxChange: (item: any) => void;
-  selectedCategory: string;
+  selectedCategory: any;
   searchKeyword: string;
 }
 
