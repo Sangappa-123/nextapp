@@ -21,18 +21,8 @@ import {
   handlePendingInvoicePagination,
   handlePendingInvoiceSort,
 } from "@/reducers/PendingInvoice/PendingInvoiceSlice";
-
-const pathList = [
-  {
-    name: "Home",
-    path: "/adjuster-dashboard",
-  },
-  {
-    name: "Pending Vendor Invoices",
-    path: "/login",
-    active: true,
-  },
-];
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 const PendingInvoiceTable: React.FC<connectorType> = (props) => {
   const {
@@ -55,6 +45,21 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
     createDate: string;
     status: unknownObjectType;
   };
+
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
+  const pathList = [
+    {
+      name: translate?.breadCrumbsHeading?.home,
+      path: "/adjuster-dashboard",
+    },
+    {
+      name: translate?.breadCrumbsHeading?.pendingVendorInvoices,
+      path: "/login",
+      active: true,
+    },
+  ];
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -161,7 +166,7 @@ const PendingInvoiceTable: React.FC<connectorType> = (props) => {
           pendingInvoiceStyle.tableHeading
         )}
       >
-        <label>{`Pending Vendor Invoices (${totalinvoice})`}</label>
+        <label>{`${translate?.breadCrumbsHeading?.pendingVendorInvoices} (${totalinvoice})`}</label>
       </div>
       <div className={pendingInvoiceStyle.claimContainer}>
         <div className={`row ${pendingInvoiceStyle.claimContentContainer}`}>

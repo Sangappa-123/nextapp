@@ -2,9 +2,11 @@ import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants"
 import ActivityLog from "@/components/ActivityLog/ActivityLog";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
-import Documents from "@/components/Documents/Documents";
+// import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type propTypes = {
   serviceRequestListRes: any;
@@ -13,9 +15,12 @@ type propTypes = {
 };
 
 const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const tabsArray = [
     {
-      name: "Claim Detail",
+      name: translate?.tabsComponent?.claimDetail,
       content: (
         <ClaimDetailContentTopButtonsComponent
           serviceRequestListRes={props.serviceRequestListRes}
@@ -27,27 +32,27 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
       // className: TabsStyle.tab1,
     },
     {
-      name: "Contents Evaluation",
+      name: translate?.tabsComponent?.contentsEvaluation,
       content: <ContentsEvaluationContentTopButtonsComponent />,
     },
     {
-      name: "Vendor Assignments",
+      name: translate?.tabsComponent?.vendorAssignments,
       content: "",
     },
     {
-      name: "Documents",
-      content: <Documents />,
+      name: translate?.tabsComponent?.documents,
+      content: "",
     },
     {
-      name: "Claim Participants",
+      name: translate?.tabsComponent?.claimParticipants,
       content: <ClaimParticipants claimId={props.claimId} />,
     },
     {
-      name: "Activity Log",
+      name: translate?.tabsComponent?.activityLog,
       content: <ActivityLog />,
     },
     {
-      name: "Policy and Coverage Details",
+      name: translate?.tabsComponent?.policyCoverageDetails,
       content: <PoicyAndCoverageDetails />,
     },
   ];
