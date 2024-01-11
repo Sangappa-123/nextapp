@@ -4,6 +4,7 @@ enum translatePage {
   securityTranslate = "securityTranslate",
   securityQuestionTranslate = "securityQuestionTranslate",
   resetPasswordTranslate = "resetPasswordTranslate",
+  claimDocumentsTranslate = "claimDocumentsTranslate",
   adjusterPropertyClaimActivityLog = "adjusterPropertyClaimActivityLog",
   addItemModalTranslate = "addItemModalTranslate",
   claimDetailsTranslate = "claimDetailsTranslate",
