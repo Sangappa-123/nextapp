@@ -2,6 +2,8 @@
 // import CustomLoader from "../common/CustomLoader/index";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import GenericComponentHeading from "../common/GenericComponentHeading/index";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 type propsTypes = {
   serviceRequestId: string;
@@ -10,12 +12,15 @@ type propsTypes = {
 const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
   serviceRequestId,
 }) => {
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const claimId = sessionStorage.getItem("claimId") || "";
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
 
   const pathList = [
     {
-      name: "Home",
+      name: translate?.breadCrumbsHeading?.home,
       path: "/adjuster-dashboard",
       // active: true,
     },
@@ -30,7 +35,7 @@ const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
     },
 
     {
-      name: "Assign service request",
+      name: translate?.breadCrumbsHeading?.assignServiceRequest,
       path: `/adjuster-assign-service-request/${serviceRequestId}`,
       active: true,
     },
@@ -42,7 +47,7 @@ const AdjusterAssignServiceRequestComponent: React.FC<propsTypes> = ({
       <div className="p-3">
         <GenericComponentHeading
           customTitleClassname="mt-2"
-          title="Service Requested :   New Construction - Residential Inspection"
+          title={translate?.breadCrumbsHeading?.serviceRequestedNewConstruction}
         />
       </div>
     </div>

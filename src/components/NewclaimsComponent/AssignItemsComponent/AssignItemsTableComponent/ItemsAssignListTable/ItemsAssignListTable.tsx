@@ -26,7 +26,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     description: string;
     status: { status: string };
     qty: string;
-    category: string;
+    category: { category: string };
     ageMonths: number;
     select: boolean;
     quantity: string;
@@ -93,7 +93,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-    columnHelper.accessor((data) => data?.category?.name, {
+    columnHelper.accessor((data) => data?.category?.category, {
       header: () => `Category`,
       id: "category",
     }),
