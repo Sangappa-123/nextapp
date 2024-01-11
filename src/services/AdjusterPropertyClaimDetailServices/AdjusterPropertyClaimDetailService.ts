@@ -246,3 +246,31 @@ export const updateCliamStatus = async (param: object) => {
     return err;
   }
 };
+
+export const getVendorAssignments = async (param: {
+  claimId: string;
+  claimNumber: string;
+}) => {
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("vendorAssignmentsApiUrl");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};
+
+export const getVendorAssignmentsCont = async (param: {
+  claimId: string;
+  claimNumber: string;
+}) => {
+  try {
+    const http = new HttpService({ isClient: true });
+    const url = getApiEndPoint("claimContentsUrl");
+    const resp = await http.post(url, param);
+    return resp;
+  } catch (err: any) {
+    return err;
+  }
+};

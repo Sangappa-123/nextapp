@@ -4,7 +4,7 @@ import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
-
+import VendorAssignments from "@/components/VendorAssignments/index";
 type propTypes = {
   serviceRequestListRes: any;
   claimContentListRes: any;
@@ -31,7 +31,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: "Vendor Assignments",
-      content: "",
+      content: <VendorAssignments />,
     },
     {
       name: "Documents",
