@@ -303,7 +303,7 @@ function ClaimpolicyInformation({
             {...register("zipcode")}
             showError={error["zipcode"]}
             errorMsg={error?.zipcode?.message}
-            maxlength="5"
+            maxLength="5"
           />{" "}
         </div>
         {/* </div> */}
