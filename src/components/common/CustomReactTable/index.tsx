@@ -215,9 +215,9 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
           {showFooter && (
             <tfoot>
               {table.getFooterGroups() &&
-                table.getFooterGroups().map((footerGroup) => (
+                table.getFooterGroups().map((footerGroup: any) => (
                   <tr key={footerGroup.id}>
-                    {footerGroup.headers.map((header) => (
+                    {footerGroup.headers.map((header: any) => (
                       <th key={header.id}>
                         {header.isPlaceholder
                           ? null
