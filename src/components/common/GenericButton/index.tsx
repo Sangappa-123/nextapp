@@ -8,6 +8,7 @@ enum btnThemes {
   normal = "normal-button",
   deleteBtn = "delete-button",
   existingDarkBlueBtn = "existing-blue-btn",
+  linkBtn = "linkButton",
 }
 
 enum btnSize {
@@ -17,7 +18,7 @@ enum btnSize {
 }
 
 type genericButtonType = {
-  label: string;
+  label: string | any;
   theme?: keyof typeof btnThemes;
   size?: keyof typeof btnSize;
   btnClassname?: string;

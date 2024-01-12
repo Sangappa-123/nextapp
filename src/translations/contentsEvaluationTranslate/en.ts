@@ -1,8 +1,14 @@
 const translate = {
+  detailedTabTitle: "Detailed Inventory",
+  coverageTabTitle: "Coverage Summary",
+  policyTabTitle: "Policyholder Payouts",
   detailedInventory: {
     exportAs: "Export as",
+    excelText: "Excel",
+    pdfText: "PDF",
     emailPolicyholder: "Email Policyholder",
     searchPlaceHolder: "Item description, Room, Category",
+    noRecords: "No Record Found",
     column: {
       item: "Item #",
       room: "Room",
@@ -31,6 +37,7 @@ const translate = {
   },
   coverageSummary: {
     title: "Coverage Summary",
+    noRecords: "No Record Found",
     exportText: "Export to PDF",
     columns: {
       category: "Category",
@@ -53,6 +60,7 @@ const translate = {
     totalitemspaidcashfor: "Total # items paid cash for",
     totalitemsreplaced: "Total # items replaced",
     total$paid: "Total $ paid",
+    noRecords: "No Record Found",
     columns: {
       paymentId: "Payment Id",
       paymentAmount: "Payment Amount",
@@ -63,13 +71,15 @@ const translate = {
       totalPaid: "Total Paid",
     },
     replacementCostTitle: "Replacement Cost Settlement",
+    itemsReplaced: "#Items Replaced",
     totalReplacementCost: "Total Replacement Cost(Including Taxes)",
     totalReceiptValue: "Total Receipt Value(Including Taxes)",
     totalHoldoverPaid: "Total Holdover Paid (Including Taxes)",
     lessPolicyDeductible: "Less Policy Deductible (-)",
     netReplacementCost: "Net Replacement Cost",
-    actualCashTitle: "Replacement Cost Settlement",
-    itemsCashed: "Items Cashed",
+
+    actualCashTitle: "Actual Cash Value Settlement",
+    itemsCashed: "#Items Cashed",
     actualTotalReplacementCost: "Total Replacement Cost",
     lessDepreciationCost: "Less Depreciation Cost (-)",
     lessAmountOverLimit: "Less Amount Over Limit (-)",

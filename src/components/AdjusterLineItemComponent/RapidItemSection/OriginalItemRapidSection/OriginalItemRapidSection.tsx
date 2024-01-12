@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import GenericSelect from "@/components/common/GenericSelect";
 import originalItemRapidSectionStyle from "./originalItemRapidSection.module.scss";
 import clsx from "clsx";
@@ -7,11 +7,12 @@ import { RootState } from "@/store/store";
 import selectRapidOriginalData from "@/reducers/LineItemDetail/Selectors/selectRapidOriginalData";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 import {
+  updateLineItem,
   updateOnCategoryChange,
   updateOnSubCategoryChange,
 } from "@/reducers/LineItemDetail/LineItemDetailSlice";
-import { OriginalItemRefType } from "../../LineItemDetailComponent/OrginalItemForm/OrginalItemForm";
 import { fetchSubCategory } from "@/reducers/LineItemDetail/LineItemThunkService";
+import Tooltip from "@/components/common/ToolTip";
 
 interface CategoryType {
   categoryId: number;
@@ -23,44 +24,37 @@ interface subCategoryType {
   name: string;
 }
 
-interface propsType {
-  originalItemRef: OriginalItemRefType | null;
+interface conditionType {
+  conditionId: number;
+  conditionName: string;
 }
 
-const OriginalItemRapidSection: React.FC<connectorType & propsType> = (props) => {
+const OriginalItemRapidSection: React.FC<connectorType> = (props) => {
   const {
     rapidData,
     category,
     subCategory,
     updateOnCategoryChange,
-    originalItemRef,
     fetchSubCategory,
     updateOnSubCategoryChange,
+    condition,
+    updateLineItem,
   } = props;
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>({
-    categoryId: rapidData?.selectedCategory?.id,
-    categoryName: rapidData?.selectedCategory?.name,
-  });
-  const [selectedSubCategory, setSelectedSubCategory] = useState<subCategoryType | null>({
-    id: rapidData?.selectedSubCategory?.id,
-    name: rapidData?.selectedSubCategory?.name,
-  });
+
   const handleCategorySelect = (e: CategoryType | null) => {
     if (e !== null) {
       fetchSubCategory(e.categoryId); //fetch new sub-category
     }
-    setSelectedCategory(e);
     updateOnCategoryChange(e);
-    setSelectedSubCategory(null);
-    originalItemRef?.onRapidSubCategoryChange(null);
-    originalItemRef?.onRapidCategoryChange(e);
-  };
-  const handleSubCategorySelect = (e: subCategoryType) => {
-    setSelectedSubCategory(e);
-    updateOnSubCategoryChange(e);
-    originalItemRef?.onRapidSubCategoryChange(e);
   };
 
+  const handleSubCategorySelect = (e: subCategoryType) => {
+    updateOnSubCategoryChange(e);
+  };
+
+  const handleConditionSelect = (e: conditionType) => {
+    updateLineItem({ condition: e });
+  };
   return (
     <div className={originalItemRapidSectionStyle.root}>
       <h5 className={originalItemRapidSectionStyle.heading}>Original Item</h5>
@@ -77,27 +71,65 @@ const OriginalItemRapidSection: React.FC<connectorType & propsType> = (props) =>
             <label htmlFor="category">Category</label>
             <GenericSelect
               id="category"
-              value={selectedCategory}
+              value={
+                rapidData?.selectedCategory
+                  ? {
+                      categoryId: rapidData?.selectedCategory?.id,
+                      categoryName: rapidData?.selectedCategory?.name,
+                    }
+                  : null
+              }
               options={category}
               getOptionLabel={(option: { categoryName: any }) => option.categoryName}
               getOptionValue={(option: { categoryId: any }) => option.categoryId}
               onChange={handleCategorySelect}
+            />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedCategory?.name
+                  ? rapidData?.selectedCategory?.name
+                  : "Select Category"
+              }
             />
           </div>
           <div className={originalItemRapidSectionStyle.selectBox}>
             <label htmlFor="subCategory">Sub-Category</label>
             <GenericSelect
               id="subCategory"
-              value={selectedSubCategory}
+              value={rapidData.selectedSubCategory}
               options={subCategory}
               getOptionLabel={(option: { name: string }) => option.name}
               getOptionValue={(option: { id: number }) => option.id}
               onChange={handleSubCategorySelect}
             />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedSubCategory?.name
+                  ? rapidData?.selectedSubCategory?.name
+                  : "Select SubCategory"
+              }
+            />
           </div>
           <div className={originalItemRapidSectionStyle.selectBox}>
-            <label htmlFor="category">Condition</label>
-            <GenericSelect id="category" />
+            <label htmlFor="condition">Condition</label>
+            <GenericSelect
+              id="condition"
+              value={rapidData.selectedCondition}
+              options={condition}
+              getOptionLabel={(option: { conditionName: any }) => option.conditionName}
+              getOptionValue={(option: { conditionId: any }) => option.conditionId}
+              onChange={handleConditionSelect}
+            />
+            <Tooltip
+              // className={orginalItemFormStyle.infoIconContainer}
+              text={
+                rapidData?.selectedCondition?.conditionName
+                  ? rapidData?.selectedCondition?.conditionName
+                  : "Select Condition"
+              }
+            />
           </div>
         </div>
       </div>
@@ -109,12 +141,14 @@ const mapStateToProps = (state: RootState) => ({
   rapidData: selectRapidOriginalData(state),
   category: state[EnumStoreSlice.LINE_ITEM_DETAIL].category,
   subCategory: state[EnumStoreSlice.LINE_ITEM_DETAIL].subCategory,
+  condition: state[EnumStoreSlice.LINE_ITEM_DETAIL].condition,
 });
 
 const mapDispatchToProps = {
   updateOnCategoryChange,
   fetchSubCategory,
   updateOnSubCategoryChange,
+  updateLineItem,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

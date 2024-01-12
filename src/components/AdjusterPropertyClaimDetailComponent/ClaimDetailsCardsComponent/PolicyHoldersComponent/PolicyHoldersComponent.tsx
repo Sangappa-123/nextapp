@@ -12,13 +12,22 @@ import clsx from "clsx";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import NoRecordComponent from "@/components/common/NoRecordComponent/NoRecordComponent";
+import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
-const PolicyHoldersComponent: React.FC<connectorType> = (props: {
-  pendingTaskList: any;
-}) => {
+interface PolicyHoldersComponentType {
+  claimId: string;
+}
+
+const PolicyHoldersComponent: React.FC<
+  connectorType & PolicyHoldersComponentType
+> = (props: { pendingTaskList: any; claimId: string }) => {
+  const { pendingTaskList, claimId } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [openTaskModal, setOpenTaskModal] = useState(false);
-  const { pendingTaskList } = props;
+
+  const { translate }: { translate: claimDetailsTranslateType | undefined } =
+    useTranslation("claimDetailsTranslate");
 
   const handleOpenTaskModal = () => {
     setOpenTaskModal(!openTaskModal);
@@ -32,17 +41,24 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
       <Modal
         isOpen={isOpen}
         onClose={handleOpenModal}
-        headingName="Create Task"
-        childComp={<PolicyCreateTaskModalComponent handleOpenModal={handleOpenModal} />}
+        childComp={
+          <PolicyCreateTaskModalComponent
+            handleOpenModal={handleOpenModal}
+            claimId={claimId}
+          />
+        }
+        headingName={translate?.policyHolderTaskCard?.modalHeading}
         overlayClassName={PolicyHolderCradStyle.modalContainer}
         modalWidthClassName={PolicyHolderCradStyle.modalContent}
       />
 
       <Cards className={PolicyHolderCradStyle.policyHolderCradContainer}>
-        <GenericComponentHeading title="Policyholder's Task">
+        <GenericComponentHeading
+          title={translate?.policyHolderTaskCard?.policyHolderTask}
+        >
           <div className="text-right">
             <Link href="#" onClick={handleOpenModal}>
-              Create New Task
+              {translate?.policyHolderTaskCard?.createNewTask}
             </Link>
           </div>
         </GenericComponentHeading>
@@ -50,13 +66,13 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
           {pendingTaskList?.length > 0 && (
             <div className={clsx(PolicyHolderCradStyle.formNameContainer, "col-12 p-2")}>
               <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-5")}>
-                Form Name
+                {translate?.policyHolderTaskCard?.formName}
               </div>
               <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-3")}>
-                Status
+                {translate?.policyHolderTaskCard?.status}
               </div>
               <div className={clsx(PolicyHolderCradStyle.labelStyle, "col-4")}>
-                Assigned Date
+                {translate?.policyHolderTaskCard?.assignedDate}
               </div>
             </div>
           )}
@@ -71,7 +87,7 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
                 />
               ))
           ) : (
-            <NoRecordComponent message="No task available" />
+            <NoRecordComponent message={translate?.policyHolderTaskCard?.noTask} />
           )}
           <div>
             <Modal
@@ -85,7 +101,7 @@ const PolicyHoldersComponent: React.FC<connectorType> = (props: {
           </div>
         </div>
         <div className="text-right">
-          <Link href="/all-tasks">View all</Link>
+          <Link href="/all-tasks">{translate?.policyHolderTaskCard?.viewAll}</Link>
         </div>
       </Cards>
     </>

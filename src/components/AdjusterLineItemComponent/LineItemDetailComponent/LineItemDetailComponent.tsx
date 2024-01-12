@@ -6,109 +6,68 @@ import ReplacementItemSection from "./ReplacementItemSection";
 import WebComparables from "./WebComparables";
 import AddedComparables from "./AddedComparables";
 import useCustomForm from "@/hooks/useCustomForm";
-import { Output, any, object, string } from "valibot";
-import { useAppSelector } from "@/hooks/reduxCustomHook";
+import { Output, any, minLength, object, string } from "valibot";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
 // import Modal from "@/components/common/ModalPopups";
 // import GenericButton from "@/components/common/GenericButton";
 import CustomComparable from "./CustomComparable";
 import useBodyScrollbar from "@/hooks/useBodyScrollbar";
+import Modal from "@/components/common/ModalPopups";
+import GenericButton from "@/components/common/GenericButton";
+import { deleteClaimItem } from "@/services/ClaimContentListService";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { useRouter } from "next/navigation";
+import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
 
-function LineItemDetailComponentForm({
-  rapidDivRef,
-  originalItemRef,
-}: {
-  rapidDivRef: any;
-  originalItemRef: any;
-}) {
+function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
+  const router = useRouter();
   const { hideScroll, showScroll } = useBodyScrollbar();
+  const dispatch = useAppDispatch();
   const lineItem = useAppSelector(
     (state) => state[EnumStoreSlice.LINE_ITEM_DETAIL]?.lineItem
   );
   const CRN = useAppSelector((state) => state.session?.CRN);
-
   const [openCustomComparableModal, setOpenCustomComparableModal] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const schema = object({
-    description: string("Item description"),
-    category: object({
-      categoryId: any(),
-      categoryName: string(),
-    }),
-    subCategory: object({
-      id: any(),
-      name: string(),
-    }),
+    description: string("Item description", [minLength(0)]),
     insuredPrice: any(),
     quantity: any(),
+    scheduleAmount: any(),
     totalStatedAmount: any(),
     ageYears: any(),
     ageMonths: any(),
-    brand: string(),
-    model: string(),
-    originallyPurchasedFrom: object({
-      id: any(),
-      name: string(),
-    }),
-    purchaseMethod: object({
-      label: string(),
-      value: string(),
-    }),
-    // condition: object({
-    //   conditionId: number(),
-    //   conditionName: string(),
-    // }),
-    condition: any(),
-    room: any(),
+    brand: any(),
+    model: any(),
   });
 
   useEffect(() => {
-    if (openCustomComparableModal) {
+    if (openCustomComparableModal || confirmDelete) {
       hideScroll();
     } else {
       showScroll();
     }
-  }, [openCustomComparableModal, hideScroll, showScroll]);
+    return () => showScroll();
+  }, [openCustomComparableModal, confirmDelete, hideScroll, showScroll]);
 
   const defaultValue = {
     description: lineItem?.description,
-    category: {
-      categoryId: lineItem?.category?.id,
-      categoryName: lineItem?.category?.name,
-    },
-    subCategory: {
-      id: lineItem?.subCategory?.id,
-      name: lineItem?.subCategory?.name,
-    },
     insuredPrice: lineItem?.insuredPrice,
     quantity: lineItem?.quantity,
+    scheduleAmount: lineItem?.scheduleAmount,
     totalStatedAmount: lineItem?.totalStatedAmount,
     ageYears: lineItem?.ageYears,
     ageMonths: lineItem?.ageMonths,
     brand: lineItem?.brand,
     model: lineItem?.model,
-    originallyPurchasedFrom: {
-      id: lineItem?.originallyPurchasedFrom?.id,
-      name: lineItem?.originallyPurchasedFrom?.name,
-    },
-    purchaseMethod: {
-      label: lineItem?.purchaseMethod,
-      value: lineItem?.purchaseMethod,
-    },
-    condition: {
-      conditionId: lineItem?.condition?.conditionId,
-      conditionName: lineItem?.condition?.conditionName,
-    },
-    room: lineItem?.room
-      ? {
-          id: lineItem?.room?.id,
-          roomName: lineItem?.room?.roomName,
-        }
-      : null,
   };
 
   const { register, handleSubmit, control, formState, getValues, setValue } =
     useCustomForm(schema, defaultValue);
   console.log("Error>>", formState.errors);
+
   const handleFormSubmit = (data: Output<typeof schema>) => {
     console.log("handleFormSubmit>>>>", data);
     try {
@@ -175,6 +134,37 @@ function LineItemDetailComponentForm({
     setOpenCustomComparableModal(false);
   };
 
+  // Delete item
+  const showDeleteModal = () => setConfirmDelete(true);
+  const closeDeleteModal = () => setConfirmDelete(false);
+
+  const handleDeleteItem = async () => {
+    const { id, itemUID, claimId } = lineItem;
+
+    const res = await deleteClaimItem({ id, itemUID });
+
+    if (res) {
+      dispatch(
+        addNotification({
+          message: res ?? "Successfully deleted item.",
+          id,
+          status: "success",
+        })
+      );
+      dispatch(fetchClaimContentAction({ claimId: claimId.toString() }));
+      router.replace(`/adjuster-property-claim-details/${claimId}`);
+    } else {
+      dispatch(
+        addNotification({
+          message: "Something went wrong.",
+          id,
+          status: "error",
+        })
+      );
+    }
+    closeDeleteModal();
+  };
+
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -184,26 +174,28 @@ function LineItemDetailComponentForm({
         closeCustomComparable={closeCustomComparable}
         openCustomComparableModal={openCustomComparableModal}
       />
-      {/* <Modal
-        isOpen={openCustomComparableModal}
-        onClose={closeCustomComparable}
-        modalWidthClassName={lineItemDetailComponentStyle.modal}
-        overlayClassName={lineItemDetailComponentStyle.modalOverlay}
-        headingName="New Custom Comparable"
+      <Modal
+        isOpen={confirmDelete}
+        onClose={closeDeleteModal}
+        headingName="Delete Lost/Damaged Item"
+        overlayClassName={lineItemDetailComponentStyle.deleteModalOverlay}
         footerContent={
-          <div className={lineItemDetailComponentStyle.customComparableModalButton}>
-            <GenericButton label="Mark Replacement" size="medium" />
-            <GenericButton label="Add Comparable" size="medium" />
-            <GenericButton
-              label="Cancel"
-              size="medium"
-              onClickHandler={closeCustomComparable}
-            />
+          <div className={lineItemDetailComponentStyle.deleteModalBtn}>
+            <GenericButton label="No" theme="linkBtn" onClickHandler={closeDeleteModal} />
+            <GenericButton label="Yes" size="small" onClickHandler={handleDeleteItem} />
           </div>
         }
-        childComp={<CustomComparable />}
-      /> */}
-      <GroupedActionButtons />
+        childComp={
+          <p className={lineItemDetailComponentStyle.deleteModalMessage}>
+            Are you sure you want to delete this item? <strong>Please Confirm!</strong>
+          </p>
+        }
+        animate
+        positionTop
+        roundedBorder
+      />
+
+      <GroupedActionButtons onDeleteClick={showDeleteModal} />
       <div className={lineItemDetailComponentStyle.topItemSection}>
         <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
         <OrginalItemForm
@@ -211,7 +203,6 @@ function LineItemDetailComponentForm({
           control={control}
           getValues={getValues}
           setValue={setValue}
-          ref={originalItemRef}
         />
         <ReplacementItemSection
           showCustomComparableModal={() => setOpenCustomComparableModal(true)}

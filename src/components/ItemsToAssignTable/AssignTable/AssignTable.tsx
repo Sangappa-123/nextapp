@@ -28,7 +28,7 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
 }) => {
   type AssignItemsModalData = {
     description: string;
-    category: string;
+    category: { category: string };
     select: boolean;
     unitCost: string;
   };
@@ -87,7 +87,7 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
     columnHelper.accessor("description", {
       header: () => `Item Description`,
     }),
-    columnHelper.accessor((data) => data?.category?.name, {
+    columnHelper.accessor((data) => data?.category?.category, {
       header: () => `Category`,
       id: "category",
     }),

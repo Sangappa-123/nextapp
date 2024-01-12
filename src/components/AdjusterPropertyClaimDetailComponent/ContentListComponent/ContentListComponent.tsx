@@ -33,6 +33,8 @@ import { RootState } from "@/store/store";
 import { PAGINATION_LIMIT_10 } from "@/constants/constants";
 import { addMessageList } from "@/reducers/ClaimDetail/ClaimDetailSlice";
 import CustomLoader from "@/components/common/CustomLoader";
+import useTranslation from "@/hooks/useTranslation";
+import { contentListComponentType } from "@/translations/contentListComponent/en";
 
 function ContentListComponent(props: any) {
   const {
@@ -45,11 +47,11 @@ function ContentListComponent(props: any) {
     categoryListRes,
     CRN,
   } = props;
+  console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
   const [openMore, setOpenMore] = useState(false);
   const [isModalOpenAcceptMinVal, setIsModalOpenAcceptMinVal] = useState(false);
@@ -60,6 +62,7 @@ function ContentListComponent(props: any) {
   const [openStatus, setOpenStatus] = useState(false);
   const [isModalOpenSuperVisor, setIsModalOpenSuperVisor] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
 
   React.useEffect(() => {
     const claimContentData = claimContentListRes;
@@ -274,7 +277,6 @@ function ContentListComponent(props: any) {
           id: "add_message_success",
           status: "success",
         });
-        handleSupervisorModal();
       }
     } else {
       addNotification({
@@ -338,6 +340,7 @@ function ContentListComponent(props: any) {
 
   const handleMessageSubmit = async (data: any) => {
     setShowLoader(true);
+    handleSupervisorModal();
     const formData = constructFormData(data);
     const addMessageResp = await addMessage(formData);
     if (addMessageResp?.status === 200) {
@@ -460,13 +463,25 @@ function ContentListComponent(props: any) {
     }
   }, [claimContentListDataFull]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const {
+    translate,
+    loading,
+  }: { translate: contentListComponentType | undefined; loading: boolean } =
+    useTranslation("contentListComponent");
+
+  console.log("translate", translate);
+  if (loading) {
+    return null;
+  }
+
   return (
     <>
       {showLoader && <CustomLoader />}
       <div className="row mb-4">
         <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
           <GenericComponentHeading
-            title={`Content List (${claimContentListData.length})`}
+            title={` ${translate?.contentList ?? ""}
+          (${claimContentListData.length})`}
             customHeadingClassname={ContentListComponentStyle.contentListHeader}
           />
         </div>
@@ -497,7 +512,7 @@ function ContentListComponent(props: any) {
                       className={ContentListComponentStyle.dropDownInnerDiv}
                       onClick={openModal}
                     >
-                      Add Items
+                      {translate?.addItems ?? ""}
                     </div>
 
                     <div
@@ -506,12 +521,12 @@ function ContentListComponent(props: any) {
                         router.push(`/upload-items-from-csv?claimDetail=${claimId}`)
                       }
                     >
-                      Load from file
+                      {translate?.loadFromFile ?? ""}
                     </div>
                   </div>
                 </Tooltip>
                 <GenericButton
-                  label="Add Item"
+                  label={translate?.addItem ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
@@ -520,7 +535,7 @@ function ContentListComponent(props: any) {
                   onClick={handleDropDown}
                 />
                 <GenericButton
-                  label="Create Assignment"
+                  label={translate?.createAssignment ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
@@ -528,7 +543,7 @@ function ContentListComponent(props: any) {
                   disabled={!isCreatedItemvAilable}
                 />
                 <GenericButton
-                  label="Map Receipts"
+                  label={translate?.mapReceipts ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
@@ -550,13 +565,13 @@ function ContentListComponent(props: any) {
                 >
                   <div className="p-0">
                     <span className={ContentListComponentStyle.selectedItemsLine}>
-                      ({getNumberSelected}) items selected
+                      ({getNumberSelected}) {translate?.itemSelected ?? ""}
                     </span>
                     <div
                       className={ContentListComponentStyle.dropDownInnerDiv}
                       onClick={openModalChangeCat}
                     >
-                      Change Category
+                      {translate?.changeCategory ?? ""}
                     </div>
 
                     <div
@@ -566,7 +581,7 @@ function ContentListComponent(props: any) {
                       }}
                       className={ContentListComponentStyle.dropDownInnerDiv}
                     >
-                      Change Status
+                      {translate?.changeStatus ?? ""}
                     </div>
                     <Tooltip
                       anchorSelect="#more-status-btn-element"
@@ -590,7 +605,7 @@ function ContentListComponent(props: any) {
                           )}
                           onClick={handleCreatedStatus}
                         >
-                          Mark Valued
+                          {translate?.markValued ?? ""}
                         </div>
                         <div
                           className={clsx(
@@ -610,20 +625,19 @@ function ContentListComponent(props: any) {
                         >
                           Mark Settled
                         </div>
-
                         <div
                           id="more-status-btn-element"
                           className={ContentListComponentStyle.dropDownInnerDiv}
                           onClick={handleSupervisorModal}
                         >
-                          Supervisor Review
+                          {translate?.supervisorReview ?? ""}
                         </div>
                       </div>
                     </Tooltip>
                   </div>
                 </Tooltip>
                 <GenericButton
-                  label="More"
+                  label={translate?.more ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
@@ -633,7 +647,7 @@ function ContentListComponent(props: any) {
                   onClickHandler={() => setOpenMore(!openMore)}
                 />
                 <GenericButton
-                  label="Accept Min. Values"
+                  label={translate?.acceptMinValues ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
@@ -641,7 +655,7 @@ function ContentListComponent(props: any) {
                   onClickHandler={() => setIsModalOpenAcceptMinVal(true)}
                 />
                 <GenericButton
-                  label="Accept Standerd Cost"
+                  label={translate?.acceptStandardCost ?? ""}
                   theme="normal"
                   size="small"
                   type="submit"
