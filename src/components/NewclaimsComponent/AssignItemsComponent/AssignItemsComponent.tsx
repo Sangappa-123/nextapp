@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
-  checkedItems: any;
+  checkedItems?: any;
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> = ({

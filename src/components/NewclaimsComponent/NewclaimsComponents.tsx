@@ -328,23 +328,23 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             <div
               className={clsx("row justify-content-end mt-4", NewClaimsStyle.upButtons)}
             >
-              <div className="col-auto">
+              <div className="col-auto p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto ml-2">
+              <div className="col-auto ml-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto">
+              <div className="col-auto ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
@@ -389,18 +389,18 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               />
             </div>
             <div className={clsx("row justify-content-end", NewClaimsStyle.downButtons)}>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
@@ -418,7 +418,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   </div>
                 )}
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
