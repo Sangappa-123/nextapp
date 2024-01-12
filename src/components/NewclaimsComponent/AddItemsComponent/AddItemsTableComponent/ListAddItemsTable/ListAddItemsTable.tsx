@@ -291,7 +291,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
             .filter((item) =>
               JSON.stringify(item).toLowerCase().includes(searchKeyword.toLowerCase())
             )
-        : addItemsTableData.filter((item) =>
+        : addItemsTableData?.filter((item) =>
             JSON.stringify(item).toLowerCase().includes(searchKeyword.toLowerCase())
           );
 
@@ -309,7 +309,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     columns,
     data: filteredData,
     enableColumnFilters: false,
-    pageCount: Math.ceil(addItemsTableData.length / pageLimit),
+    pageCount: Math.ceil(addItemsTableData?.length / pageLimit),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
@@ -331,7 +331,7 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
         </div>
       )}
       <div className={TableLisStyle.addListTableContainer}>
-        {filteredData.length > 0 ? (
+        {filteredData?.length > 0 ? (
           <CustomReactTable
             table={table}
             filteredData={filteredData}
