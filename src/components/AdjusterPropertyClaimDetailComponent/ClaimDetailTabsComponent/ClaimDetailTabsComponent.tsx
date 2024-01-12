@@ -5,6 +5,7 @@ import PolicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/Poli
 // import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
+import VendorAssignments from "@/components/VendorAssignments/index";
 import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
 
@@ -37,7 +38,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: translate?.tabsComponent?.vendorAssignments,
-      content: "",
+      content: <VendorAssignments />,
     },
     {
       name: translate?.tabsComponent?.documents,

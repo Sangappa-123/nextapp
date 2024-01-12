@@ -40,7 +40,6 @@
 .dropDownDiv {
   background-color: white;
   width: 8%;
-  // border: 1px solid red;
   z-index: 999;
   position: absolute;
   top: 667px;
@@ -51,12 +50,9 @@
   font-weight: 400;
   font-size: 14px;
   padding: 8px;
-  // padding-top: 4px;
-  // padding-bottom: 4px;
   cursor: pointer;
   z-index: 1;
   position: relative;
-  // background-color: teal;
 }
 .dropDownInnerDiv:hover {
   background-color: lightblue;
@@ -68,4 +64,27 @@
   padding: 8px;
   font-size: 12px;
   color: $astral;
+}
+.modalContent {
+  width: 600px;
+  position: absolute;
+  top: 30px;
+}
+.modalPaidContent {
+  width: 300px;
+  position: absolute;
+  top: 30px;
+}
+.modalLabel {
+  font-size: 14px;
+  // padding: 6px;
+}
+
+.centerAlign {
+  align-items: center;
+}
+
+.inputBox {
+  flex-direction: row;
+  margin-top: 16px;
 }

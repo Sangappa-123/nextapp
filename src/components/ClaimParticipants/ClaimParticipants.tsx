@@ -6,6 +6,8 @@ import { SlEnvolope } from "react-icons/sl";
 import Modal from "@/components/common/ModalPopups";
 import styles from "./ClaimParticipants.module.scss";
 import { IconContext } from "react-icons";
+import useTranslation from "@/hooks/useTranslation";
+import { claimParticipantsTranslateType } from "@/translations/claimParticipantsTranslate/en";
 import AddNewMsgModalComponent from "../common/AddNewMessageModalComponent/AddNewMessageModalComponent";
 
 interface type {
@@ -33,10 +35,20 @@ const ClaimParticipants: React.FC<type> = (props) => {
 
   const handleMessageSubmit = () => {};
 
+  const {
+    translate,
+    loading,
+  }: { translate: claimParticipantsTranslateType | undefined; loading: boolean } =
+    useTranslation("claimParticipantsTranslate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className={styles.claimParticipants}>
       <div className={styles.heading}>
-        <GenericComponentHeading title={"Claim Participants"} />
+        <GenericComponentHeading title={translate?.claimPraticipantsHeading ?? ""} />
       </div>
       <Modal
         isOpen={isModalOpen}
@@ -60,11 +72,13 @@ const ClaimParticipants: React.FC<type> = (props) => {
                 <IconContext.Provider value={{ className: styles.useCircle }}>
                   <FaUserCircle />
                 </IconContext.Provider>
-                <div className={styles.name}>{item}Gregory, Rafael</div>
-                <div className={styles.companyName}>Evolution</div>
-                <div className={styles.role}>Claim Supervisor</div>
+                <div className={styles.name}>
+                  {item} {translate?.gregoryRafel ?? ""}
+                </div>
+                <div className={styles.companyName}>{translate?.evolution ?? ""}</div>
+                <div className={styles.role}>{translate?.claimSupervisor ?? ""}</div>
                 <div className={styles.contactDetails}>
-                  <div className={styles.phone}>(565) -656-5656</div>
+                  <div className={styles.phone}>{translate?.phonNumber ?? ""}</div>
                   <div className={styles.mail}>
                     <button className={styles.mail} onClick={openModal}>
                       <IconContext.Provider value={{ className: styles.ciMail }}>
