@@ -87,8 +87,12 @@
 }
 .upButtons {
   top: 28px;
+  align-items: center;
+  display: flex;
 }
 .downButtons {
   position: relative;
   bottom: 15px;
+  align-items: center;
+  display: flex;
 }

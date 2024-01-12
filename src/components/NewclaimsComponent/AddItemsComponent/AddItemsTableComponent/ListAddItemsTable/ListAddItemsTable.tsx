@@ -9,7 +9,6 @@ import CustomReactTable from "@/components/common/CustomReactTable";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import TableLisStyle from "./listAddItems.module.scss";
 import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
-// import { fetchClaimContentActionnn } from "@/services/ClaimService";
 import { ConnectedProps, connect } from "react-redux";
 import {
   setAddItemsTableData,
@@ -18,9 +17,7 @@ import {
   setCategories,
   setSearchKeyword,
   deleteCategoryListItem,
-  // setPreviousSelectedItems,
   setSelectedRows,
-  // setEditItemDetail,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";

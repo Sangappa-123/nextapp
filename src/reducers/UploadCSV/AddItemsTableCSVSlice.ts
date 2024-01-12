@@ -62,6 +62,9 @@ const AddItemsTableCSVSlice = createSlice({
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
       state.selectedRows = [...state.selectedRows, ...action.payload];
     },
+    setPreviousSelectedItems: (state, action: PayloadAction<any[]>) => {
+      state.previousSelectedItems = action.payload;
+    },
     setCategoryRows: (state, action: PayloadAction<any[]>) => {
       state.categoryRows = [...action.payload];
     },

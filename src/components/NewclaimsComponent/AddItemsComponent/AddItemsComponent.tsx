@@ -122,7 +122,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
       <div>
         <AddItemsTableComponent onAssignItemsClick={onAssignItemsClick} />
       </div>
-      <div className="row justify-content-end">
+      <div className="row justify-content-end mt-4">
         <div className="col-auto">
           <GenericButton
             label="Cancel"
