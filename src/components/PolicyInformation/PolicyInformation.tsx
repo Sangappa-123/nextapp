@@ -98,7 +98,6 @@ function ClaimpolicyInformation({
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const getPolicyType = (id: number) => {
-    console.log("onwers logs");
     const stateId = getValues("state")?.id;
     if (!stateId) return;
     fetchPolicyType(id)
@@ -136,7 +135,6 @@ function ClaimpolicyInformation({
               emailChange(e);
               const emailValue = e.target.value;
               if (emailValue.match(regex) != null) {
-                console.log(emailValue);
                 verifyEmail(emailValue);
               }
             }}
@@ -221,7 +219,6 @@ function ClaimpolicyInformation({
                   };
                 });
               }
-              console.log("log", e.target.value);
             }}
           />
         </div>
@@ -255,7 +252,6 @@ function ClaimpolicyInformation({
                   };
                 });
               }
-              console.log("log", e.target.value);
             }}
           />
         </div>

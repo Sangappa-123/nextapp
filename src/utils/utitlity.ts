@@ -43,7 +43,6 @@ const formatMobileNumber = (e: any) => {
   const input = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
   const formattedInput = input.replace(/(\d{3})(\d{3})(\d{4})/, "($1)-$2-$3");
   e.target.value = formattedInput;
-  console.log("formattedInput", formattedInput);
 };
 
 export {
