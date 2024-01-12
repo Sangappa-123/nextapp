@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   claimedItemsList: [],
   claimedItemsErrorMsg: "",
+  searchKeyword: "",
 };
 
 const ClaimedItemsSlice = createSlice({
@@ -33,7 +34,14 @@ const ClaimedItemsSlice = createSlice({
       }
     },
   },
+  addClaimedItemsKeyWord(state, action) {
+    const { payload } = action;
+    const { searchKeyword } = payload;
+
+    state.searchKeyword = searchKeyword;
+  },
 });
 export default ClaimedItemsSlice;
 
-export const { addClaimedItemsListData } = ClaimedItemsSlice.actions;
+export const { addClaimedItemsListData, addClaimedItemsKeyWord } =
+  ClaimedItemsSlice.actions;
