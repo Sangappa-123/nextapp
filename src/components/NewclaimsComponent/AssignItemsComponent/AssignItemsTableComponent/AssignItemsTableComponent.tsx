@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Cards from "@/components/common/Cards";
 import GenericSelect from "@/components/common/GenericSelect";
 import AssignTableSTyle from "./assignItemsTableComponent.module.scss";
@@ -17,14 +17,10 @@ interface AssignItemsTableComponentProps {
 
 const AssignItemsTableComponent: React.FC<
   AssignItemsTableComponentProps & connectorType
-> = (selectedItems) => {
+> = ({ selectedItems }) => {
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
-  ];
-  const options1 = [
-    { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
-    { value: 2, label: "No Result Found" },
   ];
   const customStyles = {
     control: (defaultStyles: any) => ({
@@ -70,6 +66,12 @@ const AssignItemsTableComponent: React.FC<
       },
     }),
   };
+
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+
+  const handleChange = (selected: any) => {
+    setSelectedOption(selected);
+  };
   return (
     <>
       {console.log(selectedItems, "selectedItems in assign items file")}
@@ -80,10 +82,12 @@ const AssignItemsTableComponent: React.FC<
               1) Select the Billable Branch
             </label>
           </div>
-          <div className={`col-md-4 col-sm-6 col-12 ${AssignTableSTyle.selectContainer}`}>
+          <div className={`col-md-3 col-sm-6 col-12 ${AssignTableSTyle.selectContainer}`}>
             <GenericSelect
               placeholder="Select"
               options={options}
+              value={selectedOption}
+              onChange={handleChange}
               customStyles={customStyles}
               hideSelectedOptions={false}
             />
@@ -95,7 +99,7 @@ const AssignItemsTableComponent: React.FC<
         <div className={AssignTableSTyle.addItemsContainer}>
           <div className={`row gx-2 ${AssignTableSTyle.addItemsContentContainer}`}>
             <div
-              className={`col-lg-4 col-md-4 col-sm-12 col-12 mt-2 mb-2 ${AssignTableSTyle.selectItemsStyle}`}
+              className={`col-lg-3 col-md-3 col-sm-12 col-12 mt-2 mb-2 ${AssignTableSTyle.selectItemsStyle}`}
             >
               <SelectBoxAssignItems />
             </div>
@@ -109,6 +113,8 @@ const AssignItemsTableComponent: React.FC<
         {/* </div> */}
         <div className={AssignTableSTyle.styleTable}>
           <ItemsAssignListTable
+          // selectedItems={selectedItems}
+          // setSelectedItems={setSelectedItems}
           // selectedRowsData={selectedRowsData}
           />
         </div>
@@ -128,25 +134,6 @@ const AssignItemsTableComponent: React.FC<
         </div>
         <div className={AssignTableSTyle.styleTable}>
           <VendorAssignListTable />
-        </div>
-        <div className="row mt-3">
-          <label className={AssignTableSTyle.textAddStyle}>4) Services</label>
-        </div>
-        <div className="row mt-2">
-          <div className="col-1" />
-          <div className="col-md-2 col-sm-6 col-12">
-            <label className={AssignTableSTyle.textAddStyle}>
-              <span style={{ color: "red" }}>*</span> Service Needed
-            </label>
-          </div>
-          <div className={`col-md-4 col-sm-6 col-12 ${AssignTableSTyle.selectContainer}`}>
-            <GenericSelect
-              placeholder="Select"
-              options={options1}
-              customStyles={customStyles}
-              hideSelectedOptions={false}
-            />
-          </div>
         </div>
       </Cards>
       <div className={`mt-2 ${AssignTableSTyle.cardsStyle}`}>

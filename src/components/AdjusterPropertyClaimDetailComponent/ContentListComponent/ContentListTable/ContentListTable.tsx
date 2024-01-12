@@ -299,7 +299,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       forEdit: true,
       itemId: rowData.itemId,
     };
-    await fetchClaimContentItemDetails(payload);
+    await fetchClaimContentItemDetails(payload, claimContentListData);
     setEditItem(rowData);
     setIsModalOpen(true);
   };

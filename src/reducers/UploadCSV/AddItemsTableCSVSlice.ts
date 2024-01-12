@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { getSelectVendor } from "@/services/ClaimService";
 
 interface AddItemsTableState {
   addItemsTableData: any[];
@@ -9,10 +10,12 @@ interface AddItemsTableState {
   selectedCategory: string;
   searchKeyword: string;
   categoryRows: any[];
-  editItemDetail: object;
-  previousItem: boolean;
-  nextItem: boolean;
   previousSelectedItems: any[];
+  vendors: any[];
+  vendorInventoryListAPIData: any;
+  vendorInventoryListDataFull: any[];
+  vendorInventoryfetching: boolean;
+  vendorInventorySummaryData: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -24,11 +27,26 @@ const initialState: AddItemsTableState = {
   selectedCategory: "",
   searchKeyword: "",
   categoryRows: [],
-  editItemDetail: {},
-  previousItem: false,
-  nextItem: false,
   previousSelectedItems: [],
+  vendorInventoryfetching: true,
+  vendorInventorySummaryData: [],
+  vendorInventoryListAPIData: null,
+  vendorInventoryListDataFull: [],
+  vendors: [],
 };
+
+export const fetchVendorInventoryAction = createAsyncThunk(
+  "vendorInventory/fetchData",
+  async (param: { pageNo: number; recordPerPage: number }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getSelectVendor(param, true);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const AddItemsTableCSVSlice = createSlice({
   name: "addItemsTable",
@@ -43,8 +61,6 @@ const AddItemsTableCSVSlice = createSlice({
     },
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
       state.selectedRows = [...state.selectedRows, ...action.payload];
-      // state.selectedItems = state.selectedRows;
-      // state.isAnyItemSelected = state.selectedItems.length > 0;
     },
     setPreviousSelectedItems: (state, action: PayloadAction<any[]>) => {
       state.previousSelectedItems = action.payload;
@@ -67,78 +83,29 @@ const AddItemsTableCSVSlice = createSlice({
         (item) => item.id !== itemIdToDelete
       );
     },
-    addEditItemDetails(state, action) {
-      const { payload } = action;
-      console.log("sssssssssssssssssss", payload);
-      const { itemDetailData, previousItem, nextItem } = payload;
-      const itemData = {
-        claimId: itemDetailData.claimId,
-        itemId: itemDetailData.id,
-        itemUID: itemDetailData.itemUID,
-        itemNumber: itemDetailData.itemNumber,
-        description: itemDetailData.description,
-        quantity: itemDetailData.quantity,
-        insuredPrice: itemDetailData.insuredPrice,
-        category: itemDetailData.category
-          ? {
-              categoryId: itemDetailData.category?.id,
-              categoryName: itemDetailData.category?.name,
-            }
-          : null,
-        subCategory: itemDetailData.subCategory,
-        ageYears: itemDetailData.ageYears,
-        ageMonths: itemDetailData.ageMonths,
-        applyTax: itemDetailData.applyTax,
-        room: itemDetailData.room,
-        condition: itemDetailData.condition,
-        originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
-        isScheduledItem: itemDetailData.isScheduledItem,
-        scheduleAmount: itemDetailData.scheduleAmount,
-        attachments: itemDetailData.attachments,
-      };
-      console.log("ssssssssssssssss", itemData);
-      state.editItemDetail = itemData;
-      state.previousItem = previousItem;
-      state.nextItem = nextItem;
+    setVendors: (state, action: PayloadAction<any[]>) => {
+      state.vendors = action.payload;
     },
-    // addEditItemDetaill(state, action) {
-    //   const { payload } = action;
-    //   const { itemDetailData, previousItem, nextItem } = payload;
-
-    //   const itemData = {
-    //     claimId: itemDetailData.claimId,
-    //     itemId: itemDetailData.id,
-    //     itemUID: itemDetailData.itemUID,
-    //     itemNumber: itemDetailData.itemNumber,
-    //     description: itemDetailData.description,
-    //     quantity: itemDetailData.quantity,
-    //     insuredPrice: itemDetailData.insuredPrice,
-    //     category: itemDetailData.category
-    //       ? {
-    //           categoryId: itemDetailData.category?.id,
-    //           categoryName: itemDetailData.category?.name,
-    //         }
-    //       : null,
-    //     subCategory: itemDetailData.subCategory,
-    //     ageYears: itemDetailData.ageYears,
-    //     ageMonths: itemDetailData.ageMonths,
-    //     applyTax: itemDetailData.applyTax,
-    //     room: itemDetailData.room,
-    //     condition: itemDetailData.condition,
-    //     originallyPurchasedFrom: itemDetailData.originallyPurchasedFrom,
-    //     isScheduledItem: itemDetailData.isScheduledItem,
-    //     scheduleAmount: itemDetailData.scheduleAmount,
-    //     attachments: itemDetailData.attachments,
-    //     selected: false,
-    //   };
-    //   state.editItemDetail = itemData;
-    //   state.previousItem = previousItem;
-    //   state.nextItem = nextItem;
-    // },
-    // updateSelectedItems: (state, action: PayloadAction<any[]>) => {
-    //   state.selectedItems = action.payload;
-    //   state.isAnyItemSelected = action.payload.length > 0;
-    // },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchVendorInventoryAction.pending, (state) => {
+      state.vendorInventoryfetching = true;
+      state.vendorInventoryListDataFull = [];
+    });
+    builder.addCase(fetchVendorInventoryAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      console.log("API Responsessssssssss", payload);
+      state.vendorInventoryfetching = false;
+      if (payload?.status === 200) {
+        state.vendorInventorySummaryData = payload?.data.comapanyVendors;
+        state.vendorInventoryListDataFull = payload?.data.companyVendors;
+        state.vendorInventoryListAPIData = payload?.data.companyVendors;
+      }
+    });
+    builder.addCase(fetchVendorInventoryAction.rejected, (state) => {
+      state.vendorInventoryfetching = false;
+      state.vendorInventoryListDataFull = initialState.vendorInventoryListDataFull;
+    });
   },
 });
 
@@ -151,10 +118,6 @@ export const {
   setCategoryRows,
   setCategories,
   setSelectedCategory,
-  addEditItemDetails,
-  // toggleSelectedItem
-  // updateSelectedItems
-  // addEditItemDetaill
-  setPreviousSelectedItems,
+  setVendors,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

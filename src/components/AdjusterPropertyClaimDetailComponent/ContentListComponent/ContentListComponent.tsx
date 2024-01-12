@@ -76,8 +76,17 @@ function ContentListComponent(props: any) {
   const openModal = () => {
     setIsModalOpen(true);
   };
-
-  const closeModal = () => {
+  const itemListApi = async () => {
+    const payload = {
+      claimId,
+    };
+    const claimContentListRes: any = await claimContentList(payload, true);
+    if (claimContentListRes) {
+      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+    }
+  };
+  const closeModal = async () => {
+    await itemListApi();
     setEditItem(null);
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);

@@ -24,10 +24,10 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({
 }) => {
   // selectedOption, onChange
   return (
-    <div 
-    className={clsx({
-      [formControlClassname]: formControlClassname,
-    })}
+    <div
+      className={clsx({
+        [formControlClassname]: formControlClassname,
+      })}
     >
       {options.map((option) => (
         <label key={option.value} className={RadioButtonstyle.marginRight}>
