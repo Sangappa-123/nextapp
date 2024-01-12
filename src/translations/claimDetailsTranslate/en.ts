@@ -27,13 +27,16 @@ const translate = {
     paid: "Paid",
     paidCash: "cash",
     holdover: "holdover",
+    edit: "Edit",
+    update: "Update",
+    cancel: "Cancel",
   },
 
   addMessageCard: {
     messages: "Messages",
     addNewMessage: "Add New Messages",
     noNewMessage: "No New Message",
-    viewAllMessges: "viewAllMessges",
+    viewAllMessges: "View All Messages",
 
     addNewMessageModal: {
       to: {
