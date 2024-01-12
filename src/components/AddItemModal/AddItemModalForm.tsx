@@ -62,6 +62,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
     handleSubmit,
     editItemDetail,
     submitFormData,
+    contentData,
   } = props;
 
   const { translate }: { translate: addItemModalTranslateType | undefined } =
@@ -219,7 +220,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
     if (updateItemRes?.status === 200) {
       if (nextItem) {
-        getNextItem(editItemDetail.itemId);
+        getNextItem(editItemDetail.itemId, contentData);
       }
       addNotification({
         message: "Item Updated Successfully",
@@ -240,7 +241,7 @@ const AddItemModalForm: React.FC<connectorType & typeProps> = (props: any) => {
 
     if (updateItemRes?.status === 200) {
       if (previousItem) {
-        getPreviousItem(editItemDetail.itemId);
+        getPreviousItem(editItemDetail.itemId, contentData);
       }
       addNotification({
         message: "Item Updated Successfully",

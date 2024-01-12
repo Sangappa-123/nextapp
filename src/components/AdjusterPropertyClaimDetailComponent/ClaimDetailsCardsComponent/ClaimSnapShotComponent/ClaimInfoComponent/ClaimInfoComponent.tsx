@@ -1,57 +1,110 @@
+"use client";
 import ClmainInfoStyle from "./ClaimInfo.module.scss";
 import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
+import { convertToCurrentTimezone } from "@/utils/helper";
 
-const ClaimInfoCompoonent: React.FC = () => {
+interface calimInfoType {
+  claimSnapShotData: any;
+}
+
+const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
   const { translate }: { translate: claimDetailsTranslateType | undefined } =
     useTranslation("claimDetailsTranslate");
+  const dateFormate = "MMM DD, YYYY h:mm A";
   return (
     <>
       <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.claim}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">FLOW4122023</div>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.status}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">Work In Progress</div>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.claim}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            {claimSnapShotData?.claimNumber}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.status}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            {claimSnapShotData?.claimStatus?.status}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.tax}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>{claimSnapShotData?.taxRate}</div>
+        </fieldset>
       </div>
       <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.createdDate}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">Dec 8, 2023 7:53 PM</div>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.elapsedTime}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">2 d 19 h 9 m</div>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.elapsedTime}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>{claimSnapShotData?.claimTime}</div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.contentLimits}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            ${claimSnapShotData?.policyLimit}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.claimDeductible}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            ${claimSnapShotData?.deductible}
+          </div>
+        </fieldset>
       </div>
       <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.lossType}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">Not Specified</div>
-        <label className={`col-md-3 col-sm-3 col-6 ps-1 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.claimDeductible}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">$11.00</div>
-      </div>
-      <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.tax}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">11</div>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.contentLimits}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">$11.00</div>
-      </div>
-      <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
-        <label className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldLabel}`}>
-          {translate?.claimSnapshot?.minItemToPrice}
-        </label>
-        <div className="col-md-3 col-sm-3 col-6">$1.00</div>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.createdDate}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            {convertToCurrentTimezone(claimSnapShotData?.createdDate, dateFormate)}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.minItemToPrice}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            ${claimSnapShotData?.minimumThreshold}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
+        >
+          <legend className={ClmainInfoStyle.fieldSetLabel}>
+            {translate?.claimSnapshot?.lossType}
+          </legend>
+          <div className={ClmainInfoStyle.fieldValue}>
+            {claimSnapShotData?.damageType}
+          </div>
+        </fieldset>
       </div>
     </>
   );

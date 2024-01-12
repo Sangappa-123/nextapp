@@ -6,6 +6,7 @@ import { addClaimListData } from "@/reducers/ClaimData/ClaimSlice";
 import HttpService from "@/HttpService";
 import { getClientCookie } from "@/utils/utitlity";
 import { TABLE_LIMIT_20 } from "@/constants/constants";
+// import { deleteCategoryListItem } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface objectType {
   [key: string | number]: any;
@@ -330,4 +331,41 @@ export const fetchAddItemsTableCSVData = async (payload: any) => {
   const http = new HttpService({ isClient: true, isFormData: false });
   const res = await http.post(url, payload);
   return res;
+};
+
+export const deleteCategoryItem = async (payload: any) => {
+  try {
+    const url = getApiEndPoint("deleteClaimContentListItem");
+    const http = new HttpService({ isClient: true });
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      return res.message;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error while deleting item", error);
+    return null;
+  }
+};
+
+export const getSelectVendor = async (
+  param: {
+    pageNo: number;
+    recordPerPage: number;
+  },
+  isClient?: boolean
+) => {
+  try {
+    const http = new HttpService({ isClient });
+
+    let url = getApiEndPoint("assignVendorGet");
+    console.log("uuuuuuuuuuuuuu", url);
+    url = `${url}?page=${param?.pageNo}&q=&sort_by=&order_by=asc&limit=${param?.recordPerPage}`;
+    const resp = await http.get(url);
+    console.log("sssssssasssssssssss", resp);
+    return resp;
+  } catch (err: any) {
+    return null;
+  }
 };

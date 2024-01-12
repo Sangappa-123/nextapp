@@ -11,11 +11,11 @@ const ClaimDetailsCardsComponent: React.FC<claimDetailsCardType> = ({ claimId })
   return (
     <div>
       <div className="row">
-        <div className="col-md-5 col-sm-12 col-12 ps-0">
+        <div className="col-md-6 col-sm-12 col-12 ps-0">
           <ClaimSnapShotComponent />
         </div>
         <div
-          className={`col-md-7 col-sm-12 col-12 ${ClaimDetailsCardStyle.messageAndPolicyHolderContainer}`}
+          className={`col-md-6 col-sm-12 col-12 ${ClaimDetailsCardStyle.messageAndPolicyHolderContainer}`}
         >
           <div className="col-md-6 col-sm-6 col-12">
             <MessagesComponent claimId={claimId} />
