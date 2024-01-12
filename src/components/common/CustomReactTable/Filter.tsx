@@ -181,10 +181,10 @@ export default function Filter({
   }, [currentValue]);
 
   return (
-    <div className="position-relative">
+    <div>
       <Tooltip
         anchorSelect={`#${column.id}list`}
-        place="top"
+        place="bottom-start"
         style={{
           backgroundColor: "white",
           color: "black",

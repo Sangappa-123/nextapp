@@ -69,3 +69,26 @@
     padding: 8px 10px;
   }
 }
+.tableContainer {
+  min-height: 400px;
+  max-height: 520px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    // box-shadow: inset 0 0 5px grey;
+    background-color: #dddddd75;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+}

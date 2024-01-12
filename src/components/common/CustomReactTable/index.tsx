@@ -30,6 +30,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     editedData = null,
     handleEditChange = null,
     showFooter = false,
+    tableCustomClass = "",
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -76,6 +77,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
           [CustomReactTableStyles.reactTable]: true,
           [CustomReactTableStyles.reactTableScroll]: showScroller,
           [CustomReactTableStyles.fixedHeader]: isAnyRowInvalid,
+          [tableCustomClass]: tableCustomClass,
         })}
         {...(fetchNextPage
           ? {

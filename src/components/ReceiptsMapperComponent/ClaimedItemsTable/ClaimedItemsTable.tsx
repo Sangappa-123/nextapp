@@ -25,13 +25,9 @@ function convertToDollar(value: any) {
   }
 }
 const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
-  const {
-    claimedItemsList,
-    tableLoader,
-    claimedItemsErrorMsg,
-    // setTableLoader,
-  } = props;
+  const { claimedItemsList, tableLoader, claimedItemsErrorMsg, setTableLoader } = props;
   const [claimResult, setClaimResult] = React.useState(claimedItemsList);
+  const [filterSelected, setFilterSelected] = React.useState([]);
 
   interface ClaimData {
     [key: string | number]: any;
@@ -241,7 +237,58 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
 
   //   }
   // };
+  const filterFn = async (
+    currentValue: any,
+    columnId: string,
+    currentTypeofFilter: string
+  ) => {
+    setTableLoader(true);
+    const newfilterArr: any = [...filterSelected];
 
+    const columnIndex = newfilterArr.findIndex((item: any) =>
+      Object.prototype.hasOwnProperty.call(item, columnId)
+    );
+
+    if (columnIndex !== -1) {
+      newfilterArr[columnIndex][columnId] = {
+        currentValue,
+        typeofFilter: newfilterArr[columnIndex][columnId].typeofFilter,
+      };
+    } else {
+      newfilterArr.push({
+        [columnId]: { currentValue, typeofFilter: currentTypeofFilter },
+      });
+    }
+
+    setFilterSelected(newfilterArr);
+
+    let filterArr = claimedItemsList;
+
+    await newfilterArr.forEach((filterItem: any) => {
+      const colId = Object.keys(filterItem)[0];
+
+      const values = filterItem[colId].currentValue;
+      const typeofFilter = filterItem[colId].typeofFilter;
+
+      if (typeofFilter !== "number") {
+        filterArr = filterArr.filter((item: any) => {
+          if (item[colId] === null && values.includes("BLANK")) {
+            return true;
+          } else if (item[colId] === null && !values.includes("BLANK")) {
+            return false;
+          } else if (
+            values.some((val: any) => item[colId].toUpperCase() === val.toUpperCase())
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
+    });
+
+    setClaimResult([...filterArr]);
+    setTableLoader(false);
+  };
   const handleRowClick = async (rowData: any) => {
     console.log(rowData);
   };
@@ -261,7 +308,6 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     debugTable: true,
-    // manualSorting: true,
     enableSorting: true,
   });
 
@@ -270,13 +316,12 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
       <CustomReactTable
         table={table}
         totalDataCount={claimedItemsList.length}
-        // pageLimit={pageLimit}
-        // showStatusColor={true}
         loader={tableLoader}
         tableDataErrorMsg={claimedItemsErrorMsg}
         handleRowClick={handleRowClick}
-        // filterFn={filterFn}
-        // customFilterValues={customFilterValues}
+        filterFn={filterFn}
+        showFooter={true}
+        tableCustomClass={receiptMapperStyle.tableContainer}
       />
     </div>
   );
