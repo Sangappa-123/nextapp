@@ -274,3 +274,35 @@ export const getVendorAssignmentsCont = async (param: {
     return err;
   }
 };
+
+export const updatePaidStatus = async (param: object) => {
+  try {
+    const url = getApiEndPoint("updatePaidStatus");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateUnderReview = async (param: object) => {
+  try {
+    const url = getApiEndPoint("updateUnderReview");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};

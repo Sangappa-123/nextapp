@@ -69,6 +69,8 @@ enum apiEndPoints {
   deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
   updateCliamCategory = "web/bulk/update/item/category",
   updateCliamStatus = "web/bulk/update/item/status",
+  updatePaidStatus = "web/claim/items/paid",
+  updateUnderReview = "web/review/claim/supervisor",
   taskListApiUrl = "web/claim/tasklist/home",
   createTaskApiUrl = "web/claim/create/task",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
