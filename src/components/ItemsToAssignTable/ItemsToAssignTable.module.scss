@@ -13,6 +13,7 @@
     height: inherit;
     display: flex;
     margin-left: 5px;
+    align-items: center;
   }
 }
 .styleTable {
@@ -25,4 +26,5 @@
 .buttonContainer {
   display: flex;
   justify-content: right;
+  margin-top: 10px;
 }

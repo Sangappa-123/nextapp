@@ -24,6 +24,7 @@ import { fetchAddItemsTableCSVData } from "@/services/ClaimService";
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
   isAnyItemSelected: boolean;
+  selectedItems: any;
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
@@ -35,7 +36,6 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
-  // const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [tableLoader, setTableLoader] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
@@ -60,15 +60,15 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (item: any) => {
+  const handleCheckboxChange = async (item: any) => {
     console.log(item, "handle checkbox running on addItem main file");
 
     const updatedSelectedItems = selectedItems.includes(item)
-      ? selectedItems.filter((selectedItem) => selectedItem !== item)
+      ? selectedItems.filter((selectedItem: any) => selectedItem !== item)
       : [...selectedItems, item];
     console.log(updatedSelectedItems, "updatedSelectedItems checking");
 
-    dispatch(setSelectedItems(updatedSelectedItems));
+    await dispatch(setSelectedItems(updatedSelectedItems));
     dispatch(setSelectedRows(updatedSelectedItems));
   };
 

@@ -13,6 +13,9 @@ interface ModalProps {
   overlayClassName?: string;
   modalClassName?: string;
   modalWidthClassName?: string;
+  animate?: boolean;
+  positionTop?: boolean;
+  roundedBorder?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -26,6 +29,9 @@ const Modal: React.FC<ModalProps> = ({
   headingName,
   overlayClassName = "",
   modalWidthClassName = "",
+  animate = false,
+  positionTop = false,
+  roundedBorder = false,
 }) => {
   if (!isOpen) return null;
 
@@ -33,11 +39,14 @@ const Modal: React.FC<ModalProps> = ({
     <div
       className={clsx(styles.modalOverlay, {
         [overlayClassName]: overlayClassName,
+        [styles.animateOverlay]: animate,
+        [styles.positionTop]: positionTop,
       })}
     >
       <div
         className={clsx(styles.modal, {
           [modalWidthClassName]: modalWidthClassName,
+          [styles.roundedBorder]: roundedBorder,
         })}
       >
         <div className={clsx(styles.modalHeader)}>

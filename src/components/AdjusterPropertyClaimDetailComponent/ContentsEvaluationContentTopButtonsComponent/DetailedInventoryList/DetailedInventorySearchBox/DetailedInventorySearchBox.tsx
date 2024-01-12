@@ -3,8 +3,11 @@ import React from "react";
 import { ConnectedProps, connect } from "react-redux";
 import { RiSearch2Line } from "react-icons/ri";
 import DetailedInventorySearchStyle from "./DetailedInventorySearchBox.module.scss";
-import { searchDetailedInventory } from "@/services/ContentsEvaluationService.ts";
+import { searchDetailedInventory } from "@/services/ContentsEvaluationService";
 import { addDetailedInventorySearchKeyWord } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
+import useTranslation from "@/hooks/useTranslation";
+import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
+import CustomLoader from "@/components/common/CustomLoader/index";
 
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
@@ -16,6 +19,12 @@ const DetailedInventorySearchBox: React.FC<connectorType & typeProps> = (props) 
     searchKeyword,
     addDetailedInventorySearchKeyWord,
   }: React.SetStateAction<any> = props;
+
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
+    useTranslation("contentsEvaluationTranslate");
 
   const handleSearch = async (e: any) => {
     setSearchValue(e.target.value);
@@ -38,13 +47,19 @@ const DetailedInventorySearchBox: React.FC<connectorType & typeProps> = (props) 
       }
     }
   };
-
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
   return (
     <div className={DetailedInventorySearchStyle.searchBox}>
       <RiSearch2Line className={DetailedInventorySearchStyle.searchIcon} />
       <input
         type="text"
-        placeholder="Item description, Room, Category"
+        placeholder={translate?.detailedInventory?.searchPlaceHolder}
         value={searchValue}
         onChange={(e) => handleSearch(e)}
         onKeyDown={(e) => searchKey(e)}

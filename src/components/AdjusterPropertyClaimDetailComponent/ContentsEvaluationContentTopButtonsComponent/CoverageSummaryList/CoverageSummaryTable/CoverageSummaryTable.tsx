@@ -7,26 +7,35 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import CoverageSummaryListStyle from "../CoverageSummaryList.module.scss";
-import { ConnectedProps, connect } from "react-redux";
+import { connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { fetchCoverageSummaryAction } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
+import useTranslation from "@/hooks/useTranslation";
+import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
+import CustomLoader from "@/components/common/CustomLoader/index";
 
 type CoverageSummaryProps = {
   listData: any;
   fetchCoverageSummaryAction: any;
+  isfetching: boolean;
 };
 
 interface coverageSummaryData {
   [key: string | number]: any;
 }
 
-function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorType> {
+function CoverageSummaryTable(props: CoverageSummaryProps) {
   const columnHelper = createColumnHelper<coverageSummaryData>();
-  const { listData, fetchCoverageSummaryAction } = props;
+  const { listData, fetchCoverageSummaryAction, isfetching } = props;
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
-  const [newData, setData] = useState();
+  const [newData, setData] = useState<typeof listData>();
   const pageLimit = 20;
   const fetchSize = 20;
+  const {
+    loading,
+    translate,
+  }: { loading: boolean; translate: contentsEvaluationTranslateType | undefined } =
+    useTranslation("contentsEvaluationTranslate");
   useEffect(() => {
     fetchCoverageSummaryAction({
       claimNumber: claimNumber,
@@ -35,54 +44,70 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
 
   const columns = [
     columnHelper.accessor("categoryName", {
-      cell: (info) => info.getValue(),
-      header: () => "Category",
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.coverageSummary.columns.category,
     }),
     columnHelper.accessor("categoryAggregateLimit", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Aggregate Limit",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.aggregateLimit,
     }),
     columnHelper.accessor("categoryIndividualItemLimit", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Item Limit",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.itemLimit,
     }),
     columnHelper.accessor("totalItems", {
-      cell: (info) => info.getValue(),
-      header: () => "# Items Claimed",
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.coverageSummary.columns.itemsClaimed,
     }),
     columnHelper.accessor("noOfItemsAboveLimit", {
-      cell: (info) => info.getValue(),
-      header: () => "# Items Over Limit",
+      cell: (info: any) => info.getValue(),
+      header: () => translate?.coverageSummary.columns.itemsOverLimit,
     }),
     columnHelper.accessor("actualsRCV", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total Replacement Cost",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalReplacementCost,
     }),
     columnHelper.accessor("actualsACV", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total ACV",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalACV,
     }),
     columnHelper.accessor("totalOverage", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total Overage",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalOverage,
     }),
     columnHelper.accessor("totalCashExposure", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total Cash Exposure",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalCashExposure,
     }),
     columnHelper.accessor("totalAmountPaid", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total Holdover Paid",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalHoldoverPaid,
     }),
     columnHelper.accessor("totalSettlementValue", {
-      cell: (info) => <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>,
-      header: () => "Total Settlement Value",
+      cell: (info: any) => (
+        <span>{`$${Number.parseFloat(info.getValue()).toFixed(2)}`}</span>
+      ),
+      header: () => translate?.coverageSummary.columns.totalSettlementValue,
     }),
   ];
 
   useEffect(() => {
     if (listData) {
-      const defaultData: listData[] = [...listData];
+      const defaultData: (typeof listData)[] = [...listData];
       const recvData = [...defaultData.slice(0, fetchSize)];
       setData(recvData);
     }
@@ -97,7 +122,7 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
     debugTable: true,
     manualSorting: true,
     manualPagination: true,
-    enableSorting: true,
+    enableSorting: false,
     enableColumnFilters: false,
   });
 
@@ -110,6 +135,13 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
     return true;
   };
 
+  if (loading) {
+    return (
+      <div className="col-12 d-flex flex-column position-relative">
+        <CustomLoader loaderType="spinner2" />
+      </div>
+    );
+  }
   return (
     <div>
       <div className={CoverageSummaryListStyle.detailListContainer}>
@@ -118,22 +150,26 @@ function CoverageSummaryTable(props: CoverageSummaryProps): React.FC<connectorTy
         ></div>
       </div>
       <div>
-        <CustomReactTable
-          table={table}
-          totalDataCount={listData?.length}
-          tableDataErrorMsg={!listData && "No Record Found"}
-          fetchNextPage={fetchNextPage}
-          totalFetched={newData?.length}
-          totalDBRowCount={listData?.length}
-        />
+        {isfetching ? (
+          <CustomLoader />
+        ) : (
+          <CustomReactTable
+            table={table}
+            totalDataCount={listData?.length}
+            tableDataErrorMsg={!listData && translate?.coverageSummary?.noRecords}
+            fetchNextPage={fetchNextPage}
+            totalFetched={newData?.length}
+            totalDBRowCount={listData?.length}
+          />
+        )}
       </div>
     </div>
   );
 }
 
 const mapStateToProps = (state: RootState) => ({
-  listData:
-    state.detailedInventorydata?.coverageSummaryListDataFull?.claimCategoryDetails,
+  listData: state.detailedInventorydata?.claimCategoryDetails,
+  isfetching: state.detailedInventorydata?.coverageSummaryfetching,
 });
 
 const mapDispatchToProps = {
@@ -141,6 +177,5 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type connectorType = ConnectedProps<typeof connector>;
 
 export default connector(CoverageSummaryTable);

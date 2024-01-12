@@ -12,10 +12,8 @@ import { useRouter } from "next/navigation";
 import ContentListSearchBox from "./ContentListSearchBox/ContentListSearchBox";
 import AddItemModal from "@/components/AddItemModal/AddItemModal";
 import { claimContentList } from "@/services/ClaimContentListService";
-import ChangeCategoryModal from "@/components/ChangeCategoryModal/ChangeCategoryModal";
-import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { updateCliamStatus } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
-import clsx from "clsx";
+import useTranslation from "@/hooks/useTranslation";
+import { contentListComponentType } from "@/translations/contentListComponent/en";
 
 function ContentListComponent(props: any) {
   const {
@@ -25,17 +23,15 @@ function ContentListComponent(props: any) {
     editItemDetail,
     claimContentListData,
     claimContentListDataFull,
-    categoryListRes,
   } = props;
+  console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
   const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
   const [openMore, setOpenMore] = useState(false);
   const [checkedValues, setcheckStatus] = useState(false);
-  const [isCreatedItemvAilable, setIsCreatedItemAvailable] = useState(false);
   const [getNumberSelected, setNumberSelected] = useState(0);
   const [openStatus, setOpenStatus] = useState(false);
 
@@ -67,83 +63,46 @@ function ContentListComponent(props: any) {
     router.push(`/adjuster-property-claim-details/${claimId}`);
   };
 
-  const openModalChangeCat = () => {
-    setIsModalOpenChangeCat(true);
-  };
-  const closeModalChangeCat = () => {
-    setIsModalOpenChangeCat(false);
-  };
-  console.log("claimContentListDataFull", claimContentListDataFull);
-
-  const handleCreatedStatus = async () => {
-    const selectedClaims =
-      claimContentListDataFull &&
-      claimContentListDataFull.length > 0 &&
-      claimContentListDataFull.filter(
-        (item: any) => item.selected === true && item.statusName === "CREATED"
+  React.useEffect(() => {
+    if (claimContentListDataFull.length > 0) {
+      const isCreatedSelected = claimContentListDataFull.filter(
+        (item: any) => item.status === "CREATED" && item.selected === true
+      );
+      const isNotCreatedSelected = claimContentListDataFull.filter(
+        (item: any) => item.status !== "CREATED" && item.selected === true
       );
 
-    const param = {
-      claimItems: selectedClaims,
-      itemStatus: "VALUED",
-    };
-    const updateStatusresult = await updateCliamStatus(param);
-
-    if (updateStatusresult?.status === 200) {
-      const payload = { claimId };
-      const claimContentListRes = await claimContentList(payload, true);
-
-      if (claimContentListRes) {
-        props.addClaimContentListData({ claimContentData: claimContentListRes, claimId });
-
-        props.addNotification({
-          message: "Status Updated Successfully",
-          id: "update_status_valued_success",
-          status: "success",
-        });
-        closeModal();
+      if (isNotCreatedSelected.length > 0) {
+        setcheckStatus(false);
+        setOpenMore(false);
+        setNumberSelected(0);
+      } else if (isCreatedSelected.length > 0) {
+        setcheckStatus(true);
+        setNumberSelected(isCreatedSelected.length);
+      } else {
+        setcheckStatus(false);
+        setOpenMore(false);
+        setNumberSelected(0);
       }
-    } else {
-      props.addNotification({
-        message: "Something went wrong.",
-        id: "update_status_valued_failure",
-        status: "error",
-      });
-    }
-  };
-
-  const isCreatedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName === "CREATED" && item.selected === true
-  );
-  const isNotCreatedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName !== "CREATED" && item.selected === true
-  );
-  const isNotValuedSelected = claimContentListDataFull.filter(
-    (item: any) => item.statusName !== "VALUED" && item.selected === true
-  );
-
-  React.useEffect(() => {
-    if (isCreatedSelected.length > 0) {
-      setIsCreatedItemAvailable(true);
-      setcheckStatus(true);
-      setNumberSelected(isCreatedSelected.length);
-    } else if (isNotCreatedSelected.length > 0) {
-      setIsCreatedItemAvailable(false);
-      setcheckStatus(true);
-      setNumberSelected(isCreatedSelected.length);
-    } else {
-      setIsCreatedItemAvailable(false);
-      setOpenMore(false);
-      setcheckStatus(false);
-      setNumberSelected(0);
     }
   }, [claimContentListDataFull]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const {
+    translate,
+    loading,
+  }: { translate: contentListComponentType | undefined; loading: boolean } =
+    useTranslation("contentListComponent");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className="row mb-4">
       <div className={`${ContentListComponentStyle.contentListHeaderContainer} mt-4`}>
         <GenericComponentHeading
-          title={`Content List (${claimContentListData.length})`}
+          title={` ${translate?.contentList ?? ""}
+          (${claimContentListData.length})`}
           customHeadingClassname={ContentListComponentStyle.contentListHeader}
         />
       </div>
@@ -174,7 +133,7 @@ function ContentListComponent(props: any) {
                     className={ContentListComponentStyle.dropDownInnerDiv}
                     onClick={openModal}
                   >
-                    Add Items
+                    {translate?.addItems ?? ""}
                   </div>
 
                   <div
@@ -183,12 +142,12 @@ function ContentListComponent(props: any) {
                       router.push(`/upload-items-from-csv?claimDetail=${claimId}`)
                     }
                   >
-                    Load from file
+                    {translate?.loadFromFile ?? ""}
                   </div>
                 </div>
               </Tooltip>
               <GenericButton
-                label="Add Item"
+                label={translate?.addItem ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -197,15 +156,15 @@ function ContentListComponent(props: any) {
                 onClick={handleDropDown}
               />
               <GenericButton
-                label="Create Assignment"
+                label={translate?.createAssignment ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
-                disabled={!isCreatedItemvAilable}
+                disabled={!checkedValues}
               />
               <GenericButton
-                label="Map Receipts"
+                label={translate?.mapReceipts ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -226,14 +185,11 @@ function ContentListComponent(props: any) {
                 clickable={true}
               >
                 <div className="p-0">
-                  <span className={ContentListComponentStyle.selectedItemsLine}>
-                    ({getNumberSelected}) items selected
-                  </span>
-                  <div
-                    className={ContentListComponentStyle.dropDownInnerDiv}
-                    onClick={openModalChangeCat}
-                  >
-                    Change Category
+                  <div className={ContentListComponentStyle.selectedItemsLine}>
+                    ({getNumberSelected}) {translate?.itemSelected ?? ""}
+                  </div>
+                  <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                    {translate?.changeCategory ?? ""}
                   </div>
 
                   <div
@@ -243,7 +199,7 @@ function ContentListComponent(props: any) {
                     }}
                     className={ContentListComponentStyle.dropDownInnerDiv}
                   >
-                    Change Status
+                    {translate?.changeStatus ?? ""}
                   </div>
                   <Tooltip
                     anchorSelect="#more-status-btn-element"
@@ -260,36 +216,22 @@ function ContentListComponent(props: any) {
                     clickable={true}
                   >
                     <div className="p-0">
-                      <div
-                        className={clsx(
-                          { "d-none": !(isCreatedSelected.length > 0) },
-                          ContentListComponentStyle.dropDownInnerDiv
-                        )}
-                        onClick={handleCreatedStatus}
-                      >
-                        Mark Valued
-                      </div>
-                      <div
-                        className={clsx(
-                          { "d-none": !(isNotValuedSelected.length > 0) },
-                          ContentListComponentStyle.dropDownInnerDiv
-                        )}
-                      >
-                        Mark Paid
+                      <div className={ContentListComponentStyle.dropDownInnerDiv}>
+                        {translate?.markValued ?? ""}
                       </div>
 
                       <div
                         id="more-status-btn-element"
                         className={ContentListComponentStyle.dropDownInnerDiv}
                       >
-                        Supervisor Review
+                        {translate?.supervisorReview ?? ""}
                       </div>
                     </div>
                   </Tooltip>
                 </div>
               </Tooltip>
               <GenericButton
-                label="More"
+                label={translate?.more ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -299,14 +241,14 @@ function ContentListComponent(props: any) {
                 onClickHandler={() => setOpenMore(!openMore)}
               />
               <GenericButton
-                label="Accept Min. Values"
+                label={translate?.acceptMinValues ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
                 btnClassname={ContentListComponentStyle.contentListBtn}
               />
               <GenericButton
-                label="Accept Standerd Cost"
+                label={translate?.acceptStandardCost ?? ""}
                 theme="normal"
                 size="small"
                 type="submit"
@@ -327,14 +269,6 @@ function ContentListComponent(props: any) {
             contentData={claimContentListData}
           />
         </div>
-        <div className="col-12">
-          <ChangeCategoryModal
-            closeModal={closeModalChangeCat}
-            isModalOpen={isModalOpenChangeCat}
-            categoryListRes={categoryListRes}
-            claimContentListDataFull={claimContentListDataFull}
-          />
-        </div>
       </div>
       <ContentListTable
         setTableLoader={setTableLoader}
@@ -353,6 +287,5 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 });
 const mapDispatchToProps = {
   addClaimContentListData,
-  addNotification,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ContentListComponent);

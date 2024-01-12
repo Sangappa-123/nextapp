@@ -21,18 +21,8 @@ import {
   handleUrgentClaimSort,
 } from "@/reducers/UrgentClaimData/UrgentClaimSlice";
 import UrgentClaimSearchBox from "../UrgentClaimSearchBox";
-
-const pathList = [
-  {
-    name: "Home",
-    path: "/adjuster-dashboard",
-  },
-  {
-    name: "Claims Exceeding Time limits",
-    path: "/login",
-    active: true,
-  },
-];
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import useTranslation from "@/hooks/useTranslation";
 
 const UrgentClaimTable: React.FC<connectorType> = (props) => {
   const {
@@ -47,6 +37,9 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
   const pageLimit = TABLE_LIMIT_20;
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   type ClaimData = {
     claimNumber: string;
     adjusterName: string;
@@ -58,7 +51,17 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
     elapsedTime: number;
     lastNote: unknownObjectType;
   };
-
+  const pathList = [
+    {
+      name: translate?.breadCrumbsHeading?.home,
+      path: "/adjuster-dashboard",
+    },
+    {
+      name: translate?.breadCrumbsHeading?.claimsExceedingTimeLimits,
+      path: "/login",
+      active: true,
+    },
+  ];
   const columnHelper = createColumnHelper<ClaimData>();
   const columns = [
     columnHelper.accessor("claimNumber", {
@@ -172,7 +175,7 @@ const UrgentClaimTable: React.FC<connectorType> = (props) => {
       <div
         className={clsx("col-lg-12 col-md-12 col-12 m-2", urgentTableStyle.tableHeading)}
       >
-        <label>{`Claims Exceeding Time Limits (${totalClaims})`}</label>
+        <label>{`${translate?.breadCrumbsHeading?.claimsExceedingTimeLimits} (${totalClaims})`}</label>
       </div>
       <div className={urgentTableStyle.claimContainer}>
         <div className={`row ${urgentTableStyle.claimContentContainer}`}>

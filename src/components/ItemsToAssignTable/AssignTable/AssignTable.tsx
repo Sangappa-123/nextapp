@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -10,6 +9,7 @@ import CustomReactTable from "@/components/common/CustomReactTable";
 import AssignTableStyle from "./AssignTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
+import GenericButton from "@/components/common/GenericButton";
 import {
   setAddItemsTableData,
   setSelectedItems,
@@ -18,31 +18,75 @@ import {
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface AssignTableProps {
-  selectedRows: any[];
+  selectedItems: any[];
   selectedCategory: any;
+  closeModal: () => void;
+  handleRowSelect: (itemId: number) => void;
 }
 
 const AssignTable: React.FC<AssignTableProps & connectorType> = ({
-  selectedRows,
+  selectedItems,
   selectedCategory,
+  setSelectedItems,
+  closeModal,
 }) => {
   type AssignItemsModalData = {
+    id: any;
     description: string;
-    category: string;
+    category: { category: string };
     select: boolean;
     unitCost: string;
   };
 
-  const [filterData, setFilterData] = useState<any>([]);
+  const [filterData, setFilterData] = useState<any>(selectedItems);
+
   useEffect(() => {
     const categoryData =
       selectedCategory?.label === "All"
-        ? selectedRows
-        : selectedRows.filter(
+        ? selectedItems
+        : selectedItems.filter(
             (item: any) => item.category?.name === selectedCategory?.label
           );
     setFilterData(categoryData);
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedItems]);
+
+  useEffect(() => {
+    const areAllChecked =
+      selectedItems.length === 0 || selectedItems.every((item) => item.select === true);
+    if (!areAllChecked) {
+      const updatedSelectedItems = selectedItems.map((item) => ({
+        ...item,
+        select: true,
+      }));
+      setSelectedItems(updatedSelectedItems);
+    }
+  }, []);
+
+  const handleHeaderCheckboxChange = () => {
+    const areAllChecked = selectedItems.every((item) => item.select);
+
+    const updatedSelectedItems = selectedItems.map((item) => ({
+      ...item,
+      select: !areAllChecked,
+    }));
+
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const handleRowSelect = (itemId: number) => {
+    const updatedSelectedItems = selectedItems.map((item) =>
+      item.id === itemId ? { ...item, select: !item.select } : item
+    );
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const handleSave = () => {
+    const updatedSelectedItems = selectedItems.filter((item) => item.select);
+    setSelectedItems(updatedSelectedItems);
+    const updatedFilterData = filterData.filter((item: { select: any }) => item.select);
+    setFilterData(updatedFilterData);
+    closeModal();
+  };
 
   const columnHelper = createColumnHelper<AssignItemsModalData>();
   const checkboxAccessor = (data: AssignItemsModalData) => data.select;
@@ -51,23 +95,31 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
     columnHelper.accessor(checkboxAccessor, {
       header: () => (
         <div
-          className="d-flex justify-content-center"
           onClick={(e) => {
             e.stopPropagation();
+            handleHeaderCheckboxChange();
           }}
         >
           <input
             type="checkbox"
+            className={AssignTableStyle.checkbox}
+            // checked={true}
+            checked={
+              selectedItems.length > 0 && selectedItems.every((item) => item.select)
+            }
             onChange={(e) => {
               e.stopPropagation();
+              handleHeaderCheckboxChange();
             }}
           />
         </div>
       ),
-      meta: {},
+      meta: {
+        headerClass: AssignTableStyle.checkHeader,
+      },
       id: "check",
       enableColumnFilter: false,
-      cell: () => (
+      cell: ({ row }) => (
         <div
           className="d-flex justify-content-center"
           onClick={(e) => {
@@ -76,18 +128,19 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
         >
           <input
             type="checkbox"
-            onChange={() => {
-              // handleCheckboxChange(row.original);
+            checked={row.original.select}
+            onChange={(e) => {
+              e.stopPropagation();
+              handleRowSelect(row.original.id);
             }}
           />
         </div>
       ),
     }),
-
     columnHelper.accessor("description", {
       header: () => `Item Description`,
     }),
-    columnHelper.accessor((data) => data?.category?.name, {
+    columnHelper.accessor((data) => data?.category?.category, {
       header: () => `Category`,
       id: "category",
     }),
@@ -107,7 +160,19 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
   return (
     <>
       <div className={AssignTableStyle.addListTableContainer}>
-        <CustomReactTable table={table} filterData={filterData} />
+        {filterData.length > 0 ? (
+          <CustomReactTable table={table} filteredData={filterData} />
+        ) : (
+          <div className={AssignTableStyle.noItemsStyle}>No items available</div>
+        )}
+      </div>
+      <div className={AssignTableStyle.buttonContainer}>
+        <div className="mx-2">
+          <GenericButton label={"Cancel"} size="medium" onClick={closeModal} />
+        </div>
+        <div className="mx-2">
+          <GenericButton label={"Save"} size="medium" onClick={handleSave} />
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { getSelectVendor } from "@/services/ClaimService";
 
 interface AddItemsTableState {
   addItemsTableData: any[];
@@ -9,6 +10,12 @@ interface AddItemsTableState {
   selectedCategory: string;
   searchKeyword: string;
   categoryRows: any[];
+  previousSelectedItems: any[];
+  vendors: any[];
+  vendorInventoryListAPIData: any;
+  vendorInventoryListDataFull: any[];
+  vendorInventoryfetching: boolean;
+  vendorInventorySummaryData: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -20,7 +27,26 @@ const initialState: AddItemsTableState = {
   selectedCategory: "",
   searchKeyword: "",
   categoryRows: [],
+  previousSelectedItems: [],
+  vendorInventoryfetching: true,
+  vendorInventorySummaryData: [],
+  vendorInventoryListAPIData: null,
+  vendorInventoryListDataFull: [],
+  vendors: [],
 };
+
+export const fetchVendorInventoryAction = createAsyncThunk(
+  "vendorInventory/fetchData",
+  async (param: { pageNo: number; recordPerPage: number }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getSelectVendor(param, true);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const AddItemsTableCSVSlice = createSlice({
   name: "addItemsTable",
@@ -54,6 +80,29 @@ const AddItemsTableCSVSlice = createSlice({
         (item) => item.id !== itemIdToDelete
       );
     },
+    setVendors: (state, action: PayloadAction<any[]>) => {
+      state.vendors = action.payload;
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchVendorInventoryAction.pending, (state) => {
+      state.vendorInventoryfetching = true;
+      state.vendorInventoryListDataFull = [];
+    });
+    builder.addCase(fetchVendorInventoryAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      console.log("API Responsessssssssss", payload);
+      state.vendorInventoryfetching = false;
+      if (payload?.status === 200) {
+        state.vendorInventorySummaryData = payload?.data.comapanyVendors;
+        state.vendorInventoryListDataFull = payload?.data.companyVendors;
+        state.vendorInventoryListAPIData = payload?.data.companyVendors;
+      }
+    });
+    builder.addCase(fetchVendorInventoryAction.rejected, (state) => {
+      state.vendorInventoryfetching = false;
+      state.vendorInventoryListDataFull = initialState.vendorInventoryListDataFull;
+    });
   },
 });
 
@@ -66,5 +115,6 @@ export const {
   setCategoryRows,
   setCategories,
   setSelectedCategory,
+  setVendors,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

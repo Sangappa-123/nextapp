@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
   getCoreRowModel,
 } from "@tanstack/react-table";
+import { setSelectedItems } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableListStyle from "./itemsAssignListTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
@@ -16,17 +17,23 @@ import ItemsToAssignTable from "@/components/ItemsToAssignTable";
 
 interface ItemsAssignListTableProps {
   selectedItems: any[];
+  // onCheckboxChange: (item: any) => void;
   selectedRows: any[];
+  setSelectedItems: (items: any[]) => void;
+  // handleRowSelect: (id: number) => void;
 }
-const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = (
-  selectedRows
-) => {
+const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = ({
+  selectedRows,
+  selectedItems,
+  setSelectedItems,
+}) => {
   type AssignItemsData = {
+    id: number;
     itemNumber: string;
     description: string;
     status: { status: string };
     qty: string;
-    category: string;
+    category: { category: string };
     ageMonths: number;
     select: boolean;
     quantity: string;
@@ -34,33 +41,70 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     individualLimitAmount: string;
     scheduledItem: string;
   };
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   console.log(selectedRows, "selectedItems inside assign list table");
 
+  useEffect(() => {
+    const areAllChecked =
+      selectedItems.length === 0 || selectedItems.every((item) => item.select === true);
+    if (!areAllChecked) {
+      const updatedSelectedItems = selectedItems.map((item) => ({
+        ...item,
+        select: true,
+      }));
+      setSelectedItems(updatedSelectedItems);
+    }
+  }, []);
+
+  const handleHeaderCheckboxChange = () => {
+    const areAllChecked = selectedItems.every((item) => item.select);
+
+    const updatedSelectedItems = selectedItems.map((item) => ({
+      ...item,
+      select: !areAllChecked,
+    }));
+
+    setSelectedItems(updatedSelectedItems);
+  };
+
+  const handleRowSelect = (itemId: number) => {
+    const updatedSelectedItems = selectedItems.map((item) =>
+      item.id === itemId ? { ...item, select: !item.select } : item
+    );
+    setSelectedItems(updatedSelectedItems);
+  };
+
   const columnHelper = createColumnHelper<AssignItemsData>();
   const checkboxAccessor = (data: AssignItemsData) => data.select;
-
   const columns = [
     columnHelper.accessor(checkboxAccessor, {
       header: () => (
         <div
           onClick={(e) => {
             e.stopPropagation();
+            handleHeaderCheckboxChange();
           }}
         >
           <input
             type="checkbox"
+            className={TableListStyle.checkbox}
+            // checked={true}
+            checked={
+              selectedItems.length > 0 && selectedItems.every((item) => item.select)
+            }
             onChange={(e) => {
               e.stopPropagation();
+              handleHeaderCheckboxChange();
             }}
           />
         </div>
       ),
-      meta: {},
+      meta: {
+        headerClass: TableListStyle.checkHeader,
+      },
       id: "check",
       enableColumnFilter: false,
-      cell: () => (
+      cell: ({ row }) => (
         <div
           className="d-flex justify-content-center"
           onClick={(e) => {
@@ -69,43 +113,62 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
         >
           <input
             type="checkbox"
-            onChange={() => {
-              // handleCheckboxChange(row.original);
+            className={TableListStyle.checkbox}
+            checked={row.original.select}
+            onChange={(e) => {
+              e.stopPropagation();
+              handleRowSelect(row.original.id);
             }}
           />
         </div>
       ),
     }),
     columnHelper.accessor("itemNumber", {
-      header: () => `Item #`,
+      header: () => "Item #",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("description", {
-      header: () => `Description`,
+      header: () => "Description",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("quantity", {
-      header: () => `Quantity`,
+      header: () => "Quantity",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("totalStatedAmount", {
-      header: () => `Stated Value`,
+      header: () => "Stated Value",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("ageMonths", {
-      header: () => `Age`,
+      header: () => "Age",
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-    columnHelper.accessor((data) => data?.category?.name, {
-      header: () => `Category`,
+    columnHelper.accessor((data) => data?.category?.category, {
+      header: () => "Category",
       id: "category",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("individualLimitAmount", {
-      header: () => `Individual Limit`,
+      header: () => "Individual Limit",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
     columnHelper.accessor("scheduledItem", {
-      header: () => `Scheduled Item`,
+      header: () => "Scheduled Item",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
-    columnHelper.accessor((data) => data.status.status, {
-      header: () => `Status`,
+    columnHelper.accessor((data) => data?.status?.status, {
+      header: () => "Status",
       id: "status",
+      cell: (info: any) => info.getValue(),
+      enableSorting: false,
     }),
   ];
 
@@ -117,9 +180,14 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     setIsModalOpen(false);
   };
 
+  const defaultItemsToShow = 10;
+  const tableDataWithoutDuplicates = Array.from(
+    new Set(selectedItems.slice(0, defaultItemsToShow))
+  );
+
   const table = useReactTable({
     columns,
-    data: selectedRows?.selectedRows,
+    data: tableDataWithoutDuplicates,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: true,
     enableColumnFilters: false,
@@ -132,34 +200,45 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
           <Modal
             isOpen={isModalOpen}
             onClose={closeModal}
-            childComp={<ItemsToAssignTable closeModal={closeModal} />}
+            childComp={
+              <ItemsToAssignTable
+                closeModal={closeModal}
+                handleRowSelect={handleRowSelect}
+              />
+            }
             headingName="Items to Assign"
             overlayClassName={TableListStyle.modalContainer}
             modalWidthClassName={TableListStyle.modalWidth}
           ></Modal>
         </div>
 
-        <CustomReactTable table={table} />
-        {selectedRows?.selectedRows?.length > 10 && (
+        <CustomReactTable table={table} key={JSON.stringify(selectedItems)} />
+        {selectedItems.length > defaultItemsToShow && (
           <div className={clsx(TableListStyle.textAlignCenter, "row")}>
-            <a onClick={handleClick}>view all items</a>
+            <a onClick={handleClick}>View all items</a>
           </div>
         )}
       </div>
-
-      <div className="row">
-        <label className={TableListStyle.labelStyles}>Item(s) Summary</label>
-      </div>
-      <div className="row">
-        <div className="col-md-4 col-sm-6 col-12">
-          <label className={TableListStyle.labelStyles}>Total Item(s) Selected:</label>
+      <div className={TableListStyle.bakgroundColorStyle}>
+        <div className="row mb-2">
+          <label className={TableListStyle.labelStyles}>Item(s) Summary</label>
         </div>
-        <div className="col-md-4 col-sm-6 col-12">
-          <label className={TableListStyle.labelStyles}>Selected Items Categories:</label>
+        <div className="row">
+          <div className="col-md-4 col-sm-6 col-12 mb-1">
+            <label className={TableListStyle.labelStyles}>
+              Total Item(s) Selected:
+              <span className={TableListStyle.spanStyle}>{selectedItems.length}</span>
+            </label>
+          </div>
+          <div className="col-md-4 col-sm-6 col-12">
+            <label className={TableListStyle.labelStyles}>
+              Selected Items Categories:
+            </label>
+          </div>
         </div>
-      </div>
-      <div className="row">
-        <label className={TableListStyle.labelStyles}>Total Stated Value:</label>
+        <div className="row">
+          <label className={TableListStyle.labelStylesStated}>Total Stated Value:</label>
+        </div>
       </div>
     </>
   );
@@ -171,7 +250,9 @@ const mapStateToProps = (state: RootState) => ({
   selectedRows: state.addItemsTable.selectedRows,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  setSelectedItems,
+};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

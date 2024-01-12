@@ -43,7 +43,8 @@
 //   }
 
 .selectContainer {
-  width: fit-content;
+  // width: auto;
+  z-index: 2;
 }
 
 .addItemsContainer {
@@ -58,12 +59,13 @@
     height: inherit;
     display: flex;
     margin-left: 5px;
+    align-items: center;
   }
 }
 .selectItemsStyle {
   margin-left: auto;
   // min-height: 10px;
-  width: auto;
+  // width: auto;
 }
 
 .searchItemsStyle {
