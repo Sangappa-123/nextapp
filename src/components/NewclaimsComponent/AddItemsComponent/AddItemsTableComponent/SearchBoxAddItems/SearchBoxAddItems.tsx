@@ -16,14 +16,8 @@ const SearchBoxAddItems: React.FC<SearchBoxAddItemsProps & connectorType> = ({
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
+    setSearchKeyword(searchValue);
   };
-
-  const searchKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      setSearchKeyword(searchValue);
-    }
-  };
-
   return (
     <div className={SearchAddStyle.searchBox}>
       <RiSearch2Line className={SearchAddStyle.searchIcon} />
@@ -32,7 +26,6 @@ const SearchBoxAddItems: React.FC<SearchBoxAddItemsProps & connectorType> = ({
         placeholder="Search..."
         value={searchValue}
         onChange={handleSearch}
-        onKeyDown={searchKey}
       />
     </div>
   );

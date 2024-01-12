@@ -70,8 +70,11 @@ enum apiEndPoints {
   mapperClaimedItems = "web/claim/line/items",
   updateCliamCategory = "web/bulk/update/item/category",
   updateCliamStatus = "web/bulk/update/item/status",
+  updatePaidStatus = "web/claim/items/paid",
+  updateUnderReview = "web/review/claim/supervisor",
   taskListApiUrl = "web/claim/tasklist/home",
   createTaskApiUrl = "web/claim/create/task",
+  assignVendorGet = "web/registered/vendors",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
 }
 
