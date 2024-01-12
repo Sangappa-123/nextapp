@@ -20,6 +20,8 @@ import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { ConnectedProps, connect } from "react-redux";
+import useTranslation from "@/hooks/useTranslation";
+import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
 import { Suspense } from "react";
 import {
   selectActiveSection,
@@ -34,13 +36,10 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
-  // const router = useRouter();
   const activeSection = useAppSelector(selectActiveSection);
   const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
 
-  console.log("insurancecompany", insuranceCompany);
   const schema = object({
-    // policy schema
     firstname: string("firstname", [
       minLength(1, "First name can contain only alphabets."),
     ]),
@@ -89,21 +88,16 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     getValues,
   } = useCustomForm(schema);
   const { errors } = formState;
-  console.log("logss", errors);
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
-  // const [claimNumberr, setClaimNumber] = useState<string | null>(null);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
-    console.log("updateHomeOwnerType", data);
-    console.log("homeOwnerType", homeOwnerType);
   };
 
   const formSubmit = async (data: any) => {
     try {
-      console.log("data", data);
       let PolicyInitials = "";
       let InsuranceCompanyIntials = "";
       let PolicyNumber = " ";
@@ -113,13 +107,11 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         PolicyInitials = data.firstname.charAt(0) + "" + data.lastname.charAt(0);
       }
       const abc = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
-      console.log("abc", abc);
 
       if (insuranceCompany !== null) {
         if (abc == -1) {
           InsuranceCompanyIntials =
             insuranceCompany.charAt(0) + "" + insuranceCompany.charAt();
-          console.log("InsuranceCompanyIntials", InsuranceCompanyIntials);
 
           if (PolicyInitials.length > 0 && InsuranceCompanyIntials.length > 0) {
             PolicyNumber =
@@ -141,8 +133,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           }
         }
       }
-      console.log("namesss", PolicyNumber);
-      console.log("CustAccNumber", CustAccNumber);
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -175,7 +165,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         totalSpecialLimit: 0,
         policyLimits: data.contentLimits,
       };
-      console.log("payload", payload);
       const payload1 = {
         filesDetails: null,
         file: null,
@@ -226,7 +215,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         },
       };
       const formData = new FormData();
-      console.log(formData);
       formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
       const postlCaimRes = await postClaim(payload);
       if (postlCaimRes?.status === 200) {
@@ -238,7 +226,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           })
         );
         const creatClaimRes = await creatClaim(formData);
-        console.log("ccccccccc", creatClaimRes);
         if (creatClaimRes?.status === 200) {
           sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
           sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
@@ -304,6 +291,15 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     reset();
     handleClose();
   };
+  const {
+    translate,
+    loading,
+  }: { translate: newClaimTransalateType | undefined; loading: boolean } =
+    useTranslation("newClaimTransalate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
   return (
     <div>
       <div className="mb-3">
@@ -318,7 +314,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             <div className={NewClaimsStyle.informationTab}>
               <p className={NewClaimsStyle.claimText}>
                 {" "}
-                1) Claim and Policy Information{" "}
+                {translate?.claimPOlicyHeading ?? ""}
               </p>
             </div>
             <div
