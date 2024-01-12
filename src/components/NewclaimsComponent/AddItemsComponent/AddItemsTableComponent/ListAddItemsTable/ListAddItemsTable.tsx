@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -8,6 +8,8 @@ import {
 import CustomReactTable from "@/components/common/CustomReactTable";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import TableLisStyle from "./listAddItems.module.scss";
+import { fetchItemDetails } from "@/services/AddItemContentService";
+// import { fetchClaimContentActionnn } from "@/services/ClaimService";
 import { ConnectedProps, connect } from "react-redux";
 import {
   setAddItemsTableData,
@@ -15,11 +17,13 @@ import {
   setSelectedCategory,
   setCategories,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
+  setPreviousSelectedItems,
+  // setEditItemDetail,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
-import { deleteClaimItem } from "@/services/ClaimContentListService";
+import { deleteCategoryItem } from "@/services/ClaimService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 interface ListAddItemsTableProps {
@@ -27,6 +31,11 @@ interface ListAddItemsTableProps {
   onCheckboxChange: (item: any) => void;
   selectedCategory: any;
   searchKeyword: string;
+  setEditItem: (rowData: any) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
+  setTableLoader: React.Dispatch<React.SetStateAction<boolean>>;
+  tableLoader: any;
+  selectedItems: any[];
 }
 
 const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
@@ -34,9 +43,26 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   onCheckboxChange,
   selectedCategory,
   searchKeyword,
+  setEditItem,
+  setIsModalOpen,
+  tableLoader,
+  setTableLoader,
+  selectedItems,
+  previousSelectedItems,
 }) => {
   const dispatch = useDispatch();
   const [deletePayload, setDelete] = React.useState<React.SetStateAction<any>>(null);
+  const [checkedItems, setCheckedItems] = useState<any[]>(selectedItems);
+
+  const editAction = async (rowData: any) => {
+    const payload = {
+      forEdit: true,
+      itemId: rowData.id,
+    };
+    await fetchItemDetails(payload);
+    setEditItem(rowData);
+    setIsModalOpen(true);
+  };
 
   const deleteAction = (rowData: any) => {
     const payload = {
@@ -54,36 +80,108 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
   const handleDelete = async () => {
     const id = deletePayload?.id;
     console.log("Deleting Item with ID", id);
-    const res = await deleteClaimItem(deletePayload);
-    console.log("Delete Response", res);
-    setDelete(null);
 
-    if (res) {
+    try {
+      setTableLoader(true);
+
+      const res = await deleteCategoryItem(deletePayload);
+      console.log("Delete Response", res);
+
+      if (res) {
+        dispatch(
+          addNotification({
+            message: res ?? "Successfully deleted item.",
+            id,
+            status: "success",
+          })
+        );
+
+        setTimeout(() => {
+          setTableLoader(false);
+        }, 6000);
+        dispatch(deleteCategoryListItem({ id }));
+      } else {
+        dispatch(
+          addNotification({
+            message: "Something went wrong.",
+            id,
+            status: "error",
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error while deleting item", error);
       dispatch(
         addNotification({
-          message: res ?? "Successfully deleted item.",
-          id,
-          status: "success",
-        })
-      );
-      dispatch(deleteClaimContentListItem({ id }));
-    } else {
-      dispatch(
-        addNotification({
-          message: "Something went wrong.",
+          message: "An error occurred while deleting the item.",
           id,
           status: "error",
         })
       );
+    } finally {
+      setDelete(null);
     }
   };
+
+  // const handleCheckboxChange = (item: any) => {
+  //   console.log("Selected Item", item);
+  //   onCheckboxChange(item);
+  // };
+
+  // const handleCheckboxChange = (item: any) => {
+  //   const updatedCheckedItems = [...checkedItems];
+  //   if (updatedCheckedItems.includes(item)) {
+  //     updatedCheckedItems.splice(updatedCheckedItems.indexOf(item), 1);
+  //   } else {
+  //     updatedCheckedItems.push(item);
+  //   }
+
+  //   setCheckedItems(updatedCheckedItems);
+  //   onCheckboxChange(item);
+  // };
+
+  // const handleCheckboxChange = (item: any) => {
+  //   const updatedCheckedItems = [...checkedItems];
+  //   const isChecked = selectedItems.some((selectedItem) => selectedItem.id === item.id);
+  //   if (isChecked) {
+  //     if (!updatedCheckedItems.includes(item)) {
+  //       updatedCheckedItems.push(item);
+  //     }
+  //   } else {
+  //     if (updatedCheckedItems.includes(item)) {
+  //       updatedCheckedItems.splice(updatedCheckedItems.indexOf(item), 1);
+  //     } else {
+  //       updatedCheckedItems.push(item);
+  //     }
+  //   }
+
+  //   setCheckedItems(updatedCheckedItems);
+  //   onCheckboxChange(item);
+  // };
+  // useEffect(() => {
+  //   setCheckedItems(previousSelectedItems);
+  // }, [previousSelectedItems]);
+
   const handleCheckboxChange = (item: any) => {
-    console.log("Selected Item", item);
-    onCheckboxChange(item);
+    const updatedCheckedItems = [...checkedItems];
+    const isChecked = checkedItems.some((checkedItem) => checkedItem.id === item.id);
+
+    if (isChecked) {
+      return;
+    }
+    updatedCheckedItems.push(item);
+    setCheckedItems(updatedCheckedItems);
+
+    onCheckboxChange(updatedCheckedItems);
   };
+
+  useEffect(() => {
+    setCheckedItems(previousSelectedItems);
+  }, [previousSelectedItems]);
 
   const pageLimit = 100;
   type AddItemsData = {
+    id: any;
     itemNumber: number;
     description: string;
     status: { status: string };
@@ -109,9 +207,11 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
           <input
             type="checkbox"
             className={TableLisStyle.checkbox}
-            onChange={(e) => {
-              e.stopPropagation();
-            }}
+            // onChange={(e) => {
+            //   e.stopPropagation();
+            //   handleCheckboxChange(row.original);
+            // }}
+            // checked={checkedItems.some((item) => item.id === row.original)}
           />
         </div>
       ),
@@ -130,9 +230,10 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
           <input
             type="checkbox"
             className={TableLisStyle.checkbox}
-            onChange={() => {
-              handleCheckboxChange(row.original);
-            }}
+            checked={checkedItems.some(
+              (checkedItem) => checkedItem.id === row.original.id
+            )}
+            onChange={() => handleCheckboxChange(row.original)}
           />
         </div>
       ),
@@ -173,7 +274,15 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       header: () => `Action`,
       cell: ({ row }) => (
         <div className={TableLisStyle.actionButtons}>
-          <button className={TableLisStyle.editButton}>Edit</button>
+          <button
+            className={TableLisStyle.editButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              editAction(row.original);
+            }}
+          >
+            Edit
+          </button>
           <button
             className={TableLisStyle.deleteButton}
             onClick={(e) => {
@@ -240,7 +349,12 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       )}
       <div className={TableLisStyle.addListTableContainer}>
         {filteredData.length > 0 ? (
-          <CustomReactTable table={table} filteredData={filteredData} />
+          <CustomReactTable
+            table={table}
+            filteredData={filteredData}
+            // loader={setTableLoader}
+            loader={tableLoader}
+          />
         ) : (
           <div className={TableLisStyle.noItemsStyle}>No items available</div>
         )}
@@ -256,6 +370,8 @@ const mapStateToProps = (state: RootState) => ({
   selectedCategory: state.addItemsTable.selectedCategory,
   categories: state.addItemsTable.categories,
   searchKeyword: state.addItemsTable.searchKeyword,
+  previousSelectedItems: state.addItemsTable.previousSelectedItems,
+  // editItemDetail: state.claimContentdata.editItemDetail,
 });
 
 const mapDispatchToProps = {
@@ -264,7 +380,10 @@ const mapDispatchToProps = {
   setSelectedCategory,
   setCategories,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
+  setPreviousSelectedItems,
+  // setEditItemDetail,
+  // fetchAddItemsTableCSVData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
