@@ -26,7 +26,7 @@ export default function Documents() {
     <div className={document.mainDiv}>
       <div>
         <div className={document.search}>
-          <OpenClaimsSearchBox />
+          <OpenClaimsSearchBox setTableLoader={() => {}} />
         </div>
         <GenericComponentHeading
           title={translate?.claimHeading ?? ""}

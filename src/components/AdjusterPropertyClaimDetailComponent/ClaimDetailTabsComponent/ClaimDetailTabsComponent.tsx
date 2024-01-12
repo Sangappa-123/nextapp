@@ -1,10 +1,11 @@
 import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants";
 import ActivityLog from "@/components/ActivityLog/ActivityLog";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
-import PoicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PoicyAndCoverageDetails";
+import PolicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PolicyAndCoverageDetails";
 // import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
+import VendorAssignments from "@/components/VendorAssignments/index";
 import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
 
@@ -37,7 +38,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: translate?.tabsComponent?.vendorAssignments,
-      content: "",
+      content: <VendorAssignments />,
     },
     {
       name: translate?.tabsComponent?.documents,
@@ -53,7 +54,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: translate?.tabsComponent?.policyCoverageDetails,
-      content: <PoicyAndCoverageDetails />,
+      content: <PolicyAndCoverageDetails />,
     },
   ];
 

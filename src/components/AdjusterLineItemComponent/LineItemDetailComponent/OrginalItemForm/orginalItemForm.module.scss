@@ -161,3 +161,13 @@
     }
   }
 }
+
+.formFieldTooltip {
+  display: flex;
+  column-gap: 8px;
+  .infoIconContainer {
+    width: 18px;
+    height: 18px;
+    margin: auto;
+  }
+}
