@@ -27,6 +27,7 @@ import {
 interface AddItemsComponentProps {
   onAssignItemsClick: () => void;
   onNewClaimsClick: () => void;
+  isAnyItemSelected: boolean;
 }
 
 const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
@@ -38,6 +39,7 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
   addRetailer,
   addRoom,
   addRoomType,
+  isAnyItemSelected,
 }) => {
   const router = useRouter();
 
@@ -103,6 +105,9 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
               size="small"
               type="submit"
               btnClassname={AddStyle.newClaimBtn}
+              isAnyItemSelected={isAnyItemSelected}
+              onClick={onAssignItemsClick}
+              disabled={isAnyItemSelected === undefined || !isAnyItemSelected}
             />
           </div>
         </div>
@@ -142,6 +147,9 @@ const AddItemsComponent: React.FC<AddItemsComponentProps & connectorType> = ({
             size="small"
             type="submit"
             btnClassname={AddStyle.newClaimBtn}
+            isAnyItemSelected={isAnyItemSelected}
+            onClick={onAssignItemsClick}
+            disabled={isAnyItemSelected === undefined || !isAnyItemSelected}
           />
         </div>
       </div>
@@ -153,6 +161,7 @@ const mapStateToProps = (state: RootState) => ({
   addItemsTableData: state.addItemsTable.addItemsTableData,
   selectedItems: state.addItemsTable.selectedItems,
   selectedCategory: state.addItemsTable.selectedCategory,
+  isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
 });
 
 const mapDispatchToProps = {

@@ -53,6 +53,13 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
 
   const columns = [
     columnHelper.accessor(checkboxAccessor, {
+      header: () => (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        ></div>
+      ),
       meta: {
         headerClass: VendorListStyle.checkHeader,
       },

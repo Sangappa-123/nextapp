@@ -15,6 +15,9 @@ import {
 } from "@/services/ClaimService";
 import { IoClose } from "react-icons/io5";
 import CategoryCoverage from "./CategoryCoverage";
+import useTranslation from "@/hooks/useTranslation";
+import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
+
 import ImagePreviewModal from "../AddItemModal/ImagePreviewModal/index";
 import AttachementPreview from "../AddItemModal/AttachementPreview/index";
 
@@ -48,27 +51,21 @@ function ClaimInformation({
     null
   );
 
-  console.log("homeOwnerTypeOptions", homeOwnerTypeOptions);
   const handleDateChange = (date: React.SetStateAction<null> | Date) => {
     setSelectedDate(date);
   };
 
   const onOptionChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setTopping(e.target.value);
-    console.log("topping", e.target.value);
   };
 
   const claimHandler = (claim: any) => {
-    console.log("claim", claim);
     if (!claim) return;
     validateClaim({
       claimNumber: claim,
     })
       .then((res) => {
         const isValidInput: RegExp = /^[a-zA-Z0-9/-]+$/;
-
-        console.log("isValidInput", claim.match(isValidInput) === null);
-        console.log("claim res", res, res.data);
         if (res.data)
           setError("claim", {
             type: "manual",
@@ -84,27 +81,21 @@ function ClaimInformation({
         }
       })
       .catch((error: any) => console.log("claim error", error));
-
-    // console.log("e", e.target.value);
   };
 
   const handleDelete = (categoryId: any) => {
-    console.log("categoty.id", categoryId);
     const newList = Data.filter(
       (li: { categoryId: any }) => li.categoryId !== categoryId
     );
-    console.log("newList", newList);
 
     setData(newList);
   };
   useEffect(() => {
     fetchLossType().then((res) => {
-      console.log("loss", res);
       setLossType(res.data);
     });
     getCategories()
       .then((res: any) => {
-        console.log("categoriesapi", res);
         setCategoriesData(res.data);
       })
       .catch((error) => console.log(" Losserrr", error));
@@ -112,40 +103,19 @@ function ClaimInformation({
 
   const handleInputChange = (e: any) => {
     setData((prev): any => {
-      console.log("prev", prev);
       return [...prev, e];
     });
-    console.log("ee", e);
   };
 
   const { onBlur: blurHandler, onChange: claimChange, ...rest } = register("claim");
-  console.log("rest", { ...rest });
-
-  // const fileOpen = (e: any) => {
-  //   console.log("file", e.target.files);
-  //   // var files = e.target.files;
-  //   // for (var i = 0; i < files.length; i++) {
-  //   //   var file = files[i];
-  //   //   var reader = new FileReader();
-  //   //   reader.file = file;
-  //   //   reader.fileName = files[i].name;
-  //   //   reader.fileType = files[i].type;
-  //   //   reader.fileExtension = files[i].name.substr(files[i].name.lastIndexOf("."));
-  //   //   reader.onload = scope.ItemContentsImageLoaded;
-  //   //   reader.readAsDataURL(file);
-  //   // }
-  // };
 
   const coverageApiCall = (stateId: number, policyTypeId: number) => {
     const [state, homeOwnerPlocyType] = getValues(["state", "homeOwnersPolicyType"]);
-    console.log("getValues", state?.id, homeOwnerPlocyType?.id);
     stateId = state?.id;
     policyTypeId = homeOwnerPlocyType?.id;
     fetchHomeOwnersType(stateId, policyTypeId)
       .then((res) => {
-        console.log("coverage", res);
         setData(res.data);
-        console.log("namme", Data);
       })
       .catch((error) => console.log(" Losserrr", error));
     setHide(true);
@@ -209,6 +179,14 @@ function ClaimInformation({
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const {
+    translate,
+    loading,
+  }: { translate: newClaimTransalateType | undefined; loading: boolean } =
+    useTranslation("newClaimTransalate");
+  if (loading) {
+    return null;
+  }
   return (
     <div>
       {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
@@ -216,7 +194,7 @@ function ClaimInformation({
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
             {" "}
-            <span style={{ color: "red" }}>*</span>Claim#
+            <span style={{ color: "red" }}>*</span> {translate?.claim ?? ""}
           </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
@@ -227,25 +205,21 @@ function ClaimInformation({
             {...rest}
             onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
               blurHandler(e);
-              // console.log("e", e.target.value);
               const claimValue = e.target.value;
 
               claimHandler(claimValue);
             }}
             onChange={(e: any) => {
               claimChange(e);
-              // if (emailValue.match(regex) != null) {
-              //   console.log(emailValue);
-              // verifyClaim(claimValue);
-              // }
-              // /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             }}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimInformationStyle.label}>Claim Date</label>
+          <label className={ClaimInformationStyle.label}>
+            {translate?.claimDate ?? ""}
+          </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           {/* <GenericInput
@@ -260,12 +234,9 @@ function ClaimInformation({
             rules={{ required: true }}
             defaultValue={new Date()}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
-              // console.log("console", { ...rest });
               return (
                 <DateTimePicker
                   name="claimDate"
-                  // labelText="Select"
-                  // isRequired={true}
                   placeholderText="12/06/2023"
                   showError={true}
                   errorMsg="kkkk"
@@ -273,17 +244,14 @@ function ClaimInformation({
                   labelClassname="labeext"
                   formControlClassname="forontrol"
                   value={selectedDate}
-                  // {...register("claimDate")}
                   onChange={(e) => {
                     fieldOnChange(e);
                     console.log("date", e?.toDateString());
                     handleDateChange(e);
                   }}
                   dateFormat="MM/dd/yyyy"
-                  // showTimeSelect={true}
                   enableTime={true}
                   time_24hr={true}
-                  // minDate={new Date()}
                   minDate={null}
                   maxDate={null}
                   {...rest}
@@ -296,7 +264,7 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span> Insurance Company
+            <span style={{ color: "red" }}>*</span> {translate?.InsuranceCompany ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -310,7 +278,8 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Adjusters Name
+            <span style={{ color: "red" }}>*</span>
+            {translate?.adjusterName ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -323,7 +292,10 @@ function ClaimInformation({
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimInformationStyle.label}>Loss/Damage Type </label>
+          <label className={ClaimInformationStyle.label}>
+            {" "}
+            {translate?.lossDamageType ?? ""}
+          </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           {" "}
@@ -332,14 +304,12 @@ function ClaimInformation({
             name="lossType"
             rules={{ required: false }}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => {
-              // console.log("console", { ...rest });
               return (
                 <GenericSelect
                   options={lossType}
                   {...rest}
                   onChange={(e: any) => {
                     fieldOnChange(e);
-                    console.log("onselect", e?.name);
                   }}
                   getOptionLabel={(option: { name: any }) => option.name}
                   getOptionValue={(option: { id: any }) => option.id}
@@ -368,7 +338,10 @@ function ClaimInformation({
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimInformationStyle.label}>Claim Description</label>
+          <label className={ClaimInformationStyle.label}>
+            {" "}
+            {translate?.claimDescription ?? ""}
+          </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <textarea
@@ -380,7 +353,7 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Claim Deductible
+            <span style={{ color: "red" }}>*</span> {translate?.claimDeductable ?? ""}
           </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
@@ -399,15 +372,16 @@ function ClaimInformation({
           <div className="d-flex">
             <div className={clsx("col-lg-10 mt-1", ClaimInformationStyle.labelContent)}>
               <label className={clsx(ClaimInformationStyle.labelContainer)}>
-                <span style={{ color: "red" }}>*</span>Min. $ Item to Price
+                <span style={{ color: "red" }}>*</span>
+                {translate?.minItemProduct ?? ""}
                 <span>
                   <Tooltip
                     text={
                       <span>
-                        The minimum dollar value of the item <br /> needs to be priced by
-                        the carrier.Anything
-                        <br /> less than this can be accepted at the <br /> items face
-                        value
+                        {translate?.minimumDollar ?? ""}
+                        <br /> {translate?.needsPricedByCarrier ?? ""}
+                        <br /> {translate?.LessThanAccepted ?? ""}
+                        <br /> {translate?.itemFaceValue ?? ""}
                       </span>
                     }
                   />
@@ -433,7 +407,8 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Tax Rate %
+            <span style={{ color: "red" }}>*</span>
+            {translate?.taxRate ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -452,7 +427,8 @@ function ClaimInformation({
           className={clsx("col-lg-4 col-md-2 col-sm-12 mt-2 d-flex align-items-center")}
         >
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Apply Taxes
+            <span style={{ color: "red" }}>*</span>
+            {translate?.applyTaxes ?? ""}
           </label>
           <GenericInput
             type="radio"
@@ -486,7 +462,7 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Content Limits
+            <span style={{ color: "red" }}>*</span> {translate?.contentLimits ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -506,7 +482,8 @@ function ClaimInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2  text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Home Owners Policy Type
+            <span style={{ color: "red" }}>*</span>
+            {translate?.homeOwnersPolicyType ?? ""}
           </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
@@ -515,11 +492,9 @@ function ClaimInformation({
             name="homeOwnersPolicyType"
             // rules={{ required: true }}
             render={({ field: { onChange: onSelect, ...rest } }: any) => {
-              console.log("console", { ...rest });
               return (
                 <GenericSelect
                   options={homeOwnerTypeOptions}
-                  // {...register("homeOwnersPolicyType")}
                   {...rest}
                   disabled={!homeOwnerTypeOptions.length}
                   getOptionLabel={(option: { typeName: any }) => option.typeName}
@@ -528,10 +503,6 @@ function ClaimInformation({
                     onSelect(e);
                     coverageApiCall(e?.stateId, e?.policyTypeId);
                   }}
-                  // inputFieldClassname="hideInputArrow"
-                  // classNames={{
-                  //   control: () => ClaimInformationStyle.disabledSelect,
-                  // }}
                 />
               );
             }}
@@ -543,7 +514,7 @@ function ClaimInformation({
           <>
             <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-1 text-right")}>
               <label className={ClaimInformationStyle.label}>
-                <span style={{ color: "red" }}>*</span>Special Limit
+                <span style={{ color: "red" }}>*</span> {translate?.specialLimit ?? ""}
               </label>
             </div>
             <div className={clsx("col-2 mt-2", ClaimInformationStyle.specialLimit)}>
@@ -557,18 +528,18 @@ function ClaimInformation({
               <Cards className={clsx("mt-3", ClaimInformationStyle.cards)}>
                 <div className="row mb-2">
                   <div className={clsx("col-lg-4", ClaimInformationStyle.coverages)}>
-                    Category Coverages
+                    {translate?.categoryCoverage ?? ""}
                   </div>
                   <div className={clsx(" col-lg-2 pl-4", ClaimInformationStyle.category)}>
-                    Category
+                    {translate?.category ?? ""}
                   </div>
                   <div
                     className={clsx("col-lg-3", ClaimInformationStyle.aggregateCoverage)}
                   >
-                    Aggregate Coverage
+                    {translate?.aggregateCoverage ?? ""}
                   </div>
                   <div className={clsx("col-lg-3 pl-4", ClaimInformationStyle.itemLimit)}>
-                    Individual Item Limit
+                    {translate?.individualItemLimit ?? ""}
                   </div>
                 </div>
                 <div className="row">
@@ -650,7 +621,7 @@ function ClaimInformation({
                   className={clsx("col-lg-12", ClaimInformationStyle.specialCategory)}
                   onClick={() => handleShow()}
                 >
-                  Add another special category
+                  {translate?.addAnotherSpecialCategory ?? ""}
                 </button>
               </Cards>
             </div>
@@ -662,7 +633,7 @@ function ClaimInformation({
       <div className="row align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
-            <span style={{ color: "red" }}>*</span>Attachments
+            <span style={{ color: "red" }}>*</span> {translate?.attachements ?? ""}
           </label>
         </div>
         <div className={clsx("col-lg-2 mt-2")}>
@@ -672,7 +643,7 @@ function ClaimInformation({
             role="button"
             className={ClaimInformationStyle.fileType}
           >
-            Click to add attachments
+            {translate?.clickAddAttachment ?? ""}
           </label>
           {/* <input type="file" />  */}
           <input

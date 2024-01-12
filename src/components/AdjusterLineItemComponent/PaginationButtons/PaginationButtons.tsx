@@ -3,15 +3,18 @@ import { FaEllipsisH } from "react-icons/fa";
 import lineItemPaginationStyle from "./lineItemPagination.module.scss";
 import clsx from "clsx";
 import { usePagination, DOTS } from "@/hooks/usePagination";
+import ArrowPageBtn from "./ArrowPageBtn";
 
 function PaginationButtons({
   pageId,
   totalPage,
   handlePageChange,
+  showArrowBtn,
 }: {
   pageId: number;
   totalPage: any[];
   handlePageChange: (itemId: number) => void;
+  showArrowBtn: boolean;
 }) {
   const currentPage = useMemo(() => {
     const pageNumber = totalPage?.findIndex((item) => {
@@ -29,14 +32,32 @@ function PaginationButtons({
     pageSize: 1,
   });
 
-  const PageButton = ({ children, key }: { children: React.ReactNode; key?: string }) => (
-    <li className={lineItemPaginationStyle.listItem} key={key}>
+  const PageButton = ({
+    children,
+    key,
+    className,
+  }: {
+    children: React.ReactNode;
+    key?: string;
+    className?: string;
+  }) => (
+    <li className={clsx(lineItemPaginationStyle.listItem, className)} key={key}>
       {children}
     </li>
   );
 
+  const handlePrevious = () =>
+    currentPage != 1 && handlePageChange(totalPage[currentPage - 1 - 1]);
+  const handleNext = () =>
+    currentPage != totalCount && handlePageChange(totalPage[currentPage - 1 + 1]);
   return (
     <div className={lineItemPaginationStyle.root}>
+      {showArrowBtn && (
+        <>
+          <ArrowPageBtn clickHandler={handlePrevious} />
+          <ArrowPageBtn align="right" clickHandler={handleNext} />
+        </>
+      )}
       <ul className={lineItemPaginationStyle.btnList}>
         <PageButton>
           <button
@@ -45,12 +66,11 @@ function PaginationButtons({
               lineItemPaginationStyle.btn,
               lineItemPaginationStyle.prevNextBtn
             )}
-            onClick={() => handlePageChange(totalPage[currentPage - 1 - 1])}
+            onClick={handlePrevious}
           >
             Previous
           </button>
         </PageButton>
-
         {paginationRange?.map((pageNo: number | string) => {
           if (pageNo === DOTS) {
             return (
@@ -80,7 +100,7 @@ function PaginationButtons({
               lineItemPaginationStyle.btn,
               lineItemPaginationStyle.prevNextBtn
             )}
-            onClick={() => handlePageChange(totalPage[currentPage - 1 + 1])}
+            onClick={handleNext}
           >
             Next
           </button>
