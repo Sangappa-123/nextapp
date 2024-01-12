@@ -4,28 +4,25 @@ import GenericButton from "@/components/common/GenericButton";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import AssignItemsTableComponent from "./AssignItemsTableComponent/AssignItemsTableComponent";
 import AssignItemsStyle from "./assignItemsComponent.module.scss";
-import { setPreviousSelectedItems } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { useRouter } from "next/navigation";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
   checkedItems?: any;
+  selectedItems?: any;
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> = ({
   onNewClaimsClick,
-  checkedItems,
-  // selectedItems,
 }) => {
   const [isSbmitItemsDisabled, setSubmitItemsDisabled] = useState(true);
-  // const [selectedItems, setSelectedItems] = useState<any[]>([]);
 
-  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const handlePreviousClick = () => {
     onNewClaimsClick();
-    dispatch(setPreviousSelectedItems(checkedItems));
   };
   return (
     <div>
@@ -40,6 +37,7 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
               size="small"
               type="submit"
               btnClassname={AssignItemsStyle.newClaimBtn}
+              onClick={() => router.push("/adjuster-dashboard")}
             />
           </div>
           <div className="col-auto">
@@ -73,10 +71,7 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
         />
       </div>
       <div>
-        <AssignItemsTableComponent
-          // selectedRowsData={selectedRowsData}
-          onNewClaimsClick={handlePreviousClick}
-        />
+        <AssignItemsTableComponent onNewClaimsClick={handlePreviousClick} />
       </div>
       <div className="row mt-3 justify-content-end">
         <div className="col-auto">
@@ -85,6 +80,7 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
             size="small"
             type="submit"
             btnClassname={AssignItemsStyle.newClaimBtn}
+            onClick={() => router.push("/adjuster-dashboard")}
           />
         </div>
         <div className="col-auto">
@@ -117,11 +113,7 @@ const mapStateToProps = (state: RootState) => ({
   previousSelectedItems: state.addItemsTable.previousSelectedItems,
 });
 
-const mapDispatchToProps = {
-  setPreviousSelectedItems,
-  // setEditItemDetail,
-  // fetchAddItemsTableCSVData,
-};
+const mapDispatchToProps = {};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

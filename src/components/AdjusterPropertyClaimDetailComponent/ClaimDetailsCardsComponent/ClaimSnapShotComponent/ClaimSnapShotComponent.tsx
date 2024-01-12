@@ -8,52 +8,15 @@ import ClaimInfoComponent from "./ClaimInfoComponent";
 import UpdateClaimInfoForm from "./UpdateClaimInfoForm";
 import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
+import { RootState } from "@/store/store";
+import { ConnectedProps, connect } from "react-redux";
 
-// type actionsType = {
-//   showFormHandler: any;
-// };
-
-const ClaimSnapShotComponent: React.FC = () => {
+const ClaimSnapShotComponent: React.FC<connectorType> = (props) => {
+  const { claimSnapShotData } = props;
+  // console.log("props", claimSnapShotData);
   const [showForm, setShowForm] = useState(false);
   const { translate }: { translate: claimDetailsTranslateType | undefined } =
     useTranslation("claimDetailsTranslate");
-
-  // const RightActionsComponent: React.FC<actionsType> = (props: any) => {
-  //   const [showActionBtn, setShowActionBtn] = useState(false);
-  //   return (
-  //     <div className={claimSnapShotStyle.actionBtnContainer}>
-  //       {!showActionBtn && (
-  //         <div
-  //           className={claimSnapShotStyle.editActionBtn}
-  //           onClick={() => {
-  //             props.setShowForm(true);
-  //             setShowActionBtn(true);
-  //           }}
-  //         >
-  //           Edit
-  //         </div>
-  //       )}
-  //       {showActionBtn && (
-  //         <div className={claimSnapShotStyle.actionBtns}>
-  //           <span className={claimSnapShotStyle.updateActionBtn}>Update</span>
-  //           <span
-  //             className={claimSnapShotStyle.cancelActionBtn}
-  //             onClick={() => {
-  //               props.setShowForm(false);
-  //               setShowActionBtn(false);
-  //             }}
-  //           >
-  //             Cancel
-  //           </span>
-  //         </div>
-  //       )}
-  //     </div>
-  //   );
-  // };
-
-  // const showFormHandler = (flag: boolean) => {
-  //   setShowForm(flag);
-  // };
 
   return (
     <>
@@ -64,86 +27,14 @@ const ClaimSnapShotComponent: React.FC = () => {
         <div className={claimSnapShotStyle.contentContainer}>
           {!showForm && (
             <>
-              <ClaimInfoComponent />
-              {/* <div
-                className={`col-md-12 col-sm-12 col-12 ${claimSnapShotStyle.fieldRowContainer}`}
-              >
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Claim #
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">adjustereStatusWork</div>
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Status
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">Work In Progress</div>
-              </div>
-              <div
-                className={`col-md-12 col-sm-12 col-12 ${claimSnapShotStyle.fieldRowContainer}`}
-              >
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Created Date
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">Dec 8, 2023 7:53 PM</div>
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Elapsed Time
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">2 d 19 h 9 m</div>
-              </div>
-              <div
-                className={`col-md-12 col-sm-12 col-12 ${claimSnapShotStyle.fieldRowContainer}`}
-              >
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Loss Type
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">Not Specified</div>
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ps-1 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Claim Deductible
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">$11.00</div>
-              </div>
-              <div
-                className={`col-md-12 col-sm-12 col-12 ${claimSnapShotStyle.fieldRowContainer}`}
-              >
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Tax %
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">11</div>
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Content Limits
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">$11.00</div>
-              </div>
-              <div
-                className={`col-md-12 col-sm-12 col-12 ${claimSnapShotStyle.fieldRowContainer}`}
-              >
-                <label
-                  className={`col-md-3 col-sm-3 col-6 ${claimSnapShotStyle.fieldLabel}`}
-                >
-                  Min. $ Item to Price
-                </label>
-                <div className="col-md-3 col-sm-3 col-6">$1.00</div>
-              </div> */}
+              <ClaimInfoComponent claimSnapShotData={claimSnapShotData} />
             </>
           )}
           {showForm && (
-            // <div>cksnckdnk</div>
-            <UpdateClaimInfoForm />
+            <UpdateClaimInfoForm
+              claimSnapShotData={claimSnapShotData}
+              translate={translate}
+            />
           )}
           <div className={claimSnapShotStyle.contentCardsContainer}>
             <div className="mt-2">
@@ -153,13 +44,17 @@ const ClaimSnapShotComponent: React.FC = () => {
                     {translate?.claimSnapshot?.items}
                   </div>
                   <div>
-                    <span className={claimSnapShotStyle.numericContent}>100</span>
+                    <span className={claimSnapShotStyle.numericContent}>
+                      {claimSnapShotData?.itemsClaimed}
+                    </span>
                     <span className={claimSnapShotStyle.textContent}>
                       {translate?.claimSnapshot?.claimed}
                     </span>
                   </div>
                   <div>
-                    <span className={claimSnapShotStyle.numericContent}>0</span>
+                    <span className={claimSnapShotStyle.numericContent}>
+                      {claimSnapShotData?.itemsProcessed}
+                    </span>
                     <span className={claimSnapShotStyle.textContent}>
                       {translate?.claimSnapshot?.processed}
                     </span>
@@ -215,4 +110,11 @@ const ClaimSnapShotComponent: React.FC = () => {
     </>
   );
 };
-export default ClaimSnapShotComponent;
+
+const mapStateToProps = (state: RootState) => ({
+  claimSnapShotData: state?.claimDetail?.contents,
+});
+
+const connector = connect(mapStateToProps, null);
+type connectorType = ConnectedProps<typeof connector>;
+export default connector(ClaimSnapShotComponent);
