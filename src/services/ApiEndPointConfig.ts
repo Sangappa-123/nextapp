@@ -72,6 +72,7 @@ enum apiEndPoints {
   updateCliamStatus = "web/bulk/update/item/status",
   taskListApiUrl = "web/claim/tasklist/home",
   createTaskApiUrl = "web/claim/create/task",
+  vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {
