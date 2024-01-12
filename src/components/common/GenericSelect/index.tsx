@@ -46,17 +46,17 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
   } = props;
 
   const customDefaultStyles: StylesConfig = {
-    menu: (styles) => ({
+    menu: (styles: any) => ({
       ...styles,
       zIndex: 2,
       top: "auto",
       bottom: "100%",
     }),
-    menuPortal: (styles) => ({
+    menuPortal: (styles: any) => ({
       ...styles,
       zIndex: 3,
     }),
-    control: (styles) => ({
+    control: (styles: any) => ({
       ...styles,
       backgroundColor: "white",
       border: "1px solid #c2cad8",
@@ -68,7 +68,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       minHeight: "30px",
       ...customStyles.control,
     }),
-    option: (styles) => {
+    option: (styles: any) => {
       return {
         ...styles,
         fontSize: "13px",
@@ -76,32 +76,32 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
         ...customStyles.option,
       };
     },
-    input: (styles) => ({
+    input: (styles: any) => ({
       ...styles,
       fontSize: "13px",
       paddingTop: "0",
       ...customStyles.input,
     }),
-    placeholder: (styles) => ({
+    placeholder: (styles: any) => ({
       ...styles,
       fontSize: "13px",
       textAlign: "left",
       fontWeight: "400",
       ...customStyles.placeholder,
     }),
-    singleValue: (styles) => ({
+    singleValue: (styles: any) => ({
       ...styles,
       fontSize: "13px",
       ...customStyles.singleValue,
     }),
-    dropdownIndicator: (styles) => ({
+    dropdownIndicator: (styles: any) => ({
       ...styles,
       padding: "2px",
       height: "25px",
       width: "22px",
       ...customStyles.dropdownIndicator,
     }),
-    clearIndicator: (styles) => ({
+    clearIndicator: (styles: any) => ({
       ...styles,
       padding: "2px",
       height: "25px",
