@@ -14,16 +14,12 @@ import {
   getFacetedUniqueValues,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
+import { getUSDCurrency } from "@/utils/utitlity";
 
 interface typeProps {
   [key: string | number]: any;
 }
-function convertToDollar(value: any) {
-  if (value) return `$${Number.parseFloat(value).toFixed(2)}`;
-  else {
-    return "$0.00";
-  }
-}
+
 const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
   const { claimedItemsList, tableLoader, claimedItemsErrorMsg, setTableLoader } = props;
   const [claimResult, setClaimResult] = React.useState(claimedItemsList);
@@ -75,7 +71,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("receiptValue", {
       header: () => "Receipt Value",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${convertToDollar(
+        <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
           info.getValue()
         )}`}</div>
       ),
@@ -84,7 +80,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
           (acc: number, dataItem: any) => acc + dataItem.receiptValue,
           0
         );
-        return <span>{`${convertToDollar(sum)}`}</span>;
+        return <span>{`${getUSDCurrency(sum)}`}</span>;
       },
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
@@ -119,7 +115,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("totalStatedAmount", {
       header: () => "Max. Replacement $",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${convertToDollar(
+        <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
           info.getValue()
         )}`}</div>
       ),
@@ -128,7 +124,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
           (acc: number, dataItem: any) => acc + dataItem.totalStatedAmount,
           0
         );
-        return <span>{`${convertToDollar(sum)}`}</span>;
+        return <span>{`${getUSDCurrency(sum)}`}</span>;
       },
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
@@ -139,7 +135,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("cashPaid", {
       header: () => "Cash Paid",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${convertToDollar(
+        <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
           info.getValue()
         )}`}</div>
       ),
@@ -148,7 +144,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
           (acc: number, dataItem: any) => acc + dataItem.cashPaid,
           0
         );
-        return <span>{`${convertToDollar(sum)}`}</span>;
+        return <span>{`${getUSDCurrency(sum)}`}</span>;
       },
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
@@ -159,7 +155,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("holdOverDue", {
       header: () => "Holdover Due",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${convertToDollar(
+        <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
           info.getValue()
         )}`}</div>
       ),
@@ -168,7 +164,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
           (acc: number, dataItem: any) => acc + dataItem.holdOverDue,
           0
         );
-        return <span>{`${convertToDollar(sum)}`}</span>;
+        return <span>{`${getUSDCurrency(sum)}`}</span>;
       },
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
@@ -179,7 +175,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     columnHelper.accessor("holdOverPaymentPaidAmount", {
       header: () => "Holdover Paid",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${convertToDollar(
+        <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
           info.getValue()
         )}`}</div>
       ),
@@ -188,7 +184,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
           (acc: number, dataItem: any) => acc + dataItem.holdOverPaymentPaidAmount,
           0
         );
-        return <span>{`${convertToDollar(sum)}`}</span>;
+        return <span>{`${getUSDCurrency(sum)}`}</span>;
       },
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
