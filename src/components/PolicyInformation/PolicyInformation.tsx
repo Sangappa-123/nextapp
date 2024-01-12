@@ -11,6 +11,7 @@ import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import { unknownObjectType } from "@/constants/customTypes";
 import useTranslation from "@/hooks/useTranslation";
 import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
+import { formatMobileNumber } from "@/utils/utitlity";
 
 function ClaimpolicyInformation({
   register,
@@ -21,6 +22,8 @@ function ClaimpolicyInformation({
   resetField,
   getValues,
   clearErrors,
+  setCustomerror,
+  customerror,
 }: any) {
   // const options = [
   //   { value: "chocolate", label: "Chocolate" },
@@ -29,7 +32,6 @@ function ClaimpolicyInformation({
   // ];
   const [options, setOptions] = useState([]);
   const [show, setShow] = useState(false);
-  // const [stateId, setStateId] = useState(null);
   const [policyDetails, setpolicyDetails] = useState<unknownObjectType | null>(null);
 
   const { onChange: emailChange, ...rest } = register("email");
@@ -200,6 +202,27 @@ function ClaimpolicyInformation({
             placeholder="XXX-XXX-XXXX"
             keyboardType="phone-pad"
             {...register("mobilenumber")}
+            showError={customerror["phone"]}
+            errorMsg={customerror?.phone}
+            onInput={(e: { target: { value: string } }) => {
+              formatMobileNumber(e);
+              if (e.target.value && e.target.value.length < 14) {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    phone: "Enter valid phone number",
+                  };
+                });
+              } else {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    phone: null,
+                  };
+                });
+              }
+              console.log("log", e.target.value);
+            }}
           />
         </div>
       </div>
@@ -213,6 +236,27 @@ function ClaimpolicyInformation({
           <GenericInput
             placeholder="XXX-XXX-XXXX"
             {...register("secondaryPhonenumber")}
+            showError={customerror["secondaryphone"]}
+            errorMsg={customerror?.secondaryphone}
+            onInput={(e: { target: { value: string } }) => {
+              formatMobileNumber(e);
+              if (e.target.value && e.target.value.length < 14) {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    secondaryphone: "Enter valid phone number",
+                  };
+                });
+              } else {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    secondaryphone: null,
+                  };
+                });
+              }
+              console.log("log", e.target.value);
+            }}
           />
         </div>
       </div>

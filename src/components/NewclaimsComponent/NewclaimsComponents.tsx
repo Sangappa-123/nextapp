@@ -91,6 +91,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
+  const [customerror, setCustomerror] = useState({ phone: null, secondaryphone: null });
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -133,6 +134,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           }
         }
       }
+
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -360,6 +362,8 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                 resetField={resetField}
                 getValues={getValues}
                 clearErrors={clearErrors}
+                customerror={customerror}
+                setCustomerror={setCustomerror}
               />
             </div>
             <div>
@@ -416,6 +420,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   theme="normal"
                   type="submit"
                   size="medium"
+                  disabled={!!customerror.phone || !!customerror.secondaryphone}
                 />
               </div>
             </div>
