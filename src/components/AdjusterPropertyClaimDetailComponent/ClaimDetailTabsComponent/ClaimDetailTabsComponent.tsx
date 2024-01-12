@@ -8,6 +8,7 @@ import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationC
 import VendorAssignments from "@/components/VendorAssignments/index";
 import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
+import Documents from "@/components/Documents/Documents";
 
 type propTypes = {
   serviceRequestListRes: any;
@@ -42,7 +43,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
     },
     {
       name: translate?.tabsComponent?.documents,
-      content: "",
+      content: <Documents />,
     },
     {
       name: translate?.tabsComponent?.claimParticipants,
