@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
-  checkedItems: any;
-  selectedItems: any;
+  checkedItems?: any;
+  selectedItems?: any;
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> = ({
