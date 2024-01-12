@@ -20,8 +20,6 @@ import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { ConnectedProps, connect } from "react-redux";
-import useTranslation from "@/hooks/useTranslation";
-import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
 import { Suspense } from "react";
 import {
   selectActiveSection,
@@ -37,9 +35,9 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
   const activeSection = useAppSelector(selectActiveSection);
-  const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
-
+  let insuranceCompany = useAppSelector(selectInsuranceCompanyName);
   const schema = object({
+    // policy schema
     firstname: string("firstname", [
       minLength(1, "First name can contain only alphabets."),
     ]),
@@ -106,10 +104,11 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       if (data.firstname !== null && data.lastname !== null) {
         PolicyInitials = data.firstname.charAt(0) + "" + data.lastname.charAt(0);
       }
-      const abc = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
+      insuranceCompany = insuranceCompany.trim();
+      const spaceIndex = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
 
       if (insuranceCompany !== null) {
-        if (abc == -1) {
+        if (spaceIndex === -1) {
           InsuranceCompanyIntials =
             insuranceCompany.charAt(0) + "" + insuranceCompany.charAt();
 
@@ -131,6 +130,27 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               "" +
               CurrentDate;
           }
+        } else {
+          InsuranceCompanyIntials =
+            insuranceCompany.length > 1
+              ? insuranceCompany.slice(0, 2)
+              : insuranceCompany[0] + insuranceCompany[0];
+          PolicyNumber =
+            "PL" +
+            "" +
+            InsuranceCompanyIntials.toUpperCase() +
+            "" +
+            PolicyInitials.toUpperCase() +
+            "" +
+            CurrentDate;
+          CustAccNumber =
+            "CA" +
+            "" +
+            InsuranceCompanyIntials.toUpperCase() +
+            "" +
+            PolicyInitials.toUpperCase() +
+            "" +
+            CurrentDate;
         }
       }
       const payload = {
@@ -231,7 +251,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
           sessionStorage.setItem("redirectToNewClaimPage", "true");
           const nextSection = activeSection + 1;
-          console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
           dispatch(
             addNotification({
@@ -274,12 +293,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const handleAssignItemsClick = () => {
     dispatch(setActiveSection(2));
-    // router.push("/new-claim");
   };
 
   const handlePreviousClick = () => {
     const prevSection = activeSection - 1;
-    console.log("Form Data on Previous Click", getValues());
     dispatch(setActiveSection(prevSection));
   };
 
@@ -291,15 +308,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     reset();
     handleClose();
   };
-  const {
-    translate,
-    loading,
-  }: { translate: newClaimTransalateType | undefined; loading: boolean } =
-    useTranslation("newClaimTransalate");
-  console.log("transalte", translate);
-  if (loading) {
-    return null;
-  }
   return (
     <div>
       <div className="mb-3">
@@ -314,7 +322,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             <div className={NewClaimsStyle.informationTab}>
               <p className={NewClaimsStyle.claimText}>
                 {" "}
-                {translate?.claimPOlicyHeading ?? ""}
+                1) Claim and Policy Information{" "}
               </p>
             </div>
             <div
@@ -427,17 +435,13 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           <AddItemsComponent
             onAssignItemsClick={handleAssignItemsClick}
             onNewClaimsClick={handlePreviousClick}
-            // claimNumber={claimNumberr || ""}
           />
         </Cards>
       )}
       {activeSection === 2 && (
         <Suspense fallback={<Loading />}>
           <Cards>
-            <AssignItemsComponent
-              onNewClaimsClick={handlePreviousClick}
-              // selectedRowsData={[]}
-            />
+            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
           </Cards>
         </Suspense>
       )}
