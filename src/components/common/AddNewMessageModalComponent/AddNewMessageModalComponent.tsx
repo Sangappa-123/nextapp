@@ -53,8 +53,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
 
   useEffect(() => {
     if (defaultValue) setValue("participants", defaultValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [defaultValue, setValue]);
 
   const { errors } = formState;
   const handleAnchorTagClick = () => {

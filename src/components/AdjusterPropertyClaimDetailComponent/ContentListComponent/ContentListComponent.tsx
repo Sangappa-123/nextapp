@@ -469,7 +469,6 @@ function ContentListComponent(props: any) {
   }: { translate: contentListComponentType | undefined; loading: boolean } =
     useTranslation("contentListComponent");
 
-  console.log("translate", translate);
   if (loading) {
     return null;
   }
