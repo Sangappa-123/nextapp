@@ -2,20 +2,23 @@ import React from "react";
 import ItemsToAssignTableStyle from "./ItemsToAssignTable.module.scss";
 import SearchBox from "./SearchBox";
 import AssignTable from "./AssignTable";
-import GenericButton from "../common/GenericButton";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import {
   setCategoryRows,
   setSelectedCategory,
+  setSelectedItems,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface ItemsToAssignTableProps {
   closeModal: () => void;
+  selectedItems: any;
+  handleRowSelect: (itemId: number) => void;
 }
 
 const ItemsToAssignTable: React.FC<ItemsToAssignTableProps & connectorType> = ({
   closeModal,
+  handleRowSelect,
 }) => {
   return (
     <>
@@ -27,15 +30,11 @@ const ItemsToAssignTable: React.FC<ItemsToAssignTableProps & connectorType> = ({
         </div>
       </div>
       <div className={ItemsToAssignTableStyle.styleTable}>
-        <AssignTable />
-      </div>
-      <div className={ItemsToAssignTableStyle.buttonContainer}>
-        <div className="mx-2">
-          <GenericButton label={"Cancel"} size="medium" onClick={closeModal} />
-        </div>
-        <div className="mx-2">
-          <GenericButton label={"Save"} size="medium" />
-        </div>
+        <AssignTable
+          // selectedItems={selectedItems}
+          handleRowSelect={handleRowSelect}
+          closeModal={closeModal}
+        />
       </div>
     </>
   );
@@ -43,8 +42,9 @@ const ItemsToAssignTable: React.FC<ItemsToAssignTableProps & connectorType> = ({
 
 const mapStateToProps = (state: RootState) => ({
   selectedCategory: state.addItemsTable.selectedCategory,
+  selectedItems: state.addItemsTable.selectedItems,
 });
-const mapDispatchToProps = { setCategoryRows, setSelectedCategory };
+const mapDispatchToProps = { setCategoryRows, setSelectedCategory, setSelectedItems };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

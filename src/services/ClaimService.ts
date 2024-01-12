@@ -348,3 +348,24 @@ export const deleteCategoryItem = async (payload: any) => {
     return null;
   }
 };
+
+export const getSelectVendor = async (
+  param: {
+    pageNo: number;
+    recordPerPage: number;
+  },
+  isClient?: boolean
+) => {
+  try {
+    const http = new HttpService({ isClient });
+
+    let url = getApiEndPoint("assignVendorGet");
+    console.log("uuuuuuuuuuuuuu", url);
+    url = `${url}?page=${param?.pageNo}&q=&sort_by=&order_by=asc&limit=${param?.recordPerPage}`;
+    const resp = await http.get(url);
+    console.log("sssssssasssssssssss", resp);
+    return resp;
+  } catch (err: any) {
+    return null;
+  }
+};

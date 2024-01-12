@@ -8,8 +8,6 @@ import clsx from "clsx";
 import GenericButton from "@/components/common/GenericButton";
 import { addContentItem, updateContentItem } from "@/services/AddItemContentService";
 import { useParams } from "next/navigation";
-import { claimContentList } from "@/services/ClaimContentListService";
-import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { object, string, number, minLength, Output, nullish } from "valibot";
 import useCustomForm from "@/hooks/useCustomForm";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
@@ -25,9 +23,8 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     closeModal,
     editItem,
     editItemDetail = null,
-
+    contentData = null,
     addNotification,
-    addClaimContentListData,
   } = props;
 
   const { translate }: { translate: addItemModalTranslateType | undefined } =
@@ -184,16 +181,6 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     }
   }, [editItem, editItemDetail, setValue]);
 
-  const itemListApi = async () => {
-    const payload = {
-      claimId,
-    };
-    const claimContentListRes: any = await claimContentList(payload, true);
-    if (claimContentListRes) {
-      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
-    }
-  };
-
   const submitFormData = async (data: Output<typeof schema>) => {
     const payload = {
       id: editItem && editItemDetail ? editItemDetail?.itemId : null,
@@ -262,8 +249,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     const addItemRes = await addContentItem(formData);
 
     if (addItemRes?.status === 200) {
-      closeModal();
-      await itemListApi();
+      await closeModal();
       addNotification({
         message: "Item Added Successfully",
         id: "add_content_item_success",
@@ -283,8 +269,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
     const updateItemRes = await updateContentItem(formData);
 
     if (updateItemRes?.status === 200) {
-      closeModal();
-      await itemListApi();
+      await closeModal();
 
       addNotification({
         message: "Item Updated Successfully",
@@ -305,33 +290,31 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
       <>
         {editItem ? (
           <div className={addClaimFormStyle.modalWidth}>
-            <div className="row m-2 flex-row-reverse">
-              <div className="row col-12 m-2 flex-row-reverse">
-                <div className="row col-2">
-                  <GenericButton
-                    label="Cancel"
-                    onClick={async () => {
-                      closeModal();
-                      await itemListApi();
-                    }}
-                    size="medium"
-                  />
-                </div>
-                <div className="row col-2">
-                  <GenericButton
-                    label="Update Item"
-                    type="submit"
-                    onClick={handleSubmit(handleUpdate)}
-                    size="medium"
-                  />
-                </div>
+            <div className={clsx(addClaimFormStyle.addItemButton, "m-4")}>
+              <div className={addClaimFormStyle.centerAlign}>
+                <a
+                  className={addClaimFormStyle.pointerCursor}
+                  onClick={async () => {
+                    await closeModal();
+                  }}
+                >
+                  Cancel
+                </a>
+              </div>
+              <div className={addClaimFormStyle.centerAlign}>
+                <GenericButton
+                  label="Update Item"
+                  type="submit"
+                  onClick={handleSubmit(handleUpdate)}
+                  size="medium"
+                />
               </div>
             </div>
           </div>
         ) : (
           <div className={addClaimFormStyle.modalWidth}>
-            <div className={clsx(addClaimFormStyle.centerAlign, "row m-4")}>
-              <div className="col-8 " style={{ textAlign: "right" }}>
+            <div className={clsx(addClaimFormStyle.addItemButton, "m-4")}>
+              <div className={addClaimFormStyle.centerAlign}>
                 <a
                   type="submit"
                   className={addClaimFormStyle.pointerCursor}
@@ -341,19 +324,17 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
                 </a>
               </div>
 
-              <div className={clsx("row col-2", addClaimFormStyle.centerAlign)}>
+              <div className={addClaimFormStyle.centerAlign}>
+                <a className={addClaimFormStyle.pointerCursor} onClick={() => reset()}>
+                  Reset
+                </a>
+              </div>
+              <div className={addClaimFormStyle.centerAlign}>
                 <GenericButton
                   label={translate?.inputFields?.addItemBtn ?? ""}
                   type="submit"
                   size="medium"
                   onClick={handleSubmit(formSubmit)}
-                />
-              </div>
-              <div className="row col-2">
-                <GenericButton
-                  label={translate?.inputFields?.resetBtn ?? ""}
-                  size="medium"
-                  onClick={() => reset()}
                 />
               </div>
             </div>
@@ -384,6 +365,7 @@ const AddItemModal: React.FC<connectorType & typeProps> = (props: any) => {
           isScheduledItemState={isScheduledItemState}
           applyTaxState={applyTaxState}
           handleSubmit={handleSubmit}
+          contentData={contentData}
         />
       }
       headingName={
@@ -400,7 +382,6 @@ const mapStateToProps = ({ claimContentdata }: any) => ({
 });
 const mapDispatchToProps = {
   addNotification,
-  addClaimContentListData,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
