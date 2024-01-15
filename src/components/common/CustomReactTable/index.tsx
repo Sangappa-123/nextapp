@@ -30,6 +30,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     editedData = null,
     handleEditChange = null,
     showFooter = false,
+    tableCustomClass = "",
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -76,6 +77,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
           [CustomReactTableStyles.reactTable]: true,
           [CustomReactTableStyles.reactTableScroll]: showScroller,
           [CustomReactTableStyles.fixedHeader]: isAnyRowInvalid,
+          [tableCustomClass]: tableCustomClass,
         })}
         {...(fetchNextPage
           ? {
@@ -212,21 +214,29 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
               </>
             )}
           </tbody>
-          {showFooter && (
+          {!tableDataErrorMsg && showFooter && (
             <tfoot>
               {table.getFooterGroups() &&
                 table.getFooterGroups().map((footerGroup: any) => (
                   <tr key={footerGroup.id}>
-                    {footerGroup.headers.map((header: any) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.footer,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
+                    {footerGroup.headers.map((header: any) => {
+                      if (header.column.columnDef.footer) {
+                        return (
+                          <th
+                            key={header.id}
+                            colSpan={header.column.columnDef.meta?.footercolSpan || 1}
+                            className={header.column.columnDef.meta?.footerClass ?? null}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.footer,
+                                  header.getContext()
+                                )}
+                          </th>
+                        );
+                      }
+                    })}
                   </tr>
                 ))}
             </tfoot>

@@ -107,7 +107,7 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
       message: data?.message,
       isInternal: internal,
       registrationNumber: registration,
-      gropuDetails: {
+      groupDetails: {
         groupId: null,
         groupTitle: null,
         participants: participantsArray,
