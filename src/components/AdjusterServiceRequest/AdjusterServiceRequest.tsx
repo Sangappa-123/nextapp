@@ -25,7 +25,6 @@ const AdjusterServiceRequest: React.FC<propsTypes> = ({ claimId }) => {
       name: claimNumber,
       path: `/adjuster-property-claim-details/${claimId}`,
     },
-
     {
       name: translate?.breadCrumbsHeading?.newServiceRequest,
       path: "/adjuster-service-request",
