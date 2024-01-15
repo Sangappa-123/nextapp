@@ -62,9 +62,9 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
       footer: () => {
         return <span>Total</span>;
       },
-      colSpan: 4,
       meta: {
         footerClass: receiptMapperStyle.footerStyles,
+        footercolSpan: 4,
       },
       enableSorting: false,
     }),

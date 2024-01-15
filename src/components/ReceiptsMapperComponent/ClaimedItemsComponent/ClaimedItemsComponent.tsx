@@ -8,7 +8,10 @@ import ClaimedItemsTable from "../ClaimedItemsTable/ClaimedItemsTable";
 import ClaimedItemsSearchBox from "../ClaimedItemsSearchBox/ClaimedItemsSearchBox";
 import GenericButton from "@/components/common/GenericButton/index";
 
-const ClaimedItemsComponent: React.FC = ({ claimNumber }: { claimNumber: string }) => {
+type propTypes = {
+  claimNumber: string;
+};
+const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) => {
   // const {  claimId } = useParams();
 
   const [tableLoader, setTableLoader] = useState<boolean>(false);

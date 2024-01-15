@@ -14,7 +14,7 @@ export const getClaimedItems = async (param: object) => {
       store.dispatch(addClaimedItemsListData({ claimedData: resp }));
       return resp;
     } else {
-      return error;
+      return resp.error;
     }
   } catch (err) {
     return err;

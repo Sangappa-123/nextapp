@@ -33,15 +33,23 @@ const ClaimedItemsSlice = createSlice({
         state.claimedItemsErrorMsg = claimedData.message;
       }
     },
-  },
-  addClaimedItemsKeyWord(state, action) {
-    const { payload } = action;
-    const { searchKeyword } = payload;
+    addClaimedItemsKeyWord(state, action) {
+      const { payload } = action;
+      const { searchKeyword } = payload;
 
-    state.searchKeyword = searchKeyword;
+      state.searchKeyword = searchKeyword;
+    },
+    updateClaimedItemsListData(state, action) {
+      const { payload } = action;
+      const { claimedData } = payload;
+      state.claimedItemsList = claimedData;
+    },
   },
 });
 export default ClaimedItemsSlice;
 
-export const { addClaimedItemsListData, addClaimedItemsKeyWord } =
-  ClaimedItemsSlice.actions;
+export const {
+  addClaimedItemsListData,
+  addClaimedItemsKeyWord,
+  updateClaimedItemsListData,
+} = ClaimedItemsSlice.actions;

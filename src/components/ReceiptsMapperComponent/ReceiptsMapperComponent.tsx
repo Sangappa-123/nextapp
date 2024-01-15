@@ -1,21 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import receiptMapperStyle from "./receiptMapperComponent.module.scss";
 import GenericComponentHeading from "../common/GenericComponentHeading";
 import TabsButtonComponent from "../common/TabsButtonComponent";
-import { useParams } from "next/navigation";
 import GenericBreadcrumb from "../common/GenericBreadcrumb";
 import ClaimedItemsComponent from "./ClaimedItemsComponent/ClaimedItemsComponent";
 
-const ReceiptsMapperComponent: React.FC = () => {
-  const { claimId } = useParams();
+type propTypes = {
+  claimId: string;
+};
+const ReceiptsMapperComponent: React.FC<propTypes> = ({ claimId }: propTypes) => {
+  const [claimNumber, setClaimNumber] = useState<string>("");
+  useEffect(() => {
+    try {
+      setClaimNumber(sessionStorage.getItem("claimNumber") ?? "");
+    } catch (error) {
+      setClaimNumber("");
+    }
+  }, []);
 
-  let claimNumber: string;
-  try {
-    claimNumber = sessionStorage.getItem("claimNumber") ?? "";
-  } catch (error) {
-    claimNumber = "";
-  }
   const tabData = [
     {
       name: "Claimed Items",
@@ -23,6 +26,7 @@ const ReceiptsMapperComponent: React.FC = () => {
     },
     {
       name: "Summary",
+      content: <ClaimedItemsComponent claimNumber={claimNumber} />,
     },
   ];
   const pathList = [
@@ -56,7 +60,7 @@ const ReceiptsMapperComponent: React.FC = () => {
         />
       </div>
       <div>
-        <TabsButtonComponent showBorders={true} tabData={tabData} />
+        <TabsButtonComponent tabData={tabData} showBorders={true} />
       </div>
     </div>
   );

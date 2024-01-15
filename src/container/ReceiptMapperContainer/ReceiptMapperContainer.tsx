@@ -2,12 +2,10 @@ import React from "react";
 
 import ReceiptsMapperComponent from "@/components/ReceiptsMapperComponent";
 
-
-async function ReceiptMapperContainer() {
-
+async function ReceiptMapperContainer({ claimId }: { claimId: string }) {
   return (
     <div>
-      <ReceiptsMapperComponent />
+      <ReceiptsMapperComponent claimId={claimId} />
     </div>
   );
 }

@@ -224,7 +224,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                         return (
                           <th
                             key={header.id}
-                            colSpan={header.column.columnDef.colSpan || 1}
+                            colSpan={header.column.columnDef.meta?.footercolSpan || 1}
                             className={header.column.columnDef.meta?.footerClass ?? null}
                           >
                             {header.isPlaceholder

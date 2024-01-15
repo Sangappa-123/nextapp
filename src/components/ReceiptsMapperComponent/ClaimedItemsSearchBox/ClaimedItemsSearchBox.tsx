@@ -2,7 +2,10 @@
 import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import ClaimedItemsSearchBoxStyle from "./ClaimedItemsSearchBox.module.scss";
-import { addClaimedItemsKeyWord } from "@/reducers/ReceiptMapper/ClaimedItemsSlice";
+import {
+  addClaimedItemsKeyWord,
+  updateClaimedItemsListData,
+} from "@/reducers/ReceiptMapper/ClaimedItemsSlice";
 import { ConnectedProps, connect } from "react-redux";
 import { getClaimedItems } from "@/services/ReceiptMapper/ReceiptMapperService";
 
@@ -15,6 +18,8 @@ const ClaimedItemsSearchBox: React.FC<connectorType & typeProps> = (props) => {
     setTableLoader,
     searchKeyword,
     addClaimedItemsKeyWord,
+    claimedItemsList,
+    updateClaimedItemsListData,
   }: React.SetStateAction<any> = props;
 
   const handleSearch = async (e: any) => {
@@ -36,12 +41,14 @@ const ClaimedItemsSearchBox: React.FC<connectorType & typeProps> = (props) => {
     if (event.key === "Enter") {
       setTableLoader(true);
       addClaimedItemsKeyWord({ searchKeyword: event.target.value });
-      //  claimedItemsList.filter(item => item.description.toLowerCase() === description.toLowerCase())[0];
-
-      // const result = await fetchContentList(event.target.value);
-      // if (result) {
-      //   setTableLoader(false);
-      // }
+      const searchWord = event.target.value;
+      const updatedData = claimedItemsList.filter((item: any) =>
+        item.description.toLowerCase().includes(searchWord.toLowerCase())
+      );
+      await updateClaimedItemsListData({ claimedData: updatedData });
+      if (updatedData) {
+        setTableLoader(false);
+      }
     }
   };
 
@@ -61,10 +68,11 @@ const ClaimedItemsSearchBox: React.FC<connectorType & typeProps> = (props) => {
 
 const mapStateToProps = ({ claimedItems }: any) => ({
   searchKeyword: claimedItems.searchKeyword,
-  // claimedItemsList:
+  claimedItemsList: claimedItems.claimedItemsList,
 });
 const mapDispatchToProps = {
   addClaimedItemsKeyWord,
+  updateClaimedItemsListData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
