@@ -31,6 +31,7 @@ import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
 import { sortBy } from "lodash";
+import { getUSDCurrency } from "@/utils/utitlity";
 interface typeProps {
   [key: string | number]: any;
 }
@@ -139,7 +140,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           id: "statusName",
         }),
         columnHelper.accessor("categoryName", {
-          header: () => "Catogory", // filter option true should have same id as value
+          header: () => "Category", // filter option true should have same id as value
           id: "categoryName",
         }),
       ],
@@ -163,6 +164,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
         }),
         columnHelper.accessor("totalStatedAmount", {
           header: () => "Total Price",
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           id: "totalStatedAmount", // filter option true should have same id as value
         }),
         columnHelper.accessor("itemTag", {
@@ -186,25 +188,27 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       ],
     }),
     columnHelper.group({
-      header: "Replacment Item",
+      header: "Replacement Item",
       id: "replacmentItem",
       meta: {
         headerClass: ContentListTableStyle.replacementItemHeader,
       },
       columns: [
         columnHelper.accessor("adjusterDescription", {
-          header: () => "Replacment Description",
+          header: () => "Replacement Description",
           id: "Replacement_Description",
           enableColumnFilter: false,
         }),
         columnHelper.accessor("rcvTotal", {
-          header: () => "Replacment Cost",
+          header: () => "Replacement Cost",
           id: "replacment",
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           enableColumnFilter: false,
         }),
         columnHelper.accessor("cashPayoutExposure", {
           header: () => "Cash Exposure",
           id: "cash-exposure",
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           enableColumnFilter: false,
         }),
       ],
