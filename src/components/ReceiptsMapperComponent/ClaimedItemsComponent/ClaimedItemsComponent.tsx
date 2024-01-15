@@ -7,6 +7,8 @@ import { getClaimedItems } from "@/services/ReceiptMapper/ReceiptMapperService";
 import ClaimedItemsTable from "../ClaimedItemsTable/ClaimedItemsTable";
 import ClaimedItemsSearchBox from "../ClaimedItemsSearchBox/ClaimedItemsSearchBox";
 import GenericButton from "@/components/common/GenericButton/index";
+import ReciptMapperSearchBox from "../ReciptMapperSearchBox/ReciptMapperSearchBox";
+import RecieptMapperMainComponent from "../RecieptMapperMainComponent/RecieptMapperMainComponent";
 
 type propTypes = {
   claimNumber: string;
@@ -51,9 +53,10 @@ const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) 
               <GenericButton label="New Recipt" size="small" />
             </div>
             <div className="col-5">
-              <ClaimedItemsSearchBox setTableLoader={setTableLoader} />
+              <ReciptMapperSearchBox setTableLoader={setTableLoader} />
             </div>
           </div>
+          <RecieptMapperMainComponent />
         </div>
       </div>
     </div>
