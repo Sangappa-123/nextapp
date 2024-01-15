@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import AddItemsButton from "./AddItemsButton";
 import AddTableSTyle from "./addItemsTableComponent.module.scss";
 import AssignAddItemButton from "./AssignAddItemButton";
@@ -17,39 +17,58 @@ import {
   setSelectedRows,
   setCategoryRows,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 import { RootState } from "@/store/store";
+import { fetchAddItemsTableCSVData } from "@/services/ClaimService";
 
 interface AddItemsTableComponentProps {
   onAssignItemsClick: () => void;
   isAnyItemSelected: boolean;
+  selectedItems: any;
 }
 
 const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorType> = ({
   onAssignItemsClick,
   isAnyItemSelected,
   selectedItems,
+  editItemDetail,
+  addItemsTableData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [editItem, setEditItem] = React.useState<React.SetStateAction<any>>(null);
+  const [tableLoader, setTableLoader] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
   const openModal = () => {
     setIsModalOpen(true);
   };
+  const itemListApi = async () => {
+    const claimId = sessionStorage.getItem("claimId") || "";
+    const claimNumber = sessionStorage.getItem("claimNumber") || "";
+    const addItemsPayload = { claimId, claimNumber };
 
-  const closeModal = () => {
+    const addItemsTableResponse = await fetchAddItemsTableCSVData(addItemsPayload);
+
+    if (addItemsTableResponse.status === 200) {
+      dispatch(setAddItemsTableData(addItemsTableResponse.data));
+    }
+  };
+  const closeModal = async () => {
+    await itemListApi();
+    setEditItem(null);
     setIsModalOpen(false);
   };
 
-  const handleCheckboxChange = (item: any) => {
+  const handleCheckboxChange = async (item: any) => {
     console.log(item, "handle checkbox running on addItem main file");
 
     const updatedSelectedItems = selectedItems.includes(item)
-      ? selectedItems.filter((selectedItem) => selectedItem !== item)
+      ? selectedItems.filter((selectedItem: any) => selectedItem !== item)
       : [...selectedItems, item];
     console.log(updatedSelectedItems, "updatedSelectedItems checking");
 
-    dispatch(setSelectedItems(updatedSelectedItems));
+    await dispatch(setSelectedItems(updatedSelectedItems));
     dispatch(setSelectedRows(updatedSelectedItems));
   };
 
@@ -57,7 +76,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
     <>
       <div className={AddTableSTyle.addItemsContainer}>
         <div className="col-12">
-          <AddItemModal closeModal={closeModal} isModalOpen={isModalOpen} />
+          <AddItemModal
+            closeModal={closeModal}
+            isModalOpen={isModalOpen}
+            editItem={editItem}
+            editItemDetail={editItemDetail}
+            contentData={addItemsTableData}
+          />
         </div>
 
         <div className={`row gx-2 ${AddTableSTyle.addItemsContentContainer}`}>
@@ -93,7 +118,13 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
         </div>
       </div>
       <div className="row">
-        <ListAddItemsTable onCheckboxChange={handleCheckboxChange} />
+        <ListAddItemsTable
+          onCheckboxChange={handleCheckboxChange}
+          setIsModalOpen={setIsModalOpen}
+          setEditItem={setEditItem}
+          setTableLoader={setTableLoader}
+          tableLoader={tableLoader}
+        />
       </div>
     </>
   );
@@ -104,6 +135,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
   isAnyItemSelected: state.addItemsTable.isAnyItemSelected,
   selectedCategory: state.addItemsTable.selectedCategory,
+  editItemDetail: state.claimContentdata.editItemDetail,
 });
 
 const mapDispatchToProps = {
@@ -112,6 +144,7 @@ const mapDispatchToProps = {
   setSelectedCategory,
   setSelectedRows,
   setCategoryRows,
+  addClaimContentListData,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

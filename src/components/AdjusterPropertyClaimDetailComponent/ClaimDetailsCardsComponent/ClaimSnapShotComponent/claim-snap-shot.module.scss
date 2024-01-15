@@ -8,33 +8,15 @@
   .contentContainer {
     height: 90%;
     overflow-y: auto;
-    margin-right: -10px;
-    // display: flex;
+    margin-right: -5px;
     @include customscrollbar(rgb(207, 201, 201), 6px, true);
-
-    // .fieldRowContainer {
-    //   display: flex;
-    //   font-size: 13px;
-    //   margin: 5px 0;
-    //   padding: 3px;
-    //   .fieldLabel {
-    //     text-align: right;
-    //     font-weight: 600;
-    //     padding-left: 10px;
-    //     padding-right: 12px;
-    //   }
-    // }
-
-    // cards UI
     .contentCardsContainer {
       display: flex;
       gap: 15px;
       justify-content: center;
-
       .snapShotContentCard {
         border-top: 3px solid $lightBlue2;
         min-width: 108px;
-
         .cardItemContainer {
           display: flex;
           flex-direction: column;

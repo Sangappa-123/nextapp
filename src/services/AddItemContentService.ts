@@ -7,22 +7,24 @@ interface objectType {
   [key: string | number]: any;
 }
 
-export const fetchClaimContentItemDetails = async (payload: {
-  forEdit: boolean;
-  itemId: number;
-}) => {
+export const fetchClaimContentItemDetails = async (
+  payload: {
+    forEdit: boolean;
+    itemId: number;
+  },
+  contentData: any
+) => {
   try {
     const url = getApiEndPoint("itemsDetails");
     const http = new HttpService({ isClient: true });
-    const state = store.getState();
 
     const res = await http.post(url, payload);
 
     if (res.status === 200) {
-      const claimContentListData = state.claimContentdata.claimContentListData;
+      const claimContentListData = contentData;
 
       const itemIndex = claimContentListData.findIndex((item: objectType) => {
-        if (item.itemId === payload.itemId) {
+        if (item.id === payload.itemId) {
           return true;
         }
       });
@@ -52,45 +54,46 @@ export const fetchClaimContentItemDetails = async (payload: {
   }
 };
 
-export const getPreviousItem = async (itemId: number) => {
-  const state = store.getState();
-  const claimContentListData = state.claimContentdata.claimContentListData;
+export const getPreviousItem = async (itemId: number, contentData: any) => {
+  console.log(contentData);
+  const claimContentListData = contentData;
 
   const itemIndex = claimContentListData.findIndex((item: objectType) => {
-    if (item.itemId === itemId) {
+    if (item.id === itemId) {
       return true;
     }
   });
   const currentItemId: {
-    itemId: number;
+    id: number;
   } = claimContentListData[itemIndex - 1];
 
   const payload = {
     forEdit: true,
-    itemId: currentItemId.itemId,
+    itemId: currentItemId.id,
   };
 
-  await fetchClaimContentItemDetails(payload);
+  await fetchClaimContentItemDetails(payload, contentData);
 };
-export const getNextItem = async (itemId: number) => {
-  const state = store.getState();
-  const claimContentListData = state.claimContentdata.claimContentListData;
+export const getNextItem = async (itemId: number, contentData: any) => {
+  console.log(contentData);
+
+  const claimContentListData = contentData;
 
   const itemIndex = await claimContentListData.findIndex((item: objectType) => {
-    if (item.itemId === itemId) {
+    if (item.id === itemId) {
       return true;
     }
   });
   const currentItemId: {
-    itemId: number;
+    id: number;
   } = claimContentListData[itemIndex + 1];
 
   const payload = {
     forEdit: true,
-    itemId: currentItemId.itemId,
+    itemId: currentItemId.id,
   };
 
-  await fetchClaimContentItemDetails(payload);
+  await fetchClaimContentItemDetails(payload, contentData);
 };
 
 export const addContentItem = async (param: object) => {

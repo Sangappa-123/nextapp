@@ -13,12 +13,14 @@ type breadcrumbPropType = {
   dataList: dataType[] | any;
   customClassname?: string;
   customNavClassname?: string;
+  [rest: string | number]: any;
 };
 
 function GenericBreadcrumb({
   dataList = [],
   customClassname = "",
   customNavClassname = "",
+  ...rest
 }: breadcrumbPropType) {
   return (
     <nav
@@ -46,6 +48,7 @@ function GenericBreadcrumb({
                 "link-active": path.active,
               })}
               href={path.path}
+              {...rest}
             >
               {path.name}
             </Link>

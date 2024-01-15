@@ -89,6 +89,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
+  const [customerror, setCustomerror] = useState({ phone: null, secondaryphone: null });
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
@@ -153,6 +154,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             CurrentDate;
         }
       }
+
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -328,23 +330,23 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             <div
               className={clsx("row justify-content-end mt-4", NewClaimsStyle.upButtons)}
             >
-              <div className="col-auto">
+              <div className="col-auto p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto ml-2">
+              <div className="col-auto ml-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto">
+              <div className="col-auto ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
@@ -368,6 +370,8 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                 resetField={resetField}
                 getValues={getValues}
                 clearErrors={clearErrors}
+                customerror={customerror}
+                setCustomerror={setCustomerror}
               />
             </div>
             <div>
@@ -389,18 +393,18 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               />
             </div>
             <div className={clsx("row justify-content-end", NewClaimsStyle.downButtons)}>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
@@ -418,12 +422,13 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   </div>
                 )}
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
                   type="submit"
                   size="medium"
+                  disabled={!!customerror.phone || !!customerror.secondaryphone}
                 />
               </div>
             </div>

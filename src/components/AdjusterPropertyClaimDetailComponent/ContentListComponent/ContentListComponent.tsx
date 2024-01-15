@@ -76,8 +76,17 @@ function ContentListComponent(props: any) {
   const openModal = () => {
     setIsModalOpen(true);
   };
-
-  const closeModal = () => {
+  const itemListApi = async () => {
+    const payload = {
+      claimId,
+    };
+    const claimContentListRes: any = await claimContentList(payload, true);
+    if (claimContentListRes) {
+      addClaimContentListData({ claimContentData: claimContentListRes, claimId });
+    }
+  };
+  const closeModal = async () => {
+    await itemListApi();
     setEditItem(null);
     setIsModalOpen(false);
     router.push(`/adjuster-property-claim-details/${claimId}`);
@@ -547,6 +556,9 @@ function ContentListComponent(props: any) {
                   size="small"
                   type="submit"
                   btnClassname={ContentListComponentStyle.contentListBtn}
+                  onClickHandler={() => {
+                    router.push(`/receipts-mapper/${claimId}`);
+                  }}
                 />
                 <Tooltip
                   anchorSelect="#more-btn-element"
