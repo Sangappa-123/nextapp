@@ -207,6 +207,9 @@
             URL: "/adjuster-property-claim-details/{ID}",
           },
           {
+            URL: "/receipts-mapper/{ID}",
+          },
+          {
             URL: "/bills-and-payments",
           },
           {

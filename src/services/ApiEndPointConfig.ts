@@ -67,6 +67,7 @@ enum apiEndPoints {
   detailedInventoryReportExcel = "web/export/detailed/inventory",
   newCustomComparable = "web/add/custom/item",
   deleteCustomItemApi = "web/delete/custom/item?id={{COMPARABLE_ID}}",
+  mapperClaimedItems = "web/claim/line/items",
   updateCliamCategory = "web/bulk/update/item/category",
   updateCliamStatus = "web/bulk/update/item/status",
   updatePaidStatus = "web/claim/items/paid",
