@@ -189,7 +189,6 @@ function ClaimInformation({
   }
   return (
     <div>
-      {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimInformationStyle.label}>
@@ -222,12 +221,6 @@ function ClaimInformation({
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          {/* <GenericInput
-            placeholder="First Name"
-            type="Date"
-            {...register("claimDate")}
-            // className={ClaimInformationStyle.claimDate}
-          /> */}
           <Controller
             control={control}
             name="claimDate"
@@ -271,7 +264,6 @@ function ClaimInformation({
           <GenericInput
             placeholder="Insurance Company"
             {...register("insuranceCompany")}
-            // className={ClaimInformationStyle.insuranceCompany}
           />
         </div>
       </div>
@@ -283,11 +275,7 @@ function ClaimInformation({
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          <GenericInput
-            placeholder="Adjuster's Name"
-            {...register("adjusterName")}
-            // className={ClaimInformationStyle.mobile}
-          />
+          <GenericInput placeholder="Adjuster's Name" {...register("adjusterName")} />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
@@ -317,23 +305,6 @@ function ClaimInformation({
               );
             }}
           />
-          {/* <Controller
-            control={control}
-            name={selectName}
-            rules={{ required: true }}
-            render={({ field: { ...rest } }: any) => (
-              <GenericSelect
-                labelText={selectLabel}
-                placeholder={selectPlaceholder}
-                options={options}
-                showError={errors[selectName]}
-                errorMsg={errors[selectName]?.message}
-                name={selectName}
-                {...rest}
-              />
-            )}
-          /> */}
-          {/* <SelectCheckBox options={options} className="selectOptions" /> */}
         </div>
       </div>
       <div className="row mt-3 align-items-center">
@@ -359,11 +330,9 @@ function ClaimInformation({
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
           <GenericInput
             placeholder="$999.00"
-            type="number"
             inputFieldClassname="hideInputArrow"
             {...register("claimDeductible")}
-
-            // className={ClaimInformationStyle.addressOne}
+            priceFormatter={true}
           />
         </div>
       </div>
@@ -386,7 +355,6 @@ function ClaimInformation({
                     }
                   />
                 </span>
-                {/* <div className="col-lg-2 col-md-2 col-sm-12"></div> */}
               </label>{" "}
             </div>
           </div>
@@ -394,13 +362,11 @@ function ClaimInformation({
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="$88.00"
-            type="number"
             inputFieldClassname="hideInputArrow"
             showError={error["minItemPrice"]}
             errorMsg={error?.minItemPrice?.message}
             {...register("minItemPrice")}
-
-            //   className={ClaimInformationStyle.addressSecond}
+            priceFormatter={true}
           />
         </div>
       </div>
@@ -418,7 +384,6 @@ function ClaimInformation({
             inputFieldClassname="hideInputArrow"
             showError={error["taxRate"]}
             errorMsg={error?.taxRate?.message}
-            // disabled={disabled}
             disabled={topping === "no"}
             {...register("taxRate")}
           />
@@ -438,12 +403,9 @@ function ClaimInformation({
             value="yes"
             label="Yes"
             labelClassname={ClaimInformationStyle.labelClassname}
-            // id="yes"
-            // name="applyTax"
             checked={topping === "yes"}
             onChange={onOptionChange}
           />
-          {/* <label className="mt-4">No</label> */}
           <GenericInput
             type="radio"
             formControlClassname={ClaimInformationStyle.formControl1}
@@ -452,9 +414,7 @@ function ClaimInformation({
             value="no"
             label="No"
             labelClassname={ClaimInformationStyle.labelClassname}
-            // id="no"
             checked={topping === "no"}
-            // name="applyTax"
             onChange={onOptionChange}
           />
         </div>
@@ -468,14 +428,12 @@ function ClaimInformation({
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="$0.00"
-            type="number"
             inputFieldClassname="hideInputArrow"
             showError={error["contentLimits"]}
             errorMsg={error?.contentLimits?.message}
             errorMsgClassname={ClaimInformationStyle.errorMessage}
             {...register("contentLimits")}
-
-            //   className={ClaimInformationStyle.addressSecond}
+            priceFormatter={true}
           />
         </div>
       </div>
@@ -490,7 +448,6 @@ function ClaimInformation({
           <Controller
             control={control}
             name="homeOwnersPolicyType"
-            // rules={{ required: true }}
             render={({ field: { onChange: onSelect, ...rest } }: any) => {
               return (
                 <GenericSelect
@@ -554,7 +511,6 @@ function ClaimInformation({
                         />
                       ))}
                     </ul>
-                    {/* </div> */}
                   </>
                 </div>
                 {show && (
@@ -564,15 +520,12 @@ function ClaimInformation({
                       ClaimInformationStyle.specialCategoryDiv
                     )}
                   >
-                    {/* <div className={clsx("col-lg-2")} /> */}
                     <div
                       className={clsx(
                         "col-lg-6 col-md-6 col-sm-12",
                         ClaimInformationStyle.search
                       )}
                     >
-                      {/* <SearchBoxAssignItems /> */}
-
                       <GenericSelect
                         placeholder="Enter Category"
                         value={searchQuery}
@@ -645,7 +598,6 @@ function ClaimInformation({
           >
             {translate?.clickAddAttachment ?? ""}
           </label>
-          {/* <input type="file" />  */}
           <input
             type="file"
             id="inp"

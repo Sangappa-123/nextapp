@@ -11,7 +11,6 @@ import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import { unknownObjectType } from "@/constants/customTypes";
 import useTranslation from "@/hooks/useTranslation";
 import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
-import { formatMobileNumber } from "@/utils/utitlity";
 
 function ClaimpolicyInformation({
   register,
@@ -202,8 +201,8 @@ function ClaimpolicyInformation({
             {...register("mobilenumber")}
             showError={customerror["phone"]}
             errorMsg={customerror?.phone}
+            phoneFormatter={true}
             onInput={(e: { target: { value: string } }) => {
-              formatMobileNumber(e);
               if (e.target.value && e.target.value.length < 14) {
                 setCustomerror((prev: any) => {
                   return {
@@ -235,8 +234,8 @@ function ClaimpolicyInformation({
             {...register("secondaryPhonenumber")}
             showError={customerror["secondaryphone"]}
             errorMsg={customerror?.secondaryphone}
+            phoneFormatter={true}
             onInput={(e: { target: { value: string } }) => {
-              formatMobileNumber(e);
               if (e.target.value && e.target.value.length < 14) {
                 setCustomerror((prev: any) => {
                   return {
