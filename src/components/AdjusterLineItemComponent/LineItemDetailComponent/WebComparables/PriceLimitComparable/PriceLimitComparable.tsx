@@ -7,11 +7,10 @@ interface priceLimitPropType {
   endPrice: number;
   handleSubmit: () => void;
   updateState: (key: string, value: string | number | object) => void;
-  isSearching: boolean;
 }
 
 const PriceLimitComparable = (props: priceLimitPropType) => {
-  const { startPrice, endPrice, handleSubmit, updateState, isSearching } = props;
+  const { startPrice, endPrice, handleSubmit, updateState } = props;
   // const [pFrom, setPFrom] = useState(startPrice);
   // const [pTo, setPTo] = useState(endPrice);
 
@@ -44,7 +43,6 @@ const PriceLimitComparable = (props: priceLimitPropType) => {
             id="priceFrom"
             value={startPrice}
             onChange={handlePriceFromChange}
-            disabled={isSearching}
           />
         </div>
         <div>To</div>
@@ -60,12 +58,10 @@ const PriceLimitComparable = (props: priceLimitPropType) => {
             placeholder="Price To"
             value={endPrice}
             onChange={handlePriceToChange}
-            disabled={isSearching}
           />
         </div>
       </div>
       <GenericButton
-        disabled={isSearching}
         label="Go"
         size="medium"
         theme="existingDarkBlueBtn"
