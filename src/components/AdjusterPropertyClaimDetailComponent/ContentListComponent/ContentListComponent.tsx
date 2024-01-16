@@ -763,6 +763,7 @@ function ContentListComponent(props: any) {
           tableLoader={tableLoader}
           setIsModalOpen={setIsModalOpen}
           setEditItem={setEditItem}
+          translate={translate}
         />
       </div>
     </>
