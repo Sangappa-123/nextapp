@@ -328,11 +328,18 @@ function ClaimInformation({
           </label>
         </div>
         <div className={clsx("col-lg-3 col-md-3 col-sm-12")}>
-          <GenericInput
-            placeholder="$999.00"
-            inputFieldClassname="hideInputArrow"
-            {...register("claimDeductible")}
-            priceFormatter={true}
+          <Controller
+            name="claimDeductible"
+            control={control}
+            render={({ field }: any) => (
+              <GenericInput
+                placeholder="$999.00"
+                inputFieldClassname="hideInputArrow"
+                onValueChange={(values: any) => field.onChange(values.value)}
+                priceFormatter={true}
+                {...field}
+              />
+            )}
           />
         </div>
       </div>
@@ -360,13 +367,20 @@ function ClaimInformation({
           </div>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          <GenericInput
-            placeholder="$88.00"
-            inputFieldClassname="hideInputArrow"
-            showError={error["minItemPrice"]}
-            errorMsg={error?.minItemPrice?.message}
-            {...register("minItemPrice")}
-            priceFormatter={true}
+          <Controller
+            name="minItemPrice"
+            control={control}
+            render={({ field }: any) => (
+              <GenericInput
+                placeholder="$88.00"
+                inputFieldClassname="hideInputArrow"
+                showError={error["minItemPrice"]}
+                errorMsg={error?.minItemPrice?.message}
+                onValueChange={(values: any) => field.onChange(values.value)}
+                priceFormatter={true}
+                {...field}
+              />
+            )}
           />
         </div>
       </div>
@@ -426,14 +440,20 @@ function ClaimInformation({
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          <GenericInput
-            placeholder="$0.00"
-            inputFieldClassname="hideInputArrow"
-            showError={error["contentLimits"]}
-            errorMsg={error?.contentLimits?.message}
-            errorMsgClassname={ClaimInformationStyle.errorMessage}
-            {...register("contentLimits")}
-            priceFormatter={true}
+          <Controller
+            name="contentLimits"
+            control={control}
+            render={({ field }: any) => (
+              <GenericInput
+                placeholder="$0.00"
+                inputFieldClassname="hideInputArrow"
+                showError={error["contentLimits"]}
+                errorMsg={error?.contentLimits?.message}
+                errorMsgClassname={ClaimInformationStyle.errorMessage}
+                onValueChange={(values: any) => field.onChange(values.value)}
+                priceFormatter={true}
+              />
+            )}
           />
         </div>
       </div>
