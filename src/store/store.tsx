@@ -5,13 +5,14 @@ import React from "react";
 import rootReducer from "@/reducers";
 import { Provider } from "react-redux";
 import { addSessionData, updateLoadingState } from "@/reducers/Session/SessionSlice";
+import { participants } from "@/reducers/LineItemDetail/LineItemThunkService";
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat(participants.middleware),
 });
 
 export default store;
