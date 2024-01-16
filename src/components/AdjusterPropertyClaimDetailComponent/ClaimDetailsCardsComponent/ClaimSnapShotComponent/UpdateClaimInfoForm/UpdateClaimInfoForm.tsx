@@ -1,3 +1,4 @@
+"use client";
 import ClmainInfoStyle from "./ClaimInfo.module.scss";
 import GenericInput from "@/components/common/GenericInput";
 import { useForm, Controller } from "react-hook-form";
