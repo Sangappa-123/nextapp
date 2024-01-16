@@ -72,6 +72,7 @@ enum apiEndPoints {
   updateCliamStatus = "web/bulk/update/item/status",
   updatePaidStatus = "web/claim/items/paid",
   updateUnderReview = "web/review/claim/supervisor",
+  reviewItemSupervisor = "web/review/item/supervisor",
   taskListApiUrl = "web/claim/tasklist/home",
   createTaskApiUrl = "web/claim/create/task",
   assignVendorGet = "web/registered/vendors",
