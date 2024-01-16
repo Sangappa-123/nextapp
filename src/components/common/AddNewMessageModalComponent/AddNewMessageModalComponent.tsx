@@ -17,8 +17,8 @@ interface AddNewMsgModalComponentProps {
   handleOpenModal: () => void;
   handleMessageSubmit: (data: any) => void;
   claimId: string;
-  participants: [];
-  defaultValue?: [];
+  participants: { label: string; value: string }[];
+  defaultValue?: { label: string; value: string }[];
 }
 const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: any) => {
   const { handleOpenModal, participants, defaultValue } = props;

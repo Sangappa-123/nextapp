@@ -12,8 +12,7 @@ const translate = {
   more: "More",
   acceptMinValues: "Accept Min. Values",
   acceptStandardCost: "Accept Standerd Cost",
-  contentList: "Content List",
-
+  contentList: "Contents List",
   contentListTableColoumns: {
     clearAllFilter: "Clear All Filter",
     originalItem: "Original Item",

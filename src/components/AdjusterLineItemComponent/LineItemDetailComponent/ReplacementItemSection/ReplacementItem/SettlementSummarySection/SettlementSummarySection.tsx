@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useMemo } from "react";
 import settlementSummarySectionStyle from "./settlementSummarySection.module.scss";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
+import { calculatedTaxType } from "../ReplacementItem";
+import { useAppSelector } from "@/hooks/reduxCustomHook";
+import selectItemStatus from "@/reducers/LineItemDetail/Selectors/selectItemStatus";
+import selectSelectedSubCategory from "@/reducers/LineItemDetail/Selectors/selectSelectedSubCategory";
 
-function SettlementSummarySection() {
+interface rcvWithSplCaseType {
+  depriciationRateStr: string;
+}
+
+function SettlementSummarySection({
+  calculatedTax,
+}: {
+  calculatedTax: calculatedTaxType;
+}) {
+  const status = useAppSelector(selectItemStatus);
+  const subcategory = useAppSelector(selectSelectedSubCategory);
+
+  const CalculateRCVWithSplCase = useMemo<rcvWithSplCaseType>(() => {
+    let depriciationRateStr = subcategory ? subcategory?.annualDepreciation + "%" : "0 %";
+    if (subcategory?.specialCase) {
+      if (subcategory.depreciation) {
+        depriciationRateStr = `${subcategory.firstYearDepreciation}%, 
+          ${subcategory.correspondYearDepreciation}% year on, ${subcategory.maxDepreciation}% max`;
+      } else if (subcategory.flatDepreciation && subcategory.flatDepreciation > 0) {
+        depriciationRateStr = `${subcategory?.flatDepreciation}% flat`;
+      } else {
+        depriciationRateStr += `, ${subcategory.maxDepreciation}% max`;
+      }
+    }
+    return { depriciationRateStr };
+  }, [subcategory]);
+
   const CalculatedValue = ({
     label,
     value,
@@ -17,6 +47,7 @@ function SettlementSummarySection() {
       <div id={id}>{value}</div>
     </div>
   );
+
   return (
     <div className={settlementSummarySectionStyle.root}>
       <GenericComponentHeading
@@ -28,12 +59,12 @@ function SettlementSummarySection() {
           <CalculatedValue
             id="status"
             label="Item Status"
-            value={"Valued".toUpperCase()}
+            value={status?.status?.toUpperCase()}
           />
           <CalculatedValue
             id="totalReplaceCost"
             label="Total Replacement Cost"
-            value="$33.49"
+            value={`$${calculatedTax.rcvTotal}`}
           />
           <CalculatedValue id="totalCostVal" label="Total Cash Value" value="$33.49" />
         </div>
@@ -41,7 +72,7 @@ function SettlementSummarySection() {
           <CalculatedValue
             id="annualDepreciation"
             label="Annual Depreciation"
-            value="0%, 0% max"
+            value={CalculateRCVWithSplCase.depriciationRateStr}
           />
           <CalculatedValue id="itemLimit" label="Item Limit" value="$0.00" />
         </div>

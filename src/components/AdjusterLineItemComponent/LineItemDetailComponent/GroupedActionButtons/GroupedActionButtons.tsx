@@ -6,11 +6,12 @@ import selectScheduledItem from "@/reducers/LineItemDetail/Selectors/selectSched
 
 interface propType {
   onDeleteClick?: () => void;
+  onSupervisorReviewClick: () => void;
 }
 
 function GroupedActionButtons(props: propType) {
   const { isScheduledItem, scheduleAmount } = useAppSelector(selectScheduledItem);
-  const { onDeleteClick } = props;
+  const { onDeleteClick, onSupervisorReviewClick } = props;
   return (
     <div className={groupedActionButtonsStyle.root}>
       <GenericButton
@@ -19,7 +20,12 @@ function GroupedActionButtons(props: propType) {
         theme="normal"
         disabled={true}
       />
-      <GenericButton label="Supervisor Review" size="medium" theme="normal" />
+      <GenericButton
+        label="Supervisor Review"
+        size="medium"
+        theme="normal"
+        onClickHandler={onSupervisorReviewClick}
+      />
       <GenericButton
         label="Save"
         size="medium"

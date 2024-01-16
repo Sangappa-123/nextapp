@@ -14,20 +14,30 @@
     grid-template-rows: auto;
     gap: 16px;
   }
-  .deleteModalOverlay {
-    .deleteModalBtn {
-      display: flex;
-      justify-content: flex-end;
-      // column-gap: 16px;
-      width: 100%;
-      button {
-        width: 50px;
-      }
+}
+
+.deleteModalOverlay {
+  .deleteModalBtn {
+    display: flex;
+    justify-content: flex-end;
+    // column-gap: 16px;
+    width: 100%;
+    button {
+      width: 50px;
     }
-    .deleteModalMessage {
-      padding: 24px 8px;
-      font-size: 13px;
-      color: #333;
-    }
+  }
+  .deleteModalMessage {
+    padding: 24px 8px;
+    font-size: 13px;
+    color: #333;
+  }
+}
+
+.modalContainer {
+  align-items: start;
+  .modalContent {
+    width: 600px;
+    position: relative;
+    top: 30px;
   }
 }
