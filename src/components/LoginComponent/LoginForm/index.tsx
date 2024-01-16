@@ -91,6 +91,14 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
           router.push("/login");
         }
       }
+    } else {
+      dispatch(
+        addNotification({
+          message: loginRes?.result?.errorMessage,
+          id: "login-error",
+          status: "error",
+        })
+      );
     }
   };
 

@@ -17,7 +17,7 @@ interface TypedProps<T> {
   customStyles?: StylesConfig;
   isSearchable?: boolean;
   [rest: string]: any;
-  defaultValue?: T[];
+  isModalPopUp: boolean;
 }
 
 function GenericSelect<T extends object>(props: TypedProps<T>) {
@@ -41,7 +41,7 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
     handleClear,
     disabled = false,
     isSearchable = true,
-    defaultValue = [],
+    isModalPopUp = false,
     ...rest
   } = props;
 
@@ -66,6 +66,10 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       },
       height: !isMulti ? "30px" : "auto",
       minHeight: "30px",
+      ...customStyles.control,
+    }),
+    valueContainer: (styles: any) => ({
+      ...styles,
       ...customStyles.control,
     }),
     option: (styles: any) => {
@@ -100,6 +104,10 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
       height: "25px",
       width: "22px",
       ...customStyles.dropdownIndicator,
+    }),
+    indicatorSeparator: (styles: any) => ({
+      ...styles,
+      ...customStyles.indicatorSeparator,
     }),
     clearIndicator: (styles: any) => ({
       ...styles,
@@ -143,8 +151,6 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
 
       <div>
         <ReactSelect
-          // classNames={selectStyle.reactSelectContainer}
-          // classNames={"abc"}
           styles={customDefaultStyles}
           components={{ Menu: CustomMenuWithClear }}
           value={selected}
@@ -159,10 +165,11 @@ function GenericSelect<T extends object>(props: TypedProps<T>) {
             container: () => selectStyle.reactSelectContainer,
             control: () => (disabled ? selectStyle.disabled : ""),
           }}
-          // menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+          menuPortalTarget={
+            typeof window !== "undefined" && !isModalPopUp ? document.body : null
+          }
           maxMenuHeight={200}
           menuShouldScrollIntoView={false}
-          defaultValue={defaultValue}
           {...rest}
         />
         <div

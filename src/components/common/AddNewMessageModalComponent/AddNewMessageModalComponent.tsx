@@ -109,6 +109,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
                       fieldOnChange(e);
                     }}
                     defaultValue={defaultValue}
+                    isModalPopUp={true}
                     {...rest}
                   />
                 )}
