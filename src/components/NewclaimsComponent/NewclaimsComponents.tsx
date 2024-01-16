@@ -84,12 +84,9 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     setError,
     clearErrors,
     getValues,
-    watch,
   } = useCustomForm(schema);
   const { errors } = formState;
-  const watchAllFields = watch();
 
-  console.log(watchAllFields);
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
   const [customerror, setCustomerror] = useState({ phone: null, secondaryphone: null });
