@@ -34,7 +34,6 @@ const ClaimContentSlice = createSlice({
       let newArr = {};
       const claimRes: any = [];
       if (claimContentData.data) {
-        console.log("claimContentData", claimContentData);
         claimContentData.data.map((item: any) => {
           newArr = {
             ...item,

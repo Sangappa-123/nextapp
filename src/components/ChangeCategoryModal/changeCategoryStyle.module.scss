@@ -1,11 +1,10 @@
 @use "@/scss/mixins.scss" as *;
 @use "@/scss/colors.scss" as *;
 
-
 .formControl {
-  flex-direction: row-reverse;  
+  flex-direction: row-reverse;
   .wrapper {
-    flex-direction: row-reverse;  
+    flex-direction: row-reverse;
     margin: auto;
     display: flex;
     align-items: center;
@@ -22,7 +21,7 @@
 .labelClassname {
   font-size: 14px;
   font-weight: 600;
-  order:2;
+  order: 2;
 }
 
 .formControl {
@@ -46,7 +45,6 @@
   }
 }
 
-
 .modalContainer {
   align-items: start;
 }
@@ -56,6 +54,6 @@
   top: 30px;
 }
 
-.items{
+.items {
   cursor: pointer;
 }

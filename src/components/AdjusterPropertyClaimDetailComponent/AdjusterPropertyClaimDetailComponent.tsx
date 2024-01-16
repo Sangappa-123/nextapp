@@ -69,37 +69,52 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
 }) => {
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
-  if (Array.isArray(categoryListRes?.data)) {
-    dispatch(addCategories(categoryListRes?.data));
-  }
-  if (Array.isArray(subcategoryListRes?.data)) {
-    dispatch(addSubcategories(subcategoryListRes?.data));
-  }
-  if (Array.isArray(pendingTaskListRes?.data)) {
-    dispatch(addPendingTasks(pendingTaskListRes?.data));
-  } else {
-    dispatch(addPendingTasks([]));
-  }
-  if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
-    dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
-  } else {
-    dispatch(addMessageList([]));
-  }
-  if (Array.isArray(claimParticipantsRes?.data)) {
-    dispatch(addParticipants(claimParticipantsRes?.data));
-  } else {
-    dispatch(addParticipants([]));
-  }
-  if (claimContentsRes?.data) {
-    dispatch(addContents(claimContentsRes?.data));
-  }
-  if (policyInfoRes?.data) {
-    dispatch(addPolicyInfo(policyInfoRes?.data));
-  }
-  dispatch(addCondition(claimContitionRes?.data));
-  dispatch(addRetailer(claimRetailerRes?.data?.retailers));
-  dispatch(addRoom(claimRoomRes?.data));
-  dispatch(addRoomType(claimRoomTypeRes));
+  useEffect(() => {
+    if (Array.isArray(categoryListRes?.data)) {
+      dispatch(addCategories(categoryListRes?.data));
+    }
+    if (Array.isArray(subcategoryListRes?.data)) {
+      dispatch(addSubcategories(subcategoryListRes?.data));
+    }
+    if (Array.isArray(pendingTaskListRes?.data)) {
+      dispatch(addPendingTasks(pendingTaskListRes?.data));
+    } else {
+      dispatch(addPendingTasks([]));
+    }
+    if (Array.isArray(claimDetailMessageListRes?.data?.messages)) {
+      dispatch(addMessageList(claimDetailMessageListRes?.data?.messages));
+    } else {
+      dispatch(addMessageList([]));
+    }
+    if (Array.isArray(claimParticipantsRes?.data)) {
+      dispatch(addParticipants(claimParticipantsRes?.data));
+    } else {
+      dispatch(addParticipants([]));
+    }
+    if (claimContentsRes?.data) {
+      dispatch(addContents(claimContentsRes?.data));
+    }
+    if (policyInfoRes?.data) {
+      dispatch(addPolicyInfo(policyInfoRes?.data));
+    }
+    dispatch(addCondition(claimContitionRes?.data));
+    dispatch(addRetailer(claimRetailerRes?.data?.retailers));
+    dispatch(addRoom(claimRoomRes?.data));
+    dispatch(addRoomType(claimRoomTypeRes));
+  }, [
+    categoryListRes?.data,
+    claimContentsRes?.data,
+    claimContitionRes?.data,
+    claimDetailMessageListRes?.data?.messages,
+    claimParticipantsRes?.data,
+    claimRetailerRes?.data?.retailers,
+    claimRoomRes?.data,
+    claimRoomTypeRes,
+    dispatch,
+    pendingTaskListRes?.data,
+    policyInfoRes?.data,
+    subcategoryListRes?.data,
+  ]);
 
   const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
     useTranslation("claimDetailsTabTranslate");

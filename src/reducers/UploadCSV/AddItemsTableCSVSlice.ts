@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { getSelectVendor } from "@/services/ClaimService";
 
 interface AddItemsTableState {
   addItemsTableData: any[];
@@ -9,6 +10,12 @@ interface AddItemsTableState {
   selectedCategory: string;
   searchKeyword: string;
   categoryRows: any[];
+  previousSelectedItems: any[];
+  vendors: any[];
+  vendorInventoryListAPIData: any;
+  vendorInventoryListDataFull: any[];
+  vendorInventoryfetching: boolean;
+  vendorInventorySummaryData: any[];
 }
 
 const initialState: AddItemsTableState = {
@@ -20,7 +27,26 @@ const initialState: AddItemsTableState = {
   selectedCategory: "",
   searchKeyword: "",
   categoryRows: [],
+  previousSelectedItems: [],
+  vendorInventoryfetching: true,
+  vendorInventorySummaryData: [],
+  vendorInventoryListAPIData: null,
+  vendorInventoryListDataFull: [],
+  vendors: [],
 };
+
+export const fetchVendorInventoryAction = createAsyncThunk(
+  "vendorInventory/fetchData",
+  async (param: { pageNo: number; recordPerPage: number }, api) => {
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await getSelectVendor(param, true);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const AddItemsTableCSVSlice = createSlice({
   name: "addItemsTable",
@@ -36,6 +62,9 @@ const AddItemsTableCSVSlice = createSlice({
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
       state.selectedRows = [...state.selectedRows, ...action.payload];
     },
+    setPreviousSelectedItems: (state, action: PayloadAction<any[]>) => {
+      state.previousSelectedItems = action.payload;
+    },
     setCategoryRows: (state, action: PayloadAction<any[]>) => {
       state.categoryRows = [...action.payload];
     },
@@ -48,12 +77,35 @@ const AddItemsTableCSVSlice = createSlice({
     setSearchKeyword: (state, action: PayloadAction<string>) => {
       state.searchKeyword = action.payload;
     },
-    deleteClaimContentListItem: (state, action: PayloadAction<any>) => {
+    deleteCategoryListItem: (state, action: PayloadAction<any>) => {
       const itemIdToDelete = action.payload.id;
       state.addItemsTableData = state.addItemsTableData.filter(
         (item) => item.id !== itemIdToDelete
       );
     },
+    setVendors: (state, action: PayloadAction<any[]>) => {
+      state.vendors = action.payload;
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchVendorInventoryAction.pending, (state) => {
+      state.vendorInventoryfetching = true;
+      state.vendorInventoryListDataFull = [];
+    });
+    builder.addCase(fetchVendorInventoryAction.fulfilled, (state, action) => {
+      const payload = action.payload;
+      console.log("API Responsessssssssss", payload);
+      state.vendorInventoryfetching = false;
+      if (payload?.status === 200) {
+        state.vendorInventorySummaryData = payload?.data.comapanyVendors;
+        state.vendorInventoryListDataFull = payload?.data.companyVendors;
+        state.vendorInventoryListAPIData = payload?.data.companyVendors;
+      }
+    });
+    builder.addCase(fetchVendorInventoryAction.rejected, (state) => {
+      state.vendorInventoryfetching = false;
+      state.vendorInventoryListDataFull = initialState.vendorInventoryListDataFull;
+    });
   },
 });
 
@@ -62,9 +114,10 @@ export const {
   setSelectedItems,
   setSelectedRows,
   setSearchKeyword,
-  deleteClaimContentListItem,
+  deleteCategoryListItem,
   setCategoryRows,
   setCategories,
   setSelectedCategory,
+  setVendors,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

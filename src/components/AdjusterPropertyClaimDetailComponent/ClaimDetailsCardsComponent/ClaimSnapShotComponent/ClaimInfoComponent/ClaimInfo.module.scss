@@ -1,12 +1,28 @@
+@use "@/scss/colors.scss" as *;
+
 .fieldRowContainer {
   display: flex;
   font-size: 13px;
-  margin: 5px 0;
-  padding: 3px;
-  .fieldLabel {
-    text-align: right;
-    font-weight: 600;
+  margin: 2px 0;
+  justify-content: center;
+  .fieldSetContainer {
     padding-left: 10px;
-    padding-right: 12px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    min-width: 30%;
+    margin: 5px;
+    border: 1px solid $mineShaft;
+    border-radius: 4px;
+    font-size: 11px;
+    .fieldSetLabel {
+      font-size: 11px;
+      padding: 0 4px;
+      color: $mineShaft;
+      font-weight: 600;
+    }
+    .fieldValue {
+      font-size: 12px;
+    }
   }
 }

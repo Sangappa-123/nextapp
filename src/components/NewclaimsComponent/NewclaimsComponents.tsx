@@ -34,11 +34,8 @@ const AssignItemsComponent = dynamic(() => import("./AssignItemsComponent"), {
 
 const NewclaimsComponent: React.FC<connectorType> = () => {
   const dispatch = useAppDispatch();
-  // const router = useRouter();
   const activeSection = useAppSelector(selectActiveSection);
-  const insuranceCompany = useAppSelector(selectInsuranceCompanyName);
-
-  console.log("insurancecompany", insuranceCompany);
+  let insuranceCompany = useAppSelector(selectInsuranceCompanyName);
   const schema = object({
     // policy schema
     firstname: string("firstname", [
@@ -89,21 +86,17 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
     getValues,
   } = useCustomForm(schema);
   const { errors } = formState;
-  console.log("logss", errors);
 
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
-  // const [claimNumberr, setClaimNumber] = useState<string | null>(null);
+  const [customerror, setCustomerror] = useState({ phone: null, secondaryphone: null });
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
-    console.log("updateHomeOwnerType", data);
-    console.log("homeOwnerType", homeOwnerType);
   };
 
   const formSubmit = async (data: any) => {
     try {
-      console.log("data", data);
       let PolicyInitials = "";
       let InsuranceCompanyIntials = "";
       let PolicyNumber = " ";
@@ -112,14 +105,13 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
       if (data.firstname !== null && data.lastname !== null) {
         PolicyInitials = data.firstname.charAt(0) + "" + data.lastname.charAt(0);
       }
-      const abc = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
-      console.log("abc", abc);
+      insuranceCompany = insuranceCompany.trim();
+      const spaceIndex = insuranceCompany.indexOf(" "); //Checking for spaces in Company name string
 
       if (insuranceCompany !== null) {
-        if (abc == -1) {
+        if (spaceIndex === -1) {
           InsuranceCompanyIntials =
             insuranceCompany.charAt(0) + "" + insuranceCompany.charAt();
-          console.log("InsuranceCompanyIntials", InsuranceCompanyIntials);
 
           if (PolicyInitials.length > 0 && InsuranceCompanyIntials.length > 0) {
             PolicyNumber =
@@ -139,10 +131,30 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               "" +
               CurrentDate;
           }
+        } else {
+          InsuranceCompanyIntials =
+            insuranceCompany.length > 1
+              ? insuranceCompany.slice(0, 2)
+              : insuranceCompany[0] + insuranceCompany[0];
+          PolicyNumber =
+            "PL" +
+            "" +
+            InsuranceCompanyIntials.toUpperCase() +
+            "" +
+            PolicyInitials.toUpperCase() +
+            "" +
+            CurrentDate;
+          CustAccNumber =
+            "CA" +
+            "" +
+            InsuranceCompanyIntials.toUpperCase() +
+            "" +
+            PolicyInitials.toUpperCase() +
+            "" +
+            CurrentDate;
         }
       }
-      console.log("namesss", PolicyNumber);
-      console.log("CustAccNumber", CustAccNumber);
+
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -175,7 +187,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         totalSpecialLimit: 0,
         policyLimits: data.contentLimits,
       };
-      console.log("payload", payload);
       const payload1 = {
         filesDetails: null,
         file: null,
@@ -226,7 +237,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         },
       };
       const formData = new FormData();
-      console.log(formData);
       formData.append("claimDetails", JSON.stringify(payload1.claimDetails));
       const postlCaimRes = await postClaim(payload);
       if (postlCaimRes?.status === 200) {
@@ -238,13 +248,11 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           })
         );
         const creatClaimRes = await creatClaim(formData);
-        console.log("ccccccccc", creatClaimRes);
         if (creatClaimRes?.status === 200) {
           sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
           sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
           sessionStorage.setItem("redirectToNewClaimPage", "true");
           const nextSection = activeSection + 1;
-          console.log("Next Section", nextSection);
           dispatch(setActiveSection(nextSection));
           dispatch(
             addNotification({
@@ -287,12 +295,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
 
   const handleAssignItemsClick = () => {
     dispatch(setActiveSection(2));
-    // router.push("/new-claim");
   };
 
   const handlePreviousClick = () => {
     const prevSection = activeSection - 1;
-    console.log("Form Data on Previous Click", getValues());
     dispatch(setActiveSection(prevSection));
   };
 
@@ -324,23 +330,23 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             <div
               className={clsx("row justify-content-end mt-4", NewClaimsStyle.upButtons)}
             >
-              <div className="col-auto">
+              <div className="col-auto p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto ml-2">
+              <div className="col-auto ml-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto">
+              <div className="col-auto ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
@@ -364,6 +370,8 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                 resetField={resetField}
                 getValues={getValues}
                 clearErrors={clearErrors}
+                customerror={customerror}
+                setCustomerror={setCustomerror}
               />
             </div>
             <div>
@@ -385,18 +393,18 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
               />
             </div>
             <div className={clsx("row justify-content-end", NewClaimsStyle.downButtons)}>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Cancel"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 p-0">
                 <GenericButton
                   label="Reset"
-                  theme="normal"
+                  theme="linkBtn"
                   size="medium"
                   onClick={showConfirmation}
                 />
@@ -414,12 +422,13 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
                   </div>
                 )}
               </div>
-              <div className="col-auto mt-2">
+              <div className="col-auto mt-2 ps-0">
                 <GenericButton
                   label="Save & Next"
                   theme="normal"
                   type="submit"
                   size="medium"
+                  disabled={!!customerror.phone || !!customerror.secondaryphone}
                 />
               </div>
             </div>
@@ -431,17 +440,13 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           <AddItemsComponent
             onAssignItemsClick={handleAssignItemsClick}
             onNewClaimsClick={handlePreviousClick}
-            // claimNumber={claimNumberr || ""}
           />
         </Cards>
       )}
       {activeSection === 2 && (
         <Suspense fallback={<Loading />}>
           <Cards>
-            <AssignItemsComponent
-              onNewClaimsClick={handlePreviousClick}
-              // selectedRowsData={[]}
-            />
+            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
           </Cards>
         </Suspense>
       )}

@@ -10,19 +10,11 @@ interface comparableSearchBoxType {
   // setSearchInput: React.Dispatch<React.SetStateAction<searchInputType>>;
   updateState: (key: string, value: string | number | object) => void;
   handleSubmit: () => void;
-  isSearching: boolean;
   searchByEngine: (engine: typeof WEB_SEARCH_ENGINES) => void;
 }
 
 const ComparableSearchBox = (props: comparableSearchBoxType) => {
-  const {
-    searchKey,
-    selectedEngine,
-    updateState,
-    handleSubmit,
-    isSearching,
-    searchByEngine,
-  } = props;
+  const { searchKey, selectedEngine, updateState, handleSubmit, searchByEngine } = props;
   // const [searchValue, setSearchValue] = React.useState(searchKey);
 
   const handleSearch = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -47,7 +39,6 @@ const ComparableSearchBox = (props: comparableSearchBoxType) => {
           value={searchKey}
           onChange={handleSearch}
           onKeyDown={handleKeyDown}
-          disabled={isSearching}
         />
       </div>
       <GenericSelect
@@ -68,7 +59,6 @@ const ComparableSearchBox = (props: comparableSearchBoxType) => {
         name="engine"
         selected={selectedEngine}
         isClearable={false}
-        disabled={isSearching}
         onChange={(e: typeof WEB_SEARCH_ENGINES) => {
           const value = { ...e };
           searchByEngine(value);

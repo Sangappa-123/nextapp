@@ -9,6 +9,8 @@ import GenericSelect from "../common/GenericSelect/index";
 import { fetchPolicyType, fetchState, validateEmail } from "@/services/ClaimService";
 import ConfirmModal from "../common/ConfirmModal/ConfirmModal";
 import { unknownObjectType } from "@/constants/customTypes";
+import useTranslation from "@/hooks/useTranslation";
+import { newClaimTransalateType } from "@/translations/newClaimTransalate/en";
 
 function ClaimpolicyInformation({
   register,
@@ -19,6 +21,8 @@ function ClaimpolicyInformation({
   resetField,
   getValues,
   clearErrors,
+  setCustomerror,
+  customerror,
 }: any) {
   // const options = [
   //   { value: "chocolate", label: "Chocolate" },
@@ -27,7 +31,6 @@ function ClaimpolicyInformation({
   // ];
   const [options, setOptions] = useState([]);
   const [show, setShow] = useState(false);
-  // const [stateId, setStateId] = useState(null);
   const [policyDetails, setpolicyDetails] = useState<unknownObjectType | null>(null);
 
   const { onChange: emailChange, ...rest } = register("email");
@@ -75,25 +78,6 @@ function ClaimpolicyInformation({
     clearErrors("claim");
     clearErrors("minItemPrice");
     clearErrors("contentLimits");
-
-    // setValue("claim", { shouldValidate: true });
-    // setValue("claimDate", { shouldValidate: true });
-    // setValue("insuranceCompany", { shouldValidate: true });
-    // setValue("adjusterName", { shouldValidate: true });
-    // setValue("claimDescription", { shouldValidate: true });
-    // setValue("claimDeductible", { shouldValidate: true });
-    // setValue("minItemPrice", { shouldValidate: true });
-    // setValue("taxRate", { shouldValidate: true });
-    // setValue("contentLimits", { shouldValidate: true });
-    // setValue("lossType", { shouldValidate: true });
-    // setValue("homeOwnersPolicyType", { shouldValidate: true });
-
-    // fetchPolicyType(stateId)
-    //   .then((res: any) => {
-    //     console.log("state", res);
-    //   })
-    //   .catch((error: any) => console.log("verify errr", error));
-
     handleClose();
   };
   useEffect(() => {
@@ -104,14 +88,6 @@ function ClaimpolicyInformation({
       .then((res) => {
         console.log("state", res);
         setOptions(res.data);
-        // console.log(
-        //   "stateObject",
-        //   res.data.map((item: { state: string }) => {
-        //     item;
-        //   })
-        // );
-
-        // setStateId(res.data.address.state.id);
       })
       .catch((error) => console.log("state errr", error));
   }, []);
@@ -121,7 +97,6 @@ function ClaimpolicyInformation({
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const getPolicyType = (id: number) => {
-    console.log("onwers logs");
     const stateId = getValues("state")?.id;
     if (!stateId) return;
     fetchPolicyType(id)
@@ -133,9 +108,18 @@ function ClaimpolicyInformation({
       .catch((error) => console.log("policy errr", error));
   };
 
+  const {
+    translate,
+    loading,
+  }: { translate: newClaimTransalateType | undefined; loading: boolean } =
+    useTranslation("newClaimTransalate");
+  console.log("transalte", translate);
+  if (loading) {
+    return null;
+  }
+
   return (
     <div>
-      {/* <form className="col-lg-4 col-md-6 col-12 d-flex flex-column"> */}
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 ml-8 text-right")}>
           <label className={ClaimPolicyInformation.label}>Email</label>
@@ -150,10 +134,8 @@ function ClaimpolicyInformation({
               emailChange(e);
               const emailValue = e.target.value;
               if (emailValue.match(regex) != null) {
-                console.log(emailValue);
                 verifyEmail(emailValue);
               }
-              // /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             }}
             {...rest}
           />
@@ -165,7 +147,6 @@ function ClaimpolicyInformation({
                 submitBtnText="Yes"
                 closeBtnText="No"
                 childComp="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
-                // descText="This policyholder email already exists! Do you want to prepopulate the data? Please Confirm!"
                 modalHeading="Policyhlder Info"
                 submitHandler={() => handleGetData()}
               />
@@ -176,7 +157,7 @@ function ClaimpolicyInformation({
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
-            <span style={{ color: "red" }}>*</span> First Name
+            <span style={{ color: "red" }}>*</span> {translate?.firstName ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-4 col-sm-12">
@@ -184,7 +165,6 @@ function ClaimpolicyInformation({
             placeholder="First Name"
             showError={error["firstname"]}
             errorMsg={error?.firstname?.message}
-            // className={ClaimPolicyInformation.firstName}
             {...register("firstname")}
             singleValue
           />
@@ -194,7 +174,8 @@ function ClaimpolicyInformation({
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
           <label className={ClaimPolicyInformation.label}>
             {" "}
-            <span style={{ color: "red" }}>*</span> Last Name
+            <span style={{ color: "red" }}>*</span>
+            {translate?.lastName ?? ""}
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
@@ -202,42 +183,84 @@ function ClaimpolicyInformation({
             placeholder="Last Name"
             showError={error["lastname"]}
             errorMsg={error?.lastname?.message}
-            // className={ClaimPolicyInformation.lastName}
             {...register("lastname")}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimPolicyInformation.label}>Mobile Number</label>
+          <label className={ClaimPolicyInformation.label}>
+            {" "}
+            {translate?.mobileNumber ?? ""}
+          </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
-            // textContentType="telephoneNumber"
             keyboardType="phone-pad"
-            // name="phone-number"
-            // pattern={pattern}
             {...register("mobilenumber")}
+            showError={customerror["phone"]}
+            errorMsg={customerror?.phone}
+            phoneFormatter={true}
+            onInput={(e: { target: { value: string } }) => {
+              if (e.target.value && e.target.value.length < 14) {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    phone: "Enter valid phone number",
+                  };
+                });
+              } else {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    phone: null,
+                  };
+                });
+              }
+            }}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-center">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimPolicyInformation.label}>Secondary Phone Number</label>
+          <label className={ClaimPolicyInformation.label}>
+            {translate?.secondaryPhoneNumber ?? ""}
+          </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
             placeholder="XXX-XXX-XXXX"
-            // name="phone-number"
-            // pattern={pattern}
             {...register("secondaryPhonenumber")}
+            showError={customerror["secondaryphone"]}
+            errorMsg={customerror?.secondaryphone}
+            phoneFormatter={true}
+            onInput={(e: { target: { value: string } }) => {
+              if (e.target.value && e.target.value.length < 14) {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    secondaryphone: "Enter valid phone number",
+                  };
+                });
+              } else {
+                setCustomerror((prev: any) => {
+                  return {
+                    ...prev,
+                    secondaryphone: null,
+                  };
+                });
+              }
+            }}
           />
         </div>
       </div>
       <div className="row mt-3 align-items-start">
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 mt-2 text-right")}>
-          <label className={ClaimPolicyInformation.label}>Address</label>
+          <label className={ClaimPolicyInformation.label}>
+            {" "}
+            {translate?.address ?? ""}
+          </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
           <GenericInput
@@ -258,21 +281,17 @@ function ClaimpolicyInformation({
         </div>
       </div>
       <div className="row align-items-center">
-        {/* <div className="row"> */}
         <div className={clsx("col-lg-3 col-md-2 col-sm-12 text-right")}>
           <label className={clsx(ClaimPolicyInformation.label)}>
-            <span style={{ color: "red" }}>*</span> State
+            <span style={{ color: "red" }}>*</span> {translate?.state ?? ""}
           </label>
         </div>
         <div className="col-lg-2">
           <Controller
             control={control}
             name="state"
-            // rules={{ required: true }}
             render={({ field: { onChange: fieldOnChange, ...rest } }: any) => (
               <GenericSelect
-                // labelText={selectLabel}
-                // placeholder={selectPlaceholder}
                 options={options}
                 name="state"
                 onChange={(e: any) => {
@@ -289,12 +308,10 @@ function ClaimpolicyInformation({
             )}
           />
         </div>
-        {/* <SelectCheckBox options={options} className="col-4" /> */}
-        {/* <div className={clsx("col-lg-2 col-md-2 col-sm-12 mt-2 text-right ")}> */}
-        {/* <div className="row"> */}
+
         <div className={clsx("col-auto")}>
           <label className={clsx(ClaimPolicyInformation.label)}>
-            <span style={{ color: "red" }}>*</span> Zip Code
+            <span style={{ color: "red" }}>*</span> {translate?.zipCode ?? ""}
           </label>
         </div>
         <div className={clsx("col-lg-2 col-md-2 col-sm-12  justify-content-left")}>
@@ -306,10 +323,8 @@ function ClaimpolicyInformation({
             maxLength="5"
           />{" "}
         </div>
-        {/* </div> */}
       </div>
     </div>
-    // </div>
   );
 }
 
