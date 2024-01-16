@@ -41,6 +41,7 @@ export const getDetailedInventory = async (
     claimNum: string;
     sortBy: string;
     orderBy: string;
+    q: string;
   },
   isClient?: boolean
 ) => {
@@ -48,7 +49,7 @@ export const getDetailedInventory = async (
     const http = new HttpService({ isClient });
 
     let url = getApiEndPoint("detailedInventoryReport");
-    url = `${url}${param?.claimNum}&page=${param?.pageNo}&limit=${param?.recordPerPage}&sort_by=${param?.sortBy}&order_by=${param?.orderBy}`;
+    url = `${url}${param?.claimNum}&page=${param?.pageNo}&limit=${param?.recordPerPage}&sort_by=${param?.sortBy}&order_by=${param?.orderBy}&q=${param?.q}`;
     const resp = await http.get(url);
     return resp;
   } catch (err: any) {

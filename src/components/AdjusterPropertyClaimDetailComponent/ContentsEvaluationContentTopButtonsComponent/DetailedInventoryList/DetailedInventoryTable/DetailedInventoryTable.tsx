@@ -31,6 +31,7 @@ type DetailedInventoryProps = {
   fetchDetailedInventoryAction: any;
   detailedInventorySummaryData: any;
   isfetching: boolean;
+  searchKeyword: string;
 };
 
 interface detailedInventoryData {
@@ -65,6 +66,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     fetchDetailedInventoryAction,
     detailedInventorySummaryData,
     isfetching,
+    searchKeyword,
   } = props;
   const [newData, setData] = useState<Array<typeof listData>>();
   const [openStatus, setOpenStatus] = useState(false);
@@ -86,6 +88,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       claimNum: claimNumber,
       sortBy: "",
       orderBy: "",
+      q: "",
     });
   }, [claimNumber, fetchDetailedInventoryAction]);
 
@@ -105,6 +108,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
         claimNum: claimNumber,
         sortBy: sortBy,
         orderBy: orderBy,
+        q: "",
       });
       if (result) {
         setTableLoader(false);
@@ -116,6 +120,17 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       }
     }
   };
+
+  useEffect(() => {
+    fetchDetailedInventoryAction({
+      pageNo: 1,
+      recordPerPage: 10,
+      claimNum: claimNumber,
+      sortBy: "",
+      orderBy: "",
+      q: searchKeyword,
+    });
+  }, [searchKeyword, fetchDetailedInventoryAction]);
 
   React.useEffect(() => {
     if (listData) {
@@ -524,6 +539,7 @@ const mapStateToProps = (state: RootState) => ({
   listData: state.detailedInventorydata?.detailedInventoryListDataFull,
   isfetching: state.detailedInventorydata?.detailedInventoryfetching,
   detailedInventorySummaryData: state.detailedInventorydata?.detailedInventorySummaryData,
+  searchKeyword: state.detailedInventorydata.searchKeyword,
 });
 
 const mapDispatchToProps = {
