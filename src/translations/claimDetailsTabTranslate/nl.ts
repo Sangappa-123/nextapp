@@ -1,12 +1,12 @@
 const translate = {
   breadCrumbsHeading: {
-    home: "Home nl",
-    claim: "Claim# nl",
-    assignServiceRequest: "Assign service request nl",
+    home: "Home",
+    claim: "Claim#",
+    assignServiceRequest: "Assign service request",
     serviceRequestedNewConstruction:
       "Service Requested :   New Construction - Residential Inspection",
     newServiceRequest: "New Service Request",
-    newConstructionInspection: "New Construction - Residential Inspection nl",
+    newConstructionInspection: "New Construction - Residential Inspection",
     message: "Message",
     allClaimMessages: "All Claim Messages",
     tasks: "Tasks",
@@ -20,9 +20,9 @@ const translate = {
   },
 
   tabsComponent: {
-    claimDetail: "Claim Detail nl",
-    contentsEvaluation: "Contents Evaluation nl",
-    vendorAssignments: "Vendor Assignments nl",
+    claimDetail: "Claim Detail",
+    contentsEvaluation: "Contents Evaluation",
+    vendorAssignments: "Vendor Assignments",
     documents: "Documents",
     claimParticipants: "Claim Participants",
     activityLog: "Activity Log",

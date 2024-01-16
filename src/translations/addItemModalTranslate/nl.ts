@@ -1,17 +1,17 @@
 const translate = {
-  modalHeading: "Add Item nl",
+  modalHeading: "Add Item",
 
   inputFields: {
     ItemDescription: {
-      label: "Item Description nl:",
+      label: "Item Description:",
       placeholder: "Description",
     },
     quantity: {
-      label: "Quantity nl",
+      label: "Quantity",
       placeholder: "Quantity",
     },
     price: {
-      label: "Price nl",
+      label: "Price",
       placeholder: "$0.00",
     },
     category: {
@@ -32,7 +32,7 @@ const translate = {
       placeholder: "Months",
     },
     room: {
-      label: "Room nl",
+      label: "Room",
       newRoom: "Click to add new Room",
       roomNameLabel: "Room Name",
       cancelBtn: "Cancel",

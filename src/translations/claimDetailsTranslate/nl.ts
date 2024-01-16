@@ -1,20 +1,20 @@
 const translate = {
   topOptionButtons: {
-    calculateSettlement: "Calculate Settlement nl",
-    calculateDepreciation: "Re-Calculate Depreciation nl",
+    calculateSettlement: "Calculate Settlement",
+    calculateDepreciation: "Re-Calculate Depreciation",
     reAssignClaim: "Re-Assign Claim",
     supervisorReview: "Supervisor Review",
     closeClaim: "Close Claim",
     deleteClaim: "Delete Claim",
   },
   claimSnapshot: {
-    claimSnapshotHeading: "Claim snapshot nl",
-    claim: "Claim # nl",
+    claimSnapshotHeading: "Claim snapshot",
+    claim: "Claim #",
     status: "Status",
-    createdDate: "Created Date nl",
+    createdDate: "Created Date",
     elapsedTime: "Elapsed Time",
     lossType: "Loss Type",
-    claimDeductible: "Claim Deductible nl",
+    claimDeductible: "Claim Deductible",
     tax: "Tax %",
     contentLimits: "Content Limits",
     minItemToPrice: "Min. $ Item to Price",
@@ -30,48 +30,48 @@ const translate = {
   },
 
   addMessageCard: {
-    messages: "Messages nl",
-    addNewMessage: "Add New Messages nl",
+    messages: "Messages",
+    addNewMessage: "Add New Messages",
     noNewMessage: "No New Message",
     viewAllMessges: "View All Messges",
 
     addNewMessageModal: {
       to: {
-        label: "To nl",
+        label: "To",
         placeholder: "Select Participants",
       },
       message: {
-        label: "Message nl",
+        label: "Message",
         placeholder: "Message",
       },
       attachment: {
-        label: "Attachment nl",
+        label: "Attachment",
         linkName: "Click to add attachment",
       },
       errorMessages: {
-        receipentErr: "Please select recipient nl",
+        receipentErr: "Please select recipient",
         messageFieldsErr: "Message field is required.",
       },
 
       cancelBtn: "Cancel",
-      addMsgBtn: "Add Message nl",
+      addMsgBtn: "Add Message",
     },
   },
 
   policyHolderTaskCard: {
-    modalHeading: "Create Task nl",
-    policyHolderTask: "Policyholder's Task nl",
+    modalHeading: "Create Task",
+    policyHolderTask: "Policyholder's Task",
     createNewTask: "Create New Task",
-    formName: "Form Name nl",
+    formName: "Form Name",
     status: "Status",
     assignedDate: "Assigned Date",
     noTask: "No task available",
     viewAll: "View all",
 
     createTaskModal: {
-      assignedTo: "Assigned To nl",
-      formName: "Form Name nl",
-      description: "Description nl",
+      assignedTo: "Assigned To",
+      formName: "Form Name",
+      description: "Description",
       cancelBtn: "Cancel",
       addformBtn: "Add Form",
     },

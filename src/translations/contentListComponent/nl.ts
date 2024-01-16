@@ -1,7 +1,7 @@
 const translate = {
-  addItems: "Add Items nl",
-  loadFromFile: "Load from file nl",
-  addItem: "Add Item nl",
+  addItems: "Add Items",
+  loadFromFile: "Load from file",
+  addItem: "Add Item",
   createAssignment: "Create Assignment",
   mapReceipts: "Map Receipts",
   itemSelected: "items selected",
@@ -15,9 +15,9 @@ const translate = {
   contentList: "Content List",
 
   contentListTableColoumns: {
-    clearAllFilter: "Clear All Filter nl",
-    originalItem: "Original Item nl",
-    vendor: "Vendor nl",
+    clearAllFilter: "Clear All Filter",
+    originalItem: "Original Item",
+    vendor: "Vendor",
     replacementItem: "Replacement Item",
     item: "Item #",
     status: "Status",
@@ -26,10 +26,10 @@ const translate = {
     qty: "Qty",
     totalPrice: "Total Price",
     itemTag: "Item Tag",
-    replacementDescription: "Replacement Description nl",
-    replacementCost: "Replacement Cost nl",
+    replacementDescription: "Replacement Description",
+    replacementCost: "Replacement Cost",
     cashExposure: "Cash Exposure",
-    action: "Action nl",
+    action: "Action",
   },
 };
 

@@ -1,15 +1,15 @@
 const translate = {
-  serviceRequestHeading: "Service Requests nl",
-  newServiceRequest: "New Service Request nl",
+  serviceRequestHeading: "Service Requests",
+  newServiceRequest: "New Service Request",
   search: "Search...",
 
   serviceRequestTableColoumns: {
-    serviceNumber: "Service Number nl",
-    requestDescription: "Request Description nl",
+    serviceNumber: "Service Number",
+    requestDescription: "Request Description",
     vendor: "Vendor",
-    assignDate: "Assign Date nl",
+    assignDate: "Assign Date",
     targetCompletionDate: "Target Completion Date",
-    status: "Status nl",
+    status: "Status",
     action: "Action",
     assign: "Assign",
     cancel: "Cancel",
