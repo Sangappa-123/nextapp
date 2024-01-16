@@ -30,12 +30,13 @@ export type searchComparableReq = {
 };
 export const fetchComparable = async (
   payload: searchComparableReq,
-  isClient: boolean = false
+  isClient: boolean = false,
+  abortControl?: AbortController
 ) => {
   try {
     const url = getApiEndPoint("replacementApi");
     const http = new HttpService({ isClient });
-    const res = await http.post(url, payload);
+    const res = await http.post(url, payload, {}, abortControl);
     return res;
   } catch (error) {
     console.warn("fetchComparable::", error);

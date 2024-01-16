@@ -42,7 +42,12 @@ class HttpService {
     }
   }
 
-  async post(url: string, payload: any, headers?: object): Promise<unknownObjectType> {
+  async post(
+    url: string,
+    payload: any,
+    headers?: object,
+    abortControl?: AbortController
+  ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
       this.validateToken().then(() => {
         const bodyData = this.isFormData ? payload : JSON.stringify(payload);
@@ -52,6 +57,7 @@ class HttpService {
             headers: { ...this.header, ...headers },
             // body: JSON.stringify(payload),
             body: bodyData,
+            signal: abortControl?.signal,
           })
             .then((response) =>
               this.isArrayBuffer ? response.arrayBuffer() : response.json()
