@@ -64,7 +64,11 @@ function ServiceRequestsComponent(props: any) {
           </div>
         </div>
       </div>
-      <ServiceRequestTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
+      <ServiceRequestTable
+        setTableLoader={setTableLoader}
+        tableLoader={tableLoader}
+        translate={translate}
+      />
     </div>
   );
 }
