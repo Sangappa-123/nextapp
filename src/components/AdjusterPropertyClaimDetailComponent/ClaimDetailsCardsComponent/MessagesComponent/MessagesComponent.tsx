@@ -204,7 +204,7 @@ const MessagesComponent: React.FC<connectorType & messagesComponentType> = (
         <GenericComponentHeading title={translate?.addMessageCard?.messages}>
           <div className="text-right">
             <Link href="#" onClick={handleOpenModal}>
-              Add New Messages
+              {translate?.addMessageCard?.addNewMessage}
             </Link>
           </div>
         </GenericComponentHeading>

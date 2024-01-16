@@ -1,7 +1,7 @@
 const translate = {
-  addItems: "Add Items",
-  loadFromFile: "Load from file",
-  addItem: "Add Item",
+  addItems: "Add Items nl",
+  loadFromFile: "Load from file nl",
+  addItem: "Add Item nl",
   createAssignment: "Create Assignment",
   mapReceipts: "Map Receipts",
   itemSelected: "items selected",
@@ -12,6 +12,25 @@ const translate = {
   more: "More",
   acceptMinValues: "Accept Min. Values",
   acceptStandardCost: "Accept Standerd Cost",
+  contentList: "Content List",
+
+  contentListTableColoumns: {
+    clearAllFilter: "Clear All Filter nl",
+    originalItem: "Original Item nl",
+    vendor: "Vendor nl",
+    replacementItem: "Replacement Item",
+    item: "Item #",
+    status: "Status",
+    category: "Category",
+    description: "Description",
+    qty: "Qty",
+    totalPrice: "Total Price",
+    itemTag: "Item Tag",
+    replacementDescription: "Replacement Description nl",
+    replacementCost: "Replacement Cost nl",
+    cashExposure: "Cash Exposure",
+    action: "Action nl",
+  },
 };
 
 export { translate };
