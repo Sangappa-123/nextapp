@@ -452,6 +452,7 @@ function ClaimInformation({
                 errorMsgClassname={ClaimInformationStyle.errorMessage}
                 onValueChange={(values: any) => field.onChange(values.value)}
                 priceFormatter={true}
+                {...field}
               />
             )}
           />
