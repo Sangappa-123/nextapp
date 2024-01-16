@@ -15,7 +15,7 @@ import {
 import { RootState } from "@/store/store";
 import EnumStoreSlice from "../EnumStoreSlice";
 import { WEB_SEARCH_ENGINES } from "@/constants/constants";
-import { updateWebsearch } from "./LineItemDetailSlice";
+import { resetLineItemDetail, updateWebsearch } from "./LineItemDetailSlice";
 import { unknownObjectType } from "@/constants/customTypes";
 
 export const fetchRetailersDetails = createAsyncThunk(
@@ -79,18 +79,21 @@ export const fetchSubCategory = createAsyncThunk(
 
 export const fetchLineItemDetail = createAsyncThunk(
   "lineItem/fetchLineItem",
-  async ({ itemId }: { itemId: number }, api) => {
+  async ({ itemId, refresh = false }: { itemId: number; refresh?: boolean }, api) => {
     const rejectWithValue = api.rejectWithValue;
     const dispatch = api.dispatch;
-    const state = api.getState() as RootState;
+    // const state = api.getState() as RootState;
+    if (refresh) {
+      dispatch(resetLineItemDetail());
+    }
     try {
       const res = await fetchClaimItemDetails({ itemId }, true);
       if (res.status === 200) {
         const insuredPrice = res.data.insuredPrice;
         const searchKey = res.data.description;
         const pincode = res.data.policyHolderPinCode;
-        if (!state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.isSearching)
-          dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
+        // if (!state[EnumStoreSlice.LINE_ITEM_DETAIL]?.webSearch?.isSearching)
+        dispatch(searchComparable({ insuredPrice, searchKey, pincode, isInit: true }));
         if (res?.data?.category?.id) {
           dispatch(fetchSubCategory(res?.data?.category?.id));
         }
@@ -112,6 +115,7 @@ const getPriceRange = (insuredPrice: number) => {
   return { priceFrom, priceTo };
 };
 
+export let searchComparableAbortController: AbortController;
 export const searchComparable = createAsyncThunk(
   "comparable/search",
   async (
@@ -130,6 +134,11 @@ export const searchComparable = createAsyncThunk(
     const state = api.getState() as RootState;
     const dispatch = api.dispatch;
     try {
+      if (searchComparableAbortController) {
+        const reason = new DOMException("Duplicate Request", "AbortError");
+        searchComparableAbortController?.abort(reason);
+      }
+      searchComparableAbortController = new AbortController();
       let { startPrice: priceFrom, endPrice: priceTo } = payload;
       const selectedEngine =
         payload.selectedEngine ??
@@ -170,7 +179,11 @@ export const searchComparable = createAsyncThunk(
       if (priceTo) {
         api_payload.priceTo = priceTo ?? 0;
       }
-      const res = await fetchComparable(api_payload, true);
+      const res = await fetchComparable(
+        api_payload,
+        true,
+        searchComparableAbortController
+      );
       return res;
     } catch (err) {
       return rejectWithValue(err);

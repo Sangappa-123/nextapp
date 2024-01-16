@@ -15,7 +15,7 @@ import {
 
 const initialState: unknownObjectType = {
   isLoading: true,
-  isFetching: false,
+  isFetching: true,
   lineItem: null,
   comparableItems: null,
   replacementItem: null,
@@ -144,7 +144,12 @@ const LineItemDetailSlice = createSlice({
         }
       }
     });
-    builder.addCase(searchComparable.rejected, (state) => {
+    builder.addCase(searchComparable.rejected, (state, action) => {
+      const { payload }: { payload: any } = action;
+      if (payload && payload?.error?.code === 20) {
+        state.webSearch.isSearching = true;
+        return;
+      }
       state.webSearch.isSearching = false;
     });
     builder.addCase(fetchSubCategory.pending, (state) => {

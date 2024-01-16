@@ -59,7 +59,6 @@ const WebComparables: React.FC<connectorType> = (props) => {
             searchKey={searchInput.searchKey}
             updateState={updateState}
             handleSubmit={startSearch}
-            isSearching={isSearching}
             searchByEngine={searchByEngine}
           />
           <PriceLimitComparable
@@ -67,7 +66,6 @@ const WebComparables: React.FC<connectorType> = (props) => {
             endPrice={searchInput.endPrice}
             handleSubmit={startSearch}
             updateState={updateState}
-            isSearching={isSearching}
           />
         </div>
       </div>
