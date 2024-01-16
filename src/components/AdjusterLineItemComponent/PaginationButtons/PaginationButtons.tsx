@@ -71,16 +71,16 @@ function PaginationButtons({
             Previous
           </button>
         </PageButton>
-        {paginationRange?.map((pageNo: number | string) => {
+        {paginationRange?.map((pageNo: number | string, index: number) => {
           if (pageNo === DOTS) {
             return (
-              <PageButton key={pageNo}>
+              <PageButton key={`page-${index}`}>
                 <FaEllipsisH size={24} className={lineItemPaginationStyle.dots} />
               </PageButton>
             );
           }
           return (
-            <PageButton key={pageNo.toString()}>
+            <PageButton key={`page-${index}`}>
               <button
                 className={clsx(lineItemPaginationStyle.btn, {
                   [lineItemPaginationStyle.active]: pageNo === currentPage,
