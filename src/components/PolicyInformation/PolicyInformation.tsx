@@ -195,30 +195,38 @@ function ClaimpolicyInformation({
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          <GenericInput
-            placeholder="XXX-XXX-XXXX"
-            keyboardType="phone-pad"
-            {...register("mobilenumber")}
-            showError={customerror["phone"]}
-            errorMsg={customerror?.phone}
-            phoneFormatter={true}
-            onInput={(e: { target: { value: string } }) => {
-              if (e.target.value && e.target.value.length < 14) {
-                setCustomerror((prev: any) => {
-                  return {
-                    ...prev,
-                    phone: "Enter valid phone number",
-                  };
-                });
-              } else {
-                setCustomerror((prev: any) => {
-                  return {
-                    ...prev,
-                    phone: null,
-                  };
-                });
-              }
-            }}
+          <Controller
+            name="mobilenumber"
+            control={control}
+            render={({ field }: any) => (
+              <GenericInput
+                placeholder="XXX-XXX-XXXX"
+                keyboardType="phone-pad"
+                // {...register("mobilenumber")}
+                showError={customerror["phone"]}
+                errorMsg={customerror?.phone}
+                phoneFormatter={true}
+                onValueChange={(values: any) => field.onChange(values.value)}
+                onInput={(e: { target: { value: string } }) => {
+                  if (e.target.value && e.target.value.length < 14) {
+                    setCustomerror((prev: any) => {
+                      return {
+                        ...prev,
+                        phone: "Enter valid phone number",
+                      };
+                    });
+                  } else {
+                    setCustomerror((prev: any) => {
+                      return {
+                        ...prev,
+                        phone: null,
+                      };
+                    });
+                  }
+                }}
+                {...field}
+              />
+            )}
           />
         </div>
       </div>
@@ -229,29 +237,37 @@ function ClaimpolicyInformation({
           </label>
         </div>
         <div className="col-lg-3 col-md-3 col-sm-12">
-          <GenericInput
-            placeholder="XXX-XXX-XXXX"
-            {...register("secondaryPhonenumber")}
-            showError={customerror["secondaryphone"]}
-            errorMsg={customerror?.secondaryphone}
-            phoneFormatter={true}
-            onInput={(e: { target: { value: string } }) => {
-              if (e.target.value && e.target.value.length < 14) {
-                setCustomerror((prev: any) => {
-                  return {
-                    ...prev,
-                    secondaryphone: "Enter valid phone number",
-                  };
-                });
-              } else {
-                setCustomerror((prev: any) => {
-                  return {
-                    ...prev,
-                    secondaryphone: null,
-                  };
-                });
-              }
-            }}
+          <Controller
+            name="mobilenumber"
+            control={control}
+            render={({ field }: any) => (
+              <GenericInput
+                placeholder="XXX-XXX-XXXX"
+                // {...register("secondaryPhonenumber")}
+                showError={customerror["secondaryphone"]}
+                errorMsg={customerror?.secondaryphone}
+                phoneFormatter={true}
+                onValueChange={(values: any) => field.onChange(values.value)}
+                onInput={(e: { target: { value: string } }) => {
+                  if (e.target.value && e.target.value.length < 14) {
+                    setCustomerror((prev: any) => {
+                      return {
+                        ...prev,
+                        secondaryphone: "Enter valid phone number",
+                      };
+                    });
+                  } else {
+                    setCustomerror((prev: any) => {
+                      return {
+                        ...prev,
+                        secondaryphone: null,
+                      };
+                    });
+                  }
+                }}
+                {...field}
+              />
+            )}
           />
         </div>
       </div>
