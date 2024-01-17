@@ -33,13 +33,7 @@ const AddNewMsgModalComponent: React.FC<AddNewMsgModalComponentProps> = (props: 
         label: string(),
         value: string(),
       }),
-      "Please select recipient",
-      [
-        minLength(
-          1,
-          translate?.addMessageCard?.addNewMessageModal?.errorMessages?.receipentErr
-        ),
-      ]
+      translate?.addMessageCard?.addNewMessageModal?.errorMessages?.receipentErr
     ),
     message: string([
       minLength(

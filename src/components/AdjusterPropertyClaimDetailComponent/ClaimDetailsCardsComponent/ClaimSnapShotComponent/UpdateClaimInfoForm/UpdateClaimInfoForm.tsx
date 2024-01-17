@@ -4,29 +4,39 @@ import GenericInput from "@/components/common/GenericInput";
 import { useForm, Controller } from "react-hook-form";
 import GenericSelect from "@/components/common/GenericSelect";
 import { convertToCurrentTimezone } from "@/utils/helper";
-import { getLossTypes } from "@/services/AdjusterPropertyClaimDetailServices/ClaimSnapShotService";
+import {
+  getLossTypes,
+  updateClaimDetail,
+} from "@/services/AdjusterPropertyClaimDetailServices/ClaimSnapShotService";
 import { useEffect, useMemo, useState } from "react";
 import Loading from "@/app/[lang]/loading";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import { getclaimContents } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+import { addContents } from "@/reducers/ClaimDetail/ClaimDetailSlice";
+import { serviceRequestList } from "@/services/ClaimServiceRequestListService";
+import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 interface UpdateClaimInfoType {
   claimSnapShotData: any;
   translate: any;
-  defaultValue: object;
+  setShowForm: (arg0: boolean) => void;
 }
 
 const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
   claimSnapShotData,
   translate,
-  defaultValue,
+  setShowForm,
 }) => {
   const [selectOptions, setSelectOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
   const dateFormate = "MMM DD, YYYY h:mm A";
   useEffect(() => {
     const fetchLossType = async () => {
-      setLoading(true);
+      setIsLoading(true);
       const lossTypeRes = await getLossTypes();
       setSelectOptions(lossTypeRes?.data);
-      setLoading(false);
+      setIsLoading(false);
     };
     fetchLossType();
   }, []);
@@ -60,14 +70,28 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
     },
   };
 
-  // console.log("claimSnapShotData", claimSnapShotData);
+  const fetchClaimContents = async () => {
+    const claimId = claimSnapShotData?.claimId;
+    const serviceListRes = await serviceRequestList({ claimId }, true);
+    setShowForm(false);
+    if (serviceListRes?.status === 200) {
+      dispatch(addserviceRequestData({ claimServiceRequestList: serviceListRes }));
+    }
+    const claimContentRes = await getclaimContents({ claimId }, true);
+    if (claimContentRes?.status === 200) {
+      dispatch(addContents(claimContentRes?.data));
+    }
+    setIsLoading(false);
+  };
 
   const defaultValues = {
     claimId: claimSnapShotData?.claimId,
     updatedClaimNumber: claimSnapShotData?.claimNumber,
     oldClaimNumber: claimSnapShotData?.claimNumber,
-    damageTypeId: claimSnapShotData?.damageTypeId,
-    damageType: claimSnapShotData?.damageType,
+    damageTypeId: {
+      name: claimSnapShotData?.damageType,
+      id: claimSnapShotData?.damageTypeId,
+    },
     taxRate: claimSnapShotData?.taxRate,
     deductible: claimSnapShotData?.deductible,
     minimumThreshold: claimSnapShotData?.minimumThreshold,
@@ -83,21 +107,45 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
   const { register, handleSubmit, control, setValue } = useForm({ defaultValues });
 
   useMemo(() => {
-    if (defaultValue) setValue("damageTypeId", defaultValue);
-  }, [defaultValue, setValue]);
+    setValue("damageTypeId", {
+      name: claimSnapShotData?.damageType,
+      id: claimSnapShotData?.damageTypeId,
+    });
+  }, [claimSnapShotData?.damageType, claimSnapShotData?.damageTypeId, setValue]);
 
   const submitHandler = async (data: any) => {
+    setIsLoading(true);
     const payload = {
       ...data,
       damageTypeId: data?.damageTypeId?.id,
       claimProfile: "Contents",
     };
-    console.log("Submit data", payload);
+    const updateClaimDetailRes = await updateClaimDetail(payload);
+    if (updateClaimDetailRes?.status === 200) {
+      fetchClaimContents();
+      setIsLoading(false);
+      dispatch(
+        addNotification({
+          message: updateClaimDetailRes?.message,
+          id: "updateClaimDetail-success",
+          status: "success",
+        })
+      );
+    } else {
+      setIsLoading(false);
+      dispatch(
+        addNotification({
+          message: updateClaimDetailRes?.message,
+          id: "updateClaimDetail-success",
+          status: "success",
+        })
+      );
+    }
   };
 
   return (
     <>
-      {loading && <Loading />}
+      {isLoading && <Loading />}
       <form id="claim-info-update-form" onSubmit={handleSubmit(submitHandler)}>
         <div
           className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}
@@ -132,14 +180,13 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
             <Controller
               name="taxRate"
               control={control}
+              defaultValue={defaultValues?.taxRate}
               render={({ field }: any) => (
                 <GenericInput
                   inputFieldClassname={ClmainInfoStyle.customInput}
-                  value={defaultValues?.policyLimit}
-                  onValueChange={(values: any) => field.onChange(values.value)}
+                  value={defaultValues?.taxRate}
+                  onValueChange={(values: any) => field.onChange(values.floatValue ?? "")}
                   percentageFormatter={true}
-                  type="number"
-                  {...field}
                 />
               )}
             />
@@ -169,13 +216,10 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
               control={control}
               render={({ field }: any) => (
                 <GenericInput
-                  {...register("policyLimit")}
                   inputFieldClassname={ClmainInfoStyle.customInput}
                   value={defaultValues?.policyLimit}
-                  // type="number"
-                  onValueChange={(values: any) => field.onChange(values.value)}
+                  onValueChange={(values: any) => field.onChange(values.floatValue ?? "")}
                   priceFormatter={true}
-                  {...field}
                 />
               )}
             />
@@ -193,9 +237,8 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
                 <GenericInput
                   inputFieldClassname={ClmainInfoStyle.customInput}
                   value={defaultValues?.deductible}
-                  onValueChange={(values: any) => field.onChange(values.value)}
+                  onValueChange={(values: any) => field.onChange(values.floatValue ?? "")}
                   priceFormatter={true}
-                  {...field}
                 />
               )}
             />
@@ -227,9 +270,8 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
                 <GenericInput
                   inputFieldClassname={ClmainInfoStyle.customInput}
                   value={defaultValues?.minimumThreshold}
-                  onValueChange={(values: any) => field.onChange(values.value)}
+                  onValueChange={(values: any) => field.onChange(values.floatValue ?? "")}
                   priceFormatter={true}
-                  {...field}
                 />
               )}
             />
@@ -241,10 +283,10 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
               {translate?.claimSnapshot?.lossType}
             </legend>
             <Controller
-              control={control}
               name={"damageTypeId"}
+              control={control}
               rules={{ required: true }}
-              defaultValue={defaultValue}
+              defaultValue={defaultValues?.damageTypeId}
               render={({ field: { ...rest } }: any) => (
                 <GenericSelect
                   customStyles={selectBoxStyles}
@@ -253,7 +295,6 @@ const UpdateClaimInfoForm: React.FC<UpdateClaimInfoType> = ({
                   options={selectOptions}
                   getOptionLabel={(option: { name: any }) => option.name}
                   getOptionValue={(option: { id: any }) => option.id}
-                  name={"damageTypeId"}
                   {...rest}
                 />
               )}

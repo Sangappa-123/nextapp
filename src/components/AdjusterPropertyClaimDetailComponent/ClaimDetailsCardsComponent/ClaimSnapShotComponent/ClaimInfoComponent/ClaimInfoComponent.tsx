@@ -3,12 +3,13 @@ import ClmainInfoStyle from "./ClaimInfo.module.scss";
 import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
 import { convertToCurrentTimezone } from "@/utils/helper";
+import { NumericFormat } from "react-number-format";
 
 interface calimInfoType {
   claimSnapShotData: any;
 }
 
-const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
+const ClaimInfoComponent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
   const { translate }: { translate: claimDetailsTranslateType | undefined } =
     useTranslation("claimDetailsTranslate");
   const dateFormate = "MMM DD, YYYY h:mm A";
@@ -41,7 +42,15 @@ const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => 
           <legend className={ClmainInfoStyle.fieldSetLabel}>
             {translate?.claimSnapshot?.tax}
           </legend>
-          <div className={ClmainInfoStyle.fieldValue}>{claimSnapShotData?.taxRate}</div>
+          <div className={ClmainInfoStyle.fieldValue}>
+            <NumericFormat
+              value={claimSnapShotData?.taxRate}
+              decimalScale={2}
+              fixedDecimalScale
+              suffix={"%"}
+              readOnly
+            />
+          </div>
         </fieldset>
       </div>
       <div className={`col-md-12 col-sm-12 col-12 ${ClmainInfoStyle.fieldRowContainer}`}>
@@ -57,20 +66,32 @@ const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => 
           className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
         >
           <legend className={ClmainInfoStyle.fieldSetLabel}>
-            {translate?.claimSnapshot?.contentLimits}
+            {translate?.claimSnapshot?.coverageLimits}
           </legend>
           <div className={ClmainInfoStyle.fieldValue}>
-            ${claimSnapShotData?.policyLimit}
+            <NumericFormat
+              value={claimSnapShotData?.policyLimit}
+              decimalScale={2}
+              fixedDecimalScale
+              prefix={"$"}
+              readOnly
+            />
           </div>
         </fieldset>
         <fieldset
           className={`col-md-3 col-sm-3 col-6 ${ClmainInfoStyle.fieldSetContainer}`}
         >
           <legend className={ClmainInfoStyle.fieldSetLabel}>
-            {translate?.claimSnapshot?.claimDeductible}
+            {translate?.claimSnapshot?.deductible}
           </legend>
           <div className={ClmainInfoStyle.fieldValue}>
-            ${claimSnapShotData?.deductible}
+            <NumericFormat
+              value={claimSnapShotData?.deductible}
+              decimalScale={2}
+              fixedDecimalScale
+              prefix={"$"}
+              readOnly
+            />
           </div>
         </fieldset>
       </div>
@@ -92,7 +113,13 @@ const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => 
             {translate?.claimSnapshot?.minItemToPrice}
           </legend>
           <div className={ClmainInfoStyle.fieldValue}>
-            ${claimSnapShotData?.minimumThreshold}
+            <NumericFormat
+              value={claimSnapShotData?.minimumThreshold}
+              decimalScale={2}
+              fixedDecimalScale
+              prefix={"$"}
+              readOnly
+            />
           </div>
         </fieldset>
         <fieldset
@@ -109,4 +136,4 @@ const ClaimInfoCompoonent: React.FC<calimInfoType> = ({ claimSnapShotData }) => 
     </>
   );
 };
-export default ClaimInfoCompoonent;
+export default ClaimInfoComponent;

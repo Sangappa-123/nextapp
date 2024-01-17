@@ -28,6 +28,7 @@ type propsType = {
   size?: keyof typeof inputSize;
   priceFormatter?: boolean;
   phoneFormatter?: boolean;
+  percentageFormatter?: boolean;
   [rest: string]: any;
 };
 
@@ -47,6 +48,7 @@ function GenericInput(props: propsType, ref: any) {
     size = "small",
     priceFormatter = false,
     phoneFormatter = false,
+    percentageFormatter = false,
     ...rest
   } = props;
 
@@ -96,7 +98,18 @@ function GenericInput(props: propsType, ref: any) {
         {phoneFormatter && (
           <PatternFormat {...commonProps} format="(###)-###-####" type="text" />
         )}
-        {!priceFormatter && !phoneFormatter && <input {...commonProps} />}
+        {percentageFormatter && (
+          <NumericFormat
+            {...commonProps}
+            decimalScale={2}
+            fixedDecimalScale
+            suffix={"%"}
+            type="text"
+          />
+        )}
+        {!priceFormatter && !phoneFormatter && !percentageFormatter && (
+          <input {...commonProps} />
+        )}
 
         <div
           className={clsx({

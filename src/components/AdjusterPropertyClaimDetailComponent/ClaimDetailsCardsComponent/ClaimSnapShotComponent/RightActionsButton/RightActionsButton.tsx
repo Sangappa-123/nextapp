@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import actionsBtnStyle from "./RightActionsButton.module.scss";
 import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
@@ -7,15 +6,15 @@ import GenericButton from "@/components/common/GenericButton";
 
 type actionsType = {
   setShowForm: any;
+  showForm: any;
 };
 
 const RightActionsComponent: React.FC<actionsType> = (props: any) => {
-  const [showActionBtn, setShowActionBtn] = useState(false);
   const { translate }: { translate: claimDetailsTranslateType | undefined } =
     useTranslation("claimDetailsTranslate");
   return (
     <div className={actionsBtnStyle.actionBtnContainer}>
-      {!showActionBtn && (
+      {!props.showForm && (
         <div className={actionsBtnStyle.actionBtns}>
           <GenericButton
             size="small"
@@ -24,12 +23,11 @@ const RightActionsComponent: React.FC<actionsType> = (props: any) => {
             btnClassname={actionsBtnStyle.linkBtnStyle}
             onClick={() => {
               props.setShowForm(true);
-              setShowActionBtn(true);
             }}
           />
         </div>
       )}
-      {showActionBtn && (
+      {props.showForm && (
         <div className={actionsBtnStyle.actionBtns}>
           <GenericButton
             type="submit"
@@ -46,7 +44,6 @@ const RightActionsComponent: React.FC<actionsType> = (props: any) => {
             btnClassname={actionsBtnStyle.linkBtnStyle}
             onClick={() => {
               props.setShowForm(false);
-              setShowActionBtn(false);
             }}
           />
         </div>

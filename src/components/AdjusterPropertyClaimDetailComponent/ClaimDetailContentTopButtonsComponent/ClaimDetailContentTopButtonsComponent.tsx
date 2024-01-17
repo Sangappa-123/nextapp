@@ -7,8 +7,6 @@ import { claimDetailsTranslateType } from "@/translations/claimDetailsTranslate/
 import useTranslation from "@/hooks/useTranslation";
 
 type propTypes = {
-  serviceRequestListRes: any;
-  claimContentListRes: any;
   claimId: string;
 };
 
@@ -59,18 +57,13 @@ const ClaimDetailContentTopButtonsComponent: React.FC<propTypes> = (props: propT
       {process.env.NEXT_PUBLIC_SERVICE_REQUESTS === "true" && (
         <div className="row">
           <div className="col-lg-12 col-md-12 col-12">
-            <ServiceRequestsComponent
-              serviceRequestListRes={props.serviceRequestListRes}
-            />
+            <ServiceRequestsComponent />
           </div>
         </div>
       )}
       <div className="row">
         <div className="col-lg-12 col-md-12 col-12">
-          <ContentListComponent
-            claimContentListRes={props.claimContentListRes}
-            claimId={props.claimId}
-          />
+          <ContentListComponent claimId={props.claimId} />
         </div>
       </div>
     </div>
