@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 // import { useParams } from "next/navigation";
 import receiptMapperStyle from "../receiptMapperComponent.module.scss";
 
@@ -9,12 +9,18 @@ import ClaimedItemsSearchBox from "../ClaimedItemsSearchBox/ClaimedItemsSearchBo
 import GenericButton from "@/components/common/GenericButton/index";
 import ReciptMapperSearchBox from "../ReciptMapperSearchBox/ReciptMapperSearchBox";
 import RecieptMapperMainComponent from "../RecieptMapperMainComponent/RecieptMapperMainComponent";
+import { receiptApiUrl } from "@/services/ClaimService";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+
+import { useParams } from "next/navigation";
 
 type propTypes = {
   claimNumber: string;
 };
 const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) => {
-  // const {  claimId } = useParams();
+  const { claimId } = useParams();
+  const dispatch = useAppDispatch();
 
   const [tableLoader, setTableLoader] = useState<boolean>(false);
 
@@ -27,6 +33,29 @@ const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) 
     };
     getItems();
   }, [claimNumber]);
+
+  const handleReceipt = (e: any) => {
+    const formData = new FormData();
+
+    formData.append("pdfFile", e.target.files[0]);
+    formData.append("pdfName", e.target.files[0].name);
+    formData.append("claimId", claimId);
+
+    receiptApiUrl(formData)
+      .then(() => {
+        if (e.target.files[0].type !== "application/pdf") {
+          dispatch(
+            addNotification({
+              message: "Please enter the PDF file",
+              id: "receipt_file_message",
+              status: "error",
+            })
+          );
+        }
+      })
+      .catch((error) => console.log(" Losserrr", error));
+  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="row mt-4">
@@ -50,7 +79,21 @@ const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) 
         <div className={receiptMapperStyle.receiptMapperContainer}>
           <div className={receiptMapperStyle.receiptMapperListContainer}>
             <div className="col-7">
-              <GenericButton label="New Recipt" size="small" />
+              <GenericButton
+                label="New Receipt"
+                size="small"
+                onClick={() => fileInputRef?.current && fileInputRef?.current?.click()}
+              />
+              <input
+                type="file"
+                id="inp"
+                multiple
+                ref={fileInputRef}
+                hidden
+                // style={{ display: "none" }}
+                accept=".pdf"
+                onChange={handleReceipt}
+              ></input>
             </div>
             <div className="col-5">
               <ReciptMapperSearchBox setTableLoader={setTableLoader} />

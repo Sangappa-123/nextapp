@@ -396,6 +396,7 @@ function ClaimInformation({
             placeholder="99"
             type="number"
             inputFieldClassname="hideInputArrow"
+            step="0.01"
             showError={error["taxRate"]}
             errorMsg={error?.taxRate?.message}
             disabled={topping === "no"}
