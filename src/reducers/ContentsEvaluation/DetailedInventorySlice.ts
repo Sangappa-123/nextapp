@@ -30,6 +30,7 @@ export const fetchDetailedInventoryAction = createAsyncThunk(
       claimNum: string;
       sortBy: string;
       orderBy: string;
+      q: string;
     },
     api
   ) => {

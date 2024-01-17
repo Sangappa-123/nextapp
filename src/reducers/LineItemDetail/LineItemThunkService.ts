@@ -14,9 +14,10 @@ import {
 } from "@/services/AdjusterMyClaimServices/LineItemDetailService";
 import { RootState } from "@/store/store";
 import EnumStoreSlice from "../EnumStoreSlice";
-import { WEB_SEARCH_ENGINES } from "@/constants/constants";
+import { API_URL, WEB_SEARCH_ENGINES, XORIGINATOR, baseUrl } from "@/constants/constants";
 import { resetLineItemDetail, updateWebsearch } from "./LineItemDetailSlice";
 import { unknownObjectType } from "@/constants/customTypes";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const fetchRetailersDetails = createAsyncThunk(
   "lineItem/retailer",
@@ -207,3 +208,30 @@ export const deleteCustomItem = createAsyncThunk(
     }
   }
 );
+
+export const participants = createApi({
+  reducerPath: "participants",
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseUrl + "/",
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).session.accessToken;
+      if (token) {
+        headers.set("X-Auth-Token", token);
+      }
+      headers.set("Content-Type", "application/json");
+      headers.set("Accept", "application/json");
+      headers.set("X-originator", XORIGINATOR ?? "");
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getParticipants: builder.query({
+      query: (itemId: number) => ({
+        url: API_URL + "web/participants/item/" + itemId,
+        method: "GET",
+      }),
+    }),
+  }),
+});
+
+export const { useGetParticipantsQuery } = participants;
