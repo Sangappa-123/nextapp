@@ -15,6 +15,11 @@ interface replaceItemInterface {
   itemDetail: unknownObjectType;
 }
 
+export interface calculatedTaxType {
+  taxAmt: number;
+  rcvTotal: number;
+}
+
 function ReplacementItem(props: replaceItemInterface) {
   const { itemDetail } = props;
   const { applyTax, taxRate } = useAppSelector(selectItemTaxDetail);
@@ -39,7 +44,7 @@ function ReplacementItem(props: replaceItemInterface) {
     debounce({ quantity: value });
   };
 
-  const calculatedTax = useMemo(() => {
+  const calculatedTax = useMemo<calculatedTaxType>(() => {
     // if (!applyTax) return { taxAmt: 0, rcvTotal: 0 };
     const _price = Number(unitCost);
     const qty = Number(quantity);
@@ -53,7 +58,7 @@ function ReplacementItem(props: replaceItemInterface) {
 
     const taxAmt = parseFloatWithFixedDecimal((rcv * appliedTax) / 100);
     const rcvTotal = rcv + taxAmt;
-    return { taxAmt: applyTax ? taxAmt : 0, rcvTotal };
+    return { taxAmt: applyTax ? taxAmt : 0, rcvTotal: +rcvTotal.toFixed(2) };
   }, [applyTax, quantity, unitCost, taxRate]);
 
   return (
@@ -151,11 +156,11 @@ function ReplacementItem(props: replaceItemInterface) {
         <div>
           <div className={replacementItemStyle.formControl}>
             <label htmlFor="totalReplaceCost">Total Replacement Cost</label>
-            <div id="totalReplaceCost">${calculatedTax.rcvTotal.toFixed(2)}</div>
+            <div id="totalReplaceCost">${calculatedTax.rcvTotal}</div>
           </div>
         </div>
       </div>
-      <SettlementSummarySection />
+      <SettlementSummarySection calculatedTax={calculatedTax} />
     </div>
   );
 }

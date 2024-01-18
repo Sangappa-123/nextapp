@@ -20,7 +20,6 @@ import dayjs from "dayjs";
 import { unknownObjectType } from "@/constants/customTypes";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { ConnectedProps, connect } from "react-redux";
-import { Suspense } from "react";
 import {
   selectActiveSection,
   setActiveSection,
@@ -90,12 +89,14 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
   const [show, setShow] = useState(false);
   const [homeOwnerType, setHomeOwnerType] = useState<unknownObjectType>([]);
   const [customerror, setCustomerror] = useState({ phone: null, secondaryphone: null });
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateHomeOwnerType = (data: []) => {
     setHomeOwnerType(data);
   };
 
   const formSubmit = async (data: any) => {
+    setIsLoading(true);
     try {
       let PolicyInitials = "";
       let InsuranceCompanyIntials = "";
@@ -154,7 +155,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             CurrentDate;
         }
       }
-
+      const contentLimitInteger = data.contentLimits.replace("$", "");
+      console.log("numberValue", contentLimitInteger);
+      const claimDeductibleInteger = data.claimDeductible.replace("$", "");
+      const minItemPriceInteger = data.minItemPrice.replace("$", "");
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -185,8 +189,9 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         propertyCoverage: null,
         totalPolicyCoverage: null,
         totalSpecialLimit: 0,
-        policyLimits: data.contentLimits,
+        policyLimits: parseFloat(contentLimitInteger),
       };
+
       const payload1 = {
         filesDetails: null,
         file: null,
@@ -197,7 +202,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           applyTax: true,
           taxRate: data.taxRate,
           damageTypeId: data.lossType?.id ?? 9,
-          deductible: data.claimDeductible,
+          deductible: parseFloat(claimDeductibleInteger),
           additionalNote: null,
           incidentDate: dayjs(data.claimDate).format("YYYY-MM-DDTHH:mm:ssZ[Z]"),
           description: null,
@@ -230,10 +235,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           shippingDate: null,
           shippingMethod: null,
           noOfItems: 0,
-          minimumThreshold: data.minItemPrice,
+          minimumThreshold: parseFloat(minItemPriceInteger),
           thirdPartyInsCompName: data.insuranceCompany,
           thirdPartyInsAdjName: data.adjusterName,
-          aggigateLimit: data.contentLimits,
+          aggigateLimit: parseFloat(contentLimitInteger),
         },
       };
       const formData = new FormData();
@@ -249,6 +254,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         );
         const creatClaimRes = await creatClaim(formData);
         if (creatClaimRes?.status === 200) {
+          setIsLoading(false);
           sessionStorage.setItem("claimNumber", creatClaimRes.data?.claimNumber);
           sessionStorage.setItem("claimId", creatClaimRes.data?.claimId);
           sessionStorage.setItem("redirectToNewClaimPage", "true");
@@ -262,6 +268,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             })
           );
         } else {
+          setIsLoading(false);
           dispatch(
             addNotification({
               message: creatClaimRes.message ?? "Something went wrong.",
@@ -271,6 +278,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           );
         }
       } else {
+        setIsLoading(false);
         dispatch(
           addNotification({
             message: postlCaimRes.message ?? "Something went wrong.",
@@ -280,6 +288,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         );
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error submitting", error);
     }
   };
@@ -312,6 +321,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
   };
   return (
     <div>
+      {isLoading && <Loading />}
       <div className="mb-3">
         <NewClaimWizardFormArrow
           activeSection={activeSection}
@@ -444,11 +454,9 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         </Cards>
       )}
       {activeSection === 2 && (
-        <Suspense fallback={<Loading />}>
-          <Cards>
-            <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
-          </Cards>
-        </Suspense>
+        <Cards>
+          <AssignItemsComponent onNewClaimsClick={handlePreviousClick} />
+        </Cards>
       )}
     </div>
   );

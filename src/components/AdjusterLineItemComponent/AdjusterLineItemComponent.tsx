@@ -15,6 +15,7 @@ import {
   fetchLineItemCatergory,
   fetchLineItemDetail,
   fetchRetailersDetails,
+  searchComparableAbortController,
 } from "@/reducers/LineItemDetail/LineItemThunkService";
 import clsx from "clsx";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
@@ -76,7 +77,7 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
 
   useEffect(() => {
     if (!isInit.current) {
-      fetchLineItemDetail({ itemId: +itemId });
+      fetchLineItemDetail({ itemId: +itemId, refresh: true });
       if (!pageDetail.length) {
         fetchClaimContentAction({ claimId: claimId.toString() });
       }
@@ -86,9 +87,11 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
       isInit.current = true;
     }
 
-    // return () => {
-    //   resetLineItemDetail();
-    // };
+    return () => {
+      if (searchComparableAbortController) {
+        searchComparableAbortController.abort();
+      }
+    };
   }, [
     isInit,
     fetchLineItemDetail,

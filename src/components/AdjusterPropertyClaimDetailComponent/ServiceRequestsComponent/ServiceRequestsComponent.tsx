@@ -4,19 +4,12 @@ import ServiceRequestTable from "./ServiceRequestTable/ServiceRequestTable";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
 import ServiceRequestComponentStyle from "./ServiceRequestsComponent.module.scss";
 import GenericButton from "@/components/common/GenericButton/index";
-import { connect } from "react-redux";
-import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
 import ServiceRequestSearchBox from "./ServiceRequestSearchBox/ServiceRequestSearchBox";
 import { useParams, useRouter } from "next/navigation";
 import useTranslation from "@/hooks/useTranslation";
 import { serviceRequestComponentType } from "@/translations/serviceRequestComponent/en";
 
-function ServiceRequestsComponent(props: any) {
-  const { serviceRequestListRes, addserviceRequestData } = props;
-  React.useEffect(() => {
-    const claimServiceRequestList = serviceRequestListRes;
-    addserviceRequestData({ claimServiceRequestList });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+const ServiceRequestsComponent: React.FC = () => {
   const router = useRouter();
   const { claimId }: { claimId: string } = useParams();
 
@@ -64,11 +57,12 @@ function ServiceRequestsComponent(props: any) {
           </div>
         </div>
       </div>
-      <ServiceRequestTable setTableLoader={setTableLoader} tableLoader={tableLoader} />
+      <ServiceRequestTable
+        setTableLoader={setTableLoader}
+        tableLoader={tableLoader}
+        translate={translate}
+      />
     </div>
   );
-}
-const mapDispatchToProps = {
-  addserviceRequestData,
 };
-export default connect(null, mapDispatchToProps)(ServiceRequestsComponent);
+export default ServiceRequestsComponent;

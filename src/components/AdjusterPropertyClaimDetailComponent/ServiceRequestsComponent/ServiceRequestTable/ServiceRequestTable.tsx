@@ -24,6 +24,7 @@ import { addNotification } from "@/reducers/Notification/NotificationSlice";
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
   tableLoader: boolean;
+  translate: any;
 }
 const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   const { claimId }: { claimId: string } = useParams();
@@ -36,6 +37,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     claimErrorMsg,
     claimServiceRequestList,
     addNotification,
+    translate,
   }: React.SetStateAction<any> = props;
 
   const router = useRouter();
@@ -66,25 +68,25 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   const columns = [
     columnHelper.accessor("serviceNumber", {
       id: "serviceNumber",
-      header: () => `Service Number`,
+      header: () => translate?.serviceRequestTableColoumns?.serviceNumber,
       cell: (info) => info.getValue(),
       enableSorting: true,
     }),
 
     columnHelper.accessor("description", {
       id: "description",
-      header: () => `Request Description`,
+      header: () => translate?.serviceRequestTableColoumns?.requestDescription,
       cell: (info) => info.renderValue(),
       enableSorting: true,
     }),
     columnHelper.accessor("vendorDetails", {
-      header: () => `Vendor`,
+      header: () => translate?.serviceRequestTableColoumns?.vendor,
       cell: (info) => info.renderValue(),
       enableSorting: true,
     }),
     columnHelper.accessor("assignedDate", {
       id: "assignedDate",
-      header: () => `Assign Date`,
+      header: () => translate?.serviceRequestTableColoumns?.assignDate,
       cell: (info) => {
         if (info.renderValue()) {
           const unixDate = Date.parse(info.renderValue().replace("T", " "));
@@ -97,7 +99,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     }),
     columnHelper.accessor("targetDate", {
       id: "targetDate",
-      header: "Target Completion Date",
+      header: translate?.serviceRequestTableColoumns?.targetCompletionDate,
       cell: (info) => {
         if (info.renderValue()) {
           const unixDate = Date.parse(info.renderValue().replace("T", " "));
@@ -110,13 +112,13 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     }),
     columnHelper.accessor((row) => row?.status?.statusName, {
       id: "Status",
-      header: () => <span>Status</span>,
+      header: () => <span>{translate?.serviceRequestTableColoumns?.status}</span>,
       enableSorting: true,
       size: 100,
     }),
     columnHelper.accessor("", {
       id: "Action",
-      header: "Action",
+      header: translate?.serviceRequestTableColoumns?.action,
       cell: ({ row }) => (
         <>
           <a
@@ -124,15 +126,15 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
             className={ServiceRequestTableStyle.AssignText}
             onClick={(e) => assignService(e, row.original)}
           >
-            Assign
+            {translate?.serviceRequestTableColoumns?.assign}
           </a>
-          <span>|</span>
+          <span>{translate?.serviceRequestTableColoumns?.cancel}</span>
           <a
             href=""
             className={ServiceRequestTableStyle.DeleteText}
             onClick={(e) => deleteAction(e, row.original)}
           >
-            Delete
+            {translate?.serviceRequestTableColoumns?.delete}
           </a>
         </>
       ),
@@ -163,7 +165,8 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
   const ModalMsg = () => {
     return (
       <div>
-        Are you sure you want to delete the service request?<b> Please Confirm!</b>
+        {translate?.serviceRequestTableColoumns?.deleteMessage}?
+        <b>{translate?.serviceRequestTableColoumns?.confirm}</b>
       </div>
     );
   };
@@ -282,7 +285,7 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
             submitBtnText="Yes"
             closeBtnText="No"
             childComp={<ModalMsg />}
-            modalHeading="Service request"
+            modalHeading={translate?.serviceRequestHeading}
             submitHandler={handleDelete}
           />
         </div>

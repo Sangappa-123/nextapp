@@ -58,10 +58,13 @@ export const getClaimParticipantsList = async (param: { claimId: string }) => {
     return err;
   }
 };
-export const getclaimContents = async (param: { claimId: string }) => {
+export const getclaimContents = async (
+  param: { claimId: string },
+  isClient?: boolean
+) => {
   const payload = { id: param?.claimId };
   try {
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     const url = getApiEndPoint("claimContentsUrl");
     const resp = await http.post(url, payload);
     return resp;
@@ -294,6 +297,22 @@ export const updatePaidStatus = async (param: object) => {
 export const updateUnderReview = async (param: object) => {
   try {
     const url = getApiEndPoint("updateUnderReview");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
+
+export const reviewItemSupervisor = async (param: object) => {
+  try {
+    const url = getApiEndPoint("reviewItemSupervisor");
     const http = new HttpService({ isClient: true });
     const resp = await http.post(url, param);
     const { error } = resp;
