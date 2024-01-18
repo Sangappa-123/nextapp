@@ -74,18 +74,30 @@ function PolicyHolderTable(props: PolicyHolderTableProps) {
     }),
     columnHelper.accessor("paymentDate", {
       cell: (info: any) => <span>{convertToFloatCurrency(info.getValue())}</span>,
+      footer: () => {
+        return <span></span>;
+      },
       header: () => translate?.policyholderPayouts?.columns.paymentDate,
     }),
     columnHelper.accessor("paymentMode", {
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       header: () => translate?.policyholderPayouts?.columns.paymentMode,
     }),
     columnHelper.accessor("referenceNumber", {
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       header: () => translate?.policyholderPayouts?.columns.referenceCheck,
     }),
     columnHelper.accessor("note", {
       cell: (info: any) => <span>{info.getValue()}</span>,
+      footer: () => {
+        return <span></span>;
+      },
       header: () => translate?.policyholderPayouts?.columns.note,
     }),
   ];

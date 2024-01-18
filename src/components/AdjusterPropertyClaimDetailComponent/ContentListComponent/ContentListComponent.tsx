@@ -556,6 +556,9 @@ function ContentListComponent(props: any) {
                   size="small"
                   type="submit"
                   btnClassname={ContentListComponentStyle.contentListBtn}
+                  onClickHandler={() => {
+                    router.push(`/receipts-mapper/${claimId}`);
+                  }}
                 />
                 <Tooltip
                   anchorSelect="#more-btn-element"
@@ -760,6 +763,7 @@ function ContentListComponent(props: any) {
           tableLoader={tableLoader}
           setIsModalOpen={setIsModalOpen}
           setEditItem={setEditItem}
+          translate={translate}
         />
       </div>
     </>

@@ -1,5 +1,7 @@
 import React, { forwardRef } from "react";
 import { clsx } from "clsx";
+import { NumericFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
 
 import inputStyle from "./genericInput.module.scss";
 
@@ -24,6 +26,8 @@ type propsType = {
   labelClassname?: string;
   theme?: keyof typeof inputTheme;
   size?: keyof typeof inputSize;
+  priceFormatter?: boolean;
+  phoneFormatter?: boolean;
   [rest: string]: any;
 };
 
@@ -41,8 +45,25 @@ function GenericInput(props: propsType, ref: any) {
     isFixedError = false,
     inputFieldWrapperClassName = "",
     size = "small",
+    priceFormatter = false,
+    phoneFormatter = false,
     ...rest
   } = props;
+
+  const commonProps = {
+    type: "text",
+    ref,
+    placeholder,
+    autoComplete: "false",
+    className: clsx({
+      [inputStyle["input-field"]]: true,
+      [inputFieldClassname]: inputFieldClassname,
+      [inputStyle[inputTheme[theme]]]: true,
+      [inputStyle[inputSize[size]]]: true,
+      hideInputArrow: rest?.type === "number",
+    }),
+    ...rest,
+  };
   return (
     <div
       className={clsx({
@@ -63,21 +84,20 @@ function GenericInput(props: propsType, ref: any) {
           [inputFieldWrapperClassName]: inputFieldWrapperClassName,
         })}
       >
-        <input
-          type="text"
-          ref={ref}
-          placeholder={placeholder}
-          autoComplete="false"
-          className={clsx({
-            [inputStyle["input-field"]]: true,
-            [inputFieldClassname]: inputFieldClassname,
-            // [inputStyle["error-field"]]: showError,
-            [inputStyle[inputTheme[theme]]]: true,
-            [inputStyle[inputSize[size]]]: true,
-            hideInputArrow: rest?.type === "number",
-          })}
-          {...rest}
-        />
+        {priceFormatter && (
+          <NumericFormat
+            {...commonProps}
+            decimalScale={2}
+            fixedDecimalScale
+            prefix={"$"}
+            type="text"
+          />
+        )}
+        {phoneFormatter && (
+          <PatternFormat {...commonProps} format="(###)-###-####" type="text" />
+        )}
+        {!priceFormatter && !phoneFormatter && <input {...commonProps} />}
+
         <div
           className={clsx({
             [inputStyle["error-msg"]]: true,

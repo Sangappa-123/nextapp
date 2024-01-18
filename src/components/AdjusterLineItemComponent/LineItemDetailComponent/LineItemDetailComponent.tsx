@@ -9,16 +9,21 @@ import useCustomForm from "@/hooks/useCustomForm";
 import { Output, any, minLength, object, string } from "valibot";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxCustomHook";
 import EnumStoreSlice from "@/reducers/EnumStoreSlice";
-// import Modal from "@/components/common/ModalPopups";
-// import GenericButton from "@/components/common/GenericButton";
 import CustomComparable from "./CustomComparable";
 import useBodyScrollbar from "@/hooks/useBodyScrollbar";
 import Modal from "@/components/common/ModalPopups";
 import GenericButton from "@/components/common/GenericButton";
 import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { fetchClaimContentAction } from "@/reducers/ClaimData/ClaimContentSlice";
+import AddNewMessageModalComponent from "@/components/common/AddNewMessageModalComponent";
+import { useGetParticipantsQuery } from "@/reducers/LineItemDetail/LineItemThunkService";
+import { capitalize } from "lodash";
+import { addMessage } from "@/services/AdjusterPropertyClaimDetailServices/ClaimDetailsMessageService";
+import { reviewItemSupervisor } from "@/services/AdjusterPropertyClaimDetailServices/AdjusterPropertyClaimDetailService";
+
+type participantType = { label: string; value: string };
 
 function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
   const router = useRouter();
@@ -30,6 +35,12 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
   const CRN = useAppSelector((state) => state.session?.CRN);
   const [openCustomComparableModal, setOpenCustomComparableModal] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const { itemId, claimId } = useParams();
+  const { data, isLoading, isError } = useGetParticipantsQuery(+itemId);
+  const [showSupervisorReview, setShowSupervisorReview] = useState(false);
+  const [participants, setParticipants] = useState<participantType[]>([]);
+  const [defaultParticipants, setDefaultParticipants] = useState<participantType[]>([]);
 
   const schema = object({
     description: string("Item description", [minLength(0)]),
@@ -165,14 +176,170 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
     closeDeleteModal();
   };
 
+  useEffect(() => {
+    if (!isLoading || !isError) {
+      if (data?.status === 200) {
+        const optionsArray = data?.data?.map((participant: any) => {
+          const companyName = participant?.companyDTO?.companyName
+            ? `${participant?.companyDTO?.companyName} - `
+            : "";
+          const filteredData = {
+            label: `${participant?.firstName} ${participant?.lastName} (${companyName}${capitalize(
+              participant?.role
+            )})`,
+            value: JSON.stringify({ participant }),
+          };
+
+          if (participant.role === "CLAIM SUPERVISOR") {
+            setDefaultParticipants([filteredData]);
+          }
+
+          return filteredData;
+        });
+
+        setParticipants(optionsArray);
+      } else {
+        setParticipants([]);
+      }
+    }
+  }, [isLoading, isError, data]);
+
+  const statusChangeToUnderReview = async (addMessageResp: any) => {
+    const payload = {
+      itemUID: lineItem?.itemUID,
+    };
+    const res = await reviewItemSupervisor(payload);
+    if (res?.status === 200) {
+      addNotification({
+        message: addMessageResp.message,
+        id: "add_message_success",
+        status: "success",
+      });
+    } else {
+      addNotification({
+        message: addMessageResp.message ?? "Something went wrong.",
+        id: "add_message_failure",
+        status: "error",
+      });
+    }
+  };
+  const constructFormData = (data: any) => {
+    const participantsArray: any = [];
+    let internal = true;
+    let registration = null;
+    data?.participants.map((participant: { value: string }) => {
+      const prsedObj = JSON.parse(participant?.value);
+      if (
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "EXTERNAL" ||
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "EXISTING VENDOR" ||
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "NEW VENDOR" ||
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "CLAIM ASSOCIATE" ||
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "CLAIM REPRESENTATIVE" ||
+        prsedObj?.participant?.participantType?.participantType.toUpperCase() ==
+          "GEMLAB ASSOCIATE"
+      ) {
+        internal = false;
+        registration = prsedObj.vendorRegistration;
+        participantsArray.push({
+          participantId: prsedObj?.participant?.participantId,
+          email: prsedObj?.participant?.emailId,
+          vendorRegistration: prsedObj ? prsedObj?.participant?.vendorRegistration : null,
+          participantType: { ...prsedObj?.participant?.participantType },
+        });
+      } else {
+        participantsArray.push({
+          participantId: prsedObj?.participant?.participantId,
+          email: prsedObj?.participant?.emailId,
+          participantType: { ...prsedObj?.participant?.participantType },
+        });
+      }
+    });
+    const payload = {
+      claimId,
+      claimNumber: lineItem?.claimNumber,
+      sender: CRN,
+      itemUID: null,
+      serviceRequestNumber: null,
+      isPublicNote: false,
+      message: data?.message,
+      isInternal: internal,
+      registrationNumber: registration,
+      groupDetails: {
+        groupId: null,
+        groupTitle: null,
+        participants: participantsArray,
+      },
+    };
+    const formData = new FormData();
+    let mediaFileDetailsArray: any = [];
+    if (data?.files.length > 0) {
+      data?.files?.map((fileObj: any) => {
+        const newObj = {
+          fileName: fileObj?.name,
+          fileType: fileObj?.type,
+          extension: fileObj?.name.substr(fileObj?.name.lastIndexOf(".")),
+          filePurpose: "Note",
+          latitude: null,
+          longitude: null,
+        };
+        mediaFileDetailsArray.push(newObj);
+        formData.append("file", fileObj);
+      });
+    } else {
+      formData.append("file", "null");
+      mediaFileDetailsArray = null;
+    }
+
+    formData.append("mediaFilesDetail", JSON.stringify(mediaFileDetailsArray));
+    formData.append("noteDetail", JSON.stringify(payload));
+    return formData;
+  };
+
+  const handleMessageSubmit = async (data: any) => {
+    const formData = constructFormData(data);
+    const addMessageResp = await addMessage(formData);
+    toggleSupervisorModal();
+    if (addMessageResp?.status === 200) {
+      statusChangeToUnderReview(addMessageResp);
+    } else {
+      dispatch(
+        addNotification({
+          message: addMessageResp.message ?? "Something went wrong.",
+          id: itemId,
+          status: "error",
+        })
+      );
+    }
+  };
+
+  const toggleSupervisorModal = () => {
+    setShowSupervisorReview(!showSupervisorReview);
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit(handleFormSubmit)}
-      className={lineItemDetailComponentStyle.root}
-    >
-      <CustomComparable
-        closeCustomComparable={closeCustomComparable}
-        openCustomComparableModal={openCustomComparableModal}
+    <>
+      <Modal
+        isOpen={showSupervisorReview}
+        onClose={toggleSupervisorModal}
+        headingName={"Add new message"}
+        childComp={
+          <AddNewMessageModalComponent
+            handleOpenModal={toggleSupervisorModal}
+            claimId={claimId.toString()}
+            participants={participants}
+            handleMessageSubmit={handleMessageSubmit}
+            defaultValue={defaultParticipants}
+          />
+        }
+        positionTop={true}
+        animate={true}
+        overlayClassName={lineItemDetailComponentStyle.modalContainer}
+        modalWidthClassName={lineItemDetailComponentStyle.modalContent}
       />
       <Modal
         isOpen={confirmDelete}
@@ -194,25 +361,37 @@ function LineItemDetailComponentForm({ rapidDivRef }: { rapidDivRef: any }) {
         positionTop
         roundedBorder
       />
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className={lineItemDetailComponentStyle.root}
+      >
+        <CustomComparable
+          closeCustomComparable={closeCustomComparable}
+          openCustomComparableModal={openCustomComparableModal}
+        />
 
-      <GroupedActionButtons onDeleteClick={showDeleteModal} />
-      <div className={lineItemDetailComponentStyle.topItemSection}>
-        <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
-        <OrginalItemForm
-          register={register}
-          control={control}
-          getValues={getValues}
-          setValue={setValue}
+        <GroupedActionButtons
+          onDeleteClick={showDeleteModal}
+          onSupervisorReviewClick={toggleSupervisorModal}
         />
-        <ReplacementItemSection
-          showCustomComparableModal={() => setOpenCustomComparableModal(true)}
-        />
-      </div>
-      <div className={lineItemDetailComponentStyle.bottomItemSection}>
-        <WebComparables />
-        <AddedComparables />
-      </div>
-    </form>
+        <div className={lineItemDetailComponentStyle.topItemSection}>
+          <div ref={rapidDivRef} style={{ position: "absolute", top: 0 }} />
+          <OrginalItemForm
+            register={register}
+            control={control}
+            getValues={getValues}
+            setValue={setValue}
+          />
+          <ReplacementItemSection
+            showCustomComparableModal={() => setOpenCustomComparableModal(true)}
+          />
+        </div>
+        <div className={lineItemDetailComponentStyle.bottomItemSection}>
+          <WebComparables />
+          <AddedComparables />
+        </div>
+      </form>
+    </>
   );
 }
 

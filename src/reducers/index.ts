@@ -13,6 +13,13 @@ import ClaimDetailSlice from "./ClaimDetail/ClaimDetailSlice";
 import NavigationSlice from "./UploadCSV/navigationSlice";
 import AddItemsTableCSVSlice from "./UploadCSV/AddItemsTableCSVSlice";
 import DetailedInventorySlice from "./ContentsEvaluation/DetailedInventorySlice";
+import ClaimedItemsSlice from "./ReceiptMapper/ClaimedItemsSlice";
+import { participants } from "./LineItemDetail/LineItemThunkService";
+
+const reduxQueryReducers = {
+  // redux toolkit query services
+  [participants.reducerPath]: participants.reducer,
+};
 
 const rootReducer = combineReducers({
   [SessionSlice.name]: SessionSlice.reducer,
@@ -29,6 +36,8 @@ const rootReducer = combineReducers({
   [NavigationSlice.name]: NavigationSlice.reducer,
   [AddItemsTableCSVSlice.name]: AddItemsTableCSVSlice.reducer,
   [DetailedInventorySlice.name]: DetailedInventorySlice.reducer,
+  [ClaimedItemsSlice.name]: ClaimedItemsSlice.reducer,
+  ...reduxQueryReducers,
 });
 
 export default rootReducer;

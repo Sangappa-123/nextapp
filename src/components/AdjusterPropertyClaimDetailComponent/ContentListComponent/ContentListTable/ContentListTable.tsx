@@ -31,6 +31,7 @@ import { deleteClaimItem } from "@/services/ClaimContentListService";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 import { fetchClaimContentItemDetails } from "@/services/AddItemContentService";
 import { sortBy } from "lodash";
+import { getUSDCurrency } from "@/utils/utitlity";
 interface typeProps {
   [key: string | number]: any;
 }
@@ -47,6 +48,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
     setEditItem,
     claimContentListDataFull,
     updateClaimContentListFullData,
+    translate,
   } = props;
   const { claimId } = useParams();
   const router = useRouter();
@@ -130,81 +132,84 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
           ),
         }),
         columnHelper.accessor("itemNumber", {
-          header: () => "Item #",
+          header: () => translate?.contentListTableColoumns?.item,
           id: "item",
           enableColumnFilter: false,
         }),
         columnHelper.accessor("statusName", {
-          header: () => "Status", // filter option true should have same id as value
+          header: () => translate?.contentListTableColoumns?.status, // filter option true should have same id as value
           id: "statusName",
         }),
         columnHelper.accessor("categoryName", {
-          header: () => "Catogory", // filter option true should have same id as value
+          header: () => translate?.contentListTableColoumns?.category, // filter option true should have same id as value
           id: "categoryName",
         }),
       ],
     }),
     columnHelper.group({
-      header: () => "Original Item",
+      header: () => translate?.contentListTableColoumns?.originalItem,
       id: "original_item",
       meta: {
         headerClass: ContentListTableStyle.originalItemHeader,
       },
       columns: [
         columnHelper.accessor("description", {
-          header: () => "Description",
+          header: () => translate?.contentListTableColoumns?.description,
           id: "Description",
           enableColumnFilter: false,
         }),
         columnHelper.accessor("quantity", {
-          header: () => "Qty",
+          header: () => translate?.contentListTableColoumns?.qty,
           id: "qty",
           enableColumnFilter: false,
         }),
         columnHelper.accessor("totalStatedAmount", {
-          header: () => "Total Price",
+          header: () => translate?.contentListTableColoumns?.totalPrice,
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           id: "totalStatedAmount", // filter option true should have same id as value
         }),
         columnHelper.accessor("itemTag", {
-          header: () => "Item Tag",
+          header: () => translate?.contentListTableColoumns?.itemTag,
           id: "itemTag", // filter option true should have same id as value
         }),
       ],
     }),
     columnHelper.group({
-      header: "Vendor",
+      header: translate?.contentListTableColoumns?.vendor,
       id: "vendorId",
       meta: {
         headerClass: ContentListTableStyle.originalItemHeader,
       },
       columns: [
         columnHelper.accessor("vendorName", {
-          header: () => "Vendor",
+          header: () => translate?.contentListTableColoumns?.vendor,
           id: "vendor",
           enableColumnFilter: false,
         }),
       ],
     }),
     columnHelper.group({
-      header: "Replacment Item",
+      header: translate?.contentListTableColoumns?.replacementItem,
       id: "replacmentItem",
       meta: {
         headerClass: ContentListTableStyle.replacementItemHeader,
       },
       columns: [
         columnHelper.accessor("adjusterDescription", {
-          header: () => "Replacment Description",
+          header: () => translate?.contentListTableColoumns?.replacementDescription,
           id: "Replacement_Description",
           enableColumnFilter: false,
         }),
         columnHelper.accessor("rcvTotal", {
-          header: () => "Replacment Cost",
+          header: () => translate?.contentListTableColoumns?.replacementCost,
           id: "replacment",
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           enableColumnFilter: false,
         }),
         columnHelper.accessor("cashPayoutExposure", {
-          header: () => "Cash Exposure",
+          header: () => translate?.contentListTableColoumns?.cashExposure,
           id: "cash-exposure",
+          cell: (info) => <span>{`${getUSDCurrency(info.getValue())}`}</span>,
           enableColumnFilter: false,
         }),
       ],
@@ -214,7 +219,7 @@ const ContentListTable: React.FC<connectorType & typeProps> = (props) => {
       id: "actionItem",
       columns: [
         columnHelper.accessor("Action", {
-          header: () => "Action",
+          header: () => translate?.contentListTableColoumns?.action,
           id: "Action",
           cell: ({ row }) => {
             return (

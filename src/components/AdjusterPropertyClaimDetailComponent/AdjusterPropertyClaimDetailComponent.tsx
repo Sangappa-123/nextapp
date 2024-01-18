@@ -28,8 +28,8 @@ import { RootState } from "@/store/store";
 import selectPolicyHolderFirstName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderFirstName";
 import selectPolicyHolderLastName from "@/reducers/ClaimDetail/Selectors/selectPolicyHolderLastName";
 import Loading from "@/app/[lang]/loading";
-import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
+import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 
 type propsTypes = {
   claimId: string;
@@ -67,6 +67,9 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
   firstName,
   lastName,
 }) => {
+  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
+    useTranslation("claimDetailsTabTranslate");
+
   const dispatch = useAppDispatch();
   const companyId = useAppSelector(selectCompanyId);
   useEffect(() => {
@@ -115,9 +118,6 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
     policyInfoRes?.data,
     subcategoryListRes?.data,
   ]);
-
-  const { translate }: { translate: claimDetailsTabTranslateType | undefined } =
-    useTranslation("claimDetailsTabTranslate");
 
   const pathList = [
     {

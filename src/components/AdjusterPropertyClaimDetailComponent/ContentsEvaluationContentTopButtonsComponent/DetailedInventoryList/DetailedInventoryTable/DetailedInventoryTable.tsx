@@ -31,6 +31,7 @@ type DetailedInventoryProps = {
   fetchDetailedInventoryAction: any;
   detailedInventorySummaryData: any;
   isfetching: boolean;
+  searchKeyword: string;
 };
 
 interface detailedInventoryData {
@@ -65,6 +66,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     fetchDetailedInventoryAction,
     detailedInventorySummaryData,
     isfetching,
+    searchKeyword,
   } = props;
   const [newData, setData] = useState<Array<typeof listData>>();
   const [openStatus, setOpenStatus] = useState(false);
@@ -86,6 +88,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       claimNum: claimNumber,
       sortBy: "",
       orderBy: "",
+      q: "",
     });
   }, [claimNumber, fetchDetailedInventoryAction]);
 
@@ -105,6 +108,7 @@ const DetailedInventoryTable: React.FC<connectorType> = (
         claimNum: claimNumber,
         sortBy: sortBy,
         orderBy: orderBy,
+        q: "",
       });
       if (result) {
         setTableLoader(false);
@@ -116,6 +120,17 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       }
     }
   };
+
+  useEffect(() => {
+    fetchDetailedInventoryAction({
+      pageNo: 1,
+      recordPerPage: 10,
+      claimNum: claimNumber,
+      sortBy: "",
+      orderBy: "",
+      q: searchKeyword,
+    });
+  }, [searchKeyword, fetchDetailedInventoryAction]);
 
   React.useEffect(() => {
     if (listData) {
@@ -138,16 +153,25 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     columnHelper.accessor("itemNumber", {
       header: () => translate?.detailedInventory?.column?.item,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("room.roomName", {
       header: () => translate?.detailedInventory.column.room,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("originalItemDescription", {
       header: () => translate?.detailedInventory.column.originalDescription,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("ageInYears", {
@@ -159,11 +183,17 @@ const DetailedInventoryTable: React.FC<connectorType> = (
           props.row.original?.ageInMonths ? `${props.row.original?.ageInMonths}m` : `0m`
         }`}</span>
       ),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("quantity", {
       header: () => translate?.detailedInventory.column.quantity,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("totalPrice", {
@@ -177,26 +207,41 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     columnHelper.accessor("categoryDetails.name", {
       header: () => translate?.detailedInventory.column.category,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("status.status", {
       header: () => translate?.detailedInventory.column.status,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("itemLimit", {
       header: () => translate?.detailedInventory.column.individualLimit,
       cell: (info: any) => <span>{`${convertToDollar(info.getValue())}`}</span>,
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("replacementItemDescription", {
       header: () => translate?.detailedInventory.column.replacementDescription,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("webSource", {
       header: () => translate?.detailedInventory.column.source,
       cell: (info: any) => <a href={info.getValue()}>{info.getValue()}</a>,
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("replacementTotalCost", {
@@ -223,6 +268,9 @@ const DetailedInventoryTable: React.FC<connectorType> = (
       header: () => translate?.detailedInventory.column.annualDep,
       cell: (info: any) =>
         info.getValue() && <span>{`${convertToPercent(info.getValue())}%`}</span>,
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("depreciationAmount", {
@@ -277,6 +325,9 @@ const DetailedInventoryTable: React.FC<connectorType> = (
     columnHelper.accessor("settlementComment", {
       header: () => translate?.detailedInventory.column.comments,
       cell: (info: any) => info.getValue(),
+      footer: () => {
+        return <span></span>;
+      },
       enableSorting: true,
     }),
     columnHelper.accessor("holdOverPaid", {
@@ -488,6 +539,7 @@ const mapStateToProps = (state: RootState) => ({
   listData: state.detailedInventorydata?.detailedInventoryListDataFull,
   isfetching: state.detailedInventorydata?.detailedInventoryfetching,
   detailedInventorySummaryData: state.detailedInventorydata?.detailedInventorySummaryData,
+  searchKeyword: state.detailedInventorydata.searchKeyword,
 });
 
 const mapDispatchToProps = {
