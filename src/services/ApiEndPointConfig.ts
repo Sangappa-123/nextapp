@@ -78,6 +78,7 @@ enum apiEndPoints {
   assignVendorGet = "web/registered/vendors",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
   receiptApi = "web/upload/receipt",
+  receiptMapperDateApi = "web/pdf/list/date",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

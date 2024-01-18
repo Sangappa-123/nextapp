@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import ReceiptMapperPdfList from "../ReceiptMapperPdfList/ReceiptMapperPdfList";
 // import receiptMapperStyle from "../receiptMapperComponent.module.scss";
-import RecieptMapperPdfViewer from "../RecieptMapperPdfViewer/RecieptMapperPdfViewer";
 
 const RecieptMapperMainComponent: React.FC = () => {
-  return <RecieptMapperPdfViewer />;
+  return <ReceiptMapperPdfList />;
 };
 
 // const connector = connect(mapStateToProps, mapDispatchToProps);
