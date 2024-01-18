@@ -154,7 +154,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
             CurrentDate;
         }
       }
-
+      const contentLimitInteger = data.contentLimits.replace("$", "");
+      console.log("numberValue", contentLimitInteger);
+      const claimDeductibleInteger = data.claimDeductible.replace("$", "");
+      const minItemPriceInteger = data.minItemPrice.replace("$", "");
       const payload = {
         claimNumber: data.claim,
         additionalNote: "This is additional note for claim",
@@ -185,8 +188,9 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         propertyCoverage: null,
         totalPolicyCoverage: null,
         totalSpecialLimit: 0,
-        policyLimits: data.contentLimits,
+        policyLimits: parseFloat(contentLimitInteger),
       };
+
       const payload1 = {
         filesDetails: null,
         file: null,
@@ -197,7 +201,7 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           applyTax: true,
           taxRate: data.taxRate,
           damageTypeId: data.lossType?.id ?? 9,
-          deductible: data.claimDeductible,
+          deductible: parseFloat(claimDeductibleInteger),
           additionalNote: null,
           incidentDate: dayjs(data.claimDate).format("YYYY-MM-DDTHH:mm:ssZ[Z]"),
           description: null,
@@ -230,10 +234,10 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
           shippingDate: null,
           shippingMethod: null,
           noOfItems: 0,
-          minimumThreshold: data.minItemPrice,
+          minimumThreshold: parseFloat(minItemPriceInteger),
           thirdPartyInsCompName: data.insuranceCompany,
           thirdPartyInsAdjName: data.adjusterName,
-          aggigateLimit: data.contentLimits,
+          aggigateLimit: parseFloat(contentLimitInteger),
         },
       };
       const formData = new FormData();
