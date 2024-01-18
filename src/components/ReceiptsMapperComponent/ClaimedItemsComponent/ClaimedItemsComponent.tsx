@@ -41,7 +41,7 @@ const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) 
   }, [claimNumber]);
 
   const handleReceipt = (e: any) => {
-    const formData = new FormData();
+    const formData: any = new FormData();
 
     formData.append("pdfFile", e.target.files[0]);
     formData.append("pdfName", e.target.files[0].name);
