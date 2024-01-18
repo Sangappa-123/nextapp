@@ -87,8 +87,7 @@ const LineItemDetailSlice = createSlice({
       if (payload)
         state.lineItem.subCategory = {
           ...state.lineItem.subCategory,
-          id: payload.id,
-          name: payload.name,
+          ...payload,
         };
       else state.lineItem.subCategory = null;
     },

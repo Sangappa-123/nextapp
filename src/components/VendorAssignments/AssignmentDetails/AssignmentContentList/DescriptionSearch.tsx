@@ -2,7 +2,7 @@
 import React from "react";
 import { ConnectedProps, connect } from "react-redux";
 import { RiSearch2Line } from "react-icons/ri";
-import DetailedInventorySearchStyle from "./DetailedInventorySearchBox.module.scss";
+import AssignmentContentListStyle from "./AssignmentContentListStyle.module.scss";
 import { addDetailedInventorySearchKeyWord } from "@/reducers/ContentsEvaluation/DetailedInventorySlice";
 import useTranslation from "@/hooks/useTranslation";
 import { contentsEvaluationTranslateType } from "@/translations/contentsEvaluationTranslate/en";
@@ -11,7 +11,7 @@ import CustomLoader from "@/components/common/CustomLoader/index";
 interface typeProps {
   setTableLoader: React.SetStateAction<any>;
 }
-const DetailedInventorySearchBox: React.FC<connectorType & typeProps> = (props) => {
+const DescriptionSearch: React.FC<connectorType & typeProps> = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
   const { searchKeyword, addDetailedInventorySearchKeyWord }: React.SetStateAction<any> =
     props;
@@ -41,8 +41,8 @@ const DetailedInventorySearchBox: React.FC<connectorType & typeProps> = (props) 
     );
   }
   return (
-    <div className={DetailedInventorySearchStyle.searchBox}>
-      <RiSearch2Line className={DetailedInventorySearchStyle.searchIcon} />
+    <div className={AssignmentContentListStyle.searchBox}>
+      <RiSearch2Line className={AssignmentContentListStyle.searchIcon} />
       <input
         type="text"
         placeholder={translate?.detailedInventory?.searchPlaceHolder}
@@ -63,4 +63,4 @@ const mapDispatchToProps = {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;
-export default connector(DetailedInventorySearchBox);
+export default connector(DescriptionSearch);
