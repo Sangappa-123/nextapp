@@ -401,3 +401,19 @@ export const submitVendorDetails = async (param: object) => {
     return err;
   }
 };
+export const receiptApiUrl = async (payload: any) => {
+  try {
+    console.log("logs");
+    const url = getApiEndPoint("receiptApi");
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      return res.message;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error uploading the pdf", error);
+    return null;
+  }
+};

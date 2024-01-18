@@ -38,7 +38,6 @@ import { contentListComponentType } from "@/translations/contentListComponent/en
 
 function ContentListComponent(props: any) {
   const {
-    claimContentListRes,
     addClaimContentListData,
     claimId,
     editItemDetail,
@@ -47,7 +46,6 @@ function ContentListComponent(props: any) {
     categoryListRes,
     CRN,
   } = props;
-  console.log("calimID", props.claimId);
   const router = useRouter();
   const [tableLoader, setTableLoader] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
@@ -63,11 +61,6 @@ function ContentListComponent(props: any) {
   const [isModalOpenSuperVisor, setIsModalOpenSuperVisor] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [isModalOpenChangeCat, setIsModalOpenChangeCat] = useState<boolean>(false);
-
-  React.useEffect(() => {
-    const claimContentData = claimContentListRes;
-    addClaimContentListData({ claimContentData, claimId });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDropDown = () => {
     setShowDropDown(!showDropDown);
