@@ -11,26 +11,10 @@
   .actionBtns {
     display: flex;
     gap: 5px;
-    .updateActionBtn {
-      display: flex;
-      color: $astral;
-      cursor: pointer;
+    .linkBtnStyle {
+      padding: 0;
       font-size: 14px;
       line-height: 14px;
-      font-weight: 600;
-      border: none;
-      background: none;
-      outline-color: unset;
-      font: inherit;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    .cancelActionBtn {
-      display: flex;
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 }
