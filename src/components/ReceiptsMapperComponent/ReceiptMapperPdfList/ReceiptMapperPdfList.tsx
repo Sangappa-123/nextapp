@@ -8,12 +8,7 @@ import { ConnectedProps, connect } from "react-redux";
 import Modal from "@/components/common/ModalPopups/index";
 import AddLabelModalComponent from "@/components/common/AddLabelModalComponent/AddLabelModalComponent";
 
-// import { getClaimedItems } from "@/services/ReceiptMapper/ReceiptMapperService";
-
-interface typeProps {
-  setTableLoader: React.SetStateAction<any>;
-}
-const ReceiptMapperPdfList: React.FC<connectorType & typeProps> = (props) => {
+const ReceiptMapperPdfList: React.FC<connectorType> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
