@@ -10,6 +10,7 @@ import {
   fetchRetailersDetails,
   fetchRoom,
   fetchSubCategory,
+  removeAttachment,
   searchComparable,
 } from "./LineItemThunkService";
 
@@ -25,6 +26,7 @@ const initialState: unknownObjectType = {
   room: [],
   retailer: [],
   paymentTypes: [],
+  attachmentList: [],
   webSearch: {
     isSearching: false,
     insuredPrice: 0,
@@ -121,6 +123,9 @@ const LineItemDetailSlice = createSlice({
         state.comparableItems = tempComparable;
         state.replacementItem = tempReplacement;
         delete payload?.data?.comparableItems;
+
+        state.attachmentList = payload?.data?.attachments ?? [];
+        delete payload?.data?.attachments;
         state.lineItem = payload.data;
       }
     });
@@ -202,6 +207,13 @@ const LineItemDetailSlice = createSlice({
     builder.addCase(fetchRetailersDetails.rejected, (state) => {
       state.retailer = [];
       state.paymentTypes = [];
+    });
+
+    builder.addCase(removeAttachment.fulfilled, (state, action) => {
+      const { id } = action.payload;
+      state.attachmentList = state.attachmentList.filter(
+        (attachment: any) => attachment.id !== id
+      );
     });
   },
 });
