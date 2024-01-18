@@ -14,7 +14,7 @@ const translate = {
     createdDate: "Created Date",
     elapsedTime: "Elapsed Time",
     lossType: "Loss Type",
-    claimDeductible: "Claim Deductible",
+    deductible: "Deductible",
     tax: "Tax %",
     contentLimits: "Content Limits",
     minItemToPrice: "Min. $ Item to Price",

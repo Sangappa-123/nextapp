@@ -13,7 +13,6 @@ import { ConnectedProps, connect } from "react-redux";
 
 const ClaimSnapShotComponent: React.FC<connectorType> = (props) => {
   const { claimSnapShotData } = props;
-  // console.log("props", claimSnapShotData);
   const [showForm, setShowForm] = useState(false);
   const { translate }: { translate: claimDetailsTranslateType | undefined } =
     useTranslation("claimDetailsTranslate");
@@ -22,7 +21,7 @@ const ClaimSnapShotComponent: React.FC<connectorType> = (props) => {
     <>
       <Cards className={claimSnapShotStyle.snapShotcardContainer}>
         <GenericComponentHeading title={translate?.claimSnapshot?.claimSnapshotHeading}>
-          <RightActionsComponent setShowForm={setShowForm} />
+          <RightActionsComponent setShowForm={setShowForm} showForm={showForm} />
         </GenericComponentHeading>
         <div className={claimSnapShotStyle.contentContainer}>
           {!showForm && (
@@ -34,6 +33,7 @@ const ClaimSnapShotComponent: React.FC<connectorType> = (props) => {
             <UpdateClaimInfoForm
               claimSnapShotData={claimSnapShotData}
               translate={translate}
+              setShowForm={setShowForm}
             />
           )}
           <div className={claimSnapShotStyle.contentCardsContainer}>

@@ -55,42 +55,44 @@ export default function middleware(req: NextRequest) {
     const userRole = cookieStore.get("role");
     const url = req.nextUrl.clone();
     console.log("userRole", userRole?.value);
-    if (accessToken && userRole?.value) {
-      const urlList = getRoleBasedUrlList(userRole?.value);
-      if (urlList?.Screens) {
-        const isUrlContain = urlList?.Screens?.some((screen) => {
-          if (screen.URL.includes("{ID}")) {
-            const screenUrl = screen.URL.split("/");
-            const pathUrl = pathname.split("/");
+    if (userRole?.value) {
+      if (accessToken) {
+        const urlList = getRoleBasedUrlList(userRole?.value);
+        if (urlList?.Screens) {
+          const isUrlContain = urlList?.Screens?.some((screen) => {
+            if (screen.URL.includes("{ID}")) {
+              const screenUrl = screen.URL.split("/");
+              const pathUrl = pathname.split("/");
 
-            if (pathUrl.length === screenUrl.length) {
-              let isValid = true;
-              for (const i in screenUrl) {
-                console.log(screenUrl[i], pathUrl[i]);
-                if (screenUrl[i] !== "{ID}" && screenUrl[i] !== pathUrl[i]) {
-                  isValid = false;
-                  break;
+              if (pathUrl.length === screenUrl.length) {
+                let isValid = true;
+                for (const i in screenUrl) {
+                  console.log(screenUrl[i], pathUrl[i]);
+                  if (screenUrl[i] !== "{ID}" && screenUrl[i] !== pathUrl[i]) {
+                    isValid = false;
+                    break;
+                  }
                 }
+                return isValid;
               }
-              return isValid;
+              return false;
+            } else {
+              return screen.URL === pathname;
             }
-            return false;
-          } else {
-            return screen.URL === pathname;
+          });
+          if (!isUrlContain) {
+            url.pathname = "/login";
+            const redirect = NextResponse.redirect(url);
+            redirect.cookies.set("accessDenied", "true");
+            return redirect;
           }
-        });
-        if (!isUrlContain) {
-          url.pathname = "/login";
-          const redirect = NextResponse.redirect(url);
-          redirect.cookies.set("accessDenied", "true");
-          return redirect;
         }
+      } else {
+        url.pathname = "/login";
+        const redirect = NextResponse.redirect(url);
+        redirect.cookies.set("accessDenied", "true");
+        return redirect;
       }
-    } else {
-      url.pathname = "/login";
-      const redirect = NextResponse.redirect(url);
-      redirect.cookies.set("accessDenied", "true");
-      return redirect;
     }
   }
 
