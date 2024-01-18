@@ -92,3 +92,39 @@
     border-radius: 10px;
   }
 }
+
+// pdf viewer styles
+
+.fileNameDiv {
+  display: flex;
+  font-size: 14px;
+  justify-content: space-evenly;
+}
+.zoombuttonDiv {
+  gap: 8px;
+  display: flex;
+  justify-content: end;
+}
+
+.mapperpopup {
+  width: 100px;
+  border: 2px solid $grey3;
+  padding: 15px;
+  display: inline-table;
+  border-radius: 5px;
+  background: whitesmoke;
+}
+.receiptPdfPages {
+  position: relative;
+  span,
+  div,
+  p,
+  br,
+  a {
+    cursor: crosshair !important;
+  }
+  overflow: auto;
+  height: 500px;
+
+  cursor: crosshair;
+}
