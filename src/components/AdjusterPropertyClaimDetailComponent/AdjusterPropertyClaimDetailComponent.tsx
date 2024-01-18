@@ -30,6 +30,8 @@ import selectPolicyHolderLastName from "@/reducers/ClaimDetail/Selectors/selectP
 import Loading from "@/app/[lang]/loading";
 import useTranslation from "@/hooks/useTranslation";
 import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
+import { addserviceRequestData } from "@/reducers/ClaimData/ClaimServiceRequestSlice";
+import { addClaimContentListData } from "@/reducers/ClaimData/ClaimContentSlice";
 
 type propsTypes = {
   claimId: string;
@@ -104,11 +106,16 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
     dispatch(addRetailer(claimRetailerRes?.data?.retailers));
     dispatch(addRoom(claimRoomRes?.data));
     dispatch(addRoomType(claimRoomTypeRes));
+    dispatch(addserviceRequestData({ claimServiceRequestList: serviceRequestListRes }));
+    dispatch(addClaimContentListData({ claimContentData: claimContentListRes, claimId }));
   }, [
     categoryListRes?.data,
+    claimContentListRes,
+    claimContentListRes.data,
     claimContentsRes?.data,
     claimContitionRes?.data,
     claimDetailMessageListRes?.data?.messages,
+    claimId,
     claimParticipantsRes?.data,
     claimRetailerRes?.data?.retailers,
     claimRoomRes?.data,
@@ -116,6 +123,8 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
     dispatch,
     pendingTaskListRes?.data,
     policyInfoRes?.data,
+    serviceRequestListRes,
+    serviceRequestListRes.data,
     subcategoryListRes?.data,
   ]);
 
@@ -158,11 +167,7 @@ const AdjusterPropertyClaimDetailComponent: React.FC<connectorType & propsTypes>
           </div>
         </Suspense>
         <div>
-          <ClaimDetailTabsComponent
-            serviceRequestListRes={serviceRequestListRes}
-            claimContentListRes={claimContentListRes}
-            claimId={claimId}
-          />
+          <ClaimDetailTabsComponent claimId={claimId} />
         </div>
       </div>
     );

@@ -3,7 +3,10 @@ import React, { useEffect, useState, useRef } from "react";
 // import { useParams } from "next/navigation";
 import receiptMapperStyle from "../receiptMapperComponent.module.scss";
 
-import { getClaimedItems } from "@/services/ReceiptMapper/ReceiptMapperService";
+import {
+  getClaimedItems,
+  getReceiptMapperDate,
+} from "@/services/ReceiptMapper/ReceiptMapperService";
 import ClaimedItemsTable from "../ClaimedItemsTable/ClaimedItemsTable";
 import ClaimedItemsSearchBox from "../ClaimedItemsSearchBox/ClaimedItemsSearchBox";
 import GenericButton from "@/components/common/GenericButton/index";
@@ -29,6 +32,9 @@ const ClaimedItemsComponent: React.FC<propTypes> = ({ claimNumber }: propTypes) 
       await getClaimedItems({
         claimNumber: claimNumber,
         reqForReceiptMapper: true,
+      });
+      await getReceiptMapperDate({
+        claimId: claimId,
       });
     };
     getItems();

@@ -29,7 +29,6 @@ enum apiEndPoints {
   excelcsvuploaddata = "web/read/postloss/items",
   itemsDetails = "web/claim/itemdetails",
   categoriesRequest = "web/categories",
-  // subcategoriesReqUrl = "web/item/subcategories",
   replacementApi = "web/claim/search/replacement",
   savePolicy = "web/adjuster/create/policy",
   policyInfo = "web/policy/info",
@@ -77,7 +76,9 @@ enum apiEndPoints {
   createTaskApiUrl = "web/claim/create/task",
   assignVendorGet = "web/registered/vendors",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
+  updateClaimDetailApiUrl = "web/claim/update/claimdetails",
   receiptApi = "web/upload/receipt",
+  receiptMapperDateApi = "web/pdf/list/date",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

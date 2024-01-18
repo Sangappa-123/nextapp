@@ -2,7 +2,6 @@ import ClaimParticipants from "@/components/ClaimParticipants/ClaimParticipants"
 import ActivityLog from "@/components/ActivityLog/ActivityLog";
 import TabsButtonComponent from "@/components/common/TabsButtonComponent";
 import PolicyAndCoverageDetails from "@/components/PolicyAndCoverageDeatils/PolicyAndCoverageDetails";
-// import Documents from "@/components/Documents/Documents";
 import ClaimDetailContentTopButtonsComponent from "../ClaimDetailContentTopButtonsComponent";
 import ContentsEvaluationContentTopButtonsComponent from "../ContentsEvaluationContentTopButtonsComponent/ContentsEvaluationContentTopButtonsComponent";
 import VendorAssignments from "@/components/VendorAssignments/index";
@@ -11,8 +10,6 @@ import useTranslation from "@/hooks/useTranslation";
 import Documents from "@/components/Documents/Documents";
 
 type propTypes = {
-  serviceRequestListRes: any;
-  claimContentListRes: any;
   claimId: string;
 };
 
@@ -23,15 +20,7 @@ const ClaimDetailTabsComponent: React.FC<propTypes> = (props: propTypes) => {
   const tabsArray = [
     {
       name: translate?.tabsComponent?.claimDetail,
-      content: (
-        <ClaimDetailContentTopButtonsComponent
-          serviceRequestListRes={props.serviceRequestListRes}
-          claimContentListRes={props.claimContentListRes}
-          claimId={props.claimId}
-        />
-      ),
-      // content: <DashboardNotification data={data} />,
-      // className: TabsStyle.tab1,
+      content: <ClaimDetailContentTopButtonsComponent claimId={props.claimId} />,
     },
     {
       name: translate?.tabsComponent?.contentsEvaluation,
