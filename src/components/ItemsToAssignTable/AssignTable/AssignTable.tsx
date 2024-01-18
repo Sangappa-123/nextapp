@@ -15,7 +15,10 @@ import {
   setSelectedItems,
   setSelectedCategory,
   setCategories,
+  setSelectedItemsUUIDs,
+  updateVendorAssignmentPayload,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { useDispatch } from "react-redux";
 
 interface AssignTableProps {
   selectedItems: any[];
@@ -33,13 +36,13 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
   type AssignItemsModalData = {
     id: any;
     description: string;
-    category: { category: string };
+    category: { name: string };
     select: boolean;
     unitCost: string;
   };
 
   const [filterData, setFilterData] = useState<any>(selectedItems);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const categoryData =
       selectedCategory?.label === "All"
@@ -77,7 +80,12 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
     const updatedSelectedItems = selectedItems.map((item) =>
       item.id === itemId ? { ...item, select: !item.select } : item
     );
+    const updatedSelectedUUIDs = updatedSelectedItems
+      .filter((item) => item.select)
+      .map((item) => item.uuid);
     setSelectedItems(updatedSelectedItems);
+    dispatch(setSelectedItemsUUIDs(updatedSelectedUUIDs));
+    dispatch(updateVendorAssignmentPayload({ claimedItems: updatedSelectedUUIDs }));
   };
 
   const handleSave = () => {
@@ -128,6 +136,7 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
         >
           <input
             type="checkbox"
+            className={AssignTableStyle.checkbox}
             checked={row.original.select}
             onChange={(e) => {
               e.stopPropagation();
@@ -138,14 +147,14 @@ const AssignTable: React.FC<AssignTableProps & connectorType> = ({
       ),
     }),
     columnHelper.accessor("description", {
-      header: () => `Item Description`,
+      header: () => "Item Description",
     }),
-    columnHelper.accessor((data) => data?.category?.category, {
-      header: () => `Category`,
+    columnHelper.accessor((data) => data.category?.name, {
+      header: () => "Category",
       id: "category",
     }),
     columnHelper.accessor("unitCost", {
-      header: () => `Total Cost`,
+      header: () => "Total Cost",
     }),
   ];
 
@@ -183,6 +192,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedItems: state.addItemsTable.selectedItems,
   selectedRows: state.addItemsTable.selectedRows,
   selectedCategory: state.addItemsTable.selectedCategory,
+  selectedItemsUUIDs: state.addItemsTable.selectedItemsUUIDs,
 });
 
 const mapDispatchToProps = {
@@ -190,6 +200,8 @@ const mapDispatchToProps = {
   setSelectedItems,
   setSelectedCategory,
   setCategories,
+  setSelectedItemsUUIDs,
+  updateVendorAssignmentPayload,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

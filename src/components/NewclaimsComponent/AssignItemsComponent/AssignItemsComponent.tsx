@@ -7,23 +7,60 @@ import AssignItemsStyle from "./assignItemsComponent.module.scss";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
+import { submitVendorDetails } from "@/services/ClaimService";
+import { useAppSelector, useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addNotification } from "@/reducers/Notification/NotificationSlice";
+import {
+  setSelectedItems,
+  setTotalValue,
+  setCategoryRows,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
   checkedItems?: any;
   selectedItems?: any;
+  handleSubmitClick: () => void;
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> = ({
   onNewClaimsClick,
 }) => {
   const [isSbmitItemsDisabled, setSubmitItemsDisabled] = useState(true);
+  const dispatch = useAppDispatch();
+  const { vendorAssignmentPayload } = useAppSelector((state: RootState) => ({
+    selectedItems: state.addItemsTable.selectedItems,
+    vendorAssignmentPayload: state.addItemsTable.vendorAssignmentPayload,
+    selectedItemsUUIDs: state.addItemsTable.selectedItemsUUIDs,
+  }));
 
   const router = useRouter();
 
   const handlePreviousClick = () => {
     onNewClaimsClick();
   };
+
+  const handleSubmitClick = async () => {
+    try {
+      const response = await submitVendorDetails(vendorAssignmentPayload);
+      console.log("API Response", response);
+      if (response?.status === 200) {
+        dispatch(
+          addNotification({
+            message: response.message,
+            id: "submit_vendor",
+            status: "success",
+          })
+        );
+        router.push("/adjuster-dashboard");
+      }
+
+      setSubmitItemsDisabled(true);
+    } catch (error) {
+      console.error("Error submitting vendor details", error);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -55,7 +92,7 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
               size="small"
               type="submit"
               btnClassname={AssignItemsStyle.newClaimBtn}
-              disabled={isSbmitItemsDisabled}
+              disabled={!isSbmitItemsDisabled}
               onClick={() => {
                 setSubmitItemsDisabled(true);
               }}
@@ -98,10 +135,8 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
             size="small"
             type="submit"
             btnClassname={AssignItemsStyle.newClaimBtn}
-            disabled={isSbmitItemsDisabled}
-            onClick={() => {
-              setSubmitItemsDisabled(true);
-            }}
+            disabled={!isSbmitItemsDisabled}
+            onClick={handleSubmitClick}
           />
         </div>
       </div>
@@ -111,9 +146,13 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
 
 const mapStateToProps = (state: RootState) => ({
   previousSelectedItems: state.addItemsTable.previousSelectedItems,
+  selectedItems: state.addItemsTable.selectedItems,
+  selectedCategory: state.addItemsTable.selectedCategory,
+  vendorAssignmentPayload: state.addItemsTable.vendorAssignmentPayload,
+  selectedItemsUUIDs: state.addItemsTable.selectedItemsUUIDs,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setCategoryRows, setSelectedItems, setTotalValue };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type connectorType = ConnectedProps<typeof connector>;

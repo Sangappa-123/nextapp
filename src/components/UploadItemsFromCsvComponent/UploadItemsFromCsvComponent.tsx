@@ -16,7 +16,6 @@ import { ConnectedProps, connect } from "react-redux";
 import { setActiveSection } from "@/reducers/UploadCSV/navigationSlice";
 import { fetchAddItemsTableCSVData, fetchImportCsvData } from "@/services/ClaimService";
 import { setAddItemsTableData } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
-// import { toast } from "react-toastify";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
 
 const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {

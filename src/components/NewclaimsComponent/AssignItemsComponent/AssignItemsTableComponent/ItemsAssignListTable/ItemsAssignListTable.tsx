@@ -6,7 +6,13 @@ import {
   useReactTable,
   getCoreRowModel,
 } from "@tanstack/react-table";
-import { setSelectedItems } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import {
+  setSelectedItems,
+  setTotalValue,
+  setSelectedItemsUUIDs,
+  updateVendorAssignmentPayload,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import { useDispatch } from "react-redux";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import TableListStyle from "./itemsAssignListTable.module.scss";
 import { ConnectedProps, connect } from "react-redux";
@@ -17,10 +23,8 @@ import ItemsToAssignTable from "@/components/ItemsToAssignTable";
 
 interface ItemsAssignListTableProps {
   selectedItems: any[];
-  // onCheckboxChange: (item: any) => void;
   selectedRows: any[];
   setSelectedItems: (items: any[]) => void;
-  // handleRowSelect: (id: number) => void;
 }
 const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = ({
   selectedRows,
@@ -33,7 +37,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     description: string;
     status: { status: string };
     qty: string;
-    category: { category: string };
+    category: { name: string };
     ageMonths: number;
     select: boolean;
     quantity: string;
@@ -43,18 +47,18 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
   };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   console.log(selectedRows, "selectedItems inside assign list table");
+  const [totalStatedValue, setTotalStatedValue] = useState<number>(0);
+  const dispatch = useDispatch();
+  const updateTotalStatedValue = (items: AssignItemsData[]) => {
+    const totalValue = items
+      .filter((item) => item.select && !isNaN(parseFloat(item.totalStatedAmount)))
+      .reduce((acc, item) => acc + parseFloat(item.totalStatedAmount), 0);
+    setTotalStatedValue(totalValue);
+  };
 
   useEffect(() => {
-    const areAllChecked =
-      selectedItems.length === 0 || selectedItems.every((item) => item.select === true);
-    if (!areAllChecked) {
-      const updatedSelectedItems = selectedItems.map((item) => ({
-        ...item,
-        select: true,
-      }));
-      setSelectedItems(updatedSelectedItems);
-    }
-  }, []);
+    updateTotalStatedValue(selectedItems);
+  }, [selectedItems]);
 
   const handleHeaderCheckboxChange = () => {
     const areAllChecked = selectedItems.every((item) => item.select);
@@ -71,8 +75,30 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     const updatedSelectedItems = selectedItems.map((item) =>
       item.id === itemId ? { ...item, select: !item.select } : item
     );
+
+    const updatedSelectedUUIDs = updatedSelectedItems
+      .filter((item) => item.select)
+      .map((item) => item.uuid);
+
+    console.log("SelecteUIDs", updatedSelectedUUIDs);
+
+    updateTotalStatedValue(updatedSelectedItems);
     setSelectedItems(updatedSelectedItems);
+    dispatch(setSelectedItemsUUIDs(updatedSelectedUUIDs));
+    dispatch(updateVendorAssignmentPayload({ claimedItems: updatedSelectedUUIDs }));
   };
+
+  useEffect(() => {
+    const areAllChecked =
+      selectedItems.length === 0 || selectedItems.every((item) => item.select === true);
+    if (!areAllChecked) {
+      const updatedSelectedItems = selectedItems.map((item) => ({
+        ...item,
+        select: true,
+      }));
+      setSelectedItems(updatedSelectedItems);
+    }
+  }, []);
 
   const columnHelper = createColumnHelper<AssignItemsData>();
   const checkboxAccessor = (data: AssignItemsData) => data.select;
@@ -140,6 +166,7 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     }),
     columnHelper.accessor("totalStatedAmount", {
       header: () => "Stated Value",
+      id: "totalStatedAmount",
       cell: (info: any) => info.getValue(),
       enableSorting: false,
     }),
@@ -148,7 +175,13 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
       cell: (info) => info.renderValue(),
       enableSorting: false,
     }),
-    columnHelper.accessor((data) => data?.category?.category, {
+    // columnHelper.accessor((data) => data?.category?.category, {
+    //   header: () => "Category",
+    //   id: "category",
+    //   cell: (info: any) => info.getValue(),
+    //   enableSorting: false,
+    // }),
+    columnHelper.accessor((data) => data.category?.name, {
       header: () => "Category",
       id: "category",
       cell: (info: any) => info.getValue(),
@@ -179,6 +212,11 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const categoriesNameAll = Array.from(
+    new Set(selectedItems.map((item) => item.category?.name))
+  );
+  const categoriesText = categoriesNameAll.join(", ");
 
   const defaultItemsToShow = 10;
   const tableDataWithoutDuplicates = Array.from(
@@ -233,11 +271,17 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
           <div className="col-md-4 col-sm-6 col-12">
             <label className={TableListStyle.labelStyles}>
               Selected Items Categories:
+              <span className={TableListStyle.spanStyle}>{categoriesText}</span>
             </label>
           </div>
         </div>
         <div className="row">
-          <label className={TableListStyle.labelStylesStated}>Total Stated Value:</label>
+          <label className={TableListStyle.labelStyles}>
+            Total Stated Value:
+            <span className={TableListStyle.spanStyle}>
+              {totalStatedValue.toFixed(2)}
+            </span>
+          </label>
         </div>
       </div>
     </>
@@ -248,10 +292,15 @@ const mapStateToProps = (state: RootState) => ({
   addItemsTableData: state.addItemsTable.addItemsTableData,
   selectedItems: state.addItemsTable.selectedItems,
   selectedRows: state.addItemsTable.selectedRows,
+  totalValue: state.addItemsTable.totalValue,
+  selectedItemsUUIDs: state.addItemsTable.selectedItemsUUIDs,
 });
 
 const mapDispatchToProps = {
   setSelectedItems,
+  setTotalValue,
+  setSelectedItemsUUIDs,
+  updateVendorAssignmentPayload,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

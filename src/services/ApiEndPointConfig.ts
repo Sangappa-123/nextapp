@@ -77,6 +77,8 @@ enum apiEndPoints {
   createTaskApiUrl = "web/claim/create/task",
   assignVendorGet = "web/registered/vendors",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
+  selectVendorServicesApi = "web/assignment/vendor/details",
+  submitVendorApi = "web/assignment/vendor",
 }
 
 export const getApiEndPoint = (endpoint: keyof typeof apiEndPoints) => {

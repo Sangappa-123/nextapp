@@ -13,6 +13,7 @@ import { RootState } from "@/store/store";
 
 interface AssignItemsTableComponentProps {
   onNewClaimsClick: () => void;
+  // onVendorSelected: any;
 }
 
 const AssignItemsTableComponent: React.FC<
@@ -22,6 +23,7 @@ const AssignItemsTableComponent: React.FC<
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
   ];
+
   const customStyles = {
     control: (defaultStyles: any) => ({
       ...defaultStyles,
@@ -112,11 +114,7 @@ const AssignItemsTableComponent: React.FC<
         </div>
         {/* </div> */}
         <div className={AssignTableSTyle.styleTable}>
-          <ItemsAssignListTable
-          // selectedItems={selectedItems}
-          // setSelectedItems={setSelectedItems}
-          // selectedRowsData={selectedRowsData}
-          />
+          <ItemsAssignListTable />
         </div>
       </Cards>
       <Cards className="mt-2">
