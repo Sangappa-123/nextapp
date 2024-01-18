@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
@@ -27,6 +27,7 @@ import useBodyScrollbar from "@/hooks/useBodyScrollbar";
 import GenericButton from "@/components/common/GenericButton";
 import ImagePreviewModal from "@/components/AddItemModal/ImagePreviewModal";
 import AttachementPreview from "@/components/AddItemModal/AttachementPreview";
+import { FileContext } from "../../LineItemFileContext";
 
 interface propType {
   register: any;
@@ -60,9 +61,15 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
   const [selectedImage, setSelectedImage] = useState<unknownObjectType | null>(null);
   const receiptRef = useRef<null | HTMLInputElement>(null);
   const { hideScroll, showScroll } = useBodyScrollbar();
+  const [previewFile, setPreviewFile] = useState<unknownObjectType | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
+  const { addFiles, files, removeFile } = useContext(FileContext);
 
   const handleReceiptSelect = (e: React.FocusEvent<HTMLInputElement>) => {
-    console.log("ppppppppppp", e.target.files);
+    const files = e.target.files;
+    const fileList = Array.from(files || []);
+    addFiles(fileList);
   };
 
   const hideImageConfirmModal = () => {
@@ -71,14 +78,18 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
     setSelectedImage(null);
   };
 
-  const showImageConfirmModal = (img: any) => {
+  const showImageConfirmModal = (img: unknownObjectType) => {
     setImageDeleteConfirm(true);
     hideScroll();
     setSelectedImage(img);
   };
 
   const handleFileRemove = () => {
-    removeAttachment({ id: selectedImage?.id, callback: hideImageConfirmModal });
+    if (selectedImage?.isLocal) {
+      removeFile(selectedImage?.name, hideImageConfirmModal);
+    } else {
+      removeAttachment({ id: selectedImage?.id, callback: hideImageConfirmModal });
+    }
   };
 
   const getFileUrl = (img: any) => {
@@ -111,10 +122,6 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
   const handleScheduleItem = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateLineItem({ isScheduledItem: e.target.value === "no" ? false : true });
   };
-
-  const [previewFile, setPreviewFile] = useState<unknownObjectType | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(100);
-  const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
 
   const handleZoomIn = () => {
     setZoomLevel(zoomLevel + 5);
@@ -549,6 +556,35 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
           <div className={orginalItemFormStyle.attachmentContainer}>
             {attachment?.map((img: any) => (
               <div key={img?.id} className={orginalItemFormStyle.attachmentWrapper}>
+                <IoMdCloseCircle
+                  className={orginalItemFormStyle.clearImage}
+                  size={24}
+                  onClick={() => showImageConfirmModal(img)}
+                />
+                <div className={orginalItemFormStyle.attachmentFile}>
+                  <Image
+                    unoptimized={true}
+                    src={getFileUrl(img)}
+                    alt="products"
+                    fill={true}
+                    sizes="100%"
+                    style={{ objectFit: "fill" }}
+                  />
+                </div>
+                <GenericButton
+                  label={img?.name}
+                  theme="linkBtn"
+                  onClickHandler={() => showFilePreview(img)}
+                  btnClassname={orginalItemFormStyle.fileName}
+                />
+              </div>
+            ))}
+
+            {files?.map((img: any, index: number) => (
+              <div
+                key={`editImage_${index}`}
+                className={orginalItemFormStyle.attachmentWrapper}
+              >
                 <IoMdCloseCircle
                   className={orginalItemFormStyle.clearImage}
                   size={24}
