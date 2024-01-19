@@ -8,10 +8,13 @@ import { sortBy } from "lodash";
 import { TABLE_LIMIT_5 } from "@/constants/constants";
 import HttpService from "@/HttpService";
 
-export const serviceRequestList = async (payload: { claimId: string }) => {
+export const serviceRequestList = async (
+  payload: { claimId: string },
+  isClient?: boolean
+) => {
   try {
     const url = getApiEndPoint("serviceRequest");
-    const http = new HttpService();
+    const http = new HttpService({ isClient });
     const res = await http.post(url, payload);
     return res;
   } catch (error) {
