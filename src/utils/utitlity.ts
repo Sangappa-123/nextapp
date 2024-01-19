@@ -45,10 +45,16 @@ const formatMobileNumber = (e: any) => {
   e.target.value = formattedInput;
 };
 
+const getFileExtension = (file: File) => {
+  const fileExtension = `.${file.name.split(".").pop()}`;
+  return fileExtension;
+};
+
 export {
   getClientCookie,
   getServerCookie,
   getUSDCurrency,
   parseFloatWithFixedDecimal,
   formatMobileNumber,
+  getFileExtension,
 };

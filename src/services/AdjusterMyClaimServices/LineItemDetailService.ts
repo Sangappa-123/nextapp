@@ -117,3 +117,18 @@ export const removeCustomComparable = async (id: number) => {
   const resp = await http.get(url);
   return resp;
 };
+
+export const deleteAttachment = async ({
+  id,
+  purpose,
+}: {
+  id: number;
+  purpose?: string;
+}) => {
+  const url = getApiEndPoint("deleteLineItemReceiptAttachment")
+    .replace("{{IMAGE_ID}}", `${id}`)
+    .replace("{{PURPOSE}}", `${purpose}`);
+  const http = new HttpService({ isClient: true });
+  const resp = await http.delete(url);
+  return resp;
+};
