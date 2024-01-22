@@ -76,6 +76,7 @@ enum apiEndPoints {
   createTaskApiUrl = "web/claim/create/task",
   assignVendorGet = "web/registered/vendors",
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
+  deleteLineItemReceiptAttachment = "web/delete/attachment/{{IMAGE_ID}}/purpose/{{PURPOSE}}",
   updateClaimDetailApiUrl = "web/claim/update/claimdetails",
   receiptApi = "web/upload/receipt",
   receiptMapperDateApi = "web/pdf/list/date",

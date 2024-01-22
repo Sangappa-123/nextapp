@@ -144,7 +144,7 @@ class HttpService {
 
   async delete(
     url: string,
-    payload: unknown,
+    payload?: unknown,
     headers?: object
   ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {
