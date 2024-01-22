@@ -22,6 +22,22 @@ export const getClaimedItems = async (param: object) => {
   }
 };
 
+export const receiptApiUrl = async (payload: any) => {
+  try {
+    const url = getApiEndPoint("receiptApi");
+    const http = new HttpService({ isClient: true, isFormData: true });
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      return res.message;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error uploading the pdf", error);
+    return null;
+  }
+};
+
 export const getReceiptMapperDate = async (param: object) => {
   try {
     const url = getApiEndPoint("receiptMapperDateApi");

@@ -2,20 +2,23 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import Styles from "./receiptMapperPdfList.module.scss";
-import { receiptMapperDate } from "@/reducers/ReceiptMapper/ReceiptMapperSlice";
 import { ImPriceTags } from "react-icons/im";
 import { ConnectedProps, connect } from "react-redux";
 import Modal from "@/components/common/ModalPopups/index";
 import AddLabelModalComponent from "@/components/common/AddLabelModalComponent/AddLabelModalComponent";
+import GenericButton from "@/components/common/GenericButton/index";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { addSelectedFile } from "@/reducers/ReceiptMapper/ReceiptMapperSlice";
 
-const ReceiptMapperPdfList: React.FC<connectorType> = (props) => {
+interface typeProps {
+  [key: string | number]: any;
+}
+const ReceiptMapperPdfList: React.FC<connectorType & typeProps> = (props) => {
+  const dispatch = useAppDispatch();
+
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    // receiptMapperDate,
-    receiptMapperPdfList,
-  }: React.SetStateAction<any> = props;
-  console.log("mapp", receiptMapperPdfList);
+  const { receiptMapperPdfList, setPdfViewer }: React.SetStateAction<any> = props;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -46,15 +49,31 @@ const ReceiptMapperPdfList: React.FC<connectorType> = (props) => {
               ></Modal>
               <div className={Styles.date}>{data.date}</div>
               {data.pdfList.map(
-                (item: { name: string }, itemIndex: React.Key | null | undefined) => {
+                (
+                  item: { name: string; url: string },
+                  itemIndex: React.Key | null | undefined
+                ) => {
                   return (
-                    <div key={itemIndex} className={clsx("row", Styles.padfName)}>
-                      <span className={clsx("col-lg-10")}>{item.name}</span>
-                      <ImPriceTags
-                        size="25"
-                        className={clsx("col-lg-2 justify-content-end", Styles.priceTags)}
-                        onClick={openModal}
-                      />
+                    <div key={itemIndex} className={clsx(Styles.padfName)}>
+                      <div>
+                        <GenericButton
+                          label={item.name}
+                          theme="linkBtn"
+                          onClickHandler={async () => {
+                            dispatch(
+                              addSelectedFile({ fileUrl: item.url, fileName: item.name })
+                            );
+                            setPdfViewer(true);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <ImPriceTags
+                          size="20"
+                          className={clsx("cursor-pointer", Styles.priceTags)}
+                          onClick={openModal}
+                        />
+                      </div>
                     </div>
                   );
                 }
@@ -70,10 +89,7 @@ const ReceiptMapperPdfList: React.FC<connectorType> = (props) => {
 const mapStateToProps = ({ receiptMapper }: any) => ({
   receiptMapperPdfList: receiptMapper.receiptMapperPdfList,
 });
-const mapDispatchToProps = {
-  receiptMapperDate,
-};
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, null);
 type connectorType = ConnectedProps<typeof connector>;
 export default connector(ReceiptMapperPdfList);

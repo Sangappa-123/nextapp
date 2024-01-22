@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { RiSearch2Line } from "react-icons/ri";
-import ReciptMapperSearchBoxStyles from "./ReciptMapperSearchBox.module.scss";
+import ReciptMapperSearchBoxStyles from "./reciptMapperSearchBox.module.scss";
 import {
   addClaimedItemsKeyWord,
   updateClaimedItemsListData,
@@ -10,12 +10,12 @@ import { ConnectedProps, connect } from "react-redux";
 import { getClaimedItems } from "@/services/ReceiptMapper/ReceiptMapperService";
 
 interface typeProps {
-  setTableLoader: React.SetStateAction<any>;
+  setListLoader: React.SetStateAction<any>;
 }
 const ReciptMapperSearchBox: React.FC<connectorType & typeProps> = (props) => {
   const [searchValue, setSearchValue] = React.useState("");
   const {
-    setTableLoader,
+    setListLoader,
     searchKeyword,
     addClaimedItemsKeyWord,
     claimedItemsList,
@@ -26,20 +26,20 @@ const ReciptMapperSearchBox: React.FC<connectorType & typeProps> = (props) => {
     const claimNumber = sessionStorage.getItem("claimNumber") ?? "";
     setSearchValue(e.target.value);
     if (searchKeyword !== "" && e.target.value === "") {
-      setTableLoader(true);
+      setListLoader(true);
       addClaimedItemsKeyWord({ searchKeyword: "" });
       const result = await getClaimedItems({
         claimNumber: claimNumber,
         reqForReceiptMapper: true,
       });
       if (result) {
-        setTableLoader(false);
+        setListLoader(false);
       }
     }
   };
   const searchKey = async (event: any) => {
     if (event.key === "Enter") {
-      setTableLoader(true);
+      setListLoader(true);
       addClaimedItemsKeyWord({ searchKeyword: event.target.value });
       const searchWord = event.target.value;
       const updatedData = claimedItemsList.filter((item: any) =>
@@ -47,7 +47,7 @@ const ReciptMapperSearchBox: React.FC<connectorType & typeProps> = (props) => {
       );
       await updateClaimedItemsListData({ claimedData: updatedData });
       if (updatedData) {
-        setTableLoader(false);
+        setListLoader(false);
       }
     }
   };
