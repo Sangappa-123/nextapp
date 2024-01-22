@@ -3,7 +3,6 @@
   color: black;
   font-weight: 600;
   white-space: nowrap;
-  // margin-right: 0px;
   margin-top: 2px;
 }
 
@@ -29,7 +28,7 @@
 .labelStyles {
   font-size: 13.5px;
   color: black;
-  font-family: "Open Sans", sans-serif;
+  font-family: inherit;
   font-weight: 600;
   margin-top: 10px;
 }

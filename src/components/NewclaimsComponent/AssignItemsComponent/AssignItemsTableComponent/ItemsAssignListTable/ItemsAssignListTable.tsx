@@ -27,7 +27,6 @@ interface ItemsAssignListTableProps {
   setSelectedItems: (items: any[]) => void;
 }
 const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> = ({
-  selectedRows,
   selectedItems,
   setSelectedItems,
 }) => {
@@ -46,7 +45,6 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     scheduledItem: string;
   };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  console.log(selectedRows, "selectedItems inside assign list table");
   const [totalStatedValue, setTotalStatedValue] = useState<number>(0);
   const dispatch = useDispatch();
   const updateTotalStatedValue = (items: AssignItemsData[]) => {
@@ -79,8 +77,6 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
     const updatedSelectedUUIDs = updatedSelectedItems
       .filter((item) => item.select)
       .map((item) => item.uuid);
-
-    console.log("SelecteUIDs", updatedSelectedUUIDs);
 
     updateTotalStatedValue(updatedSelectedItems);
     setSelectedItems(updatedSelectedItems);

@@ -43,7 +43,6 @@ const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> 
   const handleSubmitClick = async () => {
     try {
       const response = await submitVendorDetails(vendorAssignmentPayload);
-      console.log("API Response", response);
       if (response?.status === 200) {
         dispatch(
           addNotification({

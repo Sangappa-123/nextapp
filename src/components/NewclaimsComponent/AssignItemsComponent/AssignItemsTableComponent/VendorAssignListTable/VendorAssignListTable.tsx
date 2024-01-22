@@ -17,7 +17,7 @@ import {
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import selectCRN from "@/reducers/Session/Selectors/selectCRN";
 import { selectVendor } from "@/services/ClaimService";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 interface VendorItemsTableProps {
   vendorInventoryListAPIData: Array<object>;
@@ -36,8 +36,8 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
     { name: string }[]
   >([]);
 
-  // const [selectedService, setSelectedService] = useState<any>(null);
   const ClaimProfile = process.env.NEXT_PUBLIC_CLAIM_PROFILE;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetchVendorInventoryAction({
@@ -110,12 +110,9 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
     }
   };
 
-  const dispatch = useDispatch();
   const claimNumber = sessionStorage.getItem("claimNumber") || "";
   const handleRowSelection = async (row: Row<VendorData>) => {
-    console.log("Row selected", row);
     const registrationNumber = row.original.registrationNumber;
-    console.log("Registration number", registrationNumber);
     dispatch(
       updateVendorAssignmentPayload({
         vendorDetails: {
@@ -136,11 +133,8 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
     );
     try {
       const result = await selectVendor({ registrationNumber, categories: null });
-      console.log(result);
-      console.log("assssaaaaaaaaaaaa", props);
       if (result?.data && result?.data.contentServices) {
         const services = result.data.contentServices;
-        console.log("qqqAazxzzzzzzzzzz", services);
         const newFilteredServices = services.filter((service: any) => {
           if (ClaimProfile === "Jewelry") {
             return service.service !== "Salvage Only";
@@ -149,7 +143,6 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
           }
         });
         setSelectedServices(newFilteredServices);
-        console.log("qqqqssssss", ClaimProfile);
         // setSelectedSubServices([]);
         setSelectedSubservices([]);
         setSelectedValue(null);
@@ -292,8 +285,6 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
       enableSorting: true,
     }),
   ];
-
-  console.log("listData before", vendorInventoryListAPIData);
 
   const table = useReactTable({
     columns,
