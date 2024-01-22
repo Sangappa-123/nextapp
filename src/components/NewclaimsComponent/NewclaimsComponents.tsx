@@ -156,7 +156,6 @@ const NewclaimsComponent: React.FC<connectorType> = () => {
         }
       }
       const contentLimitInteger = data.contentLimits.replace("$", "");
-      console.log("numberValue", contentLimitInteger);
       const claimDeductibleInteger = data.claimDeductible.replace("$", "");
       const minItemPriceInteger = data.minItemPrice.replace("$", "");
       const payload = {

@@ -140,15 +140,12 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
 
   const claimId = searchParams.get("claimDetail");
   const newclaimRedirectFlag = sessionStorage.getItem("redirectToNewClaimPage");
-  console.log("claimIdsssssssssssss", claimId);
 
   const handleRouteChange = () => {
     // const newclaimRedirectFlag = sessionStorage.getItem("redirectToNewClaimPage");
     if (claimId) {
-      console.log("Navi to /adjustr", claimId);
       router.push(`/adjuster-property-claim-details/${claimId}`);
     } else {
-      console.log("NavAddItemsComponent");
       dispatch(setActiveSection(1));
       router.push("/new-claim");
     }
@@ -262,10 +259,8 @@ const UploadItemsFromCsvComponent: React.FC<connectorType> = (props) => {
         try {
           if (shouldNavigate) {
             if (claimId && newclaimRedirectFlag === "false") {
-              console.log("Navi to /adjustr", claimId);
               router.push(`/adjuster-property-claim-details/${claimId}`);
             } else {
-              console.log("NavAddItemsComponent");
               dispatch(setActiveSection(1));
               router.push("/new-claim");
               setShouldRenderContent(true);

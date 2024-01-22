@@ -33,7 +33,6 @@ const ExcelSheetTable: React.FC<ExcelSheetTableProps & connectorType> = (props) 
   // const dispatch = useDispatch();
   const { postLossItemDetails, setExcelCsvUploadData, removeRowById, rowsProcessed } =
     props;
-  console.log("postLossItemDetails", postLossItemDetails);
 
   const data: ExcelTableData[] = React.useMemo(
     () => postLossItemDetails,

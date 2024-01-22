@@ -21,7 +21,6 @@ export default function middleware(req: NextRequest) {
   const accessToken = cookieStore.get("accessToken");
   const url = req.nextUrl.clone();
   const pathname = url?.pathname;
-  // console.log("pathname>> ", pathname);
 
   const noRoleCheckRoutes = [
     "/",
@@ -39,7 +38,6 @@ export default function middleware(req: NextRequest) {
     urlHasLocale = true;
   }
   if ((urlHasLocale && pathname === `/${tempLocale}`) || pathname == "/") {
-    console.log("url>> ", url);
     if (urlHasLocale) {
       url.pathname = `/${tempLocale}/login`;
     } else {
@@ -54,7 +52,6 @@ export default function middleware(req: NextRequest) {
   } else if (!noRoleCheckRoutes.includes(pathname)) {
     const userRole = cookieStore.get("role");
     const url = req.nextUrl.clone();
-    console.log("userRole", userRole?.value);
     if (userRole?.value) {
       if (accessToken) {
         const urlList = getRoleBasedUrlList(userRole?.value);
@@ -67,7 +64,6 @@ export default function middleware(req: NextRequest) {
               if (pathUrl.length === screenUrl.length) {
                 let isValid = true;
                 for (const i in screenUrl) {
-                  console.log(screenUrl[i], pathUrl[i]);
                   if (screenUrl[i] !== "{ID}" && screenUrl[i] !== pathUrl[i]) {
                     isValid = false;
                     break;

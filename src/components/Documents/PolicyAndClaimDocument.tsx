@@ -107,7 +107,6 @@ export default function PolicyAndClaimDocument() {
       })
     );
   };
-  console.log("hii", show);
   const handleGetData = (index: number) => {
     const docArray = docs.filter((elem, ind) => {
       if (ind !== index) {
@@ -130,7 +129,6 @@ export default function PolicyAndClaimDocument() {
     loading,
   }: { translate: claimDocumentsTranslateType | undefined; loading: boolean } =
     useTranslation("claimDocumentsTranslate");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }

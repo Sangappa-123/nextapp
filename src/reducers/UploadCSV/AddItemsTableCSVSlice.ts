@@ -139,7 +139,6 @@ const AddItemsTableCSVSlice = createSlice({
     });
     builder.addCase(fetchVendorInventoryAction.fulfilled, (state, action) => {
       const payload = action.payload;
-      console.log("API Responsessssssssss", payload);
       state.vendorInventoryfetching = false;
       if (payload?.status === 200) {
         state.vendorInventorySummaryData = payload?.data.comapanyVendors;
