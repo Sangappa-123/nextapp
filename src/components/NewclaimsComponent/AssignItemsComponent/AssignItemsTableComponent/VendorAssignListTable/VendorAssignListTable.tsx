@@ -4,29 +4,47 @@ import {
   createColumnHelper,
   useReactTable,
   getCoreRowModel,
+  Row,
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable";
 import VendorListStyle from "./vendorAssignListTable.module.scss";
 import GenericSelect from "@/components/common/GenericSelect";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
-import { fetchVendorInventoryAction } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import {
+  fetchVendorInventoryAction,
+  updateVendorAssignmentPayload,
+} from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import selectCRN from "@/reducers/Session/Selectors/selectCRN";
+import { selectVendor } from "@/services/ClaimService";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
 
 interface VendorItemsTableProps {
   vendorInventoryListAPIData: Array<object>;
   fetchVendorInventoryAction: any;
+  CRN: any;
 }
 
 const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableProps) => {
-  const { fetchVendorInventoryAction, vendorInventoryListAPIData } = props;
+  const { fetchVendorInventoryAction, vendorInventoryListAPIData, CRN } = props;
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<ContentService[]>([]);
+  const [selectedValue, setSelectedValue] = useState<any>(null);
+  const [selectedSubservices, setSelectedSubservices] = useState<any[]>([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
+  const [selectedSubservicesServices, setSelectedSubservicesServices] = useState<
+    { name: string }[]
+  >([]);
+
+  const ClaimProfile = process.env.NEXT_PUBLIC_CLAIM_PROFILE;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetchVendorInventoryAction({
       pageNo: 1,
       recordPerPage: 10,
     });
-  }, [fetchVendorInventoryAction, vendorInventoryListAPIData]);
+  }, [fetchVendorInventoryAction]);
 
   type Address = {
     city: string;
@@ -39,17 +57,137 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
     noOfItems: number;
   };
 
+  type ContentService = {
+    service: string;
+    id: number;
+    subServices?: any[];
+  };
+
   type VendorData = {
+    contentServices: ContentService[];
+    id: any;
     select: boolean;
     name: string;
     assignmentsInHand: number;
     itemsInHand: number;
     specializedCategories: SpecializedCategory[];
     shippingAddress: Address;
+    registrationNumber: string;
+    // description: string;
   };
 
   const columnHelper = createColumnHelper<VendorData>();
   const checkboxAccessor = (data: VendorData) => data.select;
+
+  const handleServiceChange = (selectedOption: any) => {
+    const service = selectedServices.find(
+      (selectService) => selectService.id === selectedOption?.value
+    );
+
+    if (service) {
+      const subservices = service.subServices || [];
+      setSelectedSubservices(subservices);
+      setSelectedSubservicesServices([]);
+      dispatch(
+        updateVendorAssignmentPayload({
+          requestedVendorService: {
+            id: service.id,
+            name: service.service,
+            subContentServices: subservices.map((subservice) => ({
+              name: subservice.service,
+            })),
+          },
+        })
+      );
+    } else {
+      setSelectedSubservices([]);
+      setSelectedSubservicesServices([]);
+      dispatch(
+        updateVendorAssignmentPayload({
+          requestedVendorService: {},
+        })
+      );
+    }
+  };
+
+  const claimNumber = sessionStorage.getItem("claimNumber") || "";
+  const handleRowSelection = async (row: Row<VendorData>) => {
+    const registrationNumber = row.original.registrationNumber;
+    dispatch(
+      updateVendorAssignmentPayload({
+        vendorDetails: {
+          registrationNumber,
+        },
+        claimBasicDetails: {
+          claimNumber,
+        },
+        insuranceCompanyDetails: {
+          crn: CRN,
+        },
+        vendorAssigment: {
+          claimNumber: claimNumber,
+          dueDate: null,
+          remark: null,
+        },
+      })
+    );
+    try {
+      const result = await selectVendor({ registrationNumber, categories: null });
+      if (result?.data && result?.data.contentServices) {
+        const services = result.data.contentServices;
+        const newFilteredServices = services.filter((service: any) => {
+          if (ClaimProfile === "Jewelry") {
+            return service.service !== "Salvage Only";
+          } else {
+            return true;
+          }
+        });
+        setSelectedServices(newFilteredServices);
+        // setSelectedSubServices([]);
+        setSelectedSubservices([]);
+        setSelectedValue(null);
+      } else {
+        console.log("no found in the API ");
+      }
+    } catch (error) {
+      console.error("Error calling selectVendor API", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedValue && selectedSubservicesServices.length > 0) {
+      dispatch(
+        updateVendorAssignmentPayload({
+          requestedVendorService: {
+            id: selectedValue.value,
+            name: selectedValue.label,
+            subContentServices: selectedSubservicesServices,
+          },
+        })
+      );
+    }
+  }, [dispatch, selectedValue, selectedSubservicesServices]);
+
+  const handleCheckboxChange = (checkboxId: number) => {
+    const subservice = selectedSubservices.find(
+      (subservice) => subservice.id === checkboxId
+    );
+
+    if (subservice) {
+      if (selectedCheckboxes.includes(checkboxId)) {
+        setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== checkboxId));
+        setSelectedSubservicesServices(
+          selectedSubservicesServices.filter((s) => s.name !== subservice.service)
+        );
+      } else {
+        setSelectedCheckboxes([...selectedCheckboxes, checkboxId]);
+        setSelectedSubservicesServices([
+          ...selectedSubservicesServices,
+          { name: subservice.service },
+        ]);
+      }
+    }
+  };
 
   const columns = [
     columnHelper.accessor(checkboxAccessor, {
@@ -63,17 +201,27 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
       meta: {
         headerClass: VendorListStyle.checkHeader,
       },
-      id: "radio",
+      id: "checkbox",
       enableColumnFilter: false,
       enableSorting: false,
-      cell: () => (
+      cell: ({ row }) => (
         <div
           className="d-flex justify-content-center"
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <input type="radio" className={VendorListStyle.checkbox} />
+          <input
+            type="radio"
+            name="assignRadio"
+            className={VendorListStyle.checkbox}
+            checked={row.original.select}
+            // checked={selectedRow === row.original}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRowSelection(row);
+            }}
+          />
         </div>
       ),
     }),
@@ -138,18 +286,12 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
     }),
   ];
 
-  console.log("listData before useReactTable:", vendorInventoryListAPIData);
-
   const table = useReactTable({
     columns,
     data: vendorInventoryListAPIData as VendorData[],
     enableColumnFilters: false,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  useEffect(() => {
-    console.log("table data within CustomReactTable:", table);
-  }, [table]);
 
   return (
     <>
@@ -158,7 +300,7 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
           <CustomReactTable table={table} />
         </div>
       ) : (
-        <p>Loading...</p>
+        <p className="d-flex justify-content-center">Loading...</p>
       )}
       <div className="row mt-3">
         <label className={VendorListStyle.textAddStyle}>4) Services</label>
@@ -171,7 +313,47 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
           </label>
         </div>
         <div className={`col-md-3 col-sm-6 col-12 ${VendorListStyle.selectContainer}`}>
-          <GenericSelect placeholder="Select" hideSelectedOptions={false} />
+          <GenericSelect
+            placeholder="Select"
+            // options={selectedServices}
+            value={selectedValue}
+            onChange={(selectedOption: any) => {
+              setSelectedValue(selectedOption);
+              handleServiceChange(selectedOption);
+            }}
+            options={selectedServices.map((service) => ({
+              label: service.service,
+              value: service.id,
+            }))}
+          />
+        </div>
+      </div>
+      <div className="row d-flex justify-content-center">
+        <div className={`col-md-10 col-sm-6 col-12 ${VendorListStyle.selectContainer}`}>
+          <div className={VendorListStyle.checkboxContainer}>
+            {selectedValue &&
+              selectedSubservices.map((subservice) => (
+                <div key={subservice.id} className={VendorListStyle.formCheck}>
+                  <input
+                    type="checkbox"
+                    id={subservice.id}
+                    checked={selectedCheckboxes.includes(subservice.id)}
+                    onChange={() => handleCheckboxChange(subservice.id)}
+                  />
+                  <label className={VendorListStyle.formCheckLabel}>
+                    {subservice.service}
+                  </label>
+                </div>
+              ))}
+          </div>
+          {selectedValue && selectedSubservices && (
+            <div className="col-md-4 col-sm-6 col-12">
+              <label className={VendorListStyle.labelStyles}>
+                Minimum Cost of Services:
+                <span className={VendorListStyle.spanStyle}></span>
+              </label>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -180,10 +362,12 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
 
 const mapStateToProps = (state: RootState) => ({
   vendorInventoryListAPIData: state.addItemsTable.vendorInventoryListAPIData,
+  CRN: selectCRN(state),
 });
 
 const mapDispatchToProps = {
   fetchVendorInventoryAction,
+  updateVendorAssignmentPayload,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
