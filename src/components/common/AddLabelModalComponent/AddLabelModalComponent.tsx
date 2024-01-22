@@ -30,10 +30,10 @@ const AddLabelModalComponent: React.FC<AddLabelModalComponentProps> = (props: an
   return (
     <div>
       <form>
-        <div className={clsx("row")}>
-          <div className={clsx("col-lg-10")}>
+        <div className="row">
+          <div className="col-lg-10">
             <GenericInput
-              className={Style.input}
+              // className={Style.input}
               placeholder="New Label"
               onChange={handleInputChange}
               onBlur={(e: any) => handleBlur(e)}
@@ -41,7 +41,7 @@ const AddLabelModalComponent: React.FC<AddLabelModalComponentProps> = (props: an
             />
             {isBlurred && <p className={Style.error}>Please enter label.. !</p>}
           </div>
-          <div className={clsx("col-lg-2 mt-2")}>
+          <div className="col-lg-2 mt-2">
             <GenericButton label="Add" size="small" disabled={isBlurred} />
           </div>
         </div>

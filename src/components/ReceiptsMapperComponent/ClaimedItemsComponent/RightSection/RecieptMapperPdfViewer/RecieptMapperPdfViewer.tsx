@@ -94,7 +94,7 @@ const RecieptMapperPdfViewer: React.FC<connectorType & typeProps> = ({
   return (
     <>
       <div className="p-3">
-        <div className={clsx("row col-12")}>
+        <div className="row col-12">
           <div className={clsx(receiptMapperStyle.fileNameDiv, "col-md-7 col-xs-7")}>
             <b>File Name:</b>
             <div>{fileName}</div>

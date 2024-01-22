@@ -1,6 +1,5 @@
-.button {
-  color: #32c5d2;
-}
+@use "@/scss/colors.scss" as *;
+
 .input {
   position: relative;
   margin-left: 10%;
@@ -12,7 +11,7 @@
   margin-left: 460px;
 }
 .error {
-  color: red;
+  color: $errorRed;
   font-size: 13px;
   padding-left: 40px;
 }

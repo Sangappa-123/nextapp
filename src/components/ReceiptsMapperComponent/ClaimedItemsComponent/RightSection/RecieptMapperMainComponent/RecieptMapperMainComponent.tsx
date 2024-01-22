@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import ReceiptMapperPdfList from "../ReceiptMapperPdfList/ReceiptMapperPdfList";
 import { receiptApiUrl } from "@/services/ReceiptMapper/ReceiptMapperService";
 import { RiListCheck } from "react-icons/ri";
-
 import { getReceiptMapperDate } from "@/services/ReceiptMapper/ReceiptMapperService";
 import { useAppDispatch } from "@/hooks/reduxCustomHook";
 import { addNotification } from "@/reducers/Notification/NotificationSlice";
@@ -41,6 +40,7 @@ const RecieptMapperMainComponent: React.FC = () => {
 
     receiptApiUrl(formData)
       .then(() => {
+        e.preventDefault();
         if (e.target.files[0].type !== "application/pdf") {
           dispatch(
             addNotification({

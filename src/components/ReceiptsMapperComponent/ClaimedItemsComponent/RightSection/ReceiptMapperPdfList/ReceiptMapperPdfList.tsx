@@ -54,7 +54,7 @@ const ReceiptMapperPdfList: React.FC<connectorType & typeProps> = (props) => {
                   itemIndex: React.Key | null | undefined
                 ) => {
                   return (
-                    <div key={itemIndex} className={clsx(Styles.padfName)}>
+                    <div key={itemIndex} className={Styles.padfName}>
                       <div>
                         <GenericButton
                           label={item.name}
