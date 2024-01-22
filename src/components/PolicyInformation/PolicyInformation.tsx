@@ -297,7 +297,6 @@ function ClaimpolicyInformation({
                 onChange={(e: any) => {
                   fieldOnChange(e);
                   resetField("homeOwnersPolicyType");
-                  console.log("onselect", e?.state);
                   if (e) getPolicyType(e.id);
                   else updateHomeOwnerType([]);
                 }}
