@@ -25,6 +25,7 @@ import RapidItemSection from "./RapidItemSection";
 import { claimDetailsTabTranslateType } from "@/translations/claimDetailsTabTranslate/en";
 import useTranslation from "@/hooks/useTranslation";
 import selectClaimContentItemIdList from "@/reducers/ClaimData/Selectors/selectClaimContentItemIdList";
+import { LineItemFileContextProvider } from "./LineItemFileContext";
 
 const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   const {
@@ -71,8 +72,6 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
     },
   ];
 
-  // const [currentPage, setCurrentPage] = useState(lineItem?.itemNumber);
-
   const isInit = useRef(false);
 
   useEffect(() => {
@@ -109,39 +108,41 @@ const AdjusterLineItemComponent: React.FC<connectorType> = (props) => {
   }
 
   return (
-    <div className={lineItemComponentStyle.root}>
-      {isFetching && <Loading />}
-      <div className={lineItemComponentStyle.stickyContainer}>
-        <GenericBreadcrumb
-          dataList={pathList}
-          customClassname={lineItemComponentStyle.breadcrumb}
-          customNavClassname={lineItemComponentStyle.customNav}
-        />
-        {claimData?.length > 1 && (
-          <div className={lineItemComponentStyle.paginationButtonsContainer}>
-            <PaginationButtons
-              pageId={lineItem?.id}
-              totalPage={pageDetail}
-              handlePageChange={(itemId: number) => {
-                router.replace(`/adjuster-line-item-detail/${claimId}/${itemId}`);
-              }}
-              showArrowBtn={!inView && isInit.current}
-            />
-          </div>
-        )}
-        <GenericComponentHeading
-          customTitleClassname={lineItemComponentStyle.headingTitle}
-          title="Item# 6 - Smith, Gracie"
-          customHeadingClassname={clsx(lineItemComponentStyle.heading, {
-            [lineItemComponentStyle.noPageHeading]: claimData.length < 2,
-          })}
-        />
-        {!inView && isInit.current && <RapidItemSection />}
+    <LineItemFileContextProvider>
+      <div className={lineItemComponentStyle.root}>
+        {isFetching && <Loading />}
+        <div className={lineItemComponentStyle.stickyContainer}>
+          <GenericBreadcrumb
+            dataList={pathList}
+            customClassname={lineItemComponentStyle.breadcrumb}
+            customNavClassname={lineItemComponentStyle.customNav}
+          />
+          {claimData?.length > 1 && (
+            <div className={lineItemComponentStyle.paginationButtonsContainer}>
+              <PaginationButtons
+                pageId={lineItem?.id}
+                totalPage={pageDetail}
+                handlePageChange={(itemId: number) => {
+                  router.replace(`/adjuster-line-item-detail/${claimId}/${itemId}`);
+                }}
+                showArrowBtn={!inView && isInit.current}
+              />
+            </div>
+          )}
+          <GenericComponentHeading
+            customTitleClassname={lineItemComponentStyle.headingTitle}
+            title="Item# 6 - Smith, Gracie"
+            customHeadingClassname={clsx(lineItemComponentStyle.heading, {
+              [lineItemComponentStyle.noPageHeading]: claimData.length < 2,
+            })}
+          />
+          {!inView && isInit.current && <RapidItemSection />}
+        </div>
+        <div>
+          <TabsButtonComponent showBorders={true} tabData={tabData} />
+        </div>
       </div>
-      <div>
-        <TabsButtonComponent showBorders={true} tabData={tabData} />
-      </div>
-    </div>
+    </LineItemFileContextProvider>
   );
 };
 
