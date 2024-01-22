@@ -78,6 +78,7 @@ enum apiEndPoints {
   vendorAssignmentsApiUrl = "web/claim/assignment/vendorassignments",
   selectVendorServicesApi = "web/assignment/vendor/details",
   submitVendorApi = "web/assignment/vendor",
+  deleteLineItemReceiptAttachment = "web/delete/attachment/{{IMAGE_ID}}/purpose/{{PURPOSE}}",
   updateClaimDetailApiUrl = "web/claim/update/claimdetails",
   receiptApi = "web/upload/receipt",
 }
