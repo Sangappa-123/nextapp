@@ -41,7 +41,6 @@ function ResetPasswordComponent({
   useEffect(() => {
     const fetchData = async () => {
       const resp: any = await getRandomQuestionsForUser(localStorage.getItem("userId"));
-      console.log("resp", resp);
       if (resp?.result?.status === 200) {
         const { data } = resp.result;
         setQuestion(data.questionName);
@@ -52,7 +51,6 @@ function ResetPasswordComponent({
   }, []);
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
-    console.log("Form data submitted:", formData);
     const payload = {
       userId: localStorage.getItem("userId"),
       questionAnswerList: [

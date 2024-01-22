@@ -66,7 +66,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       id: rowData.id,
       itemUID: rowData.itemUID,
     };
-    console.log("Delete Payload", payload);
     setDelete(payload);
   };
 
@@ -76,13 +75,11 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
 
   const handleDelete = async () => {
     const id = deletePayload?.id;
-    console.log("Deleting Item with ID", id);
 
     try {
       setTableLoader(true);
 
       const res = await deleteCategoryItem(deletePayload);
-      console.log("Delete Response", res);
 
       if (res) {
         dispatch(
@@ -298,8 +295,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
             JSON.stringify(item).toLowerCase().includes(searchKeyword.toLowerCase())
           );
 
-  console.log("Filtered Data", filteredData);
-
   const ModalMsg = () => {
     return (
       <div>
@@ -316,7 +311,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-  console.log("Filtered Datassssssssssss", filteredData);
 
   return (
     <>

@@ -50,7 +50,6 @@ function LoginForm({ translate }: { translate: loginTranslateType }) {
   const { errors } = formState;
 
   const onSubmit = async (data: Output<typeof schema>) => {
-    console.log("OnSubmit::", data);
     let payload;
     const username = getCipherEncryptedText(data.username);
     const password = getCipherEncryptedText(data.password);

@@ -13,7 +13,6 @@ const NavigationSlice = createSlice({
   initialState,
   reducers: {
     setActiveSection: (state, action: PayloadAction<number>) => {
-      console.log("Setting active section to:", action.payload);
       state.activeSection = action.payload;
     },
   },

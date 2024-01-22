@@ -52,7 +52,6 @@ const ServiceRequestSearchBox: React.FC<connectorType & typeProps> = (props) => 
     loading,
   }: { translate: serviceRequestComponentType | undefined; loading: boolean } =
     useTranslation("serviceRequestComponent");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }

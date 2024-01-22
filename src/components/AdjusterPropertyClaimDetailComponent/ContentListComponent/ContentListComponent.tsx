@@ -248,7 +248,6 @@ function ContentListComponent(props: any) {
       },
       true
     );
-    console.log("claimDetailMessageListRes ===", claimDetailMessageListRes);
     if (claimDetailMessageListRes?.data !== null) {
       props.addMessageList(claimDetailMessageListRes?.data?.messages);
     } else {

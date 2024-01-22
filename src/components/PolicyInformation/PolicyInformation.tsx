@@ -24,30 +24,19 @@ function ClaimpolicyInformation({
   setCustomerror,
   customerror,
 }: any) {
-  // const options = [
-  //   { value: "chocolate", label: "Chocolate" },
-  //   { value: "strawberry", label: "Strawberry" },
-  //   { value: "vanilla", label: "Vanilla" },
-  // ];
   const [options, setOptions] = useState([]);
   const [show, setShow] = useState(false);
   const [policyDetails, setpolicyDetails] = useState<unknownObjectType | null>(null);
 
   const { onChange: emailChange, ...rest } = register("email");
 
-  // const pattern = "/^([0-9-,()s+]{15})$/";
-
   const verifyEmail = (email: string) => {
     validateEmail({
       email: email,
     })
       .then((res) => {
-        console.log("result", res.data);
         setShow(true);
-        console.log("resss", res.data.address.state.id);
         setpolicyDetails(res.data);
-        // console.log("set", setpolicyDetails(res.data));
-        // setStateId(res.data.address.state.id);
       })
 
       .catch((error) => console.log("verify errr", error));
@@ -58,7 +47,6 @@ function ClaimpolicyInformation({
   };
 
   const handleGetData = () => {
-    console.log("policyDetails", policyDetails?.firstName, { shouldValidate: true });
     setValue("firstname", policyDetails?.firstName, { shouldValidate: true }),
       setValue("lastname", policyDetails?.lastName, { shouldValidate: true });
     setValue("mobilenumber", policyDetails?.cellPhone, { shouldValidate: true });
@@ -86,7 +74,6 @@ function ClaimpolicyInformation({
       isTimeZone: false,
     })
       .then((res) => {
-        console.log("state", res);
         setOptions(res.data);
       })
       .catch((error) => console.log("state errr", error));
@@ -101,8 +88,6 @@ function ClaimpolicyInformation({
     if (!stateId) return;
     fetchPolicyType(id)
       .then((res) => {
-        console.log("id", id);
-        console.log("policy", res.data);
         updateHomeOwnerType(res.data);
       })
       .catch((error) => console.log("policy errr", error));
@@ -113,7 +98,6 @@ function ClaimpolicyInformation({
     loading,
   }: { translate: newClaimTransalateType | undefined; loading: boolean } =
     useTranslation("newClaimTransalate");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }

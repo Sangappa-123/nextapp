@@ -40,7 +40,6 @@ const ClaimParticipants: React.FC<type> = (props) => {
     loading,
   }: { translate: claimParticipantsTranslateType | undefined; loading: boolean } =
     useTranslation("claimParticipantsTranslate");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }
