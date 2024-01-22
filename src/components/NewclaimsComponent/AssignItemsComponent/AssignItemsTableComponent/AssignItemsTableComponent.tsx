@@ -10,6 +10,8 @@ import VendorSearchBoxAssignItems from "./VendorSearchBoxAssignItems";
 import VendorAssignListTable from "./VendorAssignListTable";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { updateVendorAssignmentPayload } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface AssignItemsTableComponentProps {
   onNewClaimsClick: () => void;
@@ -23,7 +25,7 @@ const AssignItemsTableComponent: React.FC<
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
   ];
-
+  const dispatch = useAppDispatch();
   const customStyles = {
     control: (defaultStyles: any) => ({
       ...defaultStyles,
@@ -70,9 +72,23 @@ const AssignItemsTableComponent: React.FC<
   };
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [remarks, setRemarks] = useState("");
 
   const handleChange = (selected: any) => {
     setSelectedOption(selected);
+  };
+  const claimNumber = sessionStorage.getItem("claimNumber") || "";
+  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRemarks(event.target.value);
+    dispatch(
+      updateVendorAssignmentPayload({
+        vendorAssigment: {
+          claimNumber: claimNumber,
+          dueDate: null,
+          remark: remarks,
+        },
+      })
+    );
   };
   return (
     <>
@@ -146,6 +162,8 @@ const AssignItemsTableComponent: React.FC<
             cols={50}
             maxLength={1000}
             className={AssignTableSTyle.textarea}
+            value={remarks}
+            onChange={handleTextareaChange}
           />
           <p className={AssignTableSTyle.textTextArea}>Max. 1000 characters</p>
         </div>

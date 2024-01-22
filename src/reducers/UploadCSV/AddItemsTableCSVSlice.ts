@@ -52,7 +52,7 @@ const initialState: AddItemsTableState = {
     vendorDetails: {},
     claimBasicDetails: {},
     canContactInsured: true,
-    claimProfile: "",
+    claimProfile: "Contents",
     claimedItems: [],
     insuranceCompanyDetails: {},
     requestedVendorService: {},

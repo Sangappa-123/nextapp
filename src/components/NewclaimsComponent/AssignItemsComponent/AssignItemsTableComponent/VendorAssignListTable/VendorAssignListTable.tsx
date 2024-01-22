@@ -15,16 +15,18 @@ import {
   fetchVendorInventoryAction,
   updateVendorAssignmentPayload,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
+import selectCRN from "@/reducers/Session/Selectors/selectCRN";
 import { selectVendor } from "@/services/ClaimService";
 import { useDispatch } from "react-redux";
 
 interface VendorItemsTableProps {
   vendorInventoryListAPIData: Array<object>;
   fetchVendorInventoryAction: any;
+  CRN: any;
 }
 
 const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableProps) => {
-  const { fetchVendorInventoryAction, vendorInventoryListAPIData } = props;
+  const { fetchVendorInventoryAction, vendorInventoryListAPIData, CRN } = props;
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [selectedServices, setSelectedServices] = useState<ContentService[]>([]);
   const [selectedValue, setSelectedValue] = useState<any>(null);
@@ -121,6 +123,14 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
         },
         claimBasicDetails: {
           claimNumber,
+        },
+        insuranceCompanyDetails: {
+          crn: CRN,
+        },
+        vendorAssigment: {
+          claimNumber: claimNumber,
+          dueDate: null,
+          remark: null,
         },
       })
     );
@@ -361,6 +371,7 @@ const VendorAssignListTable: React.FC<connectorType> = (props: VendorItemsTableP
 
 const mapStateToProps = (state: RootState) => ({
   vendorInventoryListAPIData: state.addItemsTable.vendorInventoryListAPIData,
+  CRN: selectCRN(state),
 });
 
 const mapDispatchToProps = {

@@ -389,7 +389,7 @@ export const selectVendor = async (payload: any) => {
 export const submitVendorDetails = async (param: object) => {
   try {
     const url = getApiEndPoint("submitVendorApi");
-    const http = new HttpService({ isClient: true, isFormData: false });
+    const http = new HttpService({ isClient: true });
     const resp = await http.post(url, param);
     const { error } = resp;
     if (!error) {
