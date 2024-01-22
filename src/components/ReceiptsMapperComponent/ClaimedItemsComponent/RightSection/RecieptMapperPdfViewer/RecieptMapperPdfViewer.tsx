@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import clsx from "clsx";
 import { RiZoomInFill } from "react-icons/ri";
 import { RiZoomOutFill } from "react-icons/ri";
 import { ImPriceTags } from "react-icons/im";
@@ -95,15 +94,12 @@ const RecieptMapperPdfViewer: React.FC<connectorType & typeProps> = ({
     <>
       <div className="p-3">
         <div className="row col-12">
-          <div className={clsx(receiptMapperStyle.fileNameDiv, "col-md-7 col-xs-7")}>
+          <div className={`${receiptMapperStyle.fileNameDiv} col-md-7 col-xs-7 `}>
             <b>File Name:</b>
             <div>{fileName}</div>
           </div>
           <div
-            className={clsx(
-              receiptMapperStyle.zoombuttonDiv,
-              "col-md-5 col-xs-5 text-right"
-            )}
+            className={`${receiptMapperStyle.zoombuttonDiv} col-md-5 col-xs-5 text-right`}
           >
             <div>
               <ImPriceTags size="25" />

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import clsx from "clsx";
 import Styles from "./receiptMapperPdfList.module.scss";
 import { ImPriceTags } from "react-icons/im";
 import { ConnectedProps, connect } from "react-redux";
@@ -70,7 +69,7 @@ const ReceiptMapperPdfList: React.FC<connectorType & typeProps> = (props) => {
                       <div>
                         <ImPriceTags
                           size="20"
-                          className={clsx("cursor-pointer", Styles.priceTags)}
+                          className={Styles.priceTags}
                           onClick={openModal}
                         />
                       </div>

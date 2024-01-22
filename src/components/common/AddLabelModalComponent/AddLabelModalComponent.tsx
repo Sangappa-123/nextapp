@@ -1,6 +1,5 @@
 "use-client";
 import React from "react";
-import clsx from "clsx";
 import { useState } from "react";
 import GenericButton from "@/components/common/GenericButton";
 import GenericInput from "../GenericInput/index";
@@ -23,7 +22,6 @@ const AddLabelModalComponent: React.FC<AddLabelModalComponentProps> = (props: an
   };
 
   const handleInputChange = (event: { target: { value: any } }) => {
-    console.log("log", event.target.value);
     setValue(event.target.value);
   };
 
@@ -33,7 +31,6 @@ const AddLabelModalComponent: React.FC<AddLabelModalComponentProps> = (props: an
         <div className="row">
           <div className="col-lg-10">
             <GenericInput
-              // className={Style.input}
               placeholder="New Label"
               onChange={handleInputChange}
               onBlur={(e: any) => handleBlur(e)}
@@ -45,7 +42,7 @@ const AddLabelModalComponent: React.FC<AddLabelModalComponentProps> = (props: an
             <GenericButton label="Add" size="small" disabled={isBlurred} />
           </div>
         </div>
-        <div className={clsx("justify-content-end", Style.button)}>
+        <div className={`justify-content-end ${Style.button}`}>
           <GenericButton label="Close" size="medium" onClick={handleOpenModal} />
         </div>
       </form>
