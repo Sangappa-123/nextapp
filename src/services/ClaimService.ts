@@ -370,6 +370,37 @@ export const getSelectVendor = async (
   }
 };
 
+export const selectVendor = async (payload: any) => {
+  try {
+    const url = getApiEndPoint("selectVendorServicesApi");
+    const http = new HttpService({ isClient: true });
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      return res;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error while deleting item", error);
+    return null;
+  }
+};
+
+export const submitVendorDetails = async (param: object) => {
+  try {
+    const url = getApiEndPoint("submitVendorApi");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
 export const receiptApiUrl = async (payload: any) => {
   try {
     console.log("logs");

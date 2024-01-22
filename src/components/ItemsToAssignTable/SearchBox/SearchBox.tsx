@@ -57,6 +57,7 @@ const SearchBox: React.FC<typeProps & connectorType> = ({
             options={formattedCategories}
             onChange={handleCategoryChange}
             value={selectedCategory}
+            isModalPopUp={true}
           />
         </div>
       </div>

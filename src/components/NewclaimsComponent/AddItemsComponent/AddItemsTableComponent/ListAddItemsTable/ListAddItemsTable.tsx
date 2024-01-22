@@ -18,6 +18,7 @@ import {
   setSearchKeyword,
   deleteCategoryListItem,
   setSelectedRows,
+  setSelectedItemsUUIDs,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
@@ -134,6 +135,8 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     setCheckedItems(updatedCheckedItems);
     dispatch(setSelectedItems(updatedCheckedItems));
     dispatch(setSelectedRows(updatedCheckedItems));
+    const updatedSelectedUUIDs = checkedItems.map((checkedItem) => checkedItem.uuid);
+    dispatch(setSelectedItemsUUIDs(updatedSelectedUUIDs));
   };
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -362,6 +365,7 @@ const mapDispatchToProps = {
   setSearchKeyword,
   deleteCategoryListItem,
   setSelectedRows,
+  setSelectedItemsUUIDs,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
