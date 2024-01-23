@@ -18,6 +18,7 @@ import {
   setSearchKeyword,
   deleteCategoryListItem,
   setSelectedRows,
+  setSelectedItemsUUIDs,
 } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
@@ -65,7 +66,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
       id: rowData.id,
       itemUID: rowData.itemUID,
     };
-    console.log("Delete Payload", payload);
     setDelete(payload);
   };
 
@@ -75,13 +75,11 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
 
   const handleDelete = async () => {
     const id = deletePayload?.id;
-    console.log("Deleting Item with ID", id);
 
     try {
       setTableLoader(true);
 
       const res = await deleteCategoryItem(deletePayload);
-      console.log("Delete Response", res);
 
       if (res) {
         dispatch(
@@ -134,6 +132,8 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     setCheckedItems(updatedCheckedItems);
     dispatch(setSelectedItems(updatedCheckedItems));
     dispatch(setSelectedRows(updatedCheckedItems));
+    const updatedSelectedUUIDs = checkedItems.map((checkedItem) => checkedItem.uuid);
+    dispatch(setSelectedItemsUUIDs(updatedSelectedUUIDs));
   };
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,8 +295,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
             JSON.stringify(item).toLowerCase().includes(searchKeyword.toLowerCase())
           );
 
-  console.log("Filtered Data", filteredData);
-
   const ModalMsg = () => {
     return (
       <div>
@@ -313,7 +311,6 @@ const ListAddItemsTable: React.FC<ListAddItemsTableProps & connectorType> = ({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
-  console.log("Filtered Datassssssssssss", filteredData);
 
   return (
     <>
@@ -362,6 +359,7 @@ const mapDispatchToProps = {
   setSearchKeyword,
   deleteCategoryListItem,
   setSelectedRows,
+  setSelectedItemsUUIDs,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

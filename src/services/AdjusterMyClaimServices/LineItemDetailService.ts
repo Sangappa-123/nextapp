@@ -83,7 +83,6 @@ export const getLineItemRoom = async (claim: string) => {
     const http = new HttpService({ isClient: true });
     let url = getApiEndPoint("lineItemRoom");
     url = url.replace("{{CLAIM}}", claim);
-    console.log("-099999999", url);
     const resp = await http.get(url);
 
     return resp?.data ?? [];

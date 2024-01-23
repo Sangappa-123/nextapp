@@ -239,7 +239,6 @@ function ClaimInformation({
                   value={selectedDate}
                   onChange={(e) => {
                     fieldOnChange(e);
-                    console.log("date", e?.toDateString());
                     handleDateChange(e);
                   }}
                   dateFormat="MM/dd/yyyy"

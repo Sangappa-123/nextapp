@@ -61,12 +61,9 @@ const AddItemsTableComponent: React.FC<AddItemsTableComponentProps & connectorTy
   };
 
   const handleCheckboxChange = async (item: any) => {
-    console.log(item, "handle checkbox running on addItem main file");
-
     const updatedSelectedItems = selectedItems.includes(item)
       ? selectedItems.filter((selectedItem: any) => selectedItem !== item)
       : [...selectedItems, item];
-    console.log(updatedSelectedItems, "updatedSelectedItems checking");
 
     await dispatch(setSelectedItems(updatedSelectedItems));
     dispatch(setSelectedRows(updatedSelectedItems));

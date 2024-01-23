@@ -9,7 +9,6 @@ const selectPolicyHolderTypeParticipant = createSelector(
         return participant;
       }
     });
-    console.log("filteredPartcipants", filteredPartcipant);
 
     return filteredPartcipant;
   }

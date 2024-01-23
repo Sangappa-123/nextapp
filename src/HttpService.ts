@@ -86,7 +86,6 @@ class HttpService {
             .then((resp) => resp.json())
             .then((response) => {
               // const data = result?.data;
-              console.log("response", response);
               return resolve(response);
             })
             .catch((error) => reject({ error }));

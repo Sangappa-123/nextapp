@@ -158,7 +158,6 @@ function CustomComparable({
 
     try {
       const res = await addCustomItem(param);
-      console.log("res:", res);
       if (res?.status !== 200) {
         return dispatch(
           addNotification({

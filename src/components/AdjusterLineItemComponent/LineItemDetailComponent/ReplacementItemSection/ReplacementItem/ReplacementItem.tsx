@@ -50,7 +50,6 @@ function ReplacementItem(props: replaceItemInterface) {
     const qty = Number(quantity);
     const totalAmount = (!_price ? 0 : Number(_price)) * (!qty ? 1 : Number(qty));
     const rcv = parseFloatWithFixedDecimal(totalAmount);
-    console.log("ppppp", totalAmount);
     let appliedTax = 0;
     if (applyTax) {
       appliedTax = taxRate;
@@ -160,7 +159,7 @@ function ReplacementItem(props: replaceItemInterface) {
           </div>
         </div>
       </div>
-      <SettlementSummarySection calculatedTax={calculatedTax} />
+      <SettlementSummarySection />
     </div>
   );
 }

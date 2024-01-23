@@ -180,7 +180,6 @@ const ServiceRequestTable: React.FC<connectorType & typeProps> = (props) => {
     const id = deletePayload?.id;
     const res = await deleteServiceRequestItem(deletePayload);
     setDelete(null);
-    console.log("deleteServiceRequestClaimItem res", res);
 
     if (res) {
       setTableLoader(false);

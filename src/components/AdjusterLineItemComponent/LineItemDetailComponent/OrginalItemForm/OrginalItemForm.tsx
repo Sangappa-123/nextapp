@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import orginalItemFormStyle from "./orginalItemForm.module.scss";
 import clsx from "clsx";
 import GenericInput from "@/components/common/GenericInput";
@@ -28,6 +28,8 @@ import GenericButton from "@/components/common/GenericButton";
 import ImagePreviewModal from "@/components/AddItemModal/ImagePreviewModal";
 import AttachementPreview from "@/components/AddItemModal/AttachementPreview";
 import { FileContext } from "../../LineItemFileContext";
+import { calculateRCV } from "../../helper";
+import selectSelectedSubCategory from "@/reducers/LineItemDetail/Selectors/selectSelectedSubCategory";
 
 interface propType {
   register: any;
@@ -54,6 +56,7 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
     updateLineItem,
     attachment,
     removeAttachment,
+    selectedSubCategory,
   } = props;
 
   const debounce = useDebounce(updateLineItem, 100);
@@ -65,6 +68,15 @@ const OrginalItemForm: React.FC<propType & connectorType> = (props) => {
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
   const { addFiles, files, removeFile } = useContext(FileContext);
+
+  const initRef = useRef(false);
+  useEffect(() => {
+    if (lineItem && selectedSubCategory && !initRef.current) {
+      initRef.current = true;
+      const latestLineItem = calculateRCV(lineItem, selectedSubCategory);
+      updateLineItem(latestLineItem);
+    }
+  }, [lineItem, selectedSubCategory, updateLineItem]);
 
   const handleReceiptSelect = (e: React.FocusEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -624,6 +636,7 @@ const mapStateToProps = (state: RootState) => ({
   retailer: state[EnumStoreSlice.LINE_ITEM_DETAIL].retailer,
   paymentTypes: state[EnumStoreSlice.LINE_ITEM_DETAIL].paymentTypes,
   attachment: selectAttachment(state),
+  selectedSubCategory: selectSelectedSubCategory(state),
 });
 
 const mapDispatchToProps = {

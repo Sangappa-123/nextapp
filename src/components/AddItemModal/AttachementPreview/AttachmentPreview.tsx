@@ -11,8 +11,6 @@ const AttachementPreview: React.FC<AttachementPreviewProps> = ({
   imgType,
   zoomLevel,
 }) => {
-  console.log(imgType, "imagePreviewUrl");
-
   return imgType === "pdf" ? (
     <div
       style={{

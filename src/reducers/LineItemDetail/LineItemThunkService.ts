@@ -219,7 +219,6 @@ export const removeAttachment = createAsyncThunk(
     const rejectWithValue = api.rejectWithValue;
     try {
       const res = await deleteAttachment({ id });
-      console.log("=-=-=-=-=-=-=-=", res);
       callback();
       if (res?.status === 200) {
         dispatch(
