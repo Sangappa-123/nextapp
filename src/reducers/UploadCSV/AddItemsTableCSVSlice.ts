@@ -79,11 +79,14 @@ const AddItemsTableCSVSlice = createSlice({
   initialState,
   reducers: {
     setAddItemsTableData: (state, action: PayloadAction<any[]>) => {
-      state.addItemsTableData = action.payload.map((item) => ({
-        ...item,
-        uuid: item.itemUID,
-      }));
+      state.addItemsTableData = action.payload
+        ? action.payload.map((item) => ({
+            ...item,
+            uuid: item.itemUID,
+          }))
+        : [];
     },
+
     setSelectedItems: (state, action: PayloadAction<any[]>) => {
       state.selectedItems = action.payload;
       state.isAnyItemSelected = action.payload.length > 0;
