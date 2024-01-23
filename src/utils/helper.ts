@@ -52,14 +52,12 @@ export const convertToCurrentTimezone = (
 
 export const getRoleBasedUrlList = (role: string) => {
   const rolesObj = RoleListConstants();
-  // console.log("roleList", rolesObj?.RoleList);
 
   const roles = rolesObj?.RoleList?.filter((rolesArray) =>
     rolesArray.Roles.includes(role)
   );
   if (roles?.length > 0) {
     const screenList = roles[0];
-    // console.log("screenList", screenList);
 
     return screenList;
   }

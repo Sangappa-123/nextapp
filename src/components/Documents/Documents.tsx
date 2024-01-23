@@ -17,7 +17,6 @@ export default function Documents() {
     loading,
   }: { translate: claimDocumentsTranslateType | undefined; loading: boolean } =
     useTranslation("claimDocumentsTranslate");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }

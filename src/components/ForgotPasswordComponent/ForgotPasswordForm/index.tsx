@@ -29,7 +29,6 @@ function ForgotPasswordForm({ translate }: { translate: forgotPwdTranslateType }
   } = useCustomForm(schema);
 
   const onSubmit = async (data: Output<typeof schema>) => {
-    console.log("Data::;", data);
     // router.push("/security");
     const payload = {
       email: data.email,

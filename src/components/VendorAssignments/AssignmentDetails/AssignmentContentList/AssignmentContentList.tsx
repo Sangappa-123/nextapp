@@ -82,7 +82,6 @@ const AssignmentContentList: React.FC<connectorType> = (
     if (newSortVal.length > 0) {
       const orderBy = newSortVal[0].desc ? "desc" : "asc";
       const sortBy = newSortVal[0].id;
-      console.log("orderBy, sortBy", orderBy, sortBy);
       const result = await fetchAssignmentContentListAction({
         pageNo: 1,
         recordPerPage: 10,

@@ -10,7 +10,6 @@
 // };
 export const getHeader = () => {
   // const cookieStore = cookies();
-  console.log("cookies", document.cookie);
 
   return {
     "Content-Type": "application/json",

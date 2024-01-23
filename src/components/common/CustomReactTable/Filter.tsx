@@ -13,6 +13,7 @@ export default function Filter({
   defaultAllChecked = true,
   filterFn,
   customFilterValues,
+  clearFilter,
 }: {
   column: React.SetStateAction<any>;
   table: React.SetStateAction<any>;
@@ -21,6 +22,7 @@ export default function Filter({
   defaultAllChecked: React.SetStateAction<boolean | undefined>;
   filterFn: React.SetStateAction<any | null>;
   customFilterValues: React.SetStateAction<any | null>;
+  clearFilter: React.SetStateAction<boolean>;
 }) {
   const [currentValue, setCurrentValue] = React.useState<React.SetStateAction<any>>([]);
   const [sortedUniqueValuesFirst, setSortedUniqueValuesFirst] = React.useState<
@@ -48,7 +50,6 @@ export default function Filter({
     { label: "$1,000.00+", value: "$1,000.00+" },
   ];
   React.useEffect(() => {
-    console.log(sortedUniqueValuesFirst);
     if (typeof firstValue !== "number") {
       if (
         defaultAllChecked &&
@@ -71,6 +72,12 @@ export default function Filter({
       }
     }
   }, [sortedUniqueValues]);
+
+  React.useEffect(() => {
+    if (clearFilter) {
+      handleSelectAll();
+    }
+  }, [clearFilter]);
 
   const handleFilterIconClick = (columnId: any) => {
     setIsOpen(!isOpen);

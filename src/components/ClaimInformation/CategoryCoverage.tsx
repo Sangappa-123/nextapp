@@ -8,11 +8,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 function CategoryCoverage(props: any) {
   const [coverageValue, setCoverageValue] = useState("");
   const [individualLimitValue, setindividualLimitValue] = useState("");
-  {
-    console.log("coverageLimit", props.data.coverageLimit);
-  }
+
   const checkData = (e: any) => {
-    console.log("target", e.target.value);
     setCoverageValue(
       new Intl.NumberFormat("en-US", {
         style: "currency",

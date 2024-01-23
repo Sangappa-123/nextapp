@@ -54,8 +54,6 @@ function SecurityQuestionForm<T extends object>({ selectOptions }: TypedProp<T>)
   const { errors, isValid } = formState;
 
   const submitHandler = async (data: Output<typeof schema>) => {
-    console.log("Submit data", data);
-
     const questionAnswerList = {
       userId: localStorage.getItem("userId"),
       questionAnswerList: [

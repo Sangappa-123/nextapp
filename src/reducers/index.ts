@@ -14,6 +14,7 @@ import NavigationSlice from "./UploadCSV/navigationSlice";
 import AddItemsTableCSVSlice from "./UploadCSV/AddItemsTableCSVSlice";
 import DetailedInventorySlice from "./ContentsEvaluation/DetailedInventorySlice";
 import ClaimedItemsSlice from "./ReceiptMapper/ClaimedItemsSlice";
+import ReceiptMapperSlice from "./ReceiptMapper/ReceiptMapperSlice";
 import { participants } from "./LineItemDetail/LineItemThunkService";
 
 const reduxQueryReducers = {
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   [AddItemsTableCSVSlice.name]: AddItemsTableCSVSlice.reducer,
   [DetailedInventorySlice.name]: DetailedInventorySlice.reducer,
   [ClaimedItemsSlice.name]: ClaimedItemsSlice.reducer,
+  [ReceiptMapperSlice.name]: ReceiptMapperSlice.reducer,
   ...reduxQueryReducers,
 });
 
