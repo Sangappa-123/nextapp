@@ -14,14 +14,14 @@
     border-radius: 4px;
     background-color: $white;
     border: 1px solid $grey4;
-
+    font-family: inherit;
     &:active,
     &:focus {
       outline: none;
       border-color: $royalBlue;
     }
     &:disabled {
-      background-color: #ddd;
+      background-color: $grey3;
       cursor: not-allowed;
     }
   }

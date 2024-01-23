@@ -91,6 +91,7 @@ function GenericInput(props: propsType, ref: any) {
             {...commonProps}
             decimalScale={2}
             fixedDecimalScale
+            thousandSeparator={","}
             prefix={"$"}
             type="text"
           />
@@ -103,6 +104,7 @@ function GenericInput(props: propsType, ref: any) {
             {...commonProps}
             decimalScale={2}
             fixedDecimalScale
+            thousandSeparator={","}
             suffix={"%"}
             type="text"
           />
