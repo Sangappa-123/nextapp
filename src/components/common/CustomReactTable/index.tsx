@@ -31,6 +31,8 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
     handleEditChange = null,
     showFooter = false,
     tableCustomClass = "",
+    renderSubComponent = "",
+    clearFilter = null,
   } = props;
 
   const [showFilterBLock, setShowFilterBLock] = React.useState(null);
@@ -143,6 +145,7 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
                                 filterFn={filterFn}
                                 defaultAllChecked={true}
                                 customFilterValues={customFilterValues}
+                                clearFilter={clearFilter}
                               />
                             </div>
                           ) : null}
@@ -163,53 +166,59 @@ const CustomReactTable: React.FC<any> = React.memo((props) => {
             ) : (
               <>
                 {table.getRowModel().rows.map((row: any) => (
-                  <tr
-                    key={row.id}
-                    className={clsx({
-                      [CustomReactTableStyles.invalidRow]:
-                        row.original.isValidItem === false,
-                    })}
-                    {...(handleRowClick
-                      ? {
-                          onClick: () => {
-                            handleRowClick(row.original);
-                          },
-                        }
-                      : {})}
-                  >
-                    {row.getVisibleCells().map((cell: any, index: number) => (
-                      <td
-                        key={cell.id}
-                        className={
-                          showStatusColor && index === 0
-                            ? clsx({
-                                [CustomReactTableStyles.All_Items_Priced]:
-                                  row.original.noOfItems == row.original.noOfItemsPriced,
-                                [CustomReactTableStyles.Partial_Items_Priced]:
-                                  row.original.noOfItemsPriced != 0 &&
-                                  row.original.noOfItems > row.original.noOfItemsPriced,
-                                [CustomReactTableStyles.No_Items_Priced]:
-                                  row.original.noOfItemsPriced == 0 &&
-                                  row.original.noOfItems != 0,
-                              })
-                            : undefined
-                        }
-                      >
-                        {editableRowId === row.original.id &&
-                        cell.column.columnDef?.meta?.editableField ? (
-                          <GenericInput
-                            type="text"
-                            value={editedData[cell.column.columnDef?.accessorKey]}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                              handleEditChange(e, cell.column.columnDef?.accessorKey)
-                            }
-                          />
-                        ) : (
-                          <>{flexRender(cell.column.columnDef.cell, cell.getContext())}</>
-                        )}
-                      </td>
-                    ))}
-                  </tr>
+                  <>
+                    <tr
+                      key={row.id}
+                      className={clsx({
+                        [CustomReactTableStyles.invalidRow]:
+                          row.original.isValidItem === false,
+                      })}
+                      {...(handleRowClick
+                        ? {
+                            onClick: () => {
+                              handleRowClick(row.original);
+                            },
+                          }
+                        : {})}
+                    >
+                      {row.getVisibleCells().map((cell: any, index: number) => (
+                        <td
+                          key={cell.id}
+                          className={
+                            showStatusColor && index === 0
+                              ? clsx({
+                                  [CustomReactTableStyles.All_Items_Priced]:
+                                    row.original.noOfItems ==
+                                    row.original.noOfItemsPriced,
+                                  [CustomReactTableStyles.Partial_Items_Priced]:
+                                    row.original.noOfItemsPriced != 0 &&
+                                    row.original.noOfItems > row.original.noOfItemsPriced,
+                                  [CustomReactTableStyles.No_Items_Priced]:
+                                    row.original.noOfItemsPriced == 0 &&
+                                    row.original.noOfItems != 0,
+                                })
+                              : undefined
+                          }
+                        >
+                          {editableRowId === row.original.id &&
+                          cell.column.columnDef?.meta?.editableField ? (
+                            <GenericInput
+                              type="text"
+                              value={editedData[cell.column.columnDef?.accessorKey]}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                handleEditChange(e, cell.column.columnDef?.accessorKey)
+                              }
+                            />
+                          ) : (
+                            <>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                    {renderSubComponent && renderSubComponent({ row })}
+                  </>
                 ))}
               </>
             )}

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  deleteAttachment,
   getLineItemCategory,
   getLineItemCondition,
   getLineItemRetailers,
@@ -18,6 +19,7 @@ import { API_URL, WEB_SEARCH_ENGINES, XORIGINATOR, baseUrl } from "@/constants/c
 import { resetLineItemDetail, updateWebsearch } from "./LineItemDetailSlice";
 import { unknownObjectType } from "@/constants/customTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { addNotification } from "../Notification/NotificationSlice";
 
 export const fetchRetailersDetails = createAsyncThunk(
   "lineItem/retailer",
@@ -205,6 +207,39 @@ export const deleteCustomItem = createAsyncThunk(
       }
     } catch (err) {
       return rejectWithValue(err);
+    }
+  }
+);
+
+export const removeAttachment = createAsyncThunk(
+  "attachment/remove",
+  async (payload: { id: number; callback: () => void }, api) => {
+    const { id, callback } = payload;
+    const dispatch = api.dispatch;
+    const rejectWithValue = api.rejectWithValue;
+    try {
+      const res = await deleteAttachment({ id });
+      callback();
+      if (res?.status === 200) {
+        dispatch(
+          addNotification({
+            message: res?.message,
+            id: `success_${id}`,
+            status: "success",
+          })
+        );
+        return { id };
+      }
+      dispatch(
+        addNotification({
+          message: res?.message,
+          id: `error_${id}`,
+          status: "error",
+        })
+      );
+      return rejectWithValue({ id });
+    } catch (error) {
+      return rejectWithValue(error);
     }
   }
 );

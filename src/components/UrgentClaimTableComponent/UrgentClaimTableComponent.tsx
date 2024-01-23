@@ -12,7 +12,6 @@ interface typedProp {
 
 const UrgentClaimTableComponent: React.FC<typedProp & connectorType> = (props) => {
   const { initData, addUrgentClaimListData } = props;
-  console.log("checking props", initData);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {

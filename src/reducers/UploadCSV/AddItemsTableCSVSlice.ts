@@ -16,6 +16,19 @@ interface AddItemsTableState {
   vendorInventoryListDataFull: any[];
   vendorInventoryfetching: boolean;
   vendorInventorySummaryData: any[];
+  totalValue: number;
+  selectedItemsUUIDs: string[];
+  vendorAssignmentPayload: {
+    vendorDetails: any;
+    claimBasicDetails: any;
+    canContactInsured: boolean;
+    claimProfile: string;
+    claimedItems: any[];
+    insuranceCompanyDetails: any;
+    requestedVendorService: any;
+    vendorAssigment: any;
+    categories: any[];
+  };
 }
 
 const initialState: AddItemsTableState = {
@@ -33,6 +46,19 @@ const initialState: AddItemsTableState = {
   vendorInventoryListAPIData: null,
   vendorInventoryListDataFull: [],
   vendors: [],
+  totalValue: 0,
+  selectedItemsUUIDs: [],
+  vendorAssignmentPayload: {
+    vendorDetails: {},
+    claimBasicDetails: {},
+    canContactInsured: true,
+    claimProfile: "Contents",
+    claimedItems: [],
+    insuranceCompanyDetails: {},
+    requestedVendorService: {},
+    vendorAssigment: {},
+    categories: [],
+  },
 };
 
 export const fetchVendorInventoryAction = createAsyncThunk(
@@ -53,11 +79,18 @@ const AddItemsTableCSVSlice = createSlice({
   initialState,
   reducers: {
     setAddItemsTableData: (state, action: PayloadAction<any[]>) => {
-      state.addItemsTableData = action.payload;
+      state.addItemsTableData = action.payload.map((item) => ({
+        ...item,
+        uuid: item.itemUID,
+      }));
     },
     setSelectedItems: (state, action: PayloadAction<any[]>) => {
       state.selectedItems = action.payload;
       state.isAnyItemSelected = action.payload.length > 0;
+      // state.selectedItemsUUIDs = action.payload.map(item => item.uuid);
+    },
+    setSelectedItemsUUIDs: (state, action: PayloadAction<string[]>) => {
+      state.selectedItemsUUIDs = action.payload;
     },
     setSelectedRows: (state, action: PayloadAction<any[]>) => {
       state.selectedRows = [...state.selectedRows, ...action.payload];
@@ -86,6 +119,18 @@ const AddItemsTableCSVSlice = createSlice({
     setVendors: (state, action: PayloadAction<any[]>) => {
       state.vendors = action.payload;
     },
+    setTotalValue: (state, action: PayloadAction<number>) => {
+      state.totalValue = action.payload;
+    },
+    updateVendorAssignmentPayload: (
+      state,
+      action: PayloadAction<Partial<AddItemsTableState["vendorAssignmentPayload"]>>
+    ) => {
+      state.vendorAssignmentPayload = {
+        ...state.vendorAssignmentPayload,
+        ...action.payload,
+      };
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchVendorInventoryAction.pending, (state) => {
@@ -94,7 +139,6 @@ const AddItemsTableCSVSlice = createSlice({
     });
     builder.addCase(fetchVendorInventoryAction.fulfilled, (state, action) => {
       const payload = action.payload;
-      console.log("API Responsessssssssss", payload);
       state.vendorInventoryfetching = false;
       if (payload?.status === 200) {
         state.vendorInventorySummaryData = payload?.data.comapanyVendors;
@@ -119,5 +163,8 @@ export const {
   setCategories,
   setSelectedCategory,
   setVendors,
+  setTotalValue,
+  updateVendorAssignmentPayload,
+  setSelectedItemsUUIDs,
 } = AddItemsTableCSVSlice.actions;
 export default AddItemsTableCSVSlice;

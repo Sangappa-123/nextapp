@@ -7,7 +7,7 @@ import useCustomForm from "@/hooks/useCustomForm";
 import GenericButton from "@/components/common/GenericButton";
 import Modal from "@/components/common/ModalPopups";
 import { Output, minLength, object, string } from "valibot";
-import { parseFloatWithFixedDecimal } from "@/utils/utitlity";
+import { getFileExtension, parseFloatWithFixedDecimal } from "@/utils/utitlity";
 import { useParams } from "next/navigation";
 import selectItemUID from "@/reducers/LineItemDetail/Selectors/selectItemUID";
 import { addCustomItem } from "@/services/AdjusterMyClaimServices/LineItemDetailService";
@@ -79,11 +79,6 @@ function CustomComparable({
     const rcvTotal = rcv + taxAmt;
     setValue("ItemPrice", parseFloatWithFixedDecimal(rcvTotal).toString());
     setTaxAmount(taxAmt);
-  };
-
-  const getFileExtension = (file: File) => {
-    const fileExtension = `.${file.name.split(".").pop()}`;
-    return fileExtension;
   };
 
   const isValidImage = (file: File) => {
@@ -163,7 +158,6 @@ function CustomComparable({
 
     try {
       const res = await addCustomItem(param);
-      console.log("res:", res);
       if (res?.status !== 200) {
         return dispatch(
           addNotification({
@@ -199,7 +193,10 @@ function CustomComparable({
     <form>
       <Modal
         isOpen={openCustomComparableModal}
-        onClose={closeCustomComparable}
+        onClose={() => {
+          reset();
+          closeCustomComparable();
+        }}
         overlayClassName={customComparableStyle.modalOverlay}
         headingName="New Custom Comparable"
         positionTop
@@ -222,7 +219,10 @@ function CustomComparable({
             <GenericButton
               label="Cancel"
               size="medium"
-              onClickHandler={closeCustomComparable}
+              onClickHandler={() => {
+                reset();
+                closeCustomComparable();
+              }}
             />
           </div>
         }

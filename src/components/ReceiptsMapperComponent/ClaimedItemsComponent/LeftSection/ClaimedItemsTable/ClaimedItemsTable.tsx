@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import receiptMapperStyle from "../receiptMapperComponent.module.scss";
+import receiptMapperStyle from "../../../receiptMapperComponent.module.scss";
 import { ConnectedProps, connect } from "react-redux";
+import { clsx } from "clsx";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -15,18 +16,26 @@ import {
 } from "@tanstack/react-table";
 import CustomReactTable from "@/components/common/CustomReactTable/index";
 import { getUSDCurrency } from "@/utils/utitlity";
+import { convertToCurrentTimezone } from "@/utils/helper";
 
 interface typeProps {
   [key: string | number]: any;
 }
 
 const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
-  const { claimedItemsList, tableLoader, claimedItemsErrorMsg, setTableLoader } = props;
+  const {
+    claimedItemsList,
+    tableLoader,
+    claimedItemsErrorMsg,
+    setTableLoader,
+    clearFilter,
+  } = props;
   const [claimResult, setClaimResult] = React.useState(claimedItemsList);
   const [filterSelected, setFilterSelected] = React.useState([]);
 
   interface ClaimData {
     [key: string | number]: any;
+    subRows?: ClaimData[];
   }
   React.useEffect(() => {
     const defaultData: ClaimData[] = [...claimedItemsList];
@@ -88,12 +97,12 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
       enableSorting: true,
       enableColumnFilter: false,
     }),
-    columnHelper.accessor("totalQuantityReplaced", {
+    columnHelper.accessor("quantity", {
       header: () => "Qty Replaced",
       cell: (info: any) => (
-        <div className={receiptMapperStyle.alignRight}>{`${info.getValue()}(${
-          info.row.original.quantity
-        })`}</div>
+        <div className={receiptMapperStyle.alignRight}>{`${
+          info.row.original.totalQuantityReplaced
+        }(${info.getValue()})`}</div>
       ),
       footer: () => {
         const Replacedsum = claimResult.reduce(
@@ -112,7 +121,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
       enableSorting: true,
       enableColumnFilter: false,
     }),
-    columnHelper.accessor("totalStatedAmount", {
+    columnHelper.accessor("replacementExposure", {
       header: () => "Max. Replacement $",
       cell: (info: any) => (
         <div className={receiptMapperStyle.alignRight}>{`${getUSDCurrency(
@@ -121,7 +130,7 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
       ),
       footer: () => {
         const sum = claimResult.reduce(
-          (acc: number, dataItem: any) => acc + dataItem.totalStatedAmount,
+          (acc: number, dataItem: any) => acc + dataItem.replacementExposure,
           0
         );
         return <span>{`${getUSDCurrency(sum)}`}</span>;
@@ -210,29 +219,6 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-  // const handleSorting = async (sortingUpdater: any) => {
-  //   setTableLoader(true);
-
-  //   const newSortVal = sortingUpdater(sorting);
-  //   setSorting(newSortVal);
-
-  //   if (newSortVal.length > 0) {
-  //     const sortById = newSortVal[0].id;
-  //     let sortedData : any = []
-  //     if(newSortVal[0].desc){
-  //       sortedData = sortBy(claimedItemsList, sortById).reverse();
-  //     }else{
-  //       sortedData= sortBy(claimedItemsList, sortById);
-  //     }
-
-  //     setClaimResult([...sortedData]);
-  //       setTableLoader(false);
-  //   } else if (newSortVal.length === 0 && claimedItemsList.length > 0) {
-  //     setClaimResult([...claimedItemsList]);
-  //     setTableLoader(false);
-
-  //   }
-  // };
   const filterFn = async (
     currentValue: any,
     columnId: string,
@@ -289,6 +275,49 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     console.log(rowData);
   };
 
+  const renderSubComponent = ({ row }: any) => {
+    return (
+      <>
+        {row.original.subRows.map((subRow: any) => (
+          <tr
+            key={subRow.itemNumber}
+            onClick={() => handleRowClick(subRow)}
+            className={clsx("text-right", {
+              [receiptMapperStyle.subtotalRow]: subRow.totalRow,
+            })}
+          >
+            <td
+              colSpan={4}
+              className={clsx({
+                "text-center": !subRow.totalRow,
+              })}
+            >
+              {subRow.totalRow
+                ? "Total"
+                : convertToCurrentTimezone(subRow.createDate, "MMM DD YYYY hh:mm A")}
+            </td>
+            {row.getVisibleCells().map((cell: any, index: number) => {
+              if (subRow[cell.column.id] !== undefined) {
+                return (
+                  <td key={index}>
+                    {cell.column.id !== "quantity"
+                      ? getUSDCurrency(subRow[cell.column.id])
+                      : subRow.totalRow
+                        ? `${row.original.totalQuantityReplaced}(${
+                            subRow[cell.column.id]
+                          })`
+                        : subRow[cell.column.id]}
+                  </td>
+                );
+              }
+            })}
+            <td></td>
+          </tr>
+        ))}
+      </>
+    );
+  };
+
   const table = useReactTable({
     data: claimResult,
     columns,
@@ -311,13 +340,15 @@ const ClaimedItemsTable: React.FC<connectorType & typeProps> = (props) => {
     <div>
       <CustomReactTable
         table={table}
-        totalDataCount={claimedItemsList.length}
+        totalDataCount={claimedItemsList?.length}
         loader={tableLoader}
         tableDataErrorMsg={claimedItemsErrorMsg}
         handleRowClick={handleRowClick}
         filterFn={filterFn}
         showFooter={true}
         tableCustomClass={receiptMapperStyle.tableContainer}
+        renderSubComponent={renderSubComponent}
+        clearFilter={clearFilter}
       />
     </div>
   );

@@ -10,18 +10,22 @@ import VendorSearchBoxAssignItems from "./VendorSearchBoxAssignItems";
 import VendorAssignListTable from "./VendorAssignListTable";
 import { ConnectedProps, connect } from "react-redux";
 import { RootState } from "@/store/store";
+import { useAppDispatch } from "@/hooks/reduxCustomHook";
+import { updateVendorAssignmentPayload } from "@/reducers/UploadCSV/AddItemsTableCSVSlice";
 
 interface AssignItemsTableComponentProps {
   onNewClaimsClick: () => void;
+  // onVendorSelected: any;
 }
 
 const AssignItemsTableComponent: React.FC<
   AssignItemsTableComponentProps & connectorType
-> = ({ selectedItems }) => {
+> = () => {
   const options = [
     { value: 1, label: "HOME BRANCH,BR-4ADDE597FE47" },
     { value: 2, label: "Remote Office,201" },
   ];
+  const dispatch = useAppDispatch();
   const customStyles = {
     control: (defaultStyles: any) => ({
       ...defaultStyles,
@@ -68,13 +72,26 @@ const AssignItemsTableComponent: React.FC<
   };
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [remarks, setRemarks] = useState("");
 
   const handleChange = (selected: any) => {
     setSelectedOption(selected);
   };
+  const claimNumber = sessionStorage.getItem("claimNumber") || "";
+  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRemarks(event.target.value);
+    dispatch(
+      updateVendorAssignmentPayload({
+        vendorAssigment: {
+          claimNumber: claimNumber,
+          dueDate: null,
+          remark: remarks,
+        },
+      })
+    );
+  };
   return (
     <>
-      {console.log(selectedItems, "selectedItems in assign items file")}
       <Cards className="mt-2">
         <div className="row">
           <div className="col-md-3 col-sm-6 col-12">
@@ -112,11 +129,7 @@ const AssignItemsTableComponent: React.FC<
         </div>
         {/* </div> */}
         <div className={AssignTableSTyle.styleTable}>
-          <ItemsAssignListTable
-          // selectedItems={selectedItems}
-          // setSelectedItems={setSelectedItems}
-          // selectedRowsData={selectedRowsData}
-          />
+          <ItemsAssignListTable />
         </div>
       </Cards>
       <Cards className="mt-2">
@@ -148,6 +161,8 @@ const AssignItemsTableComponent: React.FC<
             cols={50}
             maxLength={1000}
             className={AssignTableSTyle.textarea}
+            value={remarks}
+            onChange={handleTextareaChange}
           />
           <p className={AssignTableSTyle.textTextArea}>Max. 1000 characters</p>
         </div>

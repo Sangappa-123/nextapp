@@ -86,7 +86,6 @@ class HttpService {
             .then((resp) => resp.json())
             .then((response) => {
               // const data = result?.data;
-              console.log("response", response);
               return resolve(response);
             })
             .catch((error) => reject({ error }));
@@ -144,7 +143,7 @@ class HttpService {
 
   async delete(
     url: string,
-    payload: unknown,
+    payload?: unknown,
     headers?: object
   ): Promise<unknownObjectType> {
     return new Promise((resolve, reject) => {

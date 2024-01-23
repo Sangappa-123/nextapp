@@ -22,7 +22,6 @@ const SelectBoxAddItems: React.FC<connectorType> = ({
     const fetchCategories = async () => {
       try {
         const { data } = await getCategories();
-        console.log("Categories from API:", data);
         dispatch(setCategories(data));
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -74,8 +73,6 @@ const SelectBoxAddItems: React.FC<connectorType> = ({
       label: category.categoryName,
     })),
   ];
-
-  console.log("Formatteddddddddddd", formattedCategories);
 
   const defaultSelectedValue = formattedCategories.find(
     (category) => category.label === "All"

@@ -1,0 +1,45 @@
+@use "@/scss/colors.scss" as *;
+
+.date {
+  background: $lightblue;
+  border-radius: 4px !important;
+  border-bottom: groove;
+  width: 100%;
+  height: 50px;
+  padding-left: 26px;
+  padding-top: 10px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.padfName {
+  background: $lightblue;
+  border-radius: 4px !important;
+  border-bottom: groove;
+  width: 100%;
+  height: 45px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+}
+.container {
+  height: 584px;
+  overflow-y: auto;
+  padding: 20px;
+}
+.priceTags {
+  margin-top: 2px;
+  color: black;
+  width: 30px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.modalWidth {
+  width: 30%;
+  // height: 28%;
+}

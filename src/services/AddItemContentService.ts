@@ -41,7 +41,6 @@ export const fetchClaimContentItemDetails = async (
         previousItem = true;
         nextItem = true;
       }
-      console.log(res.data);
       store.dispatch(
         addEditItemDetail({ itemDetailData: res.data, previousItem, nextItem })
       );
@@ -55,7 +54,6 @@ export const fetchClaimContentItemDetails = async (
 };
 
 export const getPreviousItem = async (itemId: number, contentData: any) => {
-  console.log(contentData);
   const claimContentListData = contentData;
 
   const itemIndex = claimContentListData.findIndex((item: objectType) => {
@@ -75,8 +73,6 @@ export const getPreviousItem = async (itemId: number, contentData: any) => {
   await fetchClaimContentItemDetails(payload, contentData);
 };
 export const getNextItem = async (itemId: number, contentData: any) => {
-  console.log(contentData);
-
   const claimContentListData = contentData;
 
   const itemIndex = await claimContentListData.findIndex((item: objectType) => {

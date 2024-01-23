@@ -23,7 +23,6 @@ const ServiceRequestsComponent: React.FC = () => {
     loading,
   }: { translate: serviceRequestComponentType | undefined; loading: boolean } =
     useTranslation("serviceRequestComponent");
-  console.log("transalte", translate);
   if (loading) {
     return null;
   }

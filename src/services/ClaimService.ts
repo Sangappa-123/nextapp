@@ -113,33 +113,6 @@ export const fetchUrgentClaimList = async (
   const http = new HttpService({ isClient });
   const res = await http.post(url, payload);
   return res;
-  // const state = store.getState();
-  // searchKeyword = state.urgentclaimdata.searchKeyword;
-  // statusIds = state.urgentclaimdata.statusIds;
-  // const userId = await getClientCookie("userId");
-  // const token = await getClientCookie("accessToken");
-
-  // const payload = {
-  //   assignedUserId: userId,
-  //   pagination: {
-  //     pageNumber,
-  //     limit,
-  //     sortBy,
-  //     orderBy,
-  //   },
-  //   searchKeyword,
-  //   statusIds,
-  // };
-
-  // const urgentClaimListRes: any = await urgentClaimList(payload, token);
-  // console.log("UrgentclaimListRes", urgentClaimListRes);
-
-  // if (urgentClaimListRes.result.status === 200) {
-  //   const urgentClaimData = urgentClaimListRes.result;
-  //   store.dispatch(addUrgentClaimListData({ urgentClaimData }));
-  //   return urgentClaimData;
-  // }
-  // return null;
 };
 
 type pendingInvoiceReq = {
@@ -216,7 +189,6 @@ export const fetchPolicyType = async (id: number) => {
   const http = new HttpService({ isClient: true });
   const res = await http.get(url);
   const { data, error } = res;
-  console.log("logggg", res);
   if (data) return { data };
   throw error;
 };
@@ -225,7 +197,6 @@ export const validateClaim = async (param: object) => {
   const url = getApiEndPoint("detailsClaim");
   const http = new HttpService({ isClient: true });
   const res = await http.post(url, param);
-  console.log("logggg", res);
   return res;
 };
 
@@ -233,14 +204,12 @@ export const fetchState = async (param: object) => {
   const url = getApiEndPoint("stateOption");
   const http = new HttpService({ isClient: true });
   const res = await http.post(url, param);
-  console.log("logggg", res);
   return res;
 };
 export const fetchLossType = async () => {
   const url = getApiEndPoint("lossTypeOption");
   const http = new HttpService({ isClient: true });
   const res = await http.get(url);
-  console.log("logggg", res);
   return res;
 };
 
@@ -254,7 +223,6 @@ export const fetchHomeOwnersType = async (stateId: number, policyTypeId: number)
   const http = new HttpService({ isClient: true });
   const res = await http.get(url);
   const { data, error } = res;
-  console.log("coverage", res);
   if (data) return { data };
   throw error;
 };
@@ -271,13 +239,11 @@ export const getCategories = async () => {
   const http = new HttpService({ isClient: true });
   const res = await http.get(url);
   const { data, error } = res;
-  console.log("coverage", res);
   if (data) return { data };
   throw error;
 };
 
 export const postClaim = async (param: object) => {
-  console.log("param", param);
   try {
     const url = getApiEndPoint("savePolicy");
     const http = new HttpService({ isClient: true });
@@ -298,7 +264,6 @@ export const getPolicyInfo = async (param: object) => {
   const http = new HttpService({ isClient: true });
   const res = await http.post(url, param);
   const { data, error } = res;
-  console.log("coverage", res);
   if (data) return { data };
   throw error;
 };
@@ -360,19 +325,47 @@ export const getSelectVendor = async (
     const http = new HttpService({ isClient });
 
     let url = getApiEndPoint("assignVendorGet");
-    console.log("uuuuuuuuuuuuuu", url);
     url = `${url}?page=${param?.pageNo}&q=&sort_by=&order_by=asc&limit=${param?.recordPerPage}`;
     const resp = await http.get(url);
-    console.log("sssssssasssssssssss", resp);
     return resp;
   } catch (err: any) {
     return null;
   }
 };
 
+export const selectVendor = async (payload: any) => {
+  try {
+    const url = getApiEndPoint("selectVendorServicesApi");
+    const http = new HttpService({ isClient: true });
+    const res = await http.post(url, payload);
+
+    if (res.status === 200) {
+      return res;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error while deleting item", error);
+    return null;
+  }
+};
+
+export const submitVendorDetails = async (param: object) => {
+  try {
+    const url = getApiEndPoint("submitVendorApi");
+    const http = new HttpService({ isClient: true });
+    const resp = await http.post(url, param);
+    const { error } = resp;
+    if (!error) {
+      return resp;
+    } else {
+      return error;
+    }
+  } catch (err) {
+    return err;
+  }
+};
 export const receiptApiUrl = async (payload: any) => {
   try {
-    console.log("logs");
     const url = getApiEndPoint("receiptApi");
     const http = new HttpService({ isClient: true, isFormData: true });
     const res = await http.post(url, payload);

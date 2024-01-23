@@ -45,7 +45,6 @@ function SecurityForm() {
   } = useCustomForm(schema);
 
   const onSubmit = async (data: Output<typeof schema>) => {
-    console.log("password::", data);
     let payload;
     const encryptedCurrPass = getCipherEncryptedText(data.currentPassword);
     const encryptedNewPass = getCipherEncryptedText(data.newPassword);
