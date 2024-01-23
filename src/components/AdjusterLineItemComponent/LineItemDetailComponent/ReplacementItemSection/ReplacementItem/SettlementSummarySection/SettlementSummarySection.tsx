@@ -1,37 +1,37 @@
-import React, { useMemo } from "react";
+import React from "react";
 import settlementSummarySectionStyle from "./settlementSummarySection.module.scss";
 import GenericComponentHeading from "@/components/common/GenericComponentHeading";
-import { calculatedTaxType } from "../ReplacementItem";
 import { useAppSelector } from "@/hooks/reduxCustomHook";
 import selectItemStatus from "@/reducers/LineItemDetail/Selectors/selectItemStatus";
-import selectSelectedSubCategory from "@/reducers/LineItemDetail/Selectors/selectSelectedSubCategory";
+// import selectSelectedSubCategory from "@/reducers/LineItemDetail/Selectors/selectSelectedSubCategory";
+import selectLineItem from "@/reducers/LineItemDetail/Selectors/selectLineItem";
 
-interface rcvWithSplCaseType {
-  depriciationRateStr: string;
-}
+// interface rcvWithSplCaseType {
+//   depriciationRateStr: string;
+// }
 
-function SettlementSummarySection({
-  calculatedTax,
-}: {
-  calculatedTax: calculatedTaxType;
-}) {
+function SettlementSummarySection() {
   const status = useAppSelector(selectItemStatus);
-  const subcategory = useAppSelector(selectSelectedSubCategory);
+  // const subcategory = useAppSelector(selectSelectedSubCategory);
+  const lineItem = useAppSelector(selectLineItem);
 
-  const CalculateRCVWithSplCase = useMemo<rcvWithSplCaseType>(() => {
-    let depriciationRateStr = subcategory ? subcategory?.annualDepreciation + "%" : "0 %";
-    if (subcategory?.specialCase) {
-      if (subcategory.depreciation) {
-        depriciationRateStr = `${subcategory.firstYearDepreciation}%, 
-          ${subcategory.correspondYearDepreciation}% year on, ${subcategory.maxDepreciation}% max`;
-      } else if (subcategory.flatDepreciation && subcategory.flatDepreciation > 0) {
-        depriciationRateStr = `${subcategory?.flatDepreciation}% flat`;
-      } else {
-        depriciationRateStr += `, ${subcategory.maxDepreciation}% max`;
-      }
-    }
-    return { depriciationRateStr };
-  }, [subcategory]);
+  // console.log("ppppppppppppp>>>>>>>>>>>>", lineItem);
+  // const CalculateRCVWithSplCase = useMemo<rcvWithSplCaseType>(() => {
+  //   let depriciationRateStr = subcategory ? subcategory?.annualDepreciation + "%" : "0 %";
+  //   if (subcategory?.specialCase) {
+  //     if (subcategory.depreciation) {
+  //       depriciationRateStr = `${subcategory.firstYearDepreciation}%,
+  //         ${subcategory.correspondYearDepreciation}% year on, ${subcategory.maxDepreciation}% max`;
+  //     } else if (subcategory.flatDepreciation && subcategory.flatDepreciation > 0) {
+  //       depriciationRateStr = `${subcategory?.flatDepreciation}% flat`;
+  //     } else {
+  //       depriciationRateStr += `, ${subcategory?.maxDepreciation}% max`;
+  //     }
+  //   } else {
+  //     depriciationRateStr += ", " + subcategory?.maxDepreciation + "% max";
+  //   }
+  //   return { depriciationRateStr };
+  // }, [subcategory]);
 
   const CalculatedValue = ({
     label,
@@ -64,25 +64,40 @@ function SettlementSummarySection({
           <CalculatedValue
             id="totalReplaceCost"
             label="Total Replacement Cost"
-            value={`$${calculatedTax.rcvTotal}`}
+            // value={`$${calculatedTax.rcvTotal}`}
+            value={lineItem.rcvTotal == null ? 0 : lineItem.rcvTotal}
           />
-          <CalculatedValue id="totalCostVal" label="Total Cash Value" value="$33.49" />
+          <CalculatedValue
+            id="totalCostVal"
+            label="Total Cash Value"
+            value={lineItem?.acv == null ? 0 : lineItem.acv}
+          />
         </div>
         <div className={settlementSummarySectionStyle.contentColumn}>
           <CalculatedValue
             id="annualDepreciation"
             label="Annual Depreciation"
-            value={CalculateRCVWithSplCase.depriciationRateStr}
+            value={lineItem.depriciationRateStr}
           />
-          <CalculatedValue id="itemLimit" label="Item Limit" value="$0.00" />
+          <CalculatedValue
+            id="itemLimit"
+            label="Item Limit"
+            value={
+              lineItem.individualLimitAmount == null ? 0 : lineItem.individualLimitAmount
+            }
+          />
         </div>
         <div className={settlementSummarySectionStyle.contentColumn}>
           <CalculatedValue
             id="total$Depreciation"
             label="Total $ Depreciation"
-            value="$0.00"
+            value={lineItem.depreciationAmount == null ? 0 : lineItem.depreciationAmount}
           />
-          <CalculatedValue id="itemOverage" label="Item Overage" value="$0.00" />
+          <CalculatedValue
+            id="itemOverage"
+            label="Item Overage"
+            value={lineItem.itemOverage == null ? 0 : lineItem.itemOverage}
+          />
         </div>
       </div>
 
