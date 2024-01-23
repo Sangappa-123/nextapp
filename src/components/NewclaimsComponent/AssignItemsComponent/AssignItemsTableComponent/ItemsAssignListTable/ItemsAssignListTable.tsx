@@ -85,6 +85,15 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
   };
 
   useEffect(() => {
+    const updatedSelectedUUIDs = selectedItems
+      .filter((item) => item.select)
+      .map((item) => item.uuid);
+
+    dispatch(setSelectedItemsUUIDs(updatedSelectedUUIDs));
+    dispatch(updateVendorAssignmentPayload({ claimedItems: updatedSelectedUUIDs }));
+  }, [selectedItems]);
+
+  useEffect(() => {
     const areAllChecked =
       selectedItems.length === 0 || selectedItems.every((item) => item.select === true);
     if (!areAllChecked) {
@@ -212,7 +221,15 @@ const ItemsAssignListTable: React.FC<ItemsAssignListTableProps & connectorType> 
   const categoriesNameAll = Array.from(
     new Set(selectedItems.map((item) => item.category?.name))
   );
-  const categoriesText = categoriesNameAll.join(", ");
+
+  // const categoriesText = categoriesNameAll.length > 0 ? categoriesNameAll.join(",") : 0;
+  // console.log("csdssssss", categoriesText.length);
+
+  const categoriesText =
+    categoriesNameAll.filter((category) => category !== undefined && category !== null)
+      .length > 0
+      ? categoriesNameAll.join(", ")
+      : "0";
 
   const defaultItemsToShow = 10;
   const tableDataWithoutDuplicates = Array.from(
