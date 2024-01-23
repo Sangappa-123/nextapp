@@ -159,7 +159,7 @@ function ReplacementItem(props: replaceItemInterface) {
           </div>
         </div>
       </div>
-      <SettlementSummarySection calculatedTax={calculatedTax} />
+      <SettlementSummarySection />
     </div>
   );
 }
