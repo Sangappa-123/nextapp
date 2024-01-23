@@ -20,7 +20,6 @@ interface AssignItemsComponentProps {
   onNewClaimsClick: () => void;
   checkedItems?: any;
   selectedItems?: any;
-  // handleSubmitClick: () => void;
 }
 
 const AssignItemsComponent: React.FC<AssignItemsComponentProps & connectorType> = ({

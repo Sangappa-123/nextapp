@@ -47,6 +47,7 @@ const ClaimInfoComponent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
               value={claimSnapShotData?.taxRate}
               decimalScale={2}
               fixedDecimalScale
+              thousandSeparator={","}
               suffix={"%"}
               readOnly
             />
@@ -73,6 +74,7 @@ const ClaimInfoComponent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
               value={claimSnapShotData?.policyLimit}
               decimalScale={2}
               fixedDecimalScale
+              thousandSeparator={","}
               prefix={"$"}
               readOnly
             />
@@ -89,6 +91,7 @@ const ClaimInfoComponent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
               value={claimSnapShotData?.deductible}
               decimalScale={2}
               fixedDecimalScale
+              thousandSeparator={","}
               prefix={"$"}
               readOnly
             />
@@ -117,6 +120,7 @@ const ClaimInfoComponent: React.FC<calimInfoType> = ({ claimSnapShotData }) => {
               value={claimSnapShotData?.minimumThreshold}
               decimalScale={2}
               fixedDecimalScale
+              thousandSeparator={","}
               prefix={"$"}
               readOnly
             />
